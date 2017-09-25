@@ -15,12 +15,15 @@ class chol_ext
 
 public:
   /**
-  % If $A$ is positive definite, then $p$ is zero.
-  % If it is not, then $p$ is a positive integer,
-  % such that $v = R^{-1} e_p$ is a certificate vector
-  % to make $v'*A[:p,:p]*v < 0$
+   If $A$ is positive definite, then $p$ is zero.
+   If it is not, then $p$ is a positive integer,
+   such that $v = R^{-1} e_p$ is a certificate vector
+   to make $v'*A[:p,:p]*v < 0$
   **/
-  explicit chol_ext(const Mat &A) : _p{0}, _n{A.size1()}, _R(_n, _n) {
+  explicit chol_ext(const Mat &A) 
+    : _p{0}
+    , _n{A.size1()}
+    , _R(_n, _n) {
     for (auto i = 0u; i < _n; ++i) {
       for (auto j = 0u; j <= i; ++j) {
         auto d = A(j, i);
@@ -50,7 +53,7 @@ public:
     v[_p - 1] = 1.0 / _R(_p - 1, _p - 1);
     for (int i = _p - 2; i >= 0; --i) {
       auto s = 0.0;
-      for (size_t k = i + 1; k < _p; ++k) {
+      for (auto k = i + 1; k < _p; ++k) {
         s += _R(i, k) * v[k];
       }
       v[i] = -s / _R(i, i);

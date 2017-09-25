@@ -16,11 +16,11 @@
              x             solution vector
              iter          number of iterations performed
 **/
-template <typename T1, typename T2, typename T3>
-auto cutting_plane_feas(T1 &assess, T2 &S, T3 t, int max_it = 1000,
+auto cutting_plane_feas(auto &assess, auto &S, auto t, int max_it = 1000,
                         double tol = 1e-8) {
-  int iter = 1, flag = 0, status = 0;
-  for (; iter <= max_it; ++iter) {
+  int flag = 0;
+  int iter, status;
+  for (iter = 1; iter <= max_it; ++iter) {
     auto [g, h, flag] = assess(S.xc(), t);
     if (flag) {
       break;
@@ -35,7 +35,7 @@ auto cutting_plane_feas(T1 &assess, T2 &S, T3 t, int max_it = 1000,
       break;
     }
   }
-  return std::make_tuple(S.xc(), iter, flag, status);
+  return std::tuple{S.xc(), iter, flag, status};
 }
 
 /**
@@ -50,21 +50,20 @@ auto cutting_plane_feas(T1 &assess, T2 &S, T3 t, int max_it = 1000,
              x_best        solution vector
              t             best-so-far optimal value
              iter          number of iterations performed
-    '''
 **/
-template <typename T1, typename T2, typename T3>
-auto cutting_plane_dc(T1 &assess, T2 &S, T3 t, int max_it = 1000,
+auto cutting_plane_dc(auto &assess, auto &S, auto t, int max_it = 1000,
                       double tol = 1e-8) {
   auto x_best = S.xc();
-  int iter = 1, flag = 0, status = 0;
-  double tau;
-  for (; iter <= max_it; ++iter) {
+  int flag = 0;
+  int iter, status;
+  for (iter = 1; iter <= max_it; ++iter) {
     auto [g, h, t1] = assess(S.xc(), t);
     if (t != t1) { // best t obtained
       flag = 1;
       t = t1;
       x_best = S.xc();
     }
+    double tau;
     std::tie(status, tau) = S.update(g, h);
     if (status == 1) {
       break;
@@ -74,7 +73,7 @@ auto cutting_plane_dc(T1 &assess, T2 &S, T3 t, int max_it = 1000,
       break;
     }
   }
-  return std::make_tuple(x_best, t, iter, flag, status);
+  return std::tuple{x_best, t, iter, flag, status};
 } // END
 
 /**
@@ -92,15 +91,14 @@ auto cutting_plane_dc(T1 &assess, T2 &S, T3 t, int max_it = 1000,
 #include <boost/numeric/ublas/symmetric.hpp>
 namespace bnu = boost::numeric::ublas;
 
-template <typename T1, typename T2, typename T3>
-auto cutting_plane_q(T1 &assess, T2 &S, T3 t, int max_it = 1000,
+auto cutting_plane_q(auto &assess, auto &S, auto t, int max_it = 1000,
                      double tol = 1e-8) {
+  int flag = 0;
   auto x_best = S.xc();
-  int iter = 1, flag = 0, status = 1;
-  double tau;
-
-  for (; iter < max_it; ++iter) {
-    auto[g, h, t1, x, loop] = assess(S.xc(), t, (status != 3) ? 0 : 1);
+  int iter, status = 1;
+  
+  for (iter = 1; iter < max_it; ++iter) {
+    auto [g, h, t1, x, loop] = assess(S.xc(), t, (status != 3) ? 0 : 1);
     if (status != 3) {
       if (loop == 1) { // discrete sol'n
         h += bnu::inner_prod(g, x - S.xc());
@@ -116,6 +114,7 @@ auto cutting_plane_q(T1 &assess, T2 &S, T3 t, int max_it = 1000,
       t = t1;
       x_best = x;
     }
+    double tau;
     std::tie(status, tau) = S.update(g, h);
     if (status == 1) {
       break;
@@ -126,7 +125,7 @@ auto cutting_plane_q(T1 &assess, T2 &S, T3 t, int max_it = 1000,
     }
   }
 
-  return std::make_tuple(x_best, t, iter, flag, status);
+  return std::tuple{x_best, t, iter, flag, status};
 } // END
 
 #endif
