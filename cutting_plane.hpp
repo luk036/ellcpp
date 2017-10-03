@@ -16,7 +16,8 @@
              x             solution vector
              iter          number of iterations performed
 **/
-auto cutting_plane_feas(auto &assess, auto &S, auto t, int max_it = 1000,
+template <typename Oracle, typename Space, typename T>
+auto cutting_plane_feas(Oracle &assess, Space &S, T t, int max_it = 1000,
                         double tol = 1e-8) {
   int flag = 0;
   int iter, status;
@@ -51,7 +52,8 @@ auto cutting_plane_feas(auto &assess, auto &S, auto t, int max_it = 1000,
              t             best-so-far optimal value
              iter          number of iterations performed
 **/
-auto cutting_plane_dc(auto &assess, auto &S, auto t, int max_it = 1000,
+template <typename Oracle, typename Space, typename T>
+auto cutting_plane_dc(Oracle &assess, Space &S, T t, int max_it = 1000,
                       double tol = 1e-8) {
   auto x_best = S.xc();
   int flag = 0;
@@ -91,7 +93,8 @@ auto cutting_plane_dc(auto &assess, auto &S, auto t, int max_it = 1000,
 #include <boost/numeric/ublas/symmetric.hpp>
 namespace bnu = boost::numeric::ublas;
 
-auto cutting_plane_q(auto &assess, auto &S, auto t, int max_it = 1000,
+template <typename Oracle, typename Space, typename T>
+auto cutting_plane_q(Oracle &assess, Space &S, T t, int max_it = 1000,
                      double tol = 1e-8) {
   int flag = 0;
   auto x_best = S.xc();
