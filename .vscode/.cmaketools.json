@@ -1,5 +1,51 @@
 {
-  "variant": null,
+  "variant": {
+    "label": "Debug",
+    "keywordSettings": {
+      "buildType": "debug"
+    },
+    "description": "Emit debug information without performing optimizations"
+  },
   "activeEnvironments": [],
-  "codeModel": null
+  "codeModel": {
+    "configurations": [
+      {
+        "name": "Release",
+        "projects": [
+          {
+            "buildDirectory": "/home/ubuntu/github/ellcpp/build",
+            "name": "ellcpp",
+            "sourceDirectory": "/home/ubuntu/github/ellcpp",
+            "targets": [
+              {
+                "artifacts": [
+                  "/home/ubuntu/github/ellcpp/build/Main"
+                ],
+                "buildDirectory": "/home/ubuntu/github/ellcpp/build",
+                "fileGroups": [
+                  {
+                    "compileFlags": "  -Wall -std=c++1z -fcoroutines-ts",
+                    "isGenerated": false,
+                    "language": "CXX",
+                    "sources": [
+                      "profit_main.cpp"
+                    ]
+                  }
+                ],
+                "fullName": "Main",
+                "linkLibraries": "-rdynamic",
+                "linkerLanguage": "CXX",
+                "name": "Main",
+                "sourceDirectory": "/home/ubuntu/github/ellcpp",
+                "type": "EXECUTABLE"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "cookie": "0.9141979784431336",
+    "inReplyTo": "codemodel",
+    "type": "reply"
+  }
 }
