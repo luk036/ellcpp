@@ -10,7 +10,7 @@
   "codeModel": {
     "configurations": [
       {
-        "name": "Release",
+        "name": "Debug",
         "projects": [
           {
             "buildDirectory": "/home/ubuntu/github/ellcpp/build",
@@ -24,7 +24,7 @@
                 "buildDirectory": "/home/ubuntu/github/ellcpp/build",
                 "fileGroups": [
                   {
-                    "compileFlags": "  -Wall -std=c++1z -fcoroutines-ts",
+                    "compileFlags": "-g   -Wall -std=gnu++1z",
                     "isGenerated": false,
                     "language": "CXX",
                     "sources": [
@@ -33,7 +33,8 @@
                   }
                 ],
                 "fullName": "Main",
-                "linkLibraries": "-rdynamic",
+                "linkLanguageFlags": "-g",
+                "linkLibraries": "-rdynamic -lfmt",
                 "linkerLanguage": "CXX",
                 "name": "Main",
                 "sourceDirectory": "/home/ubuntu/github/ellcpp",
@@ -44,7 +45,7 @@
         ]
       }
     ],
-    "cookie": "0.9141979784431336",
+    "cookie": "0.9921921564863743",
     "inReplyTo": "codemodel",
     "type": "reply"
   }

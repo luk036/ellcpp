@@ -15,9 +15,7 @@ class profit_oracle {
 public:
   profit_oracle(double p, double A, double alpha, double beta, double v1,
                 double v2, double k)
-      : _log_pA{std::log(p * A)}
-      , _log_k{std::log(k)}
-      , _v(2), _a(2) {
+      : _log_pA{std::log(p * A)}, _log_k{std::log(k)}, _v(2), _a(2) {
     _v[0] = v1;
     _v[1] = v2;
     _a[0] = alpha;
@@ -65,12 +63,8 @@ public:
   profit_rb_oracle(double p, double A, double alpha, double beta, double v1,
                    double v2, double k, double ui, double e1, double e2,
                    double e3)
-      : _uie1{ui * e1}
-      , _uie2{ui * e2}
-      , _log_pA{std::log((p - ui * e3) * A)}
-      , _log_k{std::log(k - ui * e3)}
-      , _v(2)
-      , _a(2) {
+      : _uie1{ui * e1}, _uie2{ui * e2}, _log_pA{std::log((p - ui * e3) * A)},
+        _log_k{std::log(k - ui * e3)}, _v(2), _a(2) {
     _v[0] = v1 + ui * e3;
     _v[1] = v2 + ui * e3;
     _a[0] = alpha;

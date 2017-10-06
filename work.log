@@ -1,0 +1,28 @@
+  124  sudo vi /etc/apt/sources.list
+
+deb http://apt.llvm.org/zesty/ llvm-toolchain-zesty main
+deb-src http://apt.llvm.org/zesty/ llvm-toolchain-zesty main
+
+
+  127  wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+  129  sudo apt update
+  130  sudo apt-get install clang-6.0 lld-6.0
+  271  sudo apt install clang-format-6.0
+  272  sudo apt install clang-tidy-6.0
+  300  sudo apt install gnome-terminal # for vscode debugging
+
+fmtlib
+
+
+
+git clone https://github.com/luk036/ellcpp.git
+git status
+git pull
+git add --all
+git commit -m "message"
+git push
+
+    std::tie(std::ignore, fb, iter, flag, status) = 
+        cutting_plane_q(P2, E2, 0.0, 200, 1e-4);
+    fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
+ 
