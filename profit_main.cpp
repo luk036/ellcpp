@@ -2,8 +2,8 @@
 #include "ell.hpp"
 #include "profit_oracle.hpp"
 #include <boost/numeric/ublas/symmetric.hpp>
-#include <iostream>
 #include <fmt/format.h>
+#include <iostream>
 
 //#include <boost/numeric/ublas/io.hpp>
 

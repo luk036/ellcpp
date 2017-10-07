@@ -1,5 +1,5 @@
-#ifndef _HOME_UBUNTU_CUBSTORE_ELLCPP_ELL_HPP
-#define _HOME_UBUNTU_CUBSTORE_ELLCPP_ELL_HPP 1
+#ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ELL_HPP
+#define _HOME_UBUNTU_GITHUB_ELLCPP_ELL_HPP 1
 
 #include <boost/numeric/ublas/symmetric.hpp>
 #include <tuple>
@@ -34,15 +34,15 @@ public:
 
   template <typename T, typename V>
   auto update_core(const V &g, const T &beta) {
-    Vec Pg = bnu::prod(this->_P, g);
+    Vec Pg = bnu::prod(_P, g);
     auto tsq = bnu::inner_prod(g, Pg);
     double tau = std::sqrt(tsq);
     auto alpha = beta / tau;
     auto [status, rho, sigma, delta] = this->calc_ll(alpha);
     if (status == 0) {
-      this->_xc -= (rho / tau) * Pg;
-      this->_P -= (sigma / tsq) * bnu::outer_prod(Pg, Pg);
-      this->_P *= delta;
+      _xc -= (rho / tau) * Pg;
+      _P -= (sigma / tsq) * bnu::outer_prod(Pg, Pg);
+      _P *= delta;
     }
     //return std::tuple{status, tau}; // g++-7 is ok with this
     return std::pair{status, tau}; // workaround for clang++ 6
@@ -50,10 +50,10 @@ public:
 
   auto calc_cc() {
     /* central cut */
-    auto n = this->_xc.size();
+    auto n = _xc.size();
     auto rho = 1.0 / (n + 1);
     auto sigma = 2.0 * rho;
-    auto delta = this->_c1;
+    auto delta = _c1;
     return std::tuple{0, rho, sigma, delta};
   }
 
@@ -62,7 +62,7 @@ public:
     if (alpha == 0.0) {
       return this->calc_cc();
     }
-    auto n = this->_xc.size();
+    auto n = _xc.size();
     auto [status, rho, sigma, delta] = std::tuple{0, 0.0, 0.0, 0.0};
     if (alpha > 1.) {
       status = 1; // no sol'n
@@ -71,7 +71,7 @@ public:
     } else {
       rho = (1.0 + n * alpha) / (n + 1);
       sigma = 2.0 * rho / (1.0 + alpha);
-      delta = this->_c1 * (1.0 - alpha * alpha);
+      delta = _c1 * (1.0 - alpha * alpha);
     }
     return std::tuple{status, rho, sigma, delta};
   }
@@ -86,7 +86,7 @@ public:
       if (a1 >= 1.0) {
         return this->calc_dc(a0);
       }
-      auto n = this->_xc.size();
+      auto n = _xc.size();
       auto [status, rho, sigma, delta] = std::tuple{0, 0.0, 0.0, 0.0};
       auto aprod = a0 * a1;
       if (a0 > a1) {
@@ -102,7 +102,7 @@ public:
         sigma =
             (n + (2.0 * (1.0 + aprod - xi / 2.0) / (asum * asum))) / (n + 1);
         rho = asum * sigma / 2.0;
-        delta = this->_c1 * (1.0 - (asq(0) + asq(1) - xi / n) / 2.0);
+        delta = _c1 * (1.0 - (asq(0) + asq(1) - xi / n) / 2.0);
       }
       return std::tuple{status, rho, sigma, delta};
     }

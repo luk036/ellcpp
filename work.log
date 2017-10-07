@@ -25,4 +25,11 @@ git push
     std::tie(std::ignore, fb, iter, flag, status) = 
         cutting_plane_q(P2, E2, 0.0, 200, 1e-4);
     fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
+
  
+Why not?
+
+- No Concepts
+- Run time performance is worser than g++
+
+sudo apt install python-yaml

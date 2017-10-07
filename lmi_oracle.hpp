@@ -26,7 +26,7 @@ public:
     auto g = Vec(n);
     auto fj = -1.0;
     for (auto i = 0u; i < n; ++i) {
-      A += this->_F[i] * x[i];
+      A += _F[i] * x[i];
     }
     chol_ext Q(A);
     if (Q.is_sd()) {
@@ -36,13 +36,13 @@ public:
     auto p = v.size();
     fj = -bnu::inner_prod(v, bnu::prod(sub_mat(A, p), v));
     for (auto i = 0u; i < n; ++i) {
-      g[i] = -bnu::inner_prod(v, bnu::prod(sub_mat(this->_F[i], p), v));
+      g[i] = -bnu::inner_prod(v, bnu::prod(sub_mat(_F[i], p), v));
     }
     return std::make_tuple(g, fj);
   }
 
   auto chk_spd_t(const Vec &x, double t) const {
-    auto A = this->_F[x.size()];
+    auto A = _F[x.size()];
     auto m = A.size1();
     for (auto i = 0u; i < m; ++i) {
       A(i, i) += t;
@@ -51,7 +51,7 @@ public:
   }
 
   auto chk_spd(const Vec &x) const {
-    auto A = this->_F[x.size()];
+    auto A = _F[x.size()];
     return this->chk_mtx(A, x);
   }
 

@@ -1,5 +1,5 @@
-#ifndef _HOME_UBUNTU_CUBSTORE_ELLCPP_PROFIT_ORACLE_HPP
-#define _HOME_UBUNTU_CUBSTORE_ELLCPP_PROFIT_ORACLE_HPP 1
+#ifndef _HOME_UBUNTU_GITHUB_ELLCPP_PROFIT_ORACLE_HPP
+#define _HOME_UBUNTU_GITHUB_ELLCPP_PROFIT_ORACLE_HPP 1
 
 //#include <valarray>
 #include <cmath>
@@ -23,19 +23,19 @@ public:
   }
 
   auto operator()(const Vec &y, double t) const {
-    double fj = y[0] - this->_log_k; // constraint
+    double fj = y[0] - _log_k; // constraint
     if (fj > 0.0) {
       Vec g(2); // boost::numeric::ublas is too old!
       g[0] = 1.;
       g[1] = 0.;
       return std::tuple{g, fj, t};
     }
-    auto log_Cobb = this->_log_pA + bnu::inner_prod(this->_a, y);
+    auto log_Cobb = _log_pA + bnu::inner_prod(_a, y);
     // auto x = bnu::exp(y);
     Vec x(2);
     x[0] = std::exp(y[0]);
     x[1] = std::exp(y[1]);
-    auto vx = bnu::inner_prod(this->_v, x);
+    auto vx = bnu::inner_prod(_v, x);
     auto te = t + vx;
     fj = std::log(te) - log_Cobb;
     if (fj < 0.0) {
@@ -43,7 +43,7 @@ public:
       t = te - vx;
       fj = 0.0;
     }
-    Vec g = bnu::element_prod(this->_v, x) / te - this->_a;
+    Vec g = bnu::element_prod(_v, x) / te - _a;
     return std::tuple{g, fj, t};
   }
 
@@ -72,14 +72,14 @@ public:
   }
 
   auto operator()(const Vec &y, double t) const {
-    double fj = y[0] - this->_log_k; // constraint
+    double fj = y[0] - _log_k; // constraint
     if (fj > 0.0) {
       Vec g(2);
       g[0] = 1.;
       g[1] = 0.;
       return std::tuple{g, fj, t};
     }
-    auto a_rb = this->_a;
+    auto a_rb = _a;
     a_rb[0] += _uie1 * (y[0] > 0. ? -1 : +1);
     a_rb[1] += _uie2 * (y[1] > 0. ? -1 : +1);
 
@@ -88,7 +88,7 @@ public:
     Vec x(2);
     x[0] = std::exp(y[0]);
     x[1] = std::exp(y[1]);
-    auto vx = bnu::inner_prod(this->_v, x);
+    auto vx = bnu::inner_prod(_v, x);
     auto te = t + vx;
     fj = std::log(te) - log_Cobb;
     if (fj < 0.0) {
