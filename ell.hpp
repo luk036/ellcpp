@@ -44,7 +44,7 @@ public:
       _P -= (sigma / tsq) * bnu::outer_prod(Pg, Pg);
       _P *= delta;
     }
-    //return std::tuple{status, tau}; // g++-7 is ok with this
+    // return std::tuple{status, tau}; // g++-7 is ok with this
     return std::pair{status, tau}; // workaround for clang++ 6
   }
 
