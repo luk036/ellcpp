@@ -24,7 +24,7 @@
                 "buildDirectory": "/home/ubuntu/github/ellcpp/build",
                 "fileGroups": [
                   {
-                    "compileFlags": "-g   -Wall -std=gnu++1z",
+                    "compileFlags": "-g   -Wall -std=c++1z",
                     "isGenerated": false,
                     "language": "CXX",
                     "sources": [
@@ -33,8 +33,9 @@
                   }
                 ],
                 "fullName": "Main",
+                "linkFlags": "-rdynamic",
                 "linkLanguageFlags": "-g",
-                "linkLibraries": "-rdynamic -lfmt",
+                "linkLibraries": "-lfmt",
                 "linkerLanguage": "CXX",
                 "name": "Main",
                 "sourceDirectory": "/home/ubuntu/github/ellcpp",
@@ -45,7 +46,7 @@
         ]
       }
     ],
-    "cookie": "0.9921921564863743",
+    "cookie": "0.7361605282521764",
     "inReplyTo": "codemodel",
     "type": "reply"
   }

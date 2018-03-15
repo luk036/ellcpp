@@ -26,24 +26,12 @@
         {
             "name": "Linux",
             "includePath": [
-                "/usr/include/x86_64-linux-gnu/c++/6.3.0",
-                "/usr/include/c++/6.3.0",
-                "/usr/local/include",
-                "/usr/lib/clang/6.0.0/include",
-                "/usr/include/x86_64-linux-gnu",
-                "/usr/include",
                 "${workspaceRoot}"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
             "browse": {
                 "path": [
-                    "/usr/include/x86_64-linux-gnu/c++/6.3.0",
-                    "/usr/include/c++/6.3.0",
-                    "/usr/local/include",
-                    "/usr/lib/clang/6.0.0/include",
-                    "/usr/include/x86_64-linux-gnu",
-                    "/usr/include",
                     "${workspaceRoot}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
@@ -58,7 +46,8 @@
             ],
             "defines": [
                 "_DEBUG",
-                "UNICODE"
+                "UNICODE",
+                "_UNICODE"
             ],
             "intelliSenseMode": "msvc-x64",
             "browse": {

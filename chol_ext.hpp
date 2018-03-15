@@ -7,8 +7,7 @@
 
 namespace bnu = boost::numeric::ublas;
 
-class chol_ext 
-{
+class chol_ext {
   using Mat = bnu::symmetric_matrix<double, bnu::upper>;
   using UTMat = bnu::triangular_matrix<double, bnu::upper>;
   using Vec = bnu::vector<double>;
@@ -20,10 +19,7 @@ public:
    such that $v = R^{-1} e_p$ is a certificate vector
    to make $v'*A[:p,:p]*v < 0$
   **/
-  explicit chol_ext(const Mat &A) 
-    : _p{0}
-    , _n{A.size1()}
-    , _R(_n, _n) {
+  explicit chol_ext(const Mat &A) : _p{0}, _n{A.size1()}, _R(_n, _n) {
     for (auto i = 0u; i < _n; ++i) {
       for (auto j = 0u; j <= i; ++j) {
         auto d = A(j, i);
@@ -35,9 +31,9 @@ public:
             _p = i + 1;
             _R(j, i) = std::sqrt(-d);
             return;
-          } 
-            _R(j, i) = std::sqrt(d);
-          
+          }
+          _R(j, i) = std::sqrt(d);
+
         } else {
           _R(j, i) = 1.0 / _R(j, j) * d;
         }

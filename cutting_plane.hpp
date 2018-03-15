@@ -99,7 +99,7 @@ auto cutting_plane_q(Oracle &assess, Space &S, T t, int max_it = 1000,
   int flag = 0;
   auto x_best = S.xc();
   int iter, status = 1;
-  
+
   for (iter = 1; iter < max_it; ++iter) {
     auto [g, h, t1, x, loop] = assess(S.xc(), t, (status != 3) ? 0 : 1);
     if (status != 3) {
