@@ -5,17 +5,21 @@
 #include <tuple>
 
 /**
-    Cutting-plane method for solving convex feasibility problem
-    input
-             assess        perform assessment on x0
-             S(xc)         Search Space containing x*
-             t             best-so-far optimal sol'n
-             max_it        maximum number of iterations
-             tol           error tolerance
-    output
-             x             solution vector
-             iter          number of iterations performed
-**/
+ * @brief Cutting-plane method for solving convex feasibility problem
+ * 
+ * @tparam Oracle 
+ * @tparam Space 
+ * @tparam T 
+ * @param[in] assess   perform assessment on x0
+ * @param[in] S        search Space containing x*
+ * @param[in] t        best-so-far optimal sol'n
+ * @param[in] max_it   maximum number of iterations
+ * @param[in] tol      error tolerance
+ * @return x      solution vector 
+ * @return iter   number of iterations performed
+ * @return flag   solution found or not 
+ * @return status how is the final cut 
+ */
 template <typename Oracle, typename Space, typename T>
 auto cutting_plane_feas(Oracle &assess, Space &S, T t, int max_it = 1000,
                         double tol = 1e-8) {
