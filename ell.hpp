@@ -87,7 +87,11 @@ public:
         return this->calc_dc(a0);
       }
       auto n = _xc.size();
-      auto [status, rho, sigma, delta] = std::tuple{0, 0.0, 0.0, 0.0};
+
+      //auto [status, rho, sigma, delta] = std::tuple{0, 0.0, 0.0, 0.0};
+      auto status = 0;
+      auto rho = 0.0, sigma = 0.0, delta = 0.0;
+
       auto aprod = a0 * a1;
       if (a0 > a1) {
         status = 1; // no sol'n
