@@ -1,16 +1,32 @@
 #ifndef _HOME_UBUNTU_CUBSTORE_ELLCPP_CHOL_EXT_HPP
 #define _HOME_UBUNTU_CUBSTORE_ELLCPP_CHOL_EXT_HPP 1
 
-#include <boost/numeric/ublas/symmetric.hpp>
-#include <boost/numeric/ublas/triangular.hpp>
+// #include <boost/numeric/ublas/symmetric.hpp>
+// #include <boost/numeric/ublas/triangular.hpp>
+// #include <cassert>
+
+// namespace bnu = boost::numeric::ublas;
+
 #include <cassert>
+#include <xtensor/xarray.hpp>
+#include <xtensor-blas/xlinalg.hpp>
 
-namespace bnu = boost::numeric::ublas;
-
+/**
+ * @brief Cholesky factorization
+ * 
+ */
 class chol_ext {
-  using Mat = bnu::symmetric_matrix<double, bnu::upper>;
-  using UTMat = bnu::triangular_matrix<double, bnu::upper>;
-  using Vec = bnu::vector<double>;
+  // using Mat = bnu::symmetric_matrix<double, bnu::upper>;
+  // using UTMat = bnu::triangular_matrix<double, bnu::upper>;
+  // using Vec = bnu::vector<double>;
+  using Vec = xt::xarray<double>;
+  using Mat = xt::xarray<double>;
+  using shape_type = Vec::shape_type;
+
+private:
+  size_t _p;
+  size_t _n;
+  xt::xarray<double> _R;
 
 public:
   /**
@@ -19,10 +35,14 @@ public:
    such that $v = R^{-1} e_p$ is a certificate vector
    to make $v'*A[:p,:p]*v < 0$
   **/
-  explicit chol_ext(const Mat &A) : _p{0}, _n{A.size1()}, _R(_n, _n) {
+  explicit chol_ext(const Mat &A)
+    : _p{0}, _n{A.size()} {
+    shape_type shape = {_n, _n};
+    _R = xt::zeros<double,decltype(shape)>(shape);
+    
     for (auto i = 0u; i < _n; ++i) {
       for (auto j = 0u; j <= i; ++j) {
-        auto d = A(j, i);
+        double d = A(j, i);
         for (auto k = 0u; k < j; ++k) {
           d -= _R(k, i) * _R(k, j);
         }
@@ -32,8 +52,9 @@ public:
             _R(j, i) = std::sqrt(-d);
             return;
           }
-          _R(j, i) = std::sqrt(d);
-
+          else {
+            _R(j, i) = std::sqrt(d);
+          }
         } else {
           _R(j, i) = 1.0 / _R(j, j) * d;
         }
@@ -45,22 +66,22 @@ public:
 
   auto witness() const {
     assert(!this->is_sd());
-    Vec v(_p);
+    shape_type shape = {_p};
+    Vec v = xt::zeros<double,decltype(shape)>(shape);
+    using xt::placeholders::_;
+    
     v[_p - 1] = 1.0 / _R(_p - 1, _p - 1);
     for (int i = _p - 2; i >= 0; --i) {
-      auto s = 0.0;
-      for (auto k = i + 1; k < _p; ++k) {
-        s += _R(i, k) * v[k];
-      }
+      // double s = 0.0;
+      // for (auto k = i + 1; k < _p; ++k) {
+      //   s += _R(i, k) * v[k];
+      // }
+      double s = xt::linalg::dot(xt::view(_R, i, xt::range(i+1, _)),
+                          xt::view(v, xt::range(i+1, _)))();
       v[i] = -s / _R(i, i);
     }
     return v;
   }
-
-private:
-  size_t _p;
-  size_t _n;
-  UTMat _R;
 };
 
 /**

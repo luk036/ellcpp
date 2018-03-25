@@ -23,11 +23,12 @@
 template <typename Oracle, typename Space, typename T>
 auto cutting_plane_feas(Oracle &assess, Space &S, T t, int max_it = 1000,
                         double tol = 1e-8) {
-  int flag = 0;
-  int iter, status;
-  for (iter = 1; iter <= max_it; ++iter) {
-    auto [g, h, flag] = assess(S.xc(), t);
-    if (flag) {
+  auto flag = 0;
+  auto iter = 1, status = 0;
+  for (; iter <= max_it; ++iter) {
+    auto [g, h, t1] = assess(S.xc(), t);
+    if (t != t1) {
+      flag = 1;
       break;
     }
     double tau;
@@ -60,9 +61,9 @@ template <typename Oracle, typename Space, typename T>
 auto cutting_plane_dc(Oracle &assess, Space &S, T t, int max_it = 1000,
                       double tol = 1e-8) {
   auto x_best = S.xc();
-  int flag = 0;
-  int iter, status;
-  for (iter = 1; iter <= max_it; ++iter) {
+  auto flag = 0;
+  auto iter = 1, status = 0;
+  for (; iter <= max_it; ++iter) {
     auto [g, h, t1] = assess(S.xc(), t);
     if (t != t1) { // best t obtained
       flag = 1;
@@ -94,27 +95,28 @@ auto cutting_plane_dc(Oracle &assess, Space &S, T t, int max_it = 1000,
              x             solution vector
              iter          number of iterations performed
 **/
-#include <boost/numeric/ublas/symmetric.hpp>
-namespace bnu = boost::numeric::ublas;
+// #include <boost/numeric/ublas/symmetric.hpp>
+// namespace bnu = boost::numeric::ublas;
+#include <xtensor/xarray.hpp>
+#include <xtensor-blas/xlinalg.hpp>
 
 template <typename Oracle, typename Space, typename T>
 auto cutting_plane_q(Oracle &assess, Space &S, T t, int max_it = 1000,
                      double tol = 1e-8) {
-  int flag = 0;
+  auto flag = 0;
   auto x_best = S.xc();
-  int iter, status = 1;
-
-  for (iter = 1; iter < max_it; ++iter) {
+  auto iter = 1, status = 1;
+  for (; iter < max_it; ++iter) {
     auto [g, h, t1, x, loop] = assess(S.xc(), t, (status != 3) ? 0 : 1);
     if (status != 3) {
       if (loop == 1) { // discrete sol'n
-        h += bnu::inner_prod(g, x - S.xc());
+        h += xt::linalg::dot(g, x - S.xc())();
       }
     } else { // can't cut in the previous iteration
       if (loop == 0) {
         break; // no more alternative cut
       }
-      h += bnu::inner_prod(g, x - S.xc());
+      h += xt::linalg::dot(g, x - S.xc())();
     }
     if (t != t1) { // best t obtained
       flag = 1;

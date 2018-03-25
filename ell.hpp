@@ -1,32 +1,36 @@
 #ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ELL_HPP
 #define _HOME_UBUNTU_GITHUB_ELLCPP_ELL_HPP 1
 
-#include <boost/numeric/ublas/symmetric.hpp>
 #include <tuple>
+#include <xtensor/xarray.hpp>
+#include <xtensor-blas/xlinalg.hpp>
 
-namespace bnu = boost::numeric::ublas;
-
-// ell = { x | (x - xc)' * P^-1 * (x - xc) <= 1 }
+/**
+ * @brief Ellipsoid Search Space
+ * 
+ * ell = { x | (x - xc)' * P^-1 * (x - xc) <= 1 }
+ */
 class ell {
-  using Mat = bnu::symmetric_matrix<double, bnu::upper>;
-  using Vec = bnu::vector<double>;
+  using Mat = xt::xarray<double>;
+  using Vec = xt::xarray<double>;
 
 private:
   size_t n;
-  Mat _P;
-  Vec _xc;
   double _c1;
+  Vec _xc;
+  Mat _P;
 
 public:
   template <typename T, typename V>
   ell(const T &val, const V &x)
-      : n{x.size()}, _P(n, n), _xc{x}, _c1{n * n / (n * n - 1.0)} {
-    for (auto i = 0U; i < n; ++i) {
-      if constexpr (std::is_scalar<T>::value) { // C++17
-        _P(i, i) = val;
-      } else {
-        _P(i, i) = val(i);
-      }
+      : n{x.size()}, 
+        _c1{n * n / (n * n - 1.0)},
+        _xc{x}
+  { 
+    if constexpr (std::is_scalar<T>::value) { // C++17
+      _P = val * xt::eye(n);
+    } else {
+      _P = xt::diag(val);
     }
   }
 
@@ -34,22 +38,25 @@ public:
 
   template <typename T, typename V>
   auto update_core(const V &g, const T &beta) {
-    Vec Pg = bnu::prod(_P, g);
-    auto tsq = bnu::inner_prod(g, Pg);
-    double tau = std::sqrt(tsq);
+    Vec Pg = xt::linalg::dot(_P, g);
+    auto tsq = xt::linalg::dot(g, Pg)();
+    auto tau = std::sqrt(tsq);
     auto alpha = beta / tau;
     auto [status, rho, sigma, delta] = this->calc_ll(alpha);
-    if (status == 0) {
-      _xc -= (rho / tau) * Pg;
-      _P -= (sigma / tsq) * bnu::outer_prod(Pg, Pg);
-      _P *= delta;
+    if (status != 0) {
+      return std::tuple{status, tau}; // g++-7 is ok with this
     }
-    // return std::tuple{status, tau}; // g++-7 is ok with this
-    return std::pair{status, tau}; // workaround for clang++ 6
+    _xc -= (rho / tau) * Pg;
+    _P -= (sigma / tsq) * xt::linalg::outer(Pg, Pg);
+    _P *= delta;
+    return std::tuple{status, tau}; // g++-7 is ok    
+    // return std::pair{status, tau}; // workaround for clang++ 6
   }
 
+  /**
+   * @brief Central Cut
+   */
   auto calc_cc() {
-    /* central cut */
     auto n = _xc.size();
     auto rho = 1.0 / (n + 1);
     auto sigma = 2.0 * rho;
@@ -57,8 +64,10 @@ public:
     return std::tuple{0, rho, sigma, delta};
   }
 
+  /**
+   * @brief Deep Cut
+   */
   auto calc_dc(double alpha) {
-    /* deep cut */
     if (alpha == 0.0) {
       return this->calc_cc();
     }
@@ -76,7 +85,8 @@ public:
     return std::tuple{status, rho, sigma, delta};
   }
 
-  template <typename T> auto calc_ll(const T &alpha) {
+  template <typename T> 
+  auto calc_ll(const T &alpha) {
     /* parallel or deep cut */
     if constexpr (std::is_scalar<T>::value) { // C++17
       return this->calc_dc(alpha);
@@ -91,14 +101,14 @@ public:
       //auto [status, rho, sigma, delta] = std::tuple{0, 0.0, 0.0, 0.0};
       auto status = 0;
       auto rho = 0.0, sigma = 0.0, delta = 0.0;
-
       auto aprod = a0 * a1;
       if (a0 > a1) {
         status = 1; // no sol'n
       } else if (n * aprod < -1.0) {
         status = 3; // no effect
       } else {
-        auto asq = bnu::element_prod(alpha, alpha);
+        // auto asq = bnu::element_prod(alpha, alpha);
+        auto asq = alpha * alpha;
         auto asum = a0 + a1;
         auto asqdiff = asq(1) - asq(0);
         auto xi = std::sqrt(4.0 * (1.0 - asq(0)) * (1.0 - asq(1)) +
