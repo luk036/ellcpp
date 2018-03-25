@@ -42,7 +42,17 @@
             "intelliSenseMode": "clang-x64",
             "browse": {
                 "path": [
-                    "${workspaceRoot}"
+                    "/media/ubuntu/casper-rw/miniconda2/include",
+                    "/usr/include/x86_64-linux-gnu/c++/7.2.0",
+                    "/usr/include/c++/7.2.0",
+                    "/usr/local/include",
+                    "/usr/include/x86_64-linux-gnu",
+                    "/usr/include",
+                    "${workspaceRoot}",
+                    "/usr/include/linux",
+                    "${workspaceRoot}/lib/include",
+                    "/usr/include/c++/7",
+                    "/usr/include/x86_64-linux-gnu/c++/7"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

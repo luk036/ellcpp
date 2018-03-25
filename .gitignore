@@ -1,6 +1,7 @@
 # build code
-Build
+build-g++
 build
+html
 .vscode
 
 # Prerequisites

@@ -2,12 +2,12 @@
 #define _HOME_UBUNTU_GITHUB_ELLCPP_ELL_HPP 1
 
 #include <tuple>
-#include <xtensor/xarray.hpp>
 #include <xtensor-blas/xlinalg.hpp>
+#include <xtensor/xarray.hpp>
 
 /**
  * @brief Ellipsoid Search Space
- * 
+ *
  * ell = { x | (x - xc)' * P^-1 * (x - xc) <= 1 }
  */
 class ell {
@@ -23,10 +23,7 @@ private:
 public:
   template <typename T, typename V>
   ell(const T &val, const V &x)
-      : n{x.size()}, 
-        _c1{n * n / (n * n - 1.0)},
-        _xc{x}
-  { 
+      : n{x.size()}, _c1{n * n / (n * n - 1.0)}, _xc{x} {
     if constexpr (std::is_scalar<T>::value) { // C++17
       _P = val * xt::eye(n);
     } else {
@@ -49,7 +46,7 @@ public:
     _xc -= (rho / tau) * Pg;
     _P -= (sigma / tsq) * xt::linalg::outer(Pg, Pg);
     _P *= delta;
-    return std::tuple{status, tau}; // g++-7 is ok    
+    return std::tuple{status, tau}; // g++-7 is ok
     // return std::pair{status, tau}; // workaround for clang++ 6
   }
 
@@ -85,8 +82,7 @@ public:
     return std::tuple{status, rho, sigma, delta};
   }
 
-  template <typename T> 
-  auto calc_ll(const T &alpha) {
+  template <typename T> auto calc_ll(const T &alpha) {
     /* parallel or deep cut */
     if constexpr (std::is_scalar<T>::value) { // C++17
       return this->calc_dc(alpha);
@@ -98,7 +94,7 @@ public:
       }
       auto n = _xc.size();
 
-      //auto [status, rho, sigma, delta] = std::tuple{0, 0.0, 0.0, 0.0};
+      // auto [status, rho, sigma, delta] = std::tuple{0, 0.0, 0.0, 0.0};
       auto status = 0;
       auto rho = 0.0, sigma = 0.0, delta = 0.0;
       auto aprod = a0 * a1;

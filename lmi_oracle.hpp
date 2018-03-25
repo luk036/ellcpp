@@ -3,30 +3,34 @@
 
 //#include "mat.hpp"
 #include "chol_ext.hpp"
-#include <boost/numeric/ublas/matrix_proxy.hpp>
-namespace bnu = boost::numeric::ublas;
+#include <xtensor/xarray.hpp>
+#include <xtensor-blas/xlinalg.hpp>
 
 class lmi_oracle {
-  using Mat = bnu::symmetric_matrix<double, bnu::upper>;
-  using Vec = bnu::vector<double>;
-  using Arr = bnu::vector<Mat>;
+  using Vec = xt::xarray<double>;
+  using Mat = xt::xarray<double>;
+  using Arr = xt::xarray<double>;
+  using shape_type = Vec::shape_type;
 
 private:
-  const Arr &_F;
+  Arr& _F;
 
 public:
-  explicit explicit lmi_oracle(const Arr &F) : _F{F} {}
+  explicit lmi_oracle(Arr& F) : _F{F} {}
 
   auto chk_mtx(Mat &A, const Vec &x) const {
-    auto sub_mat = [](const Mat &M, size_t p) {
-      return bnu::project(M, bnu::range(0, p), bnu::range(0, p));
-    };
+    // auto sub_mat = [](const Mat &M, size_t p) {
+    //   return bnu::project(M, bnu::range(0, p), bnu::range(0, p));
+    // };
+    using xt::placeholders::_;
+    using xt::linalg::dot;
 
     auto n = x.size();
     auto g = Vec(n);
     auto fj = -1.0;
     for (auto i = 0u; i < n; ++i) {
-      A += _F[i] * x[i];
+      auto Fi = xt::view(_F, xt::all(), xt::all(), i);
+      A += Fi * x[i];
     }
     chol_ext Q(A);
     if (Q.is_sd()) {
@@ -34,16 +38,18 @@ public:
     }
     auto v = Q.witness();
     auto p = v.size();
-    fj = -bnu::inner_prod(v, bnu::prod(sub_mat(A, p), v));
+    auto sub = xt::range(_, p);
+    fj = -dot(v, dot(xt::view(A, sub, sub), v))();
     for (auto i = 0u; i < n; ++i) {
-      g[i] = -bnu::inner_prod(v, bnu::prod(sub_mat(_F[i], p), v));
+      auto Fi = xt::view(_F, xt::all(), xt::all(), i);
+      g[i] = -dot(v, dot(xt::view(Fi, sub, sub), v))();
     }
     return std::make_tuple(g, fj);
   }
 
   auto chk_spd_t(const Vec &x, double t) const {
-    auto A = _F[x.size()];
-    auto m = A.size1();
+    Mat A = _F[x.size()];
+    auto m = A.size();
     for (auto i = 0u; i < m; ++i) {
       A(i, i) += t;
     }
@@ -51,7 +57,7 @@ public:
   }
 
   auto chk_spd(const Vec &x) const {
-    auto A = _F[x.size()];
+    Mat A = _F[x.size()];
     return this->chk_mtx(A, x);
   }
 
