@@ -21,7 +21,9 @@ add_subdirectory (third_party EXCLUDE_FROM_ALL)
 
 include_directories (${LIBRARY_INCLUDE_PATH} ${TEST_THIRD_PARTY_INCLUDE_PATH})
 add_executable (Main profit_main.cpp)
+add_executable (Test exp1d.cpp)
 target_link_libraries ( Main Threads::Threads ${LIBS} -llapack -lblas -lfmt)
+target_link_libraries ( Test Threads::Threads ${LIBS} -llapack -lblas -lfmt)
 
 enable_testing ()
 

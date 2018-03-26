@@ -48,13 +48,45 @@
                 "name": "Main",
                 "sourceDirectory": "/home/ubuntu/github/ellcpp",
                 "type": "EXECUTABLE"
+              },
+              {
+                "artifacts": [
+                  "/home/ubuntu/github/ellcpp/build/Test"
+                ],
+                "buildDirectory": "/home/ubuntu/github/ellcpp/build",
+                "fileGroups": [
+                  {
+                    "compileFlags": "-g   -std=c++17 -pthread -std=gnu++1z",
+                    "includePath": [
+                      {
+                        "path": "/media/ubuntu/casper-rw/miniconda2/include"
+                      },
+                      {
+                        "path": "/home/ubuntu/github/ellcpp/third_party/benchmark/include"
+                      }
+                    ],
+                    "isGenerated": false,
+                    "language": "CXX",
+                    "sources": [
+                      "exp1d.cpp"
+                    ]
+                  }
+                ],
+                "fullName": "Test",
+                "linkFlags": "-rdynamic",
+                "linkLanguageFlags": "-g",
+                "linkLibraries": "-L/media/ubuntu/casper-rw/miniconda2/include/../lib -llapack -lblas -lfmt -pthread",
+                "linkerLanguage": "CXX",
+                "name": "Test",
+                "sourceDirectory": "/home/ubuntu/github/ellcpp",
+                "type": "EXECUTABLE"
               }
             ]
           }
         ]
       }
     ],
-    "cookie": "0.8973076840778975",
+    "cookie": "0.2851239803819894",
     "inReplyTo": "codemodel",
     "type": "reply"
   }
