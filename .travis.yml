@@ -1,5 +1,6 @@
 language: cpp
 dist: trusty
+sudo: required
 
 matrix:
   include:
@@ -8,9 +9,9 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-7
           packages:
             - clang-7
+            - clang++-7
             - catch
       env: COMPILER=clang CLANG=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
 env:
@@ -67,7 +68,6 @@ install:
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
 
 before_script:
-  - export CXX=${COMPILER}
   - cd ${TRAVIS_BUILD_DIR}
   - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -Wdev
   - cd Build
