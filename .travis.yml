@@ -1,6 +1,5 @@
 language: cpp
 dist: trusty
-sudo: required
 
 matrix:
   include:
@@ -9,11 +8,10 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-artful
           packages:
-            - clang-7
+            - g++-7
             - catch
-      env: COMPILER=clang CLANG=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
 env:
   global:
     - MINCONDA_VERSION="latest"
@@ -80,4 +78,4 @@ notifications:
   email: false
   slack:
     rooms:
-      - loksu:jErzuILLSNn9qGYkkILvBwje#pgcpp
+      - loksu:jErzuILLSNn9qGYkkILvBwje#ellcpp
