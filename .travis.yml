@@ -1,6 +1,5 @@
 language: cpp
-dist: trusty
-
+dist: precise
 matrix:
   include:
     - os: linux
@@ -9,9 +8,87 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-7
-            - catch
-      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
+            - g++-4.9
+      env: COMPILER=gcc GCC=4.9 BLAS=OpenBLAS
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=gcc GCC=5 BLAS=OpenBLAS
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env: COMPILER=gcc GCC=6 BLAS=OpenBLAS
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env: COMPILER=gcc GCC=6 BOUND_CHECKS=1 BLAS=OpenBLAS
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env: COMPILER=gcc GCC=4.9 BLAS=mkl
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=gcc GCC=5 BLAS=mkl
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env: COMPILER=gcc GCC=6 BLAS=mkl
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+          packages:
+            - clang-3.6
+      env: COMPILER=clang CLANG=3.6 BLAS=OpenBLAS
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
+          packages:
+            - clang-3.7
+      env: COMPILER=clang CLANG=3.7 BLAS=OpenBLAS
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+      env: COMPILER=clang CLANG=3.8 BLAS=OpenBLAS
+    - os: osx
+      osx_image: xcode8
+      compiler: clang
+      env: BLAS=OpenBLAS
 env:
   global:
     - MINCONDA_VERSION="latest"
@@ -22,7 +99,7 @@ before_install:
       # Configure build variables
       if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
         if [[ "$COMPILER" == "gcc" ]]; then
-          export CXX="g++-$GCC" CC="gcc-$GCC";
+          export CXX=g++-$GCC CC=gcc-$GCC;
         fi
         if [[ "$COMPILER" == "clang" ]]; then
           export CXX=clang++-$CLANG CC=clang-$CLANG;
@@ -47,32 +124,19 @@ install:
     - conda info -a
     - conda install gtest cmake -c conda-forge
     # Install xtensor and BLAS
-    #- conda install xtensor=0.15.4 -c conda-forge
-    - conda install xtensor -c conda-forge
-    - conda install xtensor-blas -c conda-forge
+    - conda install xtensor=0.15.4 -c conda-forge
     - if [[ "$BLAS" == "OpenBLAS" ]]; then
         conda install openblas -c conda-forge;
       elif [[ "$BLAS" == "mkl" ]]; then
         conda install mkl;
       fi
-    - conda install lapack -c conda-forge
     # Testing
-    # - if [[ "$BOUND_CHECKS" == 1 ]]; then
-    #     cmake -DXTENSOR_ENABLE_ASSERT=ON -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib .;
-    #   else
-    #     cmake -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib .;
-    #   fi
-  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
-before_script:
-  - cd ${TRAVIS_BUILD_DIR}
-  - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -Wdev
-  - cd Build
+    - if [[ "$BOUND_CHECKS" == 1 ]]; then
+        cmake -DXTENSOR_ENABLE_ASSERT=ON -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib .;
+      else
+        cmake -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib .;
+      fi
+    - make -j2 test_xtensor_blas
 script:
-    - make -j 2
-    - ctest -V -j 2
-notifications:
-  email: false
-  slack:
-    rooms:
-      - loksu:jErzuILLSNn9qGYkkILvBwje#ellcpp
+    - cd test
+    - ./test_xtensor_blas
