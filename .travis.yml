@@ -1,5 +1,5 @@
 language: cpp
-dist: precise
+dist: trusty
 matrix:
   include:
     - os: linux
@@ -8,87 +8,18 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-4.9
-      env: COMPILER=gcc GCC=4.9 BLAS=OpenBLAS
+            - g++-7
+            - catch
+      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - llvm-toolchain-artful
           packages:
-            - g++-5
-      env: COMPILER=gcc GCC=5 BLAS=OpenBLAS
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
-      env: COMPILER=gcc GCC=6 BLAS=OpenBLAS
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
-      env: COMPILER=gcc GCC=6 BOUND_CHECKS=1 BLAS=OpenBLAS
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.9
-      env: COMPILER=gcc GCC=4.9 BLAS=mkl
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env: COMPILER=gcc GCC=5 BLAS=mkl
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
-      env: COMPILER=gcc GCC=6 BLAS=mkl
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
-          packages:
-            - clang-3.6
-      env: COMPILER=clang CLANG=3.6 BLAS=OpenBLAS
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
-          packages:
-            - clang-3.7
-      env: COMPILER=clang CLANG=3.7 BLAS=OpenBLAS
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-          packages:
-            - clang-3.8
-      env: COMPILER=clang CLANG=3.8 BLAS=OpenBLAS
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
-      env: BLAS=OpenBLAS
+            - clang-7
+      env: COMPILER=clang CLANG=7 BLAS=OpenBLAS BUILD_TYPE='Release'
 env:
   global:
     - MINCONDA_VERSION="latest"
@@ -132,11 +63,15 @@ install:
       fi
     # Testing
     - if [[ "$BOUND_CHECKS" == 1 ]]; then
-        cmake -DXTENSOR_ENABLE_ASSERT=ON -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib .;
+        cmake -DXTENSOR_ENABLE_ASSERT=ON -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_BUILD_TYPE=${BUILD_TYPE}-DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib .;
       else
-        cmake -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib .;
+        cmake -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_BUILD_TYPE=${BUILD_TYPE}-DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib .;
       fi
-    - make -j2 test_xtensor_blas
+    - make -j2
 script:
-    - cd test
-    - ./test_xtensor_blas
+    - ctest -V -j 2
+notifications:
+  email: false
+  slack:
+    rooms:
+      - loksu:jErzuILLSNn9qGYkkILvBwje#ellcpp
