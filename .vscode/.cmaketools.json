@@ -14,71 +14,113 @@
         "projects": [
           {
             "buildDirectory": "/home/ubuntu/github/ellcpp/build",
-            "name": "ellcpp",
+            "name": "Ell",
             "sourceDirectory": "/home/ubuntu/github/ellcpp",
             "targets": [
               {
                 "artifacts": [
-                  "/home/ubuntu/github/ellcpp/build/Main"
+                  "/home/ubuntu/github/ellcpp/build/lib/libEllLib.a"
                 ],
-                "buildDirectory": "/home/ubuntu/github/ellcpp/build",
+                "buildDirectory": "/home/ubuntu/github/ellcpp/build/lib",
                 "fileGroups": [
                   {
-                    "compileFlags": "-g   -std=c++17 -pthread -std=gnu++1z",
+                    "compileFlags": "-g   -std=c++17 -std=gnu++1z",
                     "includePath": [
                       {
-                        "path": "/media/ubuntu/casper-rw/miniconda2/include"
+                        "path": "/home/ubuntu/github/ellcpp/lib/include"
                       },
                       {
-                        "path": "/home/ubuntu/github/ellcpp/third_party/benchmark/include"
+                        "path": "/home/ubuntu/github/ellcpp/third_party/fmt/include"
                       }
                     ],
                     "isGenerated": false,
                     "language": "CXX",
                     "sources": [
-                      "profit_main.cpp"
+                      "src/calc.cpp",
+                      "src/calc_step.cpp"
                     ]
                   }
                 ],
-                "fullName": "Main",
+                "fullName": "libEllLib.a",
+                "linkerLanguage": "CXX",
+                "name": "EllLib",
+                "sourceDirectory": "/home/ubuntu/github/ellcpp/lib",
+                "type": "STATIC_LIBRARY"
+              },
+              {
+                "artifacts": [
+                  "/home/ubuntu/github/ellcpp/build/lib/test/EllLibTest"
+                ],
+                "buildDirectory": "/home/ubuntu/github/ellcpp/build/lib/test",
+                "fileGroups": [
+                  {
+                    "compileFlags": "-g   -std=c++17 -std=c++17 -pthread -std=gnu++1z",
+                    "includePath": [
+                      {
+                        "path": "/home/ubuntu/github/ellcpp/lib/include"
+                      },
+                      {
+                        "path": "/home/ubuntu/github/ellcpp/third_party/fmt/include"
+                      },
+                      {
+                        "path": "/home/ubuntu/github/ellcpp/third_party/benchmark/include"
+                      },
+                      {
+                        "path": "/media/ubuntu/casper-rw/miniconda2/include"
+                      }
+                    ],
+                    "isGenerated": false,
+                    "language": "CXX",
+                    "sources": [
+                      "src/calc_step_test.cpp",
+                      "src/calc_test.cpp",
+                      "src/main.cpp"
+                    ]
+                  }
+                ],
+                "fullName": "EllLibTest",
                 "linkFlags": "-rdynamic",
                 "linkLanguageFlags": "-g",
-                "linkLibraries": "-L/media/ubuntu/casper-rw/miniconda2/include/../lib -llapack -lblas -lfmt -pthread",
+                "linkLibraries": "../libEllLib.a -L/media/ubuntu/casper-rw/miniconda2/include/../lib -llapack -lblas -lfmt -pthread",
                 "linkerLanguage": "CXX",
-                "name": "Main",
-                "sourceDirectory": "/home/ubuntu/github/ellcpp",
+                "name": "EllLibTest",
+                "sourceDirectory": "/home/ubuntu/github/ellcpp/lib/test",
                 "type": "EXECUTABLE"
               },
               {
                 "artifacts": [
-                  "/home/ubuntu/github/ellcpp/build/Test"
+                  "/home/ubuntu/github/ellcpp/build/app/EllApp"
                 ],
-                "buildDirectory": "/home/ubuntu/github/ellcpp/build",
+                "buildDirectory": "/home/ubuntu/github/ellcpp/build/app",
                 "fileGroups": [
                   {
                     "compileFlags": "-g   -std=c++17 -pthread -std=gnu++1z",
                     "includePath": [
                       {
-                        "path": "/media/ubuntu/casper-rw/miniconda2/include"
+                        "path": "/home/ubuntu/github/ellcpp/lib/include"
                       },
                       {
-                        "path": "/home/ubuntu/github/ellcpp/third_party/benchmark/include"
+                        "path": "/home/ubuntu/github/ellcpp/third_party/fmt/include"
+                      },
+                      {
+                        "path": "/media/ubuntu/casper-rw/miniconda2/include"
                       }
                     ],
                     "isGenerated": false,
                     "language": "CXX",
                     "sources": [
-                      "exp1d.cpp"
+                      "src/PgMain.cpp",
+                      "src/main.cpp"
                     ]
                   }
                 ],
-                "fullName": "Test",
+                "fullName": "EllApp",
                 "linkFlags": "-rdynamic",
                 "linkLanguageFlags": "-g",
-                "linkLibraries": "-L/media/ubuntu/casper-rw/miniconda2/include/../lib -llapack -lblas -lfmt -pthread",
+                "linkLibraries": "../lib/libEllLib.a -L/media/ubuntu/casper-rw/miniconda2/include/../lib -llapack -lblas -lfmt -pthread",
                 "linkerLanguage": "CXX",
-                "name": "Test",
-                "sourceDirectory": "/home/ubuntu/github/ellcpp",
+                "name": "EllApp",
+                "sourceDirectory": "/home/ubuntu/github/ellcpp/app",
                 "type": "EXECUTABLE"
               }
             ]
@@ -86,7 +128,7 @@
         ]
       }
     ],
-    "cookie": "0.2851239803819894",
+    "cookie": "0.040887193165371594",
     "inReplyTo": "codemodel",
     "type": "reply"
   }
