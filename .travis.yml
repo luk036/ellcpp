@@ -9,9 +9,9 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - llvm-toolchain-artful
           packages:
             - clang-7
-            - clang++-7
             - catch
       env: COMPILER=clang CLANG=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
 env:
