@@ -64,16 +64,13 @@ install:
     #   fi
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
-
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - cmake -H. -BBuild -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -Wdev
   - cd Build
-
 script:
     - make -j 2
     - ctest -V -j 2
-
 notifications:
   email: false
   slack:
