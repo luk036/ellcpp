@@ -2,24 +2,24 @@
 #define _HOME_UBUNTU_CUBSTORE_ELLCPP_LMI_ORACLE_HPP 1
 
 //#include "mat.hpp"
-#include <xtensor/xarray.hpp>
-#include <xtensor-blas/xlinalg.hpp>
 #include "chol_ext.hpp"
+#include <xtensor-blas/xlinalg.hpp>
+#include <xtensor/xarray.hpp>
 
-inline static auto quad(const xt::xarray<double>& A, const xt::xarray<double>& v, size_t p)
-{
+inline static auto quad(const xt::xarray<double> &A,
+                        const xt::xarray<double> &v, size_t p) {
   double res = 0.0;
-  for (auto i=0u; i<p; ++i) {
-    for (auto j=0u; j<p; ++j) {
-      res += A(i,j) * v(i) * v(j);
+  for (auto i = 0u; i < p; ++i) {
+    for (auto j = 0u; j < p; ++j) {
+      res += A(i, j) * v(i) * v(j);
     }
   }
   return res;
 }
 
 /**
- * @brief  Oracle for Linear Matrix Inequality 
- * 
+ * @brief  Oracle for Linear Matrix Inequality
+ *
  * Oracle for:
  *    F * x <= B
  * or
@@ -30,22 +30,22 @@ class lmi_oracle {
   using shape_type = Arr::shape_type;
 
 private:
-  Arr& _F;
-  Arr& _F0;
+  Arr &_F;
+  Arr &_F0;
 
 public:
-  explicit lmi_oracle(Arr& F, Arr& B) : _F{F}, _F0{B} {}
+  explicit lmi_oracle(Arr &F, Arr &B) : _F{F}, _F0{B} {}
 
   auto chk_mtx(Arr A, const Arr &x) const {
-    using xt::placeholders::_;
     using xt::linalg::dot;
-    
+    using xt::placeholders::_;
+
     auto n = x.size();
     Arr g = xt::zeros<double>({n});
     auto fj = -1.0;
     for (auto i = 0u; i < n; ++i) {
       auto Fi = xt::view(_F, i, xt::all(), xt::all());
-      //Arr Fi = _F(i);
+      // Arr Fi = _F(i);
       A -= Fi * x(i);
     }
     chol_ext Q(A);
@@ -54,22 +54,9 @@ public:
     }
     Arr v = Q.witness();
     double p = v.size();
-    // Arr App = xt::view(A, xt::range(_, p), xt::range(_, p));
-
-    // Arr Appv = dot(xt::view(A, xt::range(_, p), xt::range(_, p)), v);
-    // fj = -dot(v, Appv)();
-    fj = -quad(A, v, p);
+    fj = 1.0;
     for (auto i = 0u; i < n; ++i) {
-      //auto Fi = xt::view(_F, sub, sub, i);
-      //Arr Fi = _F[i];
-      Arr Fipp = xt::view(_F, i, xt::range(_, p), xt::range(_, p));
-      // auto n1 = Fipp.shape()[0];
-      // auto n2 = v.size();
-      // if (n1 != n2) {
-      //   std::cout << "error!\n" << std::endl;
-      // }
-      // Arr Fippv = dot(xt::view(_F, i, xt::range(_, p), xt::range(_, p)), v);
-      // g(i) = dot(v, Fippv)();
+      auto Fipp = xt::view(_F, i, xt::range(_, p), xt::range(_, p));
       g(i) = quad(Fipp, v, p);
     }
     return std::tuple{g, fj};
@@ -86,9 +73,7 @@ public:
     return this->chk_mtx(A, x);
   }
 
-  auto chk_spd(const Arr &x) const {
-    return this->chk_mtx(_F0, x);
-  }
+  auto chk_spd(const Arr &x) const { return this->chk_mtx(_F0, x); }
 
   auto operator()(const Arr &x, double t) const {
     auto [g, fj] = this->chk_spd_t(x, t);

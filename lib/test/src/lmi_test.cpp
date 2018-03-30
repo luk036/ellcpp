@@ -63,11 +63,11 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
   auto P = my_oracle(c, F1, B1, F2, B2);
   auto E = ell(10.0, Arr{0.0, 0.0, 0.0});
 
-  double fb;
-  int iter, flag, status;
-  Arr xb;
+  // double fb;
+  // int iter, flag, status;
+  // Arr xb;
 
-  std::tie(xb, fb, iter, flag, status) =
+  auto [xb, fb, iter, flag, status] =
       cutting_plane_dc(P, E, 100.0, 200, 1e-4);
   // fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
   std::cout << xb << "\n";

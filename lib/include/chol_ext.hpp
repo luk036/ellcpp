@@ -8,14 +8,14 @@
 // namespace bnu = boost::numeric::ublas;
 
 #include <cassert>
-#include <xtensor/xarray.hpp>
 #include <xtensor-blas/xlinalg.hpp>
+#include <xtensor/xarray.hpp>
 
 #include <iostream>
 
 /**
  * @brief Cholesky factorization
- * 
+ *
  */
 class chol_ext {
   // using Mat = bnu::symmetric_matrix<double, bnu::upper>;
@@ -37,12 +37,11 @@ public:
    such that $v = R^{-1} e_p$ is a certificate vector
    to make $v'*A[:p,:p]*v < 0$
   **/
-  explicit chol_ext(const Mat &A)
-    : _p{0} {
+  explicit chol_ext(const Mat &A) : _p{0} {
     auto shape = A.shape();
     _n = shape[0];
     _R = xt::zeros<double>(shape);
-    
+
     for (auto i = 0u; i < _n; ++i) {
       for (auto j = 0u; j <= i; ++j) {
         double d = A(j, i);
@@ -54,8 +53,7 @@ public:
             _p = i + 1;
             _R(j, i) = std::sqrt(-d);
             return;
-          }
-          else {
+          } else {
             _R(j, i) = std::sqrt(d);
           }
         } else {
@@ -71,7 +69,7 @@ public:
     assert(!this->is_sd());
     Vec v = xt::zeros<double>({_p});
     using xt::placeholders::_;
-    
+
     v[_p - 1] = 1.0 / _R(_p - 1, _p - 1);
     for (int i = _p - 2; i >= 0; --i) {
       double s = 0.0;
