@@ -3,19 +3,19 @@
  */
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
-#include <ell.hpp>
 #include <cutting_plane.hpp>
-#include <profit_oracle.hpp>
+#include <ell.hpp>
 #include <lmi_oracle.hpp>
+#include <profit_oracle.hpp>
 //#include <boost/numeric/ublas/symmetric.hpp>
-#include <xtensor/xarray.hpp>
 #include <xtensor-blas/xlinalg.hpp>
+#include <xtensor/xarray.hpp>
 
 // using namespace fun;
 
-TEST_CASE( "Profit Test 1", "[profit]" ) {
+TEST_CASE("Profit Test 1", "[profit]") {
   using Vec = xt::xarray<double>;
- 
+
   double p = 20, A = 40, alpha = 0.1, beta = 0.4;
   double v1 = 10, v2 = 35, k = 30.5;
   double fb;
@@ -28,7 +28,7 @@ TEST_CASE( "Profit Test 1", "[profit]" ) {
         cutting_plane_dc(P, E, 0.0, 200, 1e-4);
     // fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
     std::cout << fb << ", " << iter << ", " << flag << ", " << status << "\n";
-    REQUIRE( iter == 37 );
+    REQUIRE(iter == 37);
   }
 
   double ui = 1.0, e1 = 0.003, e2 = 0.007, e3 = 1.0;
@@ -39,9 +39,8 @@ TEST_CASE( "Profit Test 1", "[profit]" ) {
     std::tie(std::ignore, fb, iter, flag, status) =
         cutting_plane_dc(P1, E1, 0.0, 200, 1e-4);
     // fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
-    std::cout << fb << ", " << iter << ", " << flag << ", " << status
-              << "\n";
-    REQUIRE( iter == 42 );
+    std::cout << fb << ", " << iter << ", " << flag << ", " << status << "\n";
+    REQUIRE(iter == 42);
   }
 
   {
@@ -50,16 +49,14 @@ TEST_CASE( "Profit Test 1", "[profit]" ) {
     std::tie(std::ignore, fb, iter, flag, status) =
         cutting_plane_q(P2, E2, 0.0, 200, 1e-4);
     // fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
-    std::cout << fb << ", " << iter << ", " << flag << ", " << status
-             << "\n";
-    REQUIRE( iter == 28 );
+    std::cout << fb << ", " << iter << ", " << flag << ", " << status << "\n";
+    REQUIRE(iter == 28);
   }
 }
 
 // TEST_CASE( "Projective Point", "[proj_plane]" ) {
 //     REQUIRE( l.incident({l, m}) );
 // }
-
 
 // int main(int argc, char* argv[]) {
 //   //using namespace ModernCppCI;

@@ -25,7 +25,7 @@ add_definitions ( -std=c++17 )
 add_executable (${TEST_APP_NAME} ${TEST_SOURCE_FILES})
 
 #add the library
-target_link_libraries (${TEST_APP_NAME} ${LIB_NAME} Threads::Threads ${LIBS} -llapack -lblas -lfmt)
+target_link_libraries (${TEST_APP_NAME} ${LIB_NAME} Threads::Threads ${LIBS} -llapack -lblas)
 
 # Turn on CMake testing capabilities
 enable_testing()
