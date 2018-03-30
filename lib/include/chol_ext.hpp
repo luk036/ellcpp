@@ -11,6 +11,8 @@
 #include <xtensor/xarray.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 
+#include <iostream>
+
 /**
  * @brief Cholesky factorization
  * 
@@ -36,9 +38,10 @@ public:
    to make $v'*A[:p,:p]*v < 0$
   **/
   explicit chol_ext(const Mat &A)
-    : _p{0}, _n{A.size()} {
-    shape_type shape = {_n, _n};
-    _R = xt::zeros<double,decltype(shape)>(shape);
+    : _p{0} {
+    auto shape = A.shape();
+    _n = shape[0];
+    _R = xt::zeros<double>(shape);
     
     for (auto i = 0u; i < _n; ++i) {
       for (auto j = 0u; j <= i; ++j) {
@@ -66,18 +69,17 @@ public:
 
   auto witness() const {
     assert(!this->is_sd());
-    shape_type shape = {_p};
-    Vec v = xt::zeros<double,decltype(shape)>(shape);
+    Vec v = xt::zeros<double>({_p});
     using xt::placeholders::_;
     
     v[_p - 1] = 1.0 / _R(_p - 1, _p - 1);
     for (int i = _p - 2; i >= 0; --i) {
-      // double s = 0.0;
-      // for (auto k = i + 1; k < _p; ++k) {
-      //   s += _R(i, k) * v[k];
-      // }
-      double s = xt::linalg::dot(xt::view(_R, i, xt::range(i+1, _)),
-                          xt::view(v, xt::range(i+1, _)))();
+      double s = 0.0;
+      for (auto k = i + 1; k < _p; ++k) {
+        s += _R(i, k) * v[k];
+      }
+      // double s = xt::linalg::dot(xt::view(_R, i, xt::range(i+1, _p)),
+      //                    xt::view(v, xt::range(i+1, _p)))();
       v[i] = -s / _R(i, i);
     }
     return v;

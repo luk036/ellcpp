@@ -2,6 +2,7 @@
 #include "ell.hpp"
 #include "profit_oracle.hpp"
 #include "lmi_oracle.hpp"
+#include "chol_ext.hpp"
 //#include <boost/numeric/ublas/symmetric.hpp>
 #include <xtensor/xarray.hpp>
 #include <xtensor-blas/xlinalg.hpp>
@@ -15,7 +16,7 @@
 // http://melpon.org/wandbox/permlink/ExQoromITFQ7WOxO
 // http://melpon.org/wandbox/permlink/YiLtKIriWtkigZs8
 
-int main() {
+int test1() {
   //namespace bnu = boost::numeric::ublas;
   //using Vec = bnu::vector<double>;
   //using Mat = xt::xarray<double>;
@@ -56,4 +57,44 @@ int main() {
     std::cout << fb << ", " << iter << ", " << flag << ", " << status
              << "\n";
   }
+
+  return 0;
+}
+
+int main() {
+  using Arr = xt::xarray<double>;
+  using xt::placeholders::_;
+  using xt::linalg::dot;
+
+  auto m1 = Arr({{25., 15., -5.},
+                {15., 18.,  0.},
+                {-5.,  0., 11.}});
+  auto Q1 = chol_ext(m1);
+  if (!Q1.is_sd()) {
+    auto v = Q1.witness();
+    auto p = v.size();
+    auto sub = xt::range(_, p);
+    Arr App = xt::view(m1, sub, sub);
+    Arr Appv = dot(App, v);
+    auto fj = -dot(v, Appv)();
+    std::cout << fj << std::endl;
+  }
+
+
+  auto m2 = Arr({{18., 22.,  54.,  42.},
+                {22., -70.,  86.,  62.},
+                {54., 86., -174., 134.},
+                {42., 62., 134., -106.}});
+  auto Q2 = chol_ext(m2);
+  if (!Q2.is_sd()) {
+    auto v = Q2.witness();
+    auto p = v.size();
+    auto sub = xt::range(_, p);
+    Arr App = xt::view(m2, sub, sub);
+    Arr Appv = dot(App, v);
+    auto fj = -dot(v, Appv)();
+    std::cout << fj << std::endl;
+  }
+
+  return 0;
 }

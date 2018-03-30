@@ -74,6 +74,7 @@
                     "sources": [
                       "src/calc_step_test.cpp",
                       "src/calc_test.cpp",
+                      "src/lmi_test.cpp",
                       "src/main.cpp"
                     ]
                   }
@@ -128,7 +129,7 @@
         ]
       }
     ],
-    "cookie": "0.040887193165371594",
+    "cookie": "0.27253507279487654",
     "inReplyTo": "codemodel",
     "type": "reply"
   }

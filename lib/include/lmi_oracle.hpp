@@ -6,6 +6,17 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include "chol_ext.hpp"
 
+inline static auto quad(const xt::xarray<double>& A, const xt::xarray<double>& v, size_t p)
+{
+  double res = 0.0;
+  for (auto i=0u; i<p; ++i) {
+    for (auto j=0u; j<p; ++j) {
+      res += A(i,j) * v(i) * v(j);
+    }
+  }
+  return res;
+}
+
 /**
  * @brief  Oracle for Linear Matrix Inequality 
  * 
@@ -25,28 +36,41 @@ private:
 public:
   explicit lmi_oracle(Arr& F, Arr& B) : _F{F}, _F0{B} {}
 
-  auto chk_mtx(Arr &A, const Arr &x) const {
+  auto chk_mtx(Arr A, const Arr &x) const {
     using xt::placeholders::_;
     using xt::linalg::dot;
-
+    
     auto n = x.size();
-    auto g = Arr(n);
+    Arr g = xt::zeros<double>({n});
     auto fj = -1.0;
     for (auto i = 0u; i < n; ++i) {
-      auto Fi = xt::view(_F, xt::all(), xt::all(), i);
-      A -= Fi * x[i];
+      auto Fi = xt::view(_F, i, xt::all(), xt::all());
+      //Arr Fi = _F(i);
+      A -= Fi * x(i);
     }
     chol_ext Q(A);
     if (Q.is_sd()) {
       return std::tuple{g, fj};
     }
-    auto v = Q.witness();
-    auto p = v.size();
-    auto sub = xt::range(_, p);
-    fj = -dot(v, dot(xt::view(A, sub, sub), v))();
+    Arr v = Q.witness();
+    double p = v.size();
+    // Arr App = xt::view(A, xt::range(_, p), xt::range(_, p));
+
+    // Arr Appv = dot(xt::view(A, xt::range(_, p), xt::range(_, p)), v);
+    // fj = -dot(v, Appv)();
+    fj = -quad(A, v, p);
     for (auto i = 0u; i < n; ++i) {
-      auto Fi = xt::view(_F, xt::all(), xt::all(), i);
-      g[i] = dot(v, dot(xt::view(Fi, sub, sub), v))();
+      //auto Fi = xt::view(_F, sub, sub, i);
+      //Arr Fi = _F[i];
+      Arr Fipp = xt::view(_F, i, xt::range(_, p), xt::range(_, p));
+      // auto n1 = Fipp.shape()[0];
+      // auto n2 = v.size();
+      // if (n1 != n2) {
+      //   std::cout << "error!\n" << std::endl;
+      // }
+      // Arr Fippv = dot(xt::view(_F, i, xt::range(_, p), xt::range(_, p)), v);
+      // g(i) = dot(v, Fippv)();
+      g(i) = quad(Fipp, v, p);
     }
     return std::tuple{g, fj};
   }
@@ -63,8 +87,7 @@ public:
   }
 
   auto chk_spd(const Arr &x) const {
-    Arr A = _F0;
-    return this->chk_mtx(A, x);
+    return this->chk_mtx(_F0, x);
   }
 
   auto operator()(const Arr &x, double t) const {
