@@ -12,6 +12,42 @@
  * @tparam T 
  * @param[in] assess   perform assessment on x0
  * @param[in] S        search Space containing x*
+ * @param[in] max_it   maximum number of iterations
+ * @param[in] tol      error tolerance
+ * @return x      solution vector 
+ * @return niter  number of iterations performed
+ * @return flag   solution found or not 
+ * @return status how is the final cut 
+ */
+template <typename Oracle, typename Space>
+auto cutting_plane_feas(Oracle &assess, Space &S, int max_it = 1000,
+                        double tol = 1e-8) {
+  // auto flag = 0;
+  // auto niter = 1, status = 0;
+  for (auto niter = 1; niter <= max_it; ++niter) {
+    auto [g, h, flag] = assess(S.xc());
+    if (flag == 1) { // feasible sol'n obtained
+      return std::tuple{S.xc(), niter, flag, 0};
+    }
+    auto [status, tau] = S.update(g, h);
+    if (status != 0) {
+      return std::tuple{S.xc(), niter, flag, status};
+    }
+    if (tau < tol) { // no more
+      return std::tuple{S.xc(), niter, flag, 2};
+    }
+  }
+  return std::tuple{S.xc(), max_it, 0, 4};
+}
+
+/**
+ * @brief Cutting-plane method for solving convex problem
+ * 
+ * @tparam Oracle 
+ * @tparam Space 
+ * @tparam T 
+ * @param[in] assess   perform assessment on x0
+ * @param[in] S        search Space containing x*
  * @param[in] t        best-so-far optimal sol'n
  * @param[in] max_it   maximum number of iterations
  * @param[in] tol      error tolerance
@@ -20,43 +56,6 @@
  * @return flag   solution found or not 
  * @return status how is the final cut 
  */
-template <typename Oracle, typename Space, typename T>
-auto cutting_plane_feas(Oracle &assess, Space &S, T t, int max_it = 1000,
-                        double tol = 1e-8) {
-  auto flag = 0;
-  auto iter = 1, status = 0;
-  for (; iter <= max_it; ++iter) {
-    auto [g, h, t1] = assess(S.xc(), t);
-    if (t != t1) {
-      flag = 1;
-      break;
-    }
-    double tau;
-    std::tie(status, tau) = S.update(g, h);
-    if (status == 1) {
-      break;
-    }
-    if (tau < tol) { // no more
-      status = 2;
-      break;
-    }
-  }
-  return std::tuple{S.xc(), iter, flag, status};
-}
-
-/**
-    Cutting-plane method for solving convex optimization problem
-    input
-             assess        perform assessment on x0
-             S(xc)         Search Space containing x*
-             t             initial best-so-far value
-             max_it        maximum number of iterations
-             tol           error tolerance
-    output
-             x_best        solution vector
-             t             best-so-far optimal value
-             iter          number of iterations performed
-**/
 template <typename Oracle, typename Space, typename T>
 auto cutting_plane_dc(Oracle &assess, Space &S, T t, int max_it = 1000,
                       double tol = 1e-8) {

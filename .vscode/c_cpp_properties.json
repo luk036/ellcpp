@@ -27,8 +27,8 @@
             "name": "Linux",
             "includePath": [
                 "/media/ubuntu/casper-rw/miniconda2/include",
-                "/usr/include/x86_64-linux-gnu/c++/7.2.0",
-                "/usr/include/c++/7.2.0",
+                "/usr/include/x86_64-linux-gnu/c++/7.3.0",
+                "/usr/include/c++/7.3.0",
                 "/usr/local/include",
                 "/usr/include/x86_64-linux-gnu",
                 "/usr/include",
@@ -43,8 +43,8 @@
             "browse": {
                 "path": [
                     "/media/ubuntu/casper-rw/miniconda2/include",
-                    "/usr/include/x86_64-linux-gnu/c++/7.2.0",
-                    "/usr/include/c++/7.2.0",
+                    "/usr/include/x86_64-linux-gnu/c++/7.3.0",
+                    "/usr/include/c++/7.3.0",
                     "/usr/local/include",
                     "/usr/include/x86_64-linux-gnu",
                     "/usr/include",
@@ -83,5 +83,5 @@
             }
         }
     ],
-    "version": 3
+    "version": 4
 }

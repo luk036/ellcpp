@@ -1,4 +1,5 @@
 # build code
+build-clang
 build-g++
 build
 html
