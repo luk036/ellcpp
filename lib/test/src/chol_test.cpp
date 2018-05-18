@@ -9,14 +9,16 @@ TEST_CASE("Cholesky test", "[chol_ext]") {
   using xt::linalg::dot;
 
   auto m1 = Arr{{25., 15., -5.}, {15., 18., 0.}, {-5., 0., 11.}};
-  auto Q1 = chol_ext(m1);
+  auto Q1 = chol_ext(m1.shape()[0]);
+  Q1.factorize(m1);
   REQUIRE(Q1.is_sd());
 
   auto m2 = Arr{{18., 22., 54., 42.},
                 {22., -70., 86., 62.},
                 {54., 86., -174., 134.},
                 {42., 62., 134., -106.}};
-  auto Q2 = chol_ext(m2);
+  auto Q2 = chol_ext(m2.shape()[0]);
+  Q2.factorize(m2);
   REQUIRE(!Q2.is_sd());
 
   auto v = Q2.witness();

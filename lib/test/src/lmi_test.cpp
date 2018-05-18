@@ -24,7 +24,7 @@ public:
   explicit my_oracle(Arr &c, Arr &F1, Arr &B1, Arr &F2, Arr &B2)
       : _c{c}, _lmi1{F1, B1}, _lmi2{F2, B2} {}
 
-  auto operator()(Arr &x, double t) const {
+  auto operator()(Arr &x, double t) {
     using xt::linalg::dot;
 
     auto f0 = dot(_c, x)();
@@ -68,7 +68,7 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
   // Arr xb;
 
   auto [xb, fb, iter, flag, status] =
-      cutting_plane_dc(P, E, 100.0, 200, 1e-4);
+      cutting_plane_dc(P, E, 100.0, 2000, 1e-4);
   // fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
   std::cout << xb << "\n";
   std::cout << fb << ", " << iter << ", " << flag << ", " << status << "\n";

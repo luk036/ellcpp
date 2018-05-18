@@ -69,7 +69,9 @@ int main() {
   auto m1 = Arr({{25., 15., -5.},
                 {15., 18.,  0.},
                 {-5.,  0., 11.}});
-  auto Q1 = chol_ext(m1);
+  std::cout << m1.shape()[0] << "\n";
+  auto Q1 = chol_ext(m1.shape()[0]);
+  Q1.factorize(m1);
   if (!Q1.is_sd()) {
     auto v = Q1.witness();
     auto p = v.size();
@@ -85,7 +87,9 @@ int main() {
                 {22., -70.,  86.,  62.},
                 {54., 86., -174., 134.},
                 {42., 62., 134., -106.}});
-  auto Q2 = chol_ext(m2);
+  std::cout << m2.shape()[0] << "\n";
+  auto Q2 = chol_ext(m2.shape()[0]);
+  Q2.factorize(m2);
   if (!Q2.is_sd()) {
     auto v = Q2.witness();
     auto p = v.size();

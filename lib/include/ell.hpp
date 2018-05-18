@@ -17,17 +17,20 @@ class ell {
 private:
   size_t n;
   double _c1;
+  double _kappa;
   Vec _xc;
-  Mat _P;
+  Mat _Q;
 
 public:
   template <typename T, typename V>
   ell(const T &val, const V &x)
       : n{x.size()}, _c1{n * n / (n * n - 1.0)}, _xc{x} {
     if constexpr (std::is_scalar<T>::value) { // C++17
-      _P = val * xt::eye(n);
+      _Q = xt::eye(n);
+      _kappa = val;
     } else {
-      _P = xt::diag(val);
+      _Q = xt::diag(val);
+      _kappa = 1.;
     }
   }
 
@@ -35,17 +38,18 @@ public:
 
   template <typename T, typename V>
   auto update_core(const V &g, const T &beta) {
-    Vec Pg = xt::linalg::dot(_P, g);
-    auto tsq = xt::linalg::dot(g, Pg)();
-    auto tau = std::sqrt(tsq);
+    Vec Qg = xt::linalg::dot(_Q, g);
+    auto tsq = xt::linalg::dot(g, Qg)();
+    auto tau = std::sqrt(_kappa * tsq);
     auto alpha = beta / tau;
     auto [status, rho, sigma, delta] = this->calc_ll(alpha);
     if (status != 0) {
       return std::tuple{status, tau}; // g++-7 is ok with this
     }
-    _xc -= (rho / tau) * Pg;
-    _P -= (sigma / tsq) * xt::linalg::outer(Pg, Pg);
-    _P *= delta;
+    _xc -= (_kappa * rho / tau) * Qg;
+    _Q -= xt::linalg::outer((sigma / tsq) * Qg, Qg);
+    // _Q *= delta;
+    _kappa *= delta;
     return std::tuple{status, tau}; // g++-7 is ok
     // return std::pair{status, tau}; // workaround for clang++ 6
   }

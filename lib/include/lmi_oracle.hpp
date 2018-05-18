@@ -10,9 +10,11 @@ inline static auto quad(const xt::xarray<double> &A,
                         const xt::xarray<double> &v, size_t p) {
   double res = 0.0;
   for (auto i = 0u; i < p; ++i) {
+    double s = 0;
     for (auto j = 0u; j < p; ++j) {
-      res += A(i, j) * v(i) * v(j);
+      s += A(i, j) * v(j);
     }
+    res += v(i) * s;
   }
   return res;
 }
@@ -32,11 +34,14 @@ class lmi_oracle {
 private:
   Arr &_F;
   Arr &_F0;
+  chol_ext _Q;
 
 public:
-  explicit lmi_oracle(Arr &F, Arr &B) : _F{F}, _F0{B} {}
+  explicit lmi_oracle(Arr &F, Arr &B) 
+    : _F{F}, _F0{B}, _Q(B.shape()[0]) {
+  }
 
-  auto chk_mtx(Arr A, const Arr &x) const {
+  auto chk_mtx(Arr A, const Arr &x) {
     using xt::linalg::dot;
     using xt::placeholders::_;
 
@@ -48,11 +53,11 @@ public:
       // Arr Fi = _F(i);
       A -= Fi * x(i);
     }
-    chol_ext Q(A);
-    if (Q.is_sd()) {
+    _Q.factorize(A);
+    if (_Q.is_sd()) {
       return std::tuple{g, fj};
     }
-    Arr v = Q.witness();
+    Arr v = _Q.witness();
     double p = v.size();
     fj = 1.0;
     for (auto i = 0u; i < n; ++i) {
@@ -62,7 +67,7 @@ public:
     return std::tuple{g, fj};
   }
 
-  auto chk_spd_t(const Arr &x, double t) const {
+  auto chk_spd_t(const Arr &x, double t) {
     Arr A = _F0;
     // ???
     // auto m = A.size();
@@ -73,9 +78,9 @@ public:
     return this->chk_mtx(A, x);
   }
 
-  auto chk_spd(const Arr &x) const { return this->chk_mtx(_F0, x); }
+  auto chk_spd(const Arr &x) { return this->chk_mtx(_F0, x); }
 
-  auto operator()(const Arr &x, double t) const {
+  auto operator()(const Arr &x, double t) {
     auto [g, fj] = this->chk_spd_t(x, t);
     if (fj < 0.0) {
       t -= 1.0;

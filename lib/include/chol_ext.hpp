@@ -26,40 +26,44 @@ class chol_ext {
   using shape_type = Vec::shape_type;
 
 private:
-  size_t _p;
-  size_t _n;
+  std::size_t _p;
+  std::size_t _n;
   xt::xarray<double> _R;
 
 public:
+  explicit chol_ext(std::size_t n) : _p{0}, _n{n} {
+    _R = xt::zeros<double>({n, n});
+  }
+
   /**
    If $A$ is positive definite, then $p$ is zero.
    If it is not, then $p$ is a positive integer,
    such that $v = R^{-1} e_p$ is a certificate vector
    to make $v'*A[:p,:p]*v < 0$
   **/
-  explicit chol_ext(const Mat &A) : _p{0} {
-    auto shape = A.shape();
-    _n = shape[0];
-    _R = xt::zeros<double>(shape);
+  void factorize(const Mat &A) {
+    // auto shape = A.shape();
+    // _n = shape[0];
+    // _R = xt::zeros<double>(shape);
+    double d;
+    _p = 0;
 
     for (auto i = 0u; i < _n; ++i) {
       for (auto j = 0u; j <= i; ++j) {
-        double d = A(j, i);
+        d = A(j, i);
         for (auto k = 0u; k < j; ++k) {
           d -= _R(k, i) * _R(k, j);
         }
-        if (i == j) {
-          if (d < 0.) {
-            _p = i + 1;
-            _R(j, i) = std::sqrt(-d);
-            return;
-          } else {
-            _R(j, i) = std::sqrt(d);
-          }
-        } else {
+        if (i != j) {
           _R(j, i) = 1.0 / _R(j, j) * d;
         }
       }
+      if (d < 0.) {
+        _p = i + 1;
+        _R(i, i) = std::sqrt(-d);
+        break;
+      }
+      _R(i, i) = std::sqrt(d);
     }
   }
 
