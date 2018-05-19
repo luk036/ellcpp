@@ -25,15 +25,16 @@ int test1() {
   double p = 20, A = 40, alpha = 0.1, beta = 0.4;
   double v1 = 10, v2 = 35, k = 30.5;
   double fb;
-  int iter, flag, status;
+  int niter, status;
+  bool feasible;
 
   {
     ell E(100.0, Vec{0.0, 0.0});
     profit_oracle P(p, A, alpha, beta, v1, v2, k);
-    std::tie(std::ignore, fb, iter, flag, status) =
-        cutting_plane_dc(P, E, 0.0, 200, 1e-4);
-    // fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
-    std::cout << fb << ", " << iter << ", " << flag << ", " << status << "\n";
+    std::tie(std::ignore, fb, niter, feasible, status) =
+        cutting_plane_dc(P, E, 0.0);
+    // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
+    std::cout << fb << ", " << niter << ", " << feasible << ", " << status << "\n";
   }
 
   double ui = 1.0, e1 = 0.003, e2 = 0.007, e3 = 1.0;
@@ -41,20 +42,20 @@ int test1() {
   {
     ell E1(100.0, Vec{0.0, 0.0});
     profit_rb_oracle P1(p, A, alpha, beta, v1, v2, k, ui, e1, e2, e3);
-    std::tie(std::ignore, fb, iter, flag, status) =
-        cutting_plane_dc(P1, E1, 0.0, 200, 1e-4);
-    // fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
-    std::cout << fb << ", " << iter << ", " << flag << ", " << status
+    std::tie(std::ignore, fb, niter, feasible, status) =
+        cutting_plane_dc(P1, E1, 0.0);
+    // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
+    std::cout << fb << ", " << niter << ", " << feasible << ", " << status
               << "\n";
   }
 
   {
     ell E2(100.0, Vec{2, 0.0});
     profit_q_oracle P2(p, A, alpha, beta, v1, v2, k);
-    std::tie(std::ignore, fb, iter, flag, status) =
-        cutting_plane_q(P2, E2, 0.0, 200, 1e-4);
-    // fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
-    std::cout << fb << ", " << iter << ", " << flag << ", " << status
+    std::tie(std::ignore, fb, niter, feasible, status) =
+        cutting_plane_q(P2, E2, 0.0);
+    // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
+    std::cout << fb << ", " << niter << ", " << feasible << ", " << status
              << "\n";
   }
 

@@ -4,40 +4,106 @@
 #include <cmath>
 #include <tuple>
 
+struct Options {
+  unsigned int max_it = 2000;
+  double tol = 1e-4;
+};
+
+template <typename Oracle, typename Space>
+auto bsearch(Oracle &evaluate, const Space &I, 
+             const Options& options=Options()) {
+  // assume monotone
+  bool feasible = false;
+  auto [l, u] = I;
+  auto t = l + (u - l)/2;
+  auto niter = 1u;
+  for (; niter <= options.max_it; ++niter) {
+    if (evaluate(t)) {  // feasible sol'n obtained
+      feasible = true;
+      u = t;
+    } else {
+      l = t;
+    }
+    auto tau = (u - l)/2;
+    t = l + tau;
+    if (tau < options.tol) {
+      break;
+    }
+  }
+  return std::tuple{u, niter, feasible};
+}
+
+
+template <typename Oracle, typename Space>
+class bsearch_adaptor {
+private:
+  Oracle& _P;
+  Space& _S;
+  Options _options;
+
+public:
+    explicit bsearch_adaptor(Oracle &P, Space &S, 
+                    const Options& options=Options()):
+      _P{P},
+      _S{S},
+      _options{options} {}
+
+    auto x_best() const {
+      return _S.xc();
+    }
+
+    auto operator()(double t) {
+      Space S(_S);
+      _P.update(t);
+      auto [x, _1, feasible, _2] = 
+          cutting_plane_feas(_P, S, _options);
+      if (feasible) {
+        _S._xc = x;
+        return true;
+      }
+      return false;
+    }
+};
+
+
 /**
  * @brief Cutting-plane method for solving convex feasibility problem
  * 
  * @tparam Oracle 
  * @tparam Space 
  * @tparam T 
- * @param[in] assess   perform assessment on x0
+ * @param[in] evaluate   perform assessment on x0
  * @param[in] S        search Space containing x*
  * @param[in] max_it   maximum number of iterations
  * @param[in] tol      error tolerance
  * @return x      solution vector 
  * @return niter  number of iterations performed
- * @return flag   solution found or not 
+ * @return feasible   solution found or not 
  * @return status how is the final cut 
  */
 template <typename Oracle, typename Space>
-auto cutting_plane_feas(Oracle &assess, Space &S, int max_it = 1000,
-                        double tol = 1e-8) {
-  // auto flag = 0;
-  // auto niter = 1, status = 0;
-  for (auto niter = 1; niter <= max_it; ++niter) {
-    auto [g, h, flag] = assess(S.xc());
-    if (flag == 1) { // feasible sol'n obtained
-      return std::tuple{S.xc(), niter, flag, 0};
+auto cutting_plane_feas(Oracle &evaluate, Space &S,
+                        const Options& options=Options()) {
+  bool feasible = false;
+  auto niter = 1u, status = 0u;
+
+  for (; niter <= options.max_it; ++niter) {
+    auto [g, h, flag] = evaluate(S.xc());
+    if (flag) { // feasible sol'n obtained
+      feasible = true;
+      break;
     }
-    auto [status, tau] = S.update(g, h);
+    double tau;
+    std::tie(status, tau) = S.update(g, h);
     if (status != 0) {
-      return std::tuple{S.xc(), niter, flag, status};
+      break;
     }
-    if (tau < tol) { // no more
-      return std::tuple{S.xc(), niter, flag, 2};
+    if (tau < options.tol) { // no more
+      status = 2;
+      break;
     }
   }
-  return std::tuple{S.xc(), max_it, 0, 4};
+  return std::tuple{S.xc(), niter, feasible, status};
 }
 
 /**
@@ -46,26 +112,26 @@ auto cutting_plane_feas(Oracle &assess, Space &S, int max_it = 1000,
  * @tparam Oracle 
  * @tparam Space 
  * @tparam T 
- * @param[in] assess   perform assessment on x0
+ * @param[in] evaluate   perform assessment on x0
  * @param[in] S        search Space containing x*
  * @param[in] t        best-so-far optimal sol'n
  * @param[in] max_it   maximum number of iterations
  * @param[in] tol      error tolerance
  * @return x      solution vector 
- * @return iter   number of iterations performed
- * @return flag   solution found or not 
+ * @return niter   number of iterations performed
+ * @return feasible   solution found or not 
  * @return status how is the final cut 
  */
 template <typename Oracle, typename Space, typename T>
-auto cutting_plane_dc(Oracle &assess, Space &S, T t, int max_it = 1000,
-                      double tol = 1e-8) {
+auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
+                      const Options& options=Options()) {
+  bool feasible = false;
   auto x_best = S.xc();
-  auto flag = 0;
-  auto iter = 1, status = 0;
-  for (; iter <= max_it; ++iter) {
-    auto [g, h, t1] = assess(S.xc(), t);
+  auto niter = 1u, status = 0u;
+  for (; niter <= options.max_it; ++niter) {
+    auto [g, h, t1] = evaluate(S.xc(), t);
     if (t != t1) { // best t obtained
-      flag = 1;
+      feasible = true;
       t = t1;
       x_best = S.xc();
     }
@@ -74,12 +140,12 @@ auto cutting_plane_dc(Oracle &assess, Space &S, T t, int max_it = 1000,
     if (status == 1) {
       break;
     }
-    if (tau < tol) { // no more
+    if (tau < options.tol) { // no more
       status = 2;
       break;
     }
   }
-  return std::tuple{x_best, t, iter, flag, status};
+  return std::tuple{x_best, t, niter, feasible, status};
 } // END
 
 /**
@@ -92,7 +158,7 @@ auto cutting_plane_dc(Oracle &assess, Space &S, T t, int max_it = 1000,
              tol           error tolerance
     output
              x             solution vector
-             iter          number of iterations performed
+             niter          number of iterations performed
 **/
 // #include <boost/numeric/ublas/symmetric.hpp>
 // namespace bnu = boost::numeric::ublas;
@@ -100,13 +166,13 @@ auto cutting_plane_dc(Oracle &assess, Space &S, T t, int max_it = 1000,
 #include <xtensor-blas/xlinalg.hpp>
 
 template <typename Oracle, typename Space, typename T>
-auto cutting_plane_q(Oracle &assess, Space &S, T t, int max_it = 1000,
-                     double tol = 1e-8) {
-  auto flag = 0;
+auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
+                     const Options& options=Options()) {
+  bool feasible = false;
   auto x_best = S.xc();
-  auto iter = 1, status = 1;
-  for (; iter < max_it; ++iter) {
-    auto [g, h, t1, x, loop] = assess(S.xc(), t, (status != 3) ? 0 : 1);
+  auto niter = 1u, status = 1u;
+  for (; niter < options.max_it; ++niter) {
+    auto [g, h, t1, x, loop] = evaluate(S.xc(), t, (status != 3) ? 0 : 1);
     if (status != 3) {
       if (loop == 1) { // discrete sol'n
         h += xt::linalg::dot(g, x - S.xc())();
@@ -118,7 +184,7 @@ auto cutting_plane_q(Oracle &assess, Space &S, T t, int max_it = 1000,
       h += xt::linalg::dot(g, x - S.xc())();
     }
     if (t != t1) { // best t obtained
-      flag = 1;
+      feasible = true;
       t = t1;
       x_best = x;
     }
@@ -127,13 +193,13 @@ auto cutting_plane_q(Oracle &assess, Space &S, T t, int max_it = 1000,
     if (status == 1) {
       break;
     }
-    if (tau < tol) {
+    if (tau < options.tol) {
       status = 2;
       break;
     }
   }
 
-  return std::tuple{x_best, t, iter, flag, status};
+  return std::tuple{x_best, t, niter, feasible, status};
 } // END
 
 #endif

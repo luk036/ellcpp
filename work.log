@@ -22,9 +22,9 @@ git add --all
 git commit -m "message"
 git push
 
-    std::tie(std::ignore, fb, iter, flag, status) = 
+    std::tie(std::ignore, fb, iter, feasible, status) = 
         cutting_plane_q(P2, E2, 0.0, 200, 1e-4);
-    fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
+    fmt::print("{:f} {} {} {} \n", fb, iter, feasible, status);
 
  
 Why not?

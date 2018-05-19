@@ -64,17 +64,17 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
   auto E = ell(10.0, Arr{0.0, 0.0, 0.0});
 
   // double fb;
-  // int iter, flag, status;
+  // int niter, feasible, status;
   // Arr xb;
 
-  auto [xb, fb, iter, flag, status] =
-      cutting_plane_dc(P, E, 100.0, 2000, 1e-4);
-  // fmt::print("{:f} {} {} {} \n", fb, iter, flag, status);
+  auto [xb, fb, niter, feasible, status] =
+      cutting_plane_dc(P, E, 100.0);
+  // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
   std::cout << xb << "\n";
-  std::cout << fb << ", " << iter << ", " << flag << ", " << status << "\n";
+  std::cout << fb << ", " << niter << ", " << feasible << ", " << status << "\n";
 
-  REQUIRE(flag == 1);
-  REQUIRE(iter == 115);
+  REQUIRE(feasible);
+  REQUIRE(niter == 115);
 }
 
 // TEST_CASE( "Projective Point", "[proj_plane]" ) {
