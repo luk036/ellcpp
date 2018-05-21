@@ -37,9 +37,7 @@ private:
   chol_ext _Q;
 
 public:
-  explicit lmi_oracle(Arr &F, Arr &B) 
-    : _F{F}, _F0{B}, _Q(B.shape()[0]) {
-  }
+  explicit lmi_oracle(Arr &F, Arr &B) : _F{F}, _F0{B}, _Q(B.shape()[0]) {}
 
   auto chk_mtx(Arr A, const Arr &x) {
     using xt::linalg::dot;

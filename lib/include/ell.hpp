@@ -1,9 +1,11 @@
 #ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ELL_HPP
 #define _HOME_UBUNTU_GITHUB_ELLCPP_ELL_HPP 1
 
+#include <cmath>
 #include <tuple>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
+
 
 /**
  * @brief Ellipsoid Search Space
@@ -15,7 +17,8 @@ class ell {
   using Vec = xt::xarray<double>;
 
 private:
-  size_t n;
+  bool use_parallel = true;
+  std::size_t n;
   double _c1;
   double _kappa;
   Vec _xc;
@@ -36,6 +39,8 @@ public:
 
   auto &xc() { return _xc; }
 
+  ell(const ell &E) = default;
+
   template <typename T, typename V>
   auto update_core(const V &g, const T &beta) {
     Vec Qg = xt::linalg::dot(_Q, g);
@@ -47,7 +52,7 @@ public:
       return std::tuple{status, tau}; // g++-7 is ok with this
     }
     _xc -= (_kappa * rho / tau) * Qg;
-    _Q -= xt::linalg::outer((sigma / tsq) * Qg, Qg);
+    _Q -= (sigma / tsq) * xt::linalg::outer(Qg, Qg);
     // _Q *= delta;
     _kappa *= delta;
     return std::tuple{status, tau}; // g++-7 is ok
@@ -59,8 +64,8 @@ public:
    */
   auto calc_cc() {
     auto n = _xc.size();
-    auto rho = 1.0 / (n + 1);
-    auto sigma = 2.0 * rho;
+    auto rho = 1. / (n + 1);
+    auto sigma = 2. * rho;
     auto delta = _c1;
     return std::tuple{0, rho, sigma, delta};
   }
@@ -69,11 +74,14 @@ public:
    * @brief Deep Cut
    */
   auto calc_dc(double alpha) {
-    if (alpha == 0.0) {
+    if (alpha == 0.) {
       return this->calc_cc();
     }
     auto n = _xc.size();
-    auto [status, rho, sigma, delta] = std::tuple{0, 0.0, 0.0, 0.0};
+    // auto [status, rho, sigma, delta] = std::tuple{0, 0., 0., 0.0};
+    auto status = 0;
+    auto rho = 0., sigma = 0., delta = 0.;
+
     if (alpha > 1.) {
       status = 1; // no sol'n
     } else if (n * alpha < -1.) {
@@ -93,30 +101,30 @@ public:
     } else { // parallel cut
       // auto a0 = alpha(0), a1 = alpha(1);
       auto [a0, a1] = alpha;
-      if (a1 >= 1.0) {
+      if (a1 >= 1.) {
         return this->calc_dc(a0);
       }
       auto n = _xc.size();
 
       // auto [status, rho, sigma, delta] = std::tuple{0, 0.0, 0.0, 0.0};
       auto status = 0;
-      auto rho = 0.0, sigma = 0.0, delta = 0.0;
+      auto rho = 0., sigma = 0., delta = 0.;
       auto aprod = a0 * a1;
       if (a0 > a1) {
         status = 1; // no sol'n
-      } else if (n * aprod < -1.0) {
+      } else if (n * aprod < -1.) {
         status = 3; // no effect
       } else {
         // auto asq = bnu::element_prod(alpha, alpha);
         auto asq = alpha * alpha;
         auto asum = a0 + a1;
-        auto asqdiff = asq(1) - asq(0);
-        auto xi = std::sqrt(4.0 * (1.0 - asq(0)) * (1.0 - asq(1)) +
+        auto [asq0, asq1] = asq;
+        auto asqdiff = asq1 - asq0;
+        auto xi = std::sqrt(4. * (1. - asq0) * (1. - asq1) +
                             n * n * asqdiff * asqdiff);
-        sigma =
-            (n + (2.0 * (1.0 + aprod - xi / 2.0) / (asum * asum))) / (n + 1);
-        rho = asum * sigma / 2.0;
-        delta = _c1 * (1.0 - (asq(0) + asq(1) - xi / n) / 2.0);
+        sigma = (n + (2. * (1. + aprod - xi / 2.) / (asum * asum))) / (n + 1);
+        rho = asum * sigma / 2.;
+        delta = _c1 * (1. - (asq0 + asq1 - xi / n) / 2.);
       }
       return std::tuple{status, rho, sigma, delta};
     }
@@ -127,5 +135,50 @@ public:
   }
 
 }; // } ell
+
+class ell1d {
+private:
+  double _r;
+  double _xc;
+
+public:
+  ell1d(double l, double u) : _r{(u - l) / 2}, _xc{l + _r} {}
+
+  auto &xc() { return _xc; }
+
+  ell1d(const ell1d &E) = default;
+
+  auto update(double g, double beta) {
+    auto tau = std::abs(_r * g);
+    if (beta == 0.) {
+      _r /= 2;
+      if (g > 0.) {
+        _xc -= _r;
+      } else {
+        _xc += _r;
+      }
+      return std::tuple{0, tau};
+    }
+    if (beta > tau) {
+      return std::tuple{1, tau}; // no sol'n
+    }
+    if (beta < -tau) {
+      return std::tuple{3, tau}; // no effect
+    }
+    double l, u;
+    double bound = _xc - beta / g;
+    if (g > 0.) {
+      u = bound;
+      l = _xc - _r;
+    } else {
+      l = bound;
+      u = _xc + _r;
+    }
+    _r = (u - l) / 2;
+    _xc = l + _r;
+    return std::tuple{0, tau};
+  }
+
+}; // } ell1d
 
 #endif
