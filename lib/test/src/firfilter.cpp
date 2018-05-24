@@ -1,0 +1,118 @@
+// -*- coding: utf-8 -*-
+#include <catch.hpp>
+#include <iostream>
+#include <tuple>
+
+#include <complex>
+#include <cutting_plane.hpp>
+#include <ell.hpp>
+#include <limits>
+
+using Arr = xt::xarray<double>;
+// using CArr = xt::xarray<std::complex<double>>;
+// using namespace std::literals::complex_literals;
+
+double PI = std::acos(-1);
+
+// ********************************************************************
+// Problem specs.
+// ********************************************************************
+// Number of FIR coefficients (including the zeroth one).
+auto n = 20;
+
+// Rule-of-thumb frequency discretization (Cheney's Approx. Theory book).
+auto m = 15 * n;
+auto w = xt::linspace<double>(0, PI, m);
+
+// ********************************************************************
+// Construct the desired filter.
+// ********************************************************************
+// Fractional delay.
+auto D = 8.25;                     // Delay value.
+// CArr Hdes = xt::exp(D * w); // Desired frequency response.
+
+// Gaussian filter with linear phase. (Uncomment lines below for this design.)
+// var = 0.05
+// Hdes = 1/(xt::sqrt(2*PI*var)) * xt::exp(-xt::square(w-PI/2)/(2*var))
+// Hdes = xt::multiply(Hdes, xt::exp(-1j*n/2*w))
+
+// A is the matrix used to compute the frequency response
+// from a vector of filter coefficients:
+//     A[w,:] = [1 exp(-j*w) exp(-j*2*w) ... exp(-j*n*w)]
+// CArr A = xt::exp(xt::linalg::kron(w, xt::arange(n)));
+
+// Presently CVXPY does not do complex-valued math, so the
+// problem must be formatted into a real-valued representation.
+
+// Split Hdes into a real part, and an imaginary part.
+// Arr Hdes_r = xt::real(Hdes);
+// Arr Hdes_i = xt::imag(Hdes);
+Arr Hdes_r = xt::cos(D * w);
+Arr Hdes_i = -xt::sin(D * w);
+Arr M = xt::linalg::outer(w, xt::arange(n));
+
+// Split A into a real part, and an imaginary part.
+// Arr A_R = xt::real(A);
+// Arr A_I = xt::imag(A);
+Arr A_R = xt::cos(M);
+Arr A_I = -xt::sin(M);
+
+
+// Optimal Chebyshev filter formulation.
+class my_fir_oracle {
+public:
+  auto operator()(const Arr &h, double t) const {
+    auto fmax = std::numeric_limits<double>::min();
+    auto imax = -1;
+    for (auto i = 0u; i < m; ++i) {
+      auto a_R = xt::view(A_R, i, xt::all());
+      auto a_I = xt::view(A_I, i, xt::all());
+      auto H_r = Hdes_r[i];
+      auto H_i = Hdes_i[i];
+      auto t_r = xt::linalg::dot(a_R, h)() - H_r;
+      auto t_i = xt::linalg::dot(a_I, h)() - H_i;
+      double fj = t_r * t_r + t_i * t_i;
+      if (fj >= t) {
+        Arr g = 2. * (t_r * a_R + t_i * a_I);
+        return std::tuple{g, fj - t, t};
+      }
+      if (fmax < fj) {
+        fmax = fj;
+        imax = i;
+      }
+    }
+
+    t = fmax;
+    auto a_R = xt::view(A_R, imax, xt::all());
+    auto a_I = xt::view(A_I, imax, xt::all());
+    auto H_r = Hdes_r[imax];
+    auto H_i = Hdes_i[imax];
+    auto t_r = xt::linalg::dot(a_R, h)() - H_r;
+    auto t_i = xt::linalg::dot(a_I, h)() - H_i;
+    Arr g = 2. * (t_r * a_R + t_i * a_I);
+    return std::tuple{g, 0., t};
+  }
+};
+
+// def test_firfilter() {
+TEST_CASE("FIR Filter", "[firfilter]") {
+
+  auto h0 = xt::zeros<double>({n}); // initial x0
+  auto E = ell(10., h0);
+  auto P = my_fir_oracle();
+  auto [hb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 100.);
+
+  CHECK(feasible);
+  std::cout << niter << "," << feasible << "," << status << "\n";
+  std::cout << hb << "\n";
+
+  // fmt = '{ {f} {} {} {}'
+  // print(prob1.optim_var)
+  // print(fmt.format(prob1.optim_vale, prob1.solver_stats.num_iters))
+
+  // print 'Problem status:', feasible
+  // if feasible != 1:
+  //    raise Exception('ELL Error')
+
+  // hv = xt::asmatrix(prob1.optim_var).T
+}
