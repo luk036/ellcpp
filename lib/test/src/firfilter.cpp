@@ -47,15 +47,16 @@ auto D = 8.25;                     // Delay value.
 // Split Hdes into a real part, and an imaginary part.
 // Arr Hdes_r = xt::real(Hdes);
 // Arr Hdes_i = xt::imag(Hdes);
-Arr Hdes_r = xt::cos(D * w);
-Arr Hdes_i = -xt::sin(D * w);
-Arr M = xt::linalg::outer(w, xt::arange(n));
+Arr Hdes_theta = D * w;
+Arr Hdes_r = xt::cos(Hdes_theta);
+Arr Hdes_i = -xt::sin(Hdes_theta);
+Arr A_theta = xt::linalg::outer(w, xt::arange(n));
 
 // Split A into a real part, and an imaginary part.
 // Arr A_R = xt::real(A);
 // Arr A_I = xt::imag(A);
-Arr A_R = xt::cos(M);
-Arr A_I = -xt::sin(M);
+Arr A_R = xt::cos(A_theta);
+Arr A_I = -xt::sin(A_theta);
 
 
 // Optimal Chebyshev filter formulation.
@@ -63,7 +64,9 @@ class my_fir_oracle {
 public:
   auto operator()(const Arr &h, double t) const {
     auto fmax = std::numeric_limits<double>::min();
-    auto imax = -1;
+    // auto imax = -1;
+    Arr gmax = xt::zeros<double>({n}); 
+
     for (auto i = 0u; i < m; ++i) {
       auto a_R = xt::view(A_R, i, xt::all());
       auto a_I = xt::view(A_I, i, xt::all());
@@ -78,19 +81,12 @@ public:
       }
       if (fmax < fj) {
         fmax = fj;
-        imax = i;
+        // imax = i;
+        gmax = 2. * (t_r * a_R + t_i * a_I);
       }
     }
 
-    t = fmax;
-    auto a_R = xt::view(A_R, imax, xt::all());
-    auto a_I = xt::view(A_I, imax, xt::all());
-    auto H_r = Hdes_r[imax];
-    auto H_i = Hdes_i[imax];
-    auto t_r = xt::linalg::dot(a_R, h)() - H_r;
-    auto t_i = xt::linalg::dot(a_I, h)() - H_i;
-    Arr g = 2. * (t_r * a_R + t_i * a_I);
-    return std::tuple{g, 0., t};
+    return std::tuple{gmax, 0., fmax};
   }
 };
 
