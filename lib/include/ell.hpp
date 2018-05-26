@@ -16,8 +16,10 @@ class ell {
   using Mat = xt::xarray<double>;
   using Vec = xt::xarray<double>;
 
+public:
+  bool _use_parallel = true;
+
 private:
-  bool use_parallel = true;
   std::size_t n;
   double _c1;
   double _kappa;
@@ -99,8 +101,12 @@ public:
     if constexpr (std::is_scalar<T>::value) { // C++17
       return this->calc_dc(alpha);
     } else { // parallel cut
-      // auto a0 = alpha(0), a1 = alpha(1);
-      auto [a0, a1] = alpha;
+      auto a0 = alpha[0];
+      if (alpha.shape()[0] < 2 || !_use_parallel) {
+        return this->calc_dc(a0);
+      }
+      auto a1 = alpha[1];
+      // auto [a0, a1] = alpha;
       if (a1 >= 1.) {
         return this->calc_dc(a0);
       }
@@ -118,7 +124,8 @@ public:
         // auto asq = bnu::element_prod(alpha, alpha);
         auto asq = alpha * alpha;
         auto asum = a0 + a1;
-        auto [asq0, asq1] = asq;
+        // auto [asq0, asq1] = asq;
+        auto asq0 = asq[0], asq1 = asq[1];
         auto asqdiff = asq1 - asq0;
         auto xi = std::sqrt(4. * (1. - asq0) * (1. - asq1) +
                             n * n * asqdiff * asqdiff);

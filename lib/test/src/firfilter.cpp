@@ -12,23 +12,23 @@ using Arr = xt::xarray<double>;
 // using CArr = xt::xarray<std::complex<double>>;
 // using namespace std::literals::complex_literals;
 
-double PI = std::acos(-1);
+static double PI = std::acos(-1);
 
 // ********************************************************************
 // Problem specs.
 // ********************************************************************
 // Number of FIR coefficients (including the zeroth one).
-auto n = 20;
+static auto n = 20;
 
 // Rule-of-thumb frequency discretization (Cheney's Approx. Theory book).
-auto m = 15 * n;
-auto w = xt::linspace<double>(0, PI, m);
+static auto m = 15 * n;
+static auto w = xt::linspace<double>(0, PI, m);
 
 // ********************************************************************
 // Construct the desired filter.
 // ********************************************************************
 // Fractional delay.
-auto D = 8.25;                     // Delay value.
+static auto D = 8.25;                     // Delay value.
 // CArr Hdes = xt::exp(D * w); // Desired frequency response.
 
 // Gaussian filter with linear phase. (Uncomment lines below for this design.)
@@ -47,16 +47,16 @@ auto D = 8.25;                     // Delay value.
 // Split Hdes into a real part, and an imaginary part.
 // Arr Hdes_r = xt::real(Hdes);
 // Arr Hdes_i = xt::imag(Hdes);
-Arr Hdes_theta = D * w;
-Arr Hdes_r = xt::cos(Hdes_theta);
-Arr Hdes_i = -xt::sin(Hdes_theta);
-Arr A_theta = xt::linalg::outer(w, xt::arange(n));
+static Arr Hdes_theta = D * w;
+static Arr Hdes_r = xt::cos(Hdes_theta);
+static Arr Hdes_i = -xt::sin(Hdes_theta);
+static Arr A_theta = xt::linalg::outer(w, xt::arange(n));
 
 // Split A into a real part, and an imaginary part.
 // Arr A_R = xt::real(A);
 // Arr A_I = xt::imag(A);
-Arr A_R = xt::cos(A_theta);
-Arr A_I = -xt::sin(A_theta);
+static Arr A_R = xt::cos(A_theta);
+static Arr A_I = -xt::sin(A_theta);
 
 
 // Optimal Chebyshev filter formulation.
