@@ -52,11 +52,11 @@ public:
       A -= Fi * x(i);
     }
     _Q.factorize(A);
-    if (_Q.is_sd()) {
+    if (_Q.is_spd()) {
       return std::tuple{g, fj};
     }
     Arr v = _Q.witness();
-    double p = v.size();
+    auto p = v.size();
     fj = 1.0;
     for (auto i = 0u; i < n; ++i) {
       auto Fipp = xt::view(_F, i, xt::range(_, p), xt::range(_, p));

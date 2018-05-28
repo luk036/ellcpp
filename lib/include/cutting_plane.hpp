@@ -58,7 +58,7 @@ public:
       auto [x, _1, feasible, _2] = 
           cutting_plane_feas(_P, S, _options);
       if (feasible) {
-        _S._xc = x;
+        _S.set_xc(x);
         return true;
       }
       return false;

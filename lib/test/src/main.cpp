@@ -5,7 +5,7 @@
 #include <catch.hpp>
 #include <cutting_plane.hpp>
 #include <ell.hpp>
-#include <lmi_oracle.hpp>
+#include <qmi_oracle.hpp>
 #include <profit_oracle.hpp>
 //#include <boost/numeric/ublas/symmetric.hpp>
 #include <xtensor-blas/xlinalg.hpp>

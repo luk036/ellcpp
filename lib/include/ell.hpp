@@ -41,6 +41,8 @@ public:
 
   auto &xc() { return _xc; }
 
+  void set_xc(const Vec& xc) { _xc = xc; }
+
   ell(const ell &E) = default;
 
   template <typename T, typename V>

@@ -67,10 +67,43 @@ public:
     }
   }
 
-  bool is_sd() const { return _p == 0; }
+  /**
+   If $A$ is positive definite, then $p$ is zero.
+   If it is not, then $p$ is a positive integer,
+   such that $v = R^{-1} e_p$ is a certificate vector
+   to make $v'*A[:p,:p]*v < 0$
+  **/
+  template <typename Fn>
+  void factor(Fn getA) {
+    // auto shape = A.shape();
+    // _n = shape[0];
+    // _R = xt::zeros<double>(shape);
+    double d;
+    _p = 0;
+
+    for (auto i = 0u; i < _n; ++i) {
+      for (auto j = 0u; j <= i; ++j) {
+        d = getA(j, i);
+        for (auto k = 0u; k < j; ++k) {
+          d -= _R(k, i) * _R(k, j);
+        }
+        if (i != j) {
+          _R(j, i) = 1.0 / _R(j, j) * d;
+        }
+      }
+      if (d < 0.) {
+        _p = i + 1;
+        _R(i, i) = std::sqrt(-d);
+        break;
+      }
+      _R(i, i) = std::sqrt(d);
+    }
+  }
+
+  bool is_spd() const { return _p == 0; }
 
   auto witness() const {
-    assert(!this->is_sd());
+    assert(!this->is_spd());
     Vec v = xt::zeros<double>({_p});
     using xt::placeholders::_;
 
