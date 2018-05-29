@@ -6,7 +6,6 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
-
 /**
  * @brief Ellipsoid Search Space
  *
@@ -41,7 +40,7 @@ public:
 
   auto &xc() { return _xc; }
 
-  void set_xc(const Vec& xc) { _xc = xc; }
+  void set_xc(const Vec &xc) { _xc = xc; }
 
   ell(const ell &E) = default;
 

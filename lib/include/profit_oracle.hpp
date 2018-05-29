@@ -5,8 +5,8 @@
 #include <cmath>
 #include <tuple>
 
-#include <xtensor/xarray.hpp>
 #include <xtensor-blas/xlinalg.hpp>
+#include <xtensor/xarray.hpp>
 
 class profit_oracle {
   using Vec = xt::xarray<double>;
@@ -14,9 +14,8 @@ class profit_oracle {
 public:
   profit_oracle(double p, double A, double alpha, double beta, double v1,
                 double v2, double k)
-      : _log_pA{std::log(p * A)}, _log_k{std::log(k)}, 
-        _v{Vec{v1, v2}}, _a{Vec{alpha, beta}} {
-  }
+      : _log_pA{std::log(p * A)}, _log_k{std::log(k)}, _v{Vec{v1, v2}},
+        _a{Vec{alpha, beta}} {}
 
   auto operator()(const Vec &y, double t) const {
     double fj = y[0] - _log_k; // constraint
@@ -26,9 +25,9 @@ public:
     }
     double log_Cobb = _log_pA + xt::linalg::dot(_a, y)();
     auto x = xt::exp(y);
-    //Vec x(2);
-    //x[0] = std::exp(y[0]);
-    //x[1] = std::exp(y[1]);
+    // Vec x(2);
+    // x[0] = std::exp(y[0]);
+    // x[1] = std::exp(y[1]);
     double vx = xt::linalg::dot(_v, x)();
     auto te = t + vx;
     fj = std::log(te) - log_Cobb;
@@ -56,10 +55,8 @@ public:
                    double v2, double k, double ui, double e1, double e2,
                    double e3)
       : _uie1{ui * e1}, _uie2{ui * e2}, _log_pA{std::log((p - ui * e3) * A)},
-        _log_k{std::log(k - ui * e3)}, 
-        _v{Vec{v1 + ui * e3, v2 + ui * e3}}, 
-        _a{Vec{alpha, beta}} {
-  }
+        _log_k{std::log(k - ui * e3)}, _v{Vec{v1 + ui * e3, v2 + ui * e3}},
+        _a{Vec{alpha, beta}} {}
 
   auto operator()(const Vec &y, double t) const {
     double fj = y[0] - _log_k; // constraint
@@ -94,7 +91,7 @@ private:
 };
 
 class profit_q_oracle : public profit_oracle {
-  //using Vec = bnu::vector<double>;
+  // using Vec = bnu::vector<double>;
   // using Vec = std::valarray<double>;
   using Vec = xt::xarray<double>;
 
@@ -117,7 +114,7 @@ public:
       x[0] = 1.0;
     if (x[1] == 0.0)
       x[1] = 1.0;
-		Vec yd = xt::log(x);      
+    Vec yd = xt::log(x);
     auto [g, fj, t1] = profit_oracle::operator()(yd, t);
     return std::tuple{g, fj, t1, yd, 1};
   }

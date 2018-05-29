@@ -73,8 +73,7 @@ public:
    such that $v = R^{-1} e_p$ is a certificate vector
    to make $v'*A[:p,:p]*v < 0$
   **/
-  template <typename Fn>
-  void factor(Fn getA) {
+  template <typename Fn> void factor(Fn getA) {
     // auto shape = A.shape();
     // _n = shape[0];
     // _R = xt::zeros<double>(shape);

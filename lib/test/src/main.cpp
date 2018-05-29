@@ -5,7 +5,6 @@
 #include <catch.hpp>
 #include <cutting_plane.hpp>
 #include <ell.hpp>
-#include <qmi_oracle.hpp>
 #include <profit_oracle.hpp>
 //#include <boost/numeric/ublas/symmetric.hpp>
 #include <xtensor-blas/xlinalg.hpp>
@@ -28,7 +27,8 @@ TEST_CASE("Profit Test 1", "[profit]") {
     std::tie(std::ignore, fb, niter, feasible, status) =
         cutting_plane_dc(P, E, 0.0);
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
-    std::cout << fb << ", " << niter << ", " << feasible << ", " << status << "\n";
+    std::cout << fb << ", " << niter << ", " << feasible << ", " << status
+              << "\n";
     REQUIRE(niter == 37);
   }
 
@@ -40,7 +40,8 @@ TEST_CASE("Profit Test 1", "[profit]") {
     std::tie(std::ignore, fb, niter, feasible, status) =
         cutting_plane_dc(P1, E1, 0.0);
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
-    std::cout << fb << ", " << niter << ", " << feasible << ", " << status << "\n";
+    std::cout << fb << ", " << niter << ", " << feasible << ", " << status
+              << "\n";
     REQUIRE(niter == 42);
   }
 
@@ -50,7 +51,8 @@ TEST_CASE("Profit Test 1", "[profit]") {
     std::tie(std::ignore, fb, niter, feasible, status) =
         cutting_plane_q(P2, E2, 0.0);
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
-    std::cout << fb << ", " << niter << ", " << feasible << ", " << status << "\n";
+    std::cout << fb << ", " << niter << ", " << feasible << ", " << status
+              << "\n";
     REQUIRE(niter == 28);
   }
 }

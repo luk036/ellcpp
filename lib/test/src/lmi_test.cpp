@@ -67,11 +67,11 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
   // int niter, feasible, status;
   // Arr xb;
 
-  auto [xb, fb, niter, feasible, status] =
-      cutting_plane_dc(P, E, 100.0);
+  auto [xb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 100.0);
   // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
   std::cout << xb << "\n";
-  std::cout << fb << ", " << niter << ", " << feasible << ", " << status << "\n";
+  std::cout << fb << ", " << niter << ", " << feasible << ", " << status
+            << "\n";
 
   REQUIRE(feasible);
   REQUIRE(niter == 115);

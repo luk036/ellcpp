@@ -10,21 +10,21 @@ struct Options {
 };
 
 template <typename Oracle, typename Space>
-auto bsearch(Oracle &evaluate, const Space &I, 
-             const Options& options=Options()) {
+auto bsearch(Oracle &evaluate, const Space &I,
+             const Options &options = Options()) {
   // assume monotone
   bool feasible = false;
   auto [l, u] = I;
-  auto t = l + (u - l)/2;
+  auto t = l + (u - l) / 2;
   auto niter = 1u;
   for (; niter <= options.max_it; ++niter) {
-    if (evaluate(t)) {  // feasible sol'n obtained
+    if (evaluate(t)) { // feasible sol'n obtained
       feasible = true;
       u = t;
     } else {
       l = t;
     }
-    auto tau = (u - l)/2;
+    auto tau = (u - l) / 2;
     t = l + tau;
     if (tau < options.tol) {
       break;
@@ -33,57 +33,49 @@ auto bsearch(Oracle &evaluate, const Space &I,
   return std::tuple{u, niter, feasible};
 }
 
-
-template <typename Oracle, typename Space>
-class bsearch_adaptor {
+template <typename Oracle, typename Space> class bsearch_adaptor {
 private:
-  Oracle& _P;
-  Space& _S;
+  Oracle &_P;
+  Space &_S;
   Options _options;
 
 public:
-    explicit bsearch_adaptor(Oracle &P, Space &S, 
-                    const Options& options=Options()):
-      _P{P},
-      _S{S},
-      _options{options} {}
+  explicit bsearch_adaptor(Oracle &P, Space &S,
+                           const Options &options = Options())
+      : _P{P}, _S{S}, _options{options} {}
 
-    auto x_best() const {
-      return _S.xc();
-    }
+  auto x_best() const { return _S.xc(); }
 
-    auto operator()(double t) {
-      Space S(_S);
-      _P.update(t);
-      auto [x, _1, feasible, _2] = 
-          cutting_plane_feas(_P, S, _options);
-      if (feasible) {
-        _S.set_xc(x);
-        return true;
-      }
-      return false;
+  auto operator()(double t) {
+    Space S(_S);
+    _P.update(t);
+    auto [x, _1, feasible, _2] = cutting_plane_feas(_P, S, _options);
+    if (feasible) {
+      _S.set_xc(x);
+      return true;
     }
+    return false;
+  }
 };
-
 
 /**
  * @brief Cutting-plane method for solving convex feasibility problem
- * 
- * @tparam Oracle 
- * @tparam Space 
- * @tparam T 
+ *
+ * @tparam Oracle
+ * @tparam Space
+ * @tparam T
  * @param[in] evaluate   perform assessment on x0
  * @param[in] S        search Space containing x*
  * @param[in] max_it   maximum number of iterations
  * @param[in] tol      error tolerance
- * @return x      solution vector 
+ * @return x      solution vector
  * @return niter  number of iterations performed
- * @return feasible   solution found or not 
- * @return status how is the final cut 
+ * @return feasible   solution found or not
+ * @return status how is the final cut
  */
 template <typename Oracle, typename Space>
 auto cutting_plane_feas(Oracle &evaluate, Space &S,
-                        const Options& options=Options()) {
+                        const Options &options = Options()) {
   bool feasible = false;
   auto niter = 1u, status = 0u;
 
@@ -108,23 +100,23 @@ auto cutting_plane_feas(Oracle &evaluate, Space &S,
 
 /**
  * @brief Cutting-plane method for solving convex problem
- * 
- * @tparam Oracle 
- * @tparam Space 
- * @tparam T 
+ *
+ * @tparam Oracle
+ * @tparam Space
+ * @tparam T
  * @param[in] evaluate   perform assessment on x0
  * @param[in] S        search Space containing x*
  * @param[in] t        best-so-far optimal sol'n
  * @param[in] max_it   maximum number of iterations
  * @param[in] tol      error tolerance
- * @return x      solution vector 
+ * @return x      solution vector
  * @return niter   number of iterations performed
- * @return feasible   solution found or not 
- * @return status how is the final cut 
+ * @return feasible   solution found or not
+ * @return status how is the final cut
  */
 template <typename Oracle, typename Space, typename T>
 auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
-                      const Options& options=Options()) {
+                      const Options &options = Options()) {
   bool feasible = false;
   auto x_best = S.xc();
   auto niter = 1u, status = 0u;
@@ -162,12 +154,12 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
 **/
 // #include <boost/numeric/ublas/symmetric.hpp>
 // namespace bnu = boost::numeric::ublas;
-#include <xtensor/xarray.hpp>
 #include <xtensor-blas/xlinalg.hpp>
+#include <xtensor/xarray.hpp>
 
 template <typename Oracle, typename Space, typename T>
 auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
-                     const Options& options=Options()) {
+                     const Options &options = Options()) {
   bool feasible = false;
   auto x_best = S.xc();
   auto niter = 1u, status = 1u;

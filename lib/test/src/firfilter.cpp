@@ -28,7 +28,7 @@ static auto w = xt::linspace<double>(0, PI, m);
 // Construct the desired filter.
 // ********************************************************************
 // Fractional delay.
-static auto D = 8.25;                     // Delay value.
+static auto D = 8.25; // Delay value.
 // CArr Hdes = xt::exp(D * w); // Desired frequency response.
 
 // Gaussian filter with linear phase. (Uncomment lines below for this design.)
@@ -58,14 +58,13 @@ static Arr A_theta = xt::linalg::outer(w, xt::arange(n));
 static Arr A_R = xt::cos(A_theta);
 static Arr A_I = -xt::sin(A_theta);
 
-
 // Optimal Chebyshev filter formulation.
 class my_fir_oracle {
 public:
   auto operator()(const Arr &h, double t) const {
     auto fmax = std::numeric_limits<double>::min();
     // auto imax = -1;
-    Arr gmax = xt::zeros<double>({n}); 
+    Arr gmax = xt::zeros<double>({n});
 
     for (auto i = 0u; i < m; ++i) {
       auto a_R = xt::view(A_R, i, xt::all());
