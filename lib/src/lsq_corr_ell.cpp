@@ -8,7 +8,7 @@
 #include <xtensor/xarray.hpp>
 #include <xtensor/xnorm.hpp>
 #include <xtensor/xmath.hpp>
-#include <vector>
+// #include <vector>
 
 using Arr = xt::xarray<double>;
 
@@ -20,25 +20,27 @@ auto construct_distance_matrix(const Arr &s) {
         for (auto j=i+1; i<n; ++i) {
             Arr h = xt::view(s, j, xt::all()) - xt::view(s, i, xt::all());
             auto d = xt::sqrt(xt::linalg::dot(h, h))();
-            D[i, j] = d;
-            D[j, i] = d;
+            D(i, j) = d;
+            D(j, i) = d;
         }
     }
     return D;
 }
 
-auto lsq_corr_poly(const Arr &Y, const Arr &s, std::size_t m) {
+Arr lsq_corr_poly(const Arr &Y, const Arr &s, std::size_t m) {
     auto n = s.shape()[0];
     Arr a = xt::zeros<double>({m});
     Arr D1 = construct_distance_matrix(s);
 
     Arr D = xt::ones<double>({n, n});
-    std::vector<Arr> Sig(m);
-    Sig.push_back(D);
+    Arr Sig = xt::zeros<double>({m, n, n});
+    //Sig.push_back(D);
+    xt::view(Sig, 0, xt::all(), xt::all()) = D;
 
     for (auto i=0u; i<m-1; ++i) {
         D *= D1;
-        Sig.push_back(D);
+        // Sig.push_back(D);
+        xt::view(Sig, i, xt::all(), xt::all()) = D;
     }
     // Sig.reverse();
 

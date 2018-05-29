@@ -4,7 +4,7 @@
 
 #include "chol_ext.hpp"
 #include <cassert>
-#include <vector>
+// #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
@@ -20,7 +20,7 @@ class qmi_oracle {
   using shape_type = Arr::shape_type;
 
 private:
-  const std::vector<Arr> &_F;
+  const Arr &_F;
   const Arr &_F0;
   double _t;
   std::size_t _nx;
@@ -30,7 +30,7 @@ private:
   Arr _A;
 
 public:
-  explicit qmi_oracle(const std::vector<Arr> &F, const Arr &F0)
+  explicit qmi_oracle(const Arr &F, const Arr &F0)
       : _F{F}, _F0{F0}, _t{0.}, _count{0}, _Q(F0.shape()[0]) {
     _Fx = xt::zeros<double>(F0.shape());
     _A = xt::zeros<double>(F0.shape());
@@ -54,15 +54,16 @@ public:
         _count = i + 1;
         Fxi = xt::view(_F0, i, xt::all());
         for (auto k = 0u; k < _nx; ++k) {
-          auto Fki = xt::view(_F[k], i, xt::all());
+          // Arr Fk = _F[k];
+          auto Fki = xt::view(_F, k, i, xt::all());
           Fxi -= Fki * x(k);
         }
       }
-      _A[i, j] = -dot(Fxi, Fxj)();
+      _A(i, j) = -dot(Fxi, Fxj)();
       if (i == j) {
-        _A[i, j] += _t;
+        _A(i, j) += _t;
       }
-      return _A[i, j];
+      return _A(i, j);
     };
 
     _Q.factor(getA);
@@ -73,11 +74,12 @@ public:
     }
     Arr v = _Q.witness();
     auto p = v.size();
-    auto Fxp = xt::view(_Fx, xt::range(_, p), xt::all());
-    Arr Av = dot(v, Fxp);
+    Arr Fxp = xt::transpose(xt::view(_Fx, xt::range(_, p), xt::all()));
+    Arr Av = dot(Fxp, v);
     for (auto k = 0u; k < _nx; ++k) {
-      auto Fkp = xt::view(_F[k], xt::range(_, p));
-      g(k) = -2. * dot(dot(v, Fkp), Av)();
+      // Arr Fk = _F[k];
+      Arr Fkp = xt::view(_F, k, xt::range(_, p), xt::all());
+      g(k) = -2. * dot(v, dot(Fkp, Av))();
     }
     return std::tuple{g, 1., false};
   }

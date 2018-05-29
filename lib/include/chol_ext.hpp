@@ -50,7 +50,7 @@ public:
 
     for (auto i = 0u; i < _n; ++i) {
       for (auto j = 0u; j <= i; ++j) {
-        d = A(j, i);
+        d = A(i, j);
         for (auto k = 0u; k < j; ++k) {
           d -= _R(k, i) * _R(k, j);
         }
@@ -83,7 +83,7 @@ public:
 
     for (auto i = 0u; i < _n; ++i) {
       for (auto j = 0u; j <= i; ++j) {
-        d = getA(j, i);
+        d = getA(i, j);
         for (auto k = 0u; k < j; ++k) {
           d -= _R(k, i) * _R(k, j);
         }
