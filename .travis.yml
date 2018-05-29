@@ -49,6 +49,7 @@ install:
     - export CONDA_PREFIX=$HOME/miniconda
     - bash miniconda.sh -b -p $CONDA_PREFIX
     - export PATH="$CONDA_PREFIX/bin:$PATH"
+    - export LD_LIBRARY_PATH="$CONDA_PREFIX/lib"
     - hash -r
     - conda config --set always_yes yes --set changeps1 no
     - conda update -q conda
