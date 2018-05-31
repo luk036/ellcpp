@@ -2,6 +2,7 @@
 build-clang
 build-g++
 build
+tidy
 html
 .vscode
 

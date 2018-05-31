@@ -1,5 +1,5 @@
-#ifndef _HOME_UBUNTU_CUBSTORE_ELLCPP_CHOL_EXT_HPP
-#define _HOME_UBUNTU_CUBSTORE_ELLCPP_CHOL_EXT_HPP 1
+#ifndef CHOL_EXT_HPP
+#define CHOL_EXT_HPP 1
 
 // #include <boost/numeric/ublas/symmetric.hpp>
 // #include <boost/numeric/ublas/triangular.hpp>
@@ -28,7 +28,7 @@ class chol_ext {
 private:
   std::size_t _p;
   std::size_t _n;
-  xt::xarray<double> _R;
+  xt::xarray<double> _R{};
 
 public:
   explicit chol_ext(std::size_t n) : _p{0}, _n{n} {
