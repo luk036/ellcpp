@@ -12,8 +12,7 @@
  * ell = { x | (x - xc)' * P^-1 * (x - xc) <= 1 }
  */
 class ell {
-  using Mat = xt::xarray<double>;
-  using Vec = xt::xarray<double>;
+  using Arr = xt::xarray<double>;
 
 public:
   bool _use_parallel = true;
@@ -22,8 +21,8 @@ private:
   std::size_t n;
   double _c1;
   double _kappa;
-  Vec _xc;
-  Mat _Q;
+  Arr _xc;
+  Arr _Q;
 
 public:
   template <typename T, typename V>
@@ -40,20 +39,21 @@ public:
 
   auto &xc() { return _xc; }
 
-  void set_xc(const Vec &xc) { _xc = xc; }
+  void set_xc(const Arr &xc) { _xc = xc; }
 
   ell(const ell &E) = default;
 
   template <typename T, typename V>
   auto update_core(const V &g, const T &beta) {
-    Vec Qg = xt::linalg::dot(_Q, g);
+    Arr Qg = xt::linalg::dot(_Q, g);
     auto tsq = xt::linalg::dot(g, Qg)();
     auto tau = std::sqrt(_kappa * tsq);
     auto alpha = beta / tau;
-    auto [status, rho, sigma, delta] = this->calc_ll(alpha);
+    auto [status, params] = this->calc_ll(alpha);
     if (status != 0) {
       return std::tuple{status, tau}; // g++-7 is ok with this
     }
+    auto [rho, sigma, delta] = params;
     _xc -= (_kappa * rho / tau) * Qg;
     _Q -= (sigma / tsq) * xt::linalg::outer(Qg, Qg);
     // _Q *= delta;
@@ -70,7 +70,7 @@ public:
     auto rho = 1. / (n + 1);
     auto sigma = 2. * rho;
     auto delta = _c1;
-    return std::tuple{0, rho, sigma, delta};
+    return std::tuple{rho, sigma, delta};
   }
 
   /**
@@ -78,27 +78,28 @@ public:
    */
   auto calc_dc(double alpha) {
     if (alpha == 0.) {
-      return this->calc_cc();
+      return std::tuple{0, this->calc_cc()};
     }
     auto n = _xc.size();
     // auto [status, rho, sigma, delta] = std::tuple{0, 0., 0., 0.0};
     auto status = 0;
-    auto rho = 0., sigma = 0., delta = 0.;
-
+    auto params = std::tuple{0., 0., 0.};
+    
     if (alpha > 1.) {
       status = 1; // no sol'n
     } else if (n * alpha < -1.) {
       status = 3; // no effect
     } else {
-      rho = (1.0 + n * alpha) / (n + 1);
-      sigma = 2.0 * rho / (1.0 + alpha);
-      delta = _c1 * (1.0 - alpha * alpha);
+      double rho = (1. + n * alpha) / (n + 1);
+      double sigma = 2. * rho / (1. + alpha);
+      double delta = _c1 * (1. - alpha * alpha);
+      params = std::tuple{rho, sigma, delta};
     }
-    return std::tuple{status, rho, sigma, delta};
+    return std::tuple{status, params};
   }
 
+  /* parallel or deep cut */
   template <typename T> auto calc_ll(const T &alpha) {
-    /* parallel or deep cut */
     if constexpr (std::is_scalar<T>::value) { // C++17
       return this->calc_dc(alpha);
     } else { // parallel cut
@@ -107,38 +108,50 @@ public:
         return this->calc_dc(a0);
       }
       auto a1 = alpha[1];
-      // auto [a0, a1] = alpha;
       if (a1 >= 1.) {
         return this->calc_dc(a0);
       }
       auto n = _xc.size();
-
-      // auto [status, rho, sigma, delta] = std::tuple{0, 0.0, 0.0, 0.0};
       auto status = 0;
-      auto rho = 0., sigma = 0., delta = 0.;
-      auto aprod = a0 * a1;
+      auto params = std::tuple{0., 0., 0.};
       if (a0 > a1) {
         status = 1; // no sol'n
-      } else if (n * aprod < -1.) {
+      } else if (n * a0 * a1 < -1.) {
         status = 3; // no effect
+      } else if (a0 == 0.) {
+        params = this->calc_ll_cc(a1, n);
       } else {
-        // auto asq = bnu::element_prod(alpha, alpha);
-        auto asq = alpha * alpha;
-        auto asum = a0 + a1;
-        // auto [asq0, asq1] = asq;
-        auto asq0 = asq[0], asq1 = asq[1];
-        auto asqdiff = asq1 - asq0;
-        auto xi = std::sqrt(4. * (1. - asq0) * (1. - asq1) +
-                            n * n * asqdiff * asqdiff);
-        sigma = (n + (2. * (1. + aprod - xi / 2.) / (asum * asum))) / (n + 1);
-        rho = asum * sigma / 2.;
-        delta = _c1 * (1. - (asq0 + asq1 - xi / n) / 2.);
+        params = this->calc_ll_general(a0, a1, n);
       }
-      return std::tuple{status, rho, sigma, delta};
+      return std::tuple{status, params};
     }
   }
 
-  template <typename T> auto update(const Vec &g, const T &beta) {
+  /** Situation when feasible cut. */
+  auto calc_ll_cc(double a1, std::size_t n) {
+    double asq1 = a1 * a1;
+    double nasq1 = n * asq1;
+    double xi = std::sqrt(nasq1 * nasq1 - 4. * asq1 + 4.);
+    double sigma = (n + (2. - xi) / asq1) / (n + 1);
+    double rho = a1 * sigma / 2.;
+    double delta = _c1 * (1 - (asq1 - xi / n) / 2.);
+    return std::tuple{rho, sigma, delta};
+  }
+
+  auto calc_ll_general(double a0, double a1, std::size_t n) {
+    double asum = a0 + a1;
+    double asq0 = a0 * a0, asq1 = a1 * a1;
+    double asqdiff = asq1 - asq0;
+    double nasqdiff = n * asqdiff;
+    double xi = std::sqrt(4. * (1. - asq0) * (1. - asq1) + nasqdiff * nasqdiff);
+    double sigma =
+        (n + (2. * (1. + a0 * a1 - xi / 2.) / (asum * asum))) / (n + 1);
+    double rho = asum * sigma / 2.;
+    double delta = _c1 * (1. - (asq0 + asq1 - xi / n) / 2.);
+    return std::tuple{rho, sigma, delta};
+  }
+
+  template <typename T> auto update(const Arr &g, const T &beta) {
     return this->update_core(g, beta);
   }
 
