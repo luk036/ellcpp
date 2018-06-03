@@ -17,7 +17,7 @@ int main() {
   auto var = 2.0;     // standard derivation
   auto N = 500u;      // number of samples
 
-  auto dist = s_end - s_begin;
+  // auto dist = s_end - s_begin;
   auto s = xt::linspace(s_begin, s_end, n);
 
   //shape_type shape = {n, n};

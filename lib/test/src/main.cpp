@@ -29,12 +29,13 @@ TEST_CASE("Profit Test 1", "[profit]") {
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
     std::cout << fb << ", " << niter << ", " << feasible << ", " << status
               << "\n";
-    REQUIRE(niter == 37);
+    CHECK(niter == 37);
   }
 
-  double ui = 1.0, e1 = 0.003, e2 = 0.007, e3 = 1.0;
 
   {
+    double ui = 1.0, e1 = 0.003, e2 = 0.007, e3 = 1.0;
+
     ell E1(100.0, Vec{0.0, 0.0});
     profit_rb_oracle P1(p, A, alpha, beta, v1, v2, k, ui, e1, e2, e3);
     std::tie(std::ignore, fb, niter, feasible, status) =
@@ -42,7 +43,7 @@ TEST_CASE("Profit Test 1", "[profit]") {
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
     std::cout << fb << ", " << niter << ", " << feasible << ", " << status
               << "\n";
-    REQUIRE(niter == 42);
+    CHECK(niter == 42);
   }
 
   {
@@ -53,12 +54,12 @@ TEST_CASE("Profit Test 1", "[profit]") {
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
     std::cout << fb << ", " << niter << ", " << feasible << ", " << status
               << "\n";
-    REQUIRE(niter == 28);
+    CHECK(niter == 28);
   }
 }
 
 // TEST_CASE( "Projective Point", "[proj_plane]" ) {
-//     REQUIRE( l.incident({l, m}) );
+//     CHECK( l.incident({l, m}) );
 // }
 
 // int main(int argc, char* argv[]) {
