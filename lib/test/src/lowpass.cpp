@@ -100,17 +100,17 @@ static double Spsq = Sp * Sp;
 // ********************************************************************
 
 auto run_lowpass(bool use_parallel) {
-  Arr r0 = xt::zeros<double>({N}); // initial x0
-  // r0[0] = 0;
-  auto E = ell(4., r0);
-  E._use_parallel = use_parallel;
-  auto P = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
-  auto options = Options();
-  options.max_it = 20000;
-  options.tol = 1e-4;
-  auto [r, Spsq_new, num_iters, feasible, status] =
-      cutting_plane_dc(P, E, Spsq, options);
-  return std::tuple<bool, unsigned int>{feasible, num_iters};
+    Arr r0 = xt::zeros<double>({N}); // initial x0
+    // r0[0] = 0;
+    auto E = ell(4., r0);
+    E._use_parallel = use_parallel;
+    auto P = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
+    auto options = Options();
+    options.max_it = 20000;
+    options.tol = 1e-4;
+    auto [r, Spsq_new, num_iters, feasible, status] =
+        cutting_plane_dc(P, E, Spsq, options);
+    return std::tuple<bool, unsigned int>{feasible, num_iters};
 }
 
 // auto test_lowpass0(benchmark) {
@@ -124,13 +124,13 @@ auto run_lowpass(bool use_parallel) {
 // }
 
 TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]") {
-  auto [feasible, num_iters] = run_lowpass(true);
-  CHECK(feasible);
-  CHECK(num_iters <= 414);
+    auto [feasible, num_iters] = run_lowpass(true);
+    CHECK(feasible);
+    CHECK(num_iters <= 414);
 }
 
 TEST_CASE("Lowpass Filter (w/o parallel cut)", "[lowpass]") {
-  auto [feasible, num_iters] = run_lowpass(false);
-  CHECK(feasible);
-  CHECK(num_iters >= 15110);
+    auto [feasible, num_iters] = run_lowpass(false);
+    CHECK(feasible);
+    CHECK(num_iters >= 15110);
 }

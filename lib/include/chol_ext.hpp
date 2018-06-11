@@ -18,106 +18,106 @@
  *
  */
 class chol_ext {
-  // using Mat = bnu::symmetric_matrix<double, bnu::upper>;
-  // using UTMat = bnu::triangular_matrix<double, bnu::upper>;
-  // using Vec = bnu::vector<double>;
-  using Vec = xt::xarray<double>;
-  using Mat = xt::xarray<double>;
-  using shape_type = Vec::shape_type;
+    // using Mat = bnu::symmetric_matrix<double, bnu::upper>;
+    // using UTMat = bnu::triangular_matrix<double, bnu::upper>;
+    // using Vec = bnu::vector<double>;
+    using Vec = xt::xarray<double>;
+    using Mat = xt::xarray<double>;
+    using shape_type = Vec::shape_type;
 
-private:
-  std::size_t _p;
-  std::size_t _n;
-  xt::xarray<double> _R{};
+  private:
+    std::size_t _p;
+    std::size_t _n;
+    xt::xarray<double> _R{};
 
-public:
-  explicit chol_ext(std::size_t n) : _p{0}, _n{n} {
-    _R = xt::zeros<double>({n, n});
-  }
-
-  /**
-   If $A$ is positive definite, then $p$ is zero.
-   If it is not, then $p$ is a positive integer,
-   such that $v = R^{-1} e_p$ is a certificate vector
-   to make $v'*A[:p,:p]*v < 0$
-  **/
-  void factorize(const Mat &A) {
-    // auto shape = A.shape();
-    // _n = shape[0];
-    // _R = xt::zeros<double>(shape);
-    double d;
-    _p = 0;
-
-    for (auto i = 0u; i < _n; ++i) {
-      for (auto j = 0u; j <= i; ++j) {
-        d = A(i, j);
-        for (auto k = 0u; k < j; ++k) {
-          d -= _R(k, i) * _R(k, j);
-        }
-        if (i != j) {
-          _R(j, i) = 1.0 / _R(j, j) * d;
-        }
-      }
-      if (d < 0.) {
-        _p = i + 1;
-        _R(i, i) = std::sqrt(-d);
-        break;
-      }
-      _R(i, i) = std::sqrt(d);
+  public:
+    explicit chol_ext(std::size_t n) : _p{0}, _n{n} {
+        _R = xt::zeros<double>({n, n});
     }
-  }
 
-  /**
-   If $A$ is positive definite, then $p$ is zero.
-   If it is not, then $p$ is a positive integer,
-   such that $v = R^{-1} e_p$ is a certificate vector
-   to make $v'*A[:p,:p]*v < 0$
-  **/
-  template <typename Fn> void factor(Fn getA) {
-    // auto shape = A.shape();
-    // _n = shape[0];
-    // _R = xt::zeros<double>(shape);
-    double d;
-    _p = 0;
+    /**
+     If $A$ is positive definite, then $p$ is zero.
+     If it is not, then $p$ is a positive integer,
+     such that $v = R^{-1} e_p$ is a certificate vector
+     to make $v'*A[:p,:p]*v < 0$
+    **/
+    void factorize(const Mat &A) {
+        // auto shape = A.shape();
+        // _n = shape[0];
+        // _R = xt::zeros<double>(shape);
+        double d;
+        _p = 0;
 
-    for (auto i = 0u; i < _n; ++i) {
-      for (auto j = 0u; j <= i; ++j) {
-        d = getA(i, j);
-        for (auto k = 0u; k < j; ++k) {
-          d -= _R(k, i) * _R(k, j);
+        for (auto i = 0u; i < _n; ++i) {
+            for (auto j = 0u; j <= i; ++j) {
+                d = A(i, j);
+                for (auto k = 0u; k < j; ++k) {
+                    d -= _R(k, i) * _R(k, j);
+                }
+                if (i != j) {
+                    _R(j, i) = 1.0 / _R(j, j) * d;
+                }
+            }
+            if (d < 0.) {
+                _p = i + 1;
+                _R(i, i) = std::sqrt(-d);
+                break;
+            }
+            _R(i, i) = std::sqrt(d);
         }
-        if (i != j) {
-          _R(j, i) = 1.0 / _R(j, j) * d;
+    }
+
+    /**
+     If $A$ is positive definite, then $p$ is zero.
+     If it is not, then $p$ is a positive integer,
+     such that $v = R^{-1} e_p$ is a certificate vector
+     to make $v'*A[:p,:p]*v < 0$
+    **/
+    template <typename Fn> void factor(Fn getA) {
+        // auto shape = A.shape();
+        // _n = shape[0];
+        // _R = xt::zeros<double>(shape);
+        double d;
+        _p = 0;
+
+        for (auto i = 0u; i < _n; ++i) {
+            for (auto j = 0u; j <= i; ++j) {
+                d = getA(i, j);
+                for (auto k = 0u; k < j; ++k) {
+                    d -= _R(k, i) * _R(k, j);
+                }
+                if (i != j) {
+                    _R(j, i) = 1.0 / _R(j, j) * d;
+                }
+            }
+            if (d < 0.) {
+                _p = i + 1;
+                _R(i, i) = std::sqrt(-d);
+                break;
+            }
+            _R(i, i) = std::sqrt(d);
         }
-      }
-      if (d < 0.) {
-        _p = i + 1;
-        _R(i, i) = std::sqrt(-d);
-        break;
-      }
-      _R(i, i) = std::sqrt(d);
     }
-  }
 
-  bool is_spd() const { return _p == 0; }
+    bool is_spd() const { return _p == 0; }
 
-  auto witness() const {
-    assert(!this->is_spd());
-    Vec v = xt::zeros<double>({_p});
-    using xt::placeholders::_;
+    auto witness() const {
+        assert(!this->is_spd());
+        Vec v = xt::zeros<double>({_p});
+        using xt::placeholders::_;
 
-    v[_p - 1] = 1.0 / _R(_p - 1, _p - 1);
-    for (int i = _p - 2; i >= 0; --i) {
-      double s = 0.0;
-      for (auto k = i + 1; k < _p; ++k) {
-        s += _R(i, k) * v[k];
-      }
-      // double s = xt::linalg::dot(xt::view(_R, i, xt::range(i+1, _p)),
-      //                    xt::view(v, xt::range(i+1, _p)))();
-      v[i] = -s / _R(i, i);
+        v[_p - 1] = 1.0 / _R(_p - 1, _p - 1);
+        for (int i = _p - 2; i >= 0; --i) {
+            double s = 0.0;
+            for (auto k = i + 1; k < _p; ++k) {
+                s += _R(i, k) * v[k];
+            }
+            // double s = xt::linalg::dot(xt::view(_R, i, xt::range(i+1, _p)),
+            //                    xt::view(v, xt::range(i+1, _p)))();
+            v[i] = -s / _R(i, i);
+        }
+        return v;
     }
-    return v;
-  }
 };
 
 /**

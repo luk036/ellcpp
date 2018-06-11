@@ -60,54 +60,54 @@ static Arr A_I = -xt::sin(A_theta);
 
 // Optimal Chebyshev filter formulation.
 class my_fir_oracle {
-public:
-  auto operator()(const Arr &h, double t) const {
-    auto fmax = std::numeric_limits<double>::min();
-    // auto imax = -1;
-    Arr gmax = xt::zeros<double>({n});
+  public:
+    auto operator()(const Arr &h, double t) const {
+        auto fmax = std::numeric_limits<double>::min();
+        // auto imax = -1;
+        Arr gmax = xt::zeros<double>({n});
 
-    for (auto i = 0u; i < m; ++i) {
-      auto a_R = xt::view(A_R, i, xt::all());
-      auto a_I = xt::view(A_I, i, xt::all());
-      auto H_r = Hdes_r[i];
-      auto H_i = Hdes_i[i];
-      auto t_r = xt::linalg::dot(a_R, h)() - H_r;
-      auto t_i = xt::linalg::dot(a_I, h)() - H_i;
-      double fj = t_r * t_r + t_i * t_i;
-      if (fj >= t) {
-        Arr g = 2. * (t_r * a_R + t_i * a_I);
-        return std::tuple{g, fj - t, t};
-      }
-      if (fmax < fj) {
-        fmax = fj;
-        // imax = i;
-        gmax = 2. * (t_r * a_R + t_i * a_I);
-      }
+        for (auto i = 0u; i < m; ++i) {
+            auto a_R = xt::view(A_R, i, xt::all());
+            auto a_I = xt::view(A_I, i, xt::all());
+            auto H_r = Hdes_r[i];
+            auto H_i = Hdes_i[i];
+            auto t_r = xt::linalg::dot(a_R, h)() - H_r;
+            auto t_i = xt::linalg::dot(a_I, h)() - H_i;
+            double fj = t_r * t_r + t_i * t_i;
+            if (fj >= t) {
+                Arr g = 2. * (t_r * a_R + t_i * a_I);
+                return std::tuple{g, fj - t, t};
+            }
+            if (fmax < fj) {
+                fmax = fj;
+                // imax = i;
+                gmax = 2. * (t_r * a_R + t_i * a_I);
+            }
+        }
+
+        return std::tuple{gmax, 0., fmax};
     }
-
-    return std::tuple{gmax, 0., fmax};
-  }
 };
 
 // def test_firfilter() {
 TEST_CASE("FIR Filter", "[firfilter]") {
 
-  auto h0 = xt::zeros<double>({n}); // initial x0
-  auto E = ell(10., h0);
-  auto P = my_fir_oracle();
-  auto [hb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 100.);
+    auto h0 = xt::zeros<double>({n}); // initial x0
+    auto E = ell(10., h0);
+    auto P = my_fir_oracle();
+    auto [hb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 100.);
 
-  CHECK(feasible);
-  std::cout << niter << "," << feasible << "," << status << "\n";
-  std::cout << hb << "\n";
+    CHECK(feasible);
+    std::cout << niter << "," << feasible << "," << status << "\n";
+    std::cout << hb << "\n";
 
-  // fmt = '{ {f} {} {} {}'
-  // print(prob1.optim_var)
-  // print(fmt.format(prob1.optim_vale, prob1.solver_stats.num_iters))
+    // fmt = '{ {f} {} {} {}'
+    // print(prob1.optim_var)
+    // print(fmt.format(prob1.optim_vale, prob1.solver_stats.num_iters))
 
-  // print 'Problem status:', feasible
-  // if feasible != 1:
-  //    raise Exception('ELL Error')
+    // print 'Problem status:', feasible
+    // if feasible != 1:
+    //    raise Exception('ELL Error')
 
-  // hv = xt::asmatrix(prob1.optim_var).T
+    // hv = xt::asmatrix(prob1.optim_var).T
 }
