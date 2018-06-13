@@ -5,9 +5,9 @@
 #include <iostream>
 #include <tuple>
 
-#include <cutting_plane.hpp>
-#include <ell.hpp>
-#include <lmi_oracle.hpp>
+#include <ellcpp/cutting_plane.hpp>
+#include <ellcpp/ell.hpp>
+#include <ellcpp/oracles/lmi_oracle.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 

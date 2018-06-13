@@ -3,9 +3,9 @@
  */
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
-#include <cutting_plane.hpp>
-#include <ell.hpp>
-#include <profit_oracle.hpp>
+#include <ellcpp/cutting_plane.hpp>
+#include <ellcpp/ell.hpp>
+#include <ellcpp/oracles/profit_oracle.hpp>
 //#include <boost/numeric/ublas/symmetric.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>

@@ -3,8 +3,8 @@
 #include <iostream>
 #include <tuple>
 
-#include <cutting_plane.hpp>
-#include <ell.hpp>
+#include <ellcpp/cutting_plane.hpp>
+#include <ellcpp/ell.hpp>
 
 using Arr = xt::xarray<double>;
 

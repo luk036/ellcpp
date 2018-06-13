@@ -5,10 +5,10 @@
 
 #include <cmath>
 #include <complex>
-#include <cutting_plane.hpp>
-#include <ell.hpp>
+#include <ellcpp/cutting_plane.hpp>
+#include <ellcpp/ell.hpp>
 #include <limits>
-#include <lowpass_oracle.hpp>
+#include <ellcpp/oracles/lowpass_oracle.hpp>
 
 using Arr = xt::xarray<double>;
 // using CArr = xt::xarray<std::complex<double>>;

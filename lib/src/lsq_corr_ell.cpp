@@ -1,8 +1,8 @@
 // -*- coding: utf-8 -*-
-#include <cutting_plane.hpp>
-#include <ell.hpp>
+#include <ellcpp/cutting_plane.hpp>
+#include <ellcpp/ell.hpp>
 #include <iostream>
-#include <qmi_oracle.hpp>
+#include <ellcpp/oracles/qmi_oracle.hpp>
 #include <tuple>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>

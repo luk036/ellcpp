@@ -4,8 +4,8 @@
 #include <tuple>
 
 #include <complex>
-#include <cutting_plane.hpp>
-#include <ell.hpp>
+#include <ellcpp/cutting_plane.hpp>
+#include <ellcpp/ell.hpp>
 #include <limits>
 
 using Arr = xt::xarray<double>;

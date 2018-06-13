@@ -1,9 +1,9 @@
 // -*- coding: utf-8 -*-
 #include <catch.hpp>
-#include <cutting_plane.hpp>
-#include <ell.hpp>
+#include <ellcpp/cutting_plane.hpp>
+#include <ellcpp/ell.hpp>
 #include <iostream>
-#include <qmi_oracle.hpp>
+#include <ellcpp/oracles/qmi_oracle.hpp>
 #include <tuple>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>

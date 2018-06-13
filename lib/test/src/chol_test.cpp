@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include <chol_ext.hpp>
+#include <ellcpp/oracles/chol_ext.hpp>
 #include <iostream>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>

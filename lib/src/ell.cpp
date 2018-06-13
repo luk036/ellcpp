@@ -1,5 +1,5 @@
 #include <cmath>
-#include <ell.hpp>
+#include <ellcpp/ell.hpp>
 #include <tuple>
 
 /**
