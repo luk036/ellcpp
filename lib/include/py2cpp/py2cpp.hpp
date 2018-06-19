@@ -12,12 +12,23 @@ namespace py {
 template <typename Key>
 struct set : std::unordered_set<Key>
 {
+    using _Self = set<Key>;
+
     explicit set(std::initializer_list<Key> init) : 
         std::unordered_set<Key>{init} {}
 
     bool contains(const Key& key) const {
         return this->find(key) != this->end();
     }
+
+    _Self copy() const { return *this; }
+
+    _Self& operator=(const _Self& ) = delete;
+
+    _Self& operator=(_Self&& ) = delete;
+
+private:
+    set(const _Self& ) = default;
 };
 
 template <typename Key>
@@ -41,6 +52,7 @@ template <typename Key, typename T>
 struct dict : std::unordered_map<Key, T>
 {
     using value_type = std::pair<const Key, T>;
+    using _Self = dict<Key, T>;
 
     explicit dict(std::initializer_list<value_type> init) : 
         std::unordered_map<Key, T>{init} {}
@@ -53,6 +65,15 @@ struct dict : std::unordered_map<Key, T>
         if (!contains(key)) return default_value;
         return (*this)[key];
     }
+
+    _Self copy() const { return *this; }
+
+    _Self& operator=(const _Self& ) = delete;
+
+    _Self& operator=(_Self&& ) = delete;
+
+private:
+    dict(const _Self& ) = default;
 };
 
 template <typename Key, typename T>

@@ -4,7 +4,7 @@
 
 // from xnetwork.utils import generate_unique_node
 #include <xnetwork.hpp> // as xn
-#include <neg_cycle.hpp> // import negCycleFinder
+#include "neg_cycle.h" // import negCycleFinder
 #include <vector>
 #include <tuple>
 
@@ -27,7 +27,7 @@ auto max_parametric(const Graph& G, auto r, auto d, auto zero_cancel) {
         dist -- optimal sol"n
 
     **/
-    auto get_weight = [](const Graph& G, const Edge& e) {
+    auto get_weight = [](const Graph& G, const std::tuple<Node*, Node*>& e) {
         return d(G, r, e);
     };
 
@@ -45,8 +45,9 @@ auto max_parametric(const Graph& G, auto r, auto d, auto zero_cancel) {
         C_opt = C;
         r_opt = r_min;
         // update ???
-        for (auto [u, v] : C_opt) {
-            S.dist[u] = S.dist[v] - get_weight(G, (u, v));
+        for (auto e : C_opt) {
+            auto [u, v] = e;
+            S.dist[u] = S.dist[v] - get_weight(G, e);
         }
     }
 

@@ -92,9 +92,8 @@ EdgeDataView
 
     The argument `nbunch` restricts edges to those incident to nodes : nbunch.
 */
-// from collections import Mapping, Set, Iterable
-#include <xnetwork.hpp>
-as xn
+from collections import Mapping, Set, Iterable
+#include <xnetwork.hpp> // as xn
 
 static const auto __all__ = {"NodeView", "NodeDataView",
            "EdgeView", "OutEdgeView", "InEdgeView",
@@ -225,9 +224,9 @@ class NodeDataView: public Set {
     /** A DataView class for nodes of a XNetwork Graph
 
     The main use for this class is to iterate through node-data pairs.
-    The data can be the entire data-dictionary for each node, || it
+    The data can be the entire data-dictionary for each node, or it
     can be a specific attribute (with default) for each node.
-    Set operations are enabled with NodeDataView, but don"t work in
+    Set operations are enabled with NodeDataView, but don't work in
     cases where the data is not hashable. Use with caution.
     Typically, set operations on nodes use NodeView, not NodeDataView.
     That is, they use `G.nodes` instead of `G.nodes(data="foo")`.

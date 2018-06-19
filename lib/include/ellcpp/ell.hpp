@@ -28,17 +28,22 @@ class ell {
     Arr _Q;
 
   public:
-    template <typename T, typename V>
-    ell(const T &val, const V &x)
-        : n{x.size()}, _c1{n * n / (n * n - 1.0)}, _xc{x} {
+    template <typename T>
+    ell(const T &val, const Arr &x)
+        : n{x.size()} // n
+        , _c1{n * n / (n * n - 1.)} // 
+        , _xc{x} //
+    {
         if constexpr (std::is_scalar<T>::value) { // C++17
-            _Q = xt::eye(n);
-            _kappa = val;
+            this->_Q = xt::eye(n);
+            this->_kappa = val;
         } else {
-            _Q = xt::diag(val);
-            _kappa = 1.;
+            this->_Q = xt::diag(val);
+            this->_kappa = 1.;
         }
     }
+
+    ell(const ell &E) = default;
 
     const Arr &xc() const { return _xc; }
 
@@ -46,12 +51,23 @@ class ell {
 
     void set_xc(const Arr &xc) { _xc = xc; }
 
-    ell(const ell &E) = default;
-
-    template <typename T, typename V>
-    auto update_core(const V &g, const T &beta) {
-        Arr Qg = xt::linalg::dot(_Q, g);
+    /**
+     * @brief Update ellipsoid core function using the cut
+     *          g' * (x - xc) + beta <= 0
+     * 
+     * @tparam T 
+     * @tparam V 
+     * @param g 
+     * @param beta 
+     * @return auto 
+     */
+    template <typename T>
+    auto update_core(const Arr &g, const T &beta) {
+        auto Qg = xt::linalg::dot(_Q, g);
         auto tsq = xt::linalg::dot(g, Qg)();
+        if (tsq <= 0.) {
+            return std::tuple{4, 0.};
+        }
         auto tau = std::sqrt(_kappa * tsq);
         auto alpha = beta / tau;
         auto [status, params] = this->calc_ll(alpha);
@@ -59,12 +75,10 @@ class ell {
             return std::tuple{status, tau}; // g++-7 is ok with this
         }
         auto [rho, sigma, delta] = params;
-        _xc -= (_kappa * rho / tau) * Qg;
-        _Q -= (sigma / tsq) * xt::linalg::outer(Qg, Qg);
-        // _Q *= delta;
-        _kappa *= delta;
+        this->_xc -= (_kappa * rho / tau) * Qg;
+        this->_Q -= (sigma / tsq) * xt::linalg::outer(Qg, Qg);
+        this->_kappa *= delta;
         return std::tuple{status, tau}; // g++-7 is ok
-        // return std::pair{status, tau}; // workaround for clang++ 6
     }
 
     /**
@@ -102,19 +116,20 @@ class ell {
             return this->calc_dc(alpha);
         } else { // parallel cut
             auto a0 = alpha[0];
-            if (alpha.shape()[0] < 2 || !_use_parallel) {
+            if (alpha.shape()[0] < 2) {
                 return this->calc_dc(a0);
             }
             auto a1 = alpha[1];
-            if (a1 >= 1.) {
+            if (a1 >= 1. || !_use_parallel) {
                 return this->calc_dc(a0);
             }
             auto n = _xc.size();
             auto status = 0;
             auto params = std::tuple{0., 0., 0.};
+            
             if (a0 > a1) {
                 status = 1; // no sol'n
-            } else if (n * a0 * a1 < -1.) {
+            } else if (n*a0*a1 < -1.) {
                 status = 3; // no effect
             } else if (a0 == 0.) {
                 params = this->calc_ll_cc(a1, n);

@@ -10,9 +10,8 @@
 //          Dan Schult(dschult@colgate.edu);
 /**
 */
-// from collections import Mapping
-#include <xnetwork.hpp>
-as xn
+from collections import Mapping
+#include <xnetwork.hpp> // as xn
 
 static const auto __all__ = {"AtlasView", "AdjacencyView", "MultiAdjacencyView",
            "UnionAtlas", "UnionAdjacency",
@@ -35,7 +34,7 @@ class AtlasView : public Mapping {
     AdjacencyView - View into dict-of-dict-of-dict
     MultiAdjacencyView - View into dict-of-dict-of-dict-of-dict
      */
-    static const auto __slots__ = ("_atlas",);
+    static const auto __slots__ = {"_atlas",};
 
     auto __getstate__( ) {
         return {"_atlas": this->_atlas};
@@ -45,7 +44,7 @@ class AtlasView : public Mapping {
         this->_atlas = state["_atlas"];
     }
 
-    explicit _Self( d) {
+    explicit AtlasView( d) {
         this->_atlas = d;
     }
 
@@ -87,7 +86,7 @@ class AdjacencyView(AtlasView) {
     AtlasView - View into dict-of-dict
     MultiAdjacencyView - View into dict-of-dict-of-dict-of-dict
      */
-    static const auto __slots__ = ();   // Still uses AtlasView slots names _atlas
+    static const char *__slots__ = nullptr;   // Still uses AtlasView slots names _atlas
 
     auto operator[]( name) {
         return AtlasView(this->_atlas[name]);
@@ -111,7 +110,8 @@ class MultiAdjacencyView(AdjacencyView) {
     AtlasView - View into dict-of-dict
     AdjacencyView - View into dict-of-dict-of-dict
      */
-    static const auto __slots__ = ();   // Still uses AtlasView slots names _atlas
+    // static const auto __slots__ = ();   // Still uses AtlasView slots names _atlas
+    static const char *__slots__ = nullptr;   // Still uses AtlasView slots names _atlas
 
     auto operator[]( name) {
         return AdjacencyView(this->_atlas[name]);
@@ -137,7 +137,7 @@ class UnionAtlas : public Mapping {
      */
     using _Self = UnionAtlas;
 
-    static const auto __slots__ = ("_succ", "_pred");
+    static const auto __slots__ = {"_succ", "_pred"};
 
     auto __getstate__( ) {
         return {"_succ": this->_succ, "_pred": this->_pred};
@@ -209,7 +209,7 @@ class UnionAdjacency : public Mapping {
      */
     using _Self = UnionAdjacency;
 
-    static const auto __slots__ = ("_succ", "_pred");
+    static const auto __slots__ = {"_succ", "_pred"};
 
     auto __getstate__( ) {
         return {"_succ": this->_succ, "_pred": this->_pred};

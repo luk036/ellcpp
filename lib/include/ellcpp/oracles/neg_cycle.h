@@ -4,9 +4,10 @@ Negative cycle detection for (auto weighed graphs.
 **/
 #include <xnetwork.hpp> // as xn
 #include <vector>
-#include <unordered_map>
+// #include <unordered_map>
+#include <py2cpp/py2cpp.hpp>
 
-auto default_get_weight(const Graph& G, const Edge& e) {
+auto default_get_weight(const Graph& G, const std::tuple<Node*, Node*>& e) {
     auto [u, v] = e;
     return G[u][v].get("weight", 1);
 }
@@ -15,8 +16,8 @@ auto default_get_weight(const Graph& G, const Edge& e) {
 class negCycleFinder {
 private:
     Graph G;
-    std::unordered_map<Node*, int> dist; // int???
-    std::unordered_map<Node*, Node*> pred;
+    py::dict<Node*, int> dist; // int???
+    py::dict<Node*, Node*> pred;
 
 
 public:
@@ -41,10 +42,10 @@ public:
             handle -- a start node of the cycle
         **/
 
-        std::unordered_map<Node*, Node*> visited{};
+        py::dict<Node*, Node*> visited{};
 
         for (auto v : this->G) {
-            if (visited.find(v) != visited.end()) { // C++20
+            if (visited.contains(v)) {
                 continue;
             }
             auto u = v;
@@ -54,7 +55,7 @@ public:
                 if (u == nullptr) {
                     break;
                 }
-                if (visited.find(u) != visited.end()) {
+                if (visited.contains(u)) {
                     if (visited[u] == v) {
                         if (this->is_negative(u)) {
                             // should be "yield u";
@@ -154,7 +155,7 @@ public:
         auto v = handle;
         while (true) {
             auto u = this->pred[v];
-            auto wt = this->get_weight(this->G, (u, v)); // ???
+            auto wt = this->get_weight(this->G, {u, v}); // ???
             if (this->dist[v] > this->dist[u] + wt) {
                 return true;
             }

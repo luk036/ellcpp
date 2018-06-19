@@ -1390,469 +1390,471 @@ class Graph: public object {
         return Graph();
     }
 
-    auto copy( as_view=false) {
-        /** Return a copy of the graph.
-
-        The copy method by default returns a shallow copy of the graph
-        && attributes. That is, if (an attribute is a container, that
-        container is shared by the original an the copy.
-        Use Python"s `copy.deepcopy` for new containers.
-
-        If `as_view` is true then a view is returned instead of a copy.
-
-        Notes
-        -----
-        All copies reproduce the graph structure, but data attributes
-        may be handled : different ways. There are four types of copies
-        of a graph that people might want.
-
-        Deepcopy -- The default behavior is a "deepcopy" where the graph
-        structure as well as all data attributes && any objects they might
-        contain are copied. The entire graph object is new so that changes
-        : the copy do not affect the original object. (see Python"s
-        copy.deepcopy);
-
-        Data Reference (Shallow) -- For a shallow copy the graph structure
-        is copied but the edge, node && graph attribute dicts are
-        references to those : the original graph. This saves
-        time && memory but could cause confusion if (you change an attribute
-        : one graph && it changes the attribute : the other.
-        XNetwork does not provide this level of shallow copy.
-
-        Independent Shallow -- This copy creates new independent attribute
-        dicts && then does a shallow copy of the attributes. That is, any
-        attributes that are containers are shared between the new graph
-        && the original. This is exactly what `dict.copy()` provides.
-        You can obtain this style copy using) {
-
-            >>> G = xn::path_graph(5);
-            >>> H = G.copy();
-            >>> H = G.copy(as_view=false);
-            >>> H = xn::Graph(G);
-            >>> H = G.fresh_copy().__class__(G);
-
-        Fresh Data -- For fresh data, the graph structure is copied while
-        new empty data attribute dicts are created. The resulting graph
-        is independent of the original && it has no edge, node || graph
-        attributes. Fresh copies are not enabled. Instead use) {
-
-            >>> H = G.fresh_copy();
-            >>> H.add_nodes_from(G);
-            >>> H.add_edges_from(G.edges);
-
-        View -- Inspired by dict-views, graph-views act like read-only
-        versions of the original graph, providing a copy of the original
-        structure without requiring any memory for copying the information.
-
-        See the Python copy module for more information on shallow
-        && deep copies, https://docs.python.org/2/library/copy.html.
-
-        Parameters
-        ----------
-        as_view : bool, optional (default=false);
-            If true, the returned graph-view provides a read-only view
-            of the original graph without actually copying any data.
-
-        Returns
-        -------
-        G : Graph
-            A copy of the graph.
-
-        See Also
-        --------
-        to_directed: return a directed copy of the graph.
-
-        Examples
-        --------
-        >>> G = xn::path_graph(4);  // or DiGraph, MultiGraph, MultiDiGraph, etc
-        >>> H = G.copy();
-
-         */
-        if (as_view == true) {
-            return xn::graphviews.GraphView( );
-        }
-        G = this->fresh_copy();
-        G.graph.update(this->graph);
-        G.add_nodes_from((n, d.copy()) for n, d : this->_node.items());
-        G.add_edges_from((u, v, datadict.copy());
-                         for (auto u, nbrs : this->_adj.items();
-                         for (auto v, datadict : nbrs.items());
-        return G;
-    }
-
-    auto to_directed( as_view=false) {
-        /** Return a directed representation of the graph.
-
-        Returns
-        -------
-        G : DiGraph
-            A directed graph with the same name, same nodes, && with
-            each edge (u, v, data) replaced by two directed edges
-            (u, v, data) && (v, u, data).
-
-        Notes
-        -----
-        This returns a "deepcopy" of the edge, node, and
-        graph attributes which attempts to completely copy
-        all of the data && references.
-
-        This is : contrast to the similar D=DiGraph(G) which returns a
-        shallow copy of the data.
-
-        See the Python copy module for more information on shallow
-        && deep copies, https://docs.python.org/2/library/copy.html.
-
-        Warning: If you have subclassed Graph to use dict-like objects
-        : the data structure, those changes do not transfer to the
-        DiGraph created by this method.
-
-        Examples
-        --------
-        >>> G = xn::Graph();  // or MultiGraph, etc
-        >>> G.add_edge(0, 1);
-        >>> H = G.to_directed();
-        >>> list(H.edges);
-        [(0, 1), (1, 0)];
-
-        If already directed, return a (deep) copy
-
-        >>> G = xn::DiGraph();  // or MultiDiGraph, etc
-        >>> G.add_edge(0, 1);
-        >>> H = G.to_directed();
-        >>> list(H.edges);
-        [(0, 1)];
-         */
-        if (as_view == true) {
-            return xn::graphviews.DiGraphView( );
-        }
-        // deepcopy when not a view
-        #include <xnetwork.hpp> // import DiGraph
-        G = DiGraph();
-        G.graph.update(deepcopy(this->graph));
-        G.add_nodes_from((n, deepcopy(d)) for n, d : this->_node.items());
-        G.add_edges_from((u, v, deepcopy(data));
-                         for (auto u, nbrs : this->_adj.items();
-                         for (auto v, data : nbrs.items());
-        return G;
-    }
-
-    auto to_undirected( as_view=false) {
-        /** Return an undirected copy of the graph.
-
-        Parameters
-        ----------
-        as_view : bool (optional, default=false);
-          If true return a view of the original undirected graph.
-
-        Returns
-        -------
-        G : Graph/MultiGraph
-            A deepcopy of the graph.
-
-        See Also
-        --------
-        Graph, copy, add_edge, add_edges_from
-
-        Notes
-        -----
-        This returns a "deepcopy" of the edge, node, and
-        graph attributes which attempts to completely copy
-        all of the data && references.
-
-        This is : contrast to the similar `G = xn::DiGraph(D)` which returns a
-        shallow copy of the data.
-
-        See the Python copy module for more information on shallow
-        && deep copies, https://docs.python.org/2/library/copy.html.
-
-        Warning: If you have subclassed DiGraph to use dict-like objects
-        : the data structure, those changes do not transfer to the
-        Graph created by this method.
-
-        Examples
-        --------
-        >>> G = xn::path_graph(2)   // or MultiGraph, etc
-        >>> H = G.to_directed();
-        >>> list(H.edges);
-        [(0, 1), (1, 0)];
-        >>> G2 = H.to_undirected();
-        >>> list(G2.edges);
-        [(0, 1)];
-         */
-        if (as_view == true) {
-            return xn::graphviews.GraphView( );
-        }
-        // deepcopy when not a view
-        G = Graph();
-        G.graph.update(deepcopy(this->graph));
-        G.add_nodes_from((n, deepcopy(d)) for n, d : this->_node.items());
-        G.add_edges_from((u, v, deepcopy(d));
-                         for (auto u, nbrs : this->_adj.items();
-                         for (auto v, d : nbrs.items());
-        return G;
-    }
-
-    auto subgraph( nodes) {
-        /** Return a SubGraph view of the subgraph induced on `nodes`.
-
-        The induced subgraph of the graph contains the nodes : `nodes`
-        && the edges between those nodes.
-
-        Parameters
-        ----------
-        nodes : list, iterable
-            A container of nodes which will be iterated through once.
-
-        Returns
-        -------
-        G : SubGraph View
-            A subgraph view of the graph. The graph structure cannot be
-            changed but node/edge attributes can && are shared with the
-            original graph.
-
-        Notes
-        -----
-        The graph, edge && node attributes are shared with the original graph.
-        Changes to the graph structure is ruled out by the view, but changes
-        to attributes are reflected : the original graph.
-
-        To create a subgraph with its own copy of the edge/node attributes use) {
-        G.subgraph(nodes).copy();
-
-        For an inplace reduction of a graph to a subgraph you can remove nodes) {
-        G.remove_nodes_from([n for n : G if (n not : set(nodes)]);
-
-        Examples
-        --------
-        >>> G = xn::path_graph(4);  // or DiGraph, MultiGraph, MultiDiGraph, etc
-        >>> H = G.subgraph([0, 1, 2]);
-        >>> list(H.edges);
-        [(0, 1), (1, 2)];
-         */
-        induced_nodes = xn::filters.show_nodes(this->nbunch_iter(nodes));
-        SubGraph = xn::graphviews.SubGraph
-        // if (already a subgraph, don"t make a chain
-        if (hasattr( "_NODE_OK") {
-            return SubGraph(this->_graph, induced_nodes, this->_EDGE_OK);
-        }
-        return SubGraph( induced_nodes);
-    }
-
-    auto edge_subgraph( edges) {
-        /** Return the subgraph induced by the specified edges.
-
-        The induced subgraph contains each edge : `edges` && each
-        node incident to any one of those edges.
-
-        Parameters
-        ----------
-        edges : iterable
-            An iterable of edges : this graph.
-
-        Returns
-        -------
-        G : Graph
-            An edge-induced subgraph of this graph with the same edge
-            attributes.
-
-        Notes
-        -----
-        The graph, edge, && node attributes : the returned subgraph
-        view are references to the corresponding attributes : the original
-        graph. The view is read-only.
-
-        To create a full graph version of the subgraph with its own copy
-        of the edge || node attributes, use:) {
-
-            >>> G.edge_subgraph(edges).copy();  // doctest: +SKIP
-
-        Examples
-        --------
-        >>> G = xn::path_graph(5);
-        >>> H = G.edge_subgraph([(0, 1), (3, 4)]);
-        >>> list(H.nodes);
-        [0, 1, 3, 4];
-        >>> list(H.edges);
-        [(0, 1), (3, 4)];
-
-         */
-        return xn::edge_subgraph( edges);
-    }
-
-    auto size( weight=None) {
-        /** Return the number of edges || total of all edge weights.
-
-        Parameters
-        ----------
-        weight : string || None, optional (default=None);
-            The edge attribute that holds the numerical value used
-            as a weight. If None, then each edge has weight 1.
-
-        Returns
-        -------
-        size : numeric
-            The number of edges or
-            (if (weight keyword is provided) the total weight sum.
-
-            If weight.empty(), returns an int. Otherwise a double
-            (or more general numeric if (the weights are more general).
-
-        See Also
-        --------
-        number_of_edges
-
-        Examples
-        --------
-        >>> G = xn::path_graph(4);  // or DiGraph, MultiGraph, MultiDiGraph, etc
-        >>> G.size();
-        3
-
-        >>> G = xn::Graph()   // or DiGraph, MultiGraph, MultiDiGraph, etc
-        >>> G.add_edge("a", "b", weight=2);
-        >>> G.add_edge("b", "c", weight=4);
-        >>> G.size();
-        2
-        >>> G.size(weight="weight");
-        6.0
-         */
-        s = sum(d for v, d : this->degree(weight=weight));
-        // If `weight`.empty(), the sum of the degrees is guaranteed to be
-        // even, so we can perform integer division && hence return an
-        // integer. Otherwise, the sum of the weighted degrees is not
-        // guaranteed to be an integer, so we perform "real" division.
-        return s; // 2 if (weight.empty() else s / 2
-    }
-
-    auto number_of_edges( u=None, v=None) {
-        /** Return the number of edges between two nodes.
-
-        Parameters
-        ----------
-        u, v : nodes, optional (default=all edges);
-            If u && v are specified, return the number of edges between
-            u && v. Otherwise return the total number of all edges.
-
-        Returns
-        -------
-        nedges : int
-            The number of edges : the graph.  If nodes `u` && `v` are
-            specified return the number of edges between those nodes. If
-            the graph is directed, this only returns the number of edges
-            from `u` to `v`.
-
-        See Also
-        --------
-        size
-
-        Examples
-        --------
-        For undirected graphs, this method counts the total number of
-        edges : the graph) {
-
-        >>> G = xn::path_graph(4);
-        >>> G.number_of_edges();
-        3
-
-        If you specify two nodes, this counts the total number of edges
-        joining the two nodes) {
-
-        >>> G.number_of_edges(0, 1);
-        1
-
-        For directed graphs, this method can count the total number of
-        directed edges from `u` to `v`) {
-
-        >>> G = xn::DiGraph();
-        >>> G.add_edge(0, 1);
-        >>> G.add_edge(1, 0);
-        >>> G.number_of_edges(0, 1);
-        1
-
-         */
-        if (u.empty()) {
-            return int(this->size());
-        }
-        if (v : this->_adj[u]) {
-            return 1;
-        }
-        return 0;
-    }
-
-    auto nbunch_iter( nbunch=None) {
-        /** Return an iterator over nodes contained : nbunch that are
-        also : the graph.
-
-        The nodes : nbunch are checked for membership : the graph
-        && if (!are silently ignored.
-
-        Parameters
-        ----------
-        nbunch : single node, container, || all nodes (default= all nodes);
-            The view will only report edges incident to these nodes.
-
-        Returns
-        -------
-        niter : iterator
-            An iterator over nodes : nbunch that are also : the graph.
-            If nbunch.empty(), iterate over all nodes : the graph.
-
-        Raises
-        ------
-        XNetworkError
-            If nbunch is not a node || or sequence of nodes.
-            If a node : nbunch is not hashable.
-
-        See Also
-        --------
-        Graph.__iter__
-
-        Notes
-        -----
-        When nbunch is an iterator, the returned iterator yields values
-        directly from nbunch, becoming exhausted when nbunch is exhausted.
-
-        To test whether nbunch is a single node, one can use
-        "if (nbunch : self:", even after processing with this routine.
-
-        If nbunch is not a node || a (possibly empty) sequence/iterator
-        || None, a :exc:`XNetworkError` is raised.  Also, if (any object in
-        nbunch is not hashable, a :exc:`XNetworkError` is raised.
-         */
-        if (nbunch.empty()) {   // include all nodes via iterator
-            bunch = iter(this->_adj);
-        } else if (nbunch : *this) { //if (nbunch is a single node
-            bunch = iter([nbunch]);
-        } else {                // if (nbunch is a sequence of nodes
-            auto bunch_iter(nlist, adj) {
-                try {
-                    for (auto n : nlist) {
-                        if (n : adj) {
-                            yield n;
-                        }
-                    }
-                } catch (TypeError as e) {
-                    message = e.args[0];
-                    // capture error for non-sequence/iterator nbunch.
-                    if ("iter" : message) {
-                        const auto msg = "nbunch is not a node || a sequence of nodes."
-                        throw XNetworkError(msg);
-                    // capture error for unhashable node.
-                    } else if ("hashable" : message) {
-                        const auto msg = "Node {} : sequence nbunch is not a valid node."
-                        throw XNetworkError(msg.format(n));
-                    } else {
-                        throw;
-                    }
-                }
-            }
-            bunch = bunch_iter(nbunch, this->_adj);
-        }
-        return bunch;
-    }
+    // auto copy( as_view=false) {
+    //     /** Return a copy of the graph.
+
+    //     The copy method by default returns a shallow copy of the graph
+    //     && attributes. That is, if (an attribute is a container, that
+    //     container is shared by the original an the copy.
+    //     Use Python"s `copy.deepcopy` for new containers.
+
+    //     If `as_view` is true then a view is returned instead of a copy.
+
+    //     Notes
+    //     -----
+    //     All copies reproduce the graph structure, but data attributes
+    //     may be handled : different ways. There are four types of copies
+    //     of a graph that people might want.
+
+    //     Deepcopy -- The default behavior is a "deepcopy" where the graph
+    //     structure as well as all data attributes && any objects they might
+    //     contain are copied. The entire graph object is new so that changes
+    //     : the copy do not affect the original object. (see Python"s
+    //     copy.deepcopy);
+
+    //     Data Reference (Shallow) -- For a shallow copy the graph structure
+    //     is copied but the edge, node && graph attribute dicts are
+    //     references to those : the original graph. This saves
+    //     time && memory but could cause confusion if (you change an attribute
+    //     : one graph && it changes the attribute : the other.
+    //     XNetwork does not provide this level of shallow copy.
+
+    //     Independent Shallow -- This copy creates new independent attribute
+    //     dicts && then does a shallow copy of the attributes. That is, any
+    //     attributes that are containers are shared between the new graph
+    //     && the original. This is exactly what `dict.copy()` provides.
+    //     You can obtain this style copy using) {
+
+    //         >>> G = xn::path_graph(5);
+    //         >>> H = G.copy();
+    //         >>> H = G.copy(as_view=false);
+    //         >>> H = xn::Graph(G);
+    //         >>> H = G.fresh_copy().__class__(G);
+
+    //     Fresh Data -- For fresh data, the graph structure is copied while
+    //     new empty data attribute dicts are created. The resulting graph
+    //     is independent of the original && it has no edge, node || graph
+    //     attributes. Fresh copies are not enabled. Instead use) {
+
+    //         >>> H = G.fresh_copy();
+    //         >>> H.add_nodes_from(G);
+    //         >>> H.add_edges_from(G.edges);
+
+    //     View -- Inspired by dict-views, graph-views act like read-only
+    //     versions of the original graph, providing a copy of the original
+    //     structure without requiring any memory for copying the information.
+
+    //     See the Python copy module for more information on shallow
+    //     && deep copies, https://docs.python.org/2/library/copy.html.
+
+    //     Parameters
+    //     ----------
+    //     as_view : bool, optional (default=false);
+    //         If true, the returned graph-view provides a read-only view
+    //         of the original graph without actually copying any data.
+
+    //     Returns
+    //     -------
+    //     G : Graph
+    //         A copy of the graph.
+
+    //     See Also
+    //     --------
+    //     to_directed: return a directed copy of the graph.
+
+    //     Examples
+    //     --------
+    //     >>> G = xn::path_graph(4);  // or DiGraph, MultiGraph, MultiDiGraph, etc
+    //     >>> H = G.copy();
+
+    //      */
+    //     if (as_view == true) {
+    //         return xn::graphviews.GraphView( );
+    //     }
+    //     G = this->fresh_copy();
+    //     G.graph.update(this->graph);
+    //     G.add_nodes_from((n, d.copy()) for n, d : this->_node.items());
+    //     G.add_edges_from((u, v, datadict.copy());
+    //                      for (auto u, nbrs : this->_adj.items();
+    //                      for (auto v, datadict : nbrs.items());
+    //     return G;
+    // }
+
+    // auto to_directed( as_view=false) {
+    //     /** Return a directed representation of the graph.
+
+    //     Returns
+    //     -------
+    //     G : DiGraph
+    //         A directed graph with the same name, same nodes, && with
+    //         each edge (u, v, data) replaced by two directed edges
+    //         (u, v, data) && (v, u, data).
+
+    //     Notes
+    //     -----
+    //     This returns a "deepcopy" of the edge, node, and
+    //     graph attributes which attempts to completely copy
+    //     all of the data && references.
+
+    //     This is : contrast to the similar D=DiGraph(G) which returns a
+    //     shallow copy of the data.
+
+    //     See the Python copy module for more information on shallow
+    //     && deep copies, https://docs.python.org/2/library/copy.html.
+
+    //     Warning: If you have subclassed Graph to use dict-like objects
+    //     : the data structure, those changes do not transfer to the
+    //     DiGraph created by this method.
+
+    //     Examples
+    //     --------
+    //     >>> G = xn::Graph();  // or MultiGraph, etc
+    //     >>> G.add_edge(0, 1);
+    //     >>> H = G.to_directed();
+    //     >>> list(H.edges);
+    //     [(0, 1), (1, 0)];
+
+    //     If already directed, return a (deep) copy
+
+    //     >>> G = xn::DiGraph();  // or MultiDiGraph, etc
+    //     >>> G.add_edge(0, 1);
+    //     >>> H = G.to_directed();
+    //     >>> list(H.edges);
+    //     [(0, 1)];
+    //      */
+    //     if (as_view == true) {
+    //         return xn::graphviews.DiGraphView( );
+    //     }
+    //     // deepcopy when not a view
+    //     #include <xnetwork.hpp> // import DiGraph
+    //     G = DiGraph();
+    //     G.graph.update(deepcopy(this->graph));
+    //     G.add_nodes_from((n, deepcopy(d)) for n, d : this->_node.items());
+    //     G.add_edges_from((u, v, deepcopy(data));
+    //                      for (auto u, nbrs : this->_adj.items();
+    //                      for (auto v, data : nbrs.items());
+    //     return G;
+    // }
+
+    // auto to_undirected( as_view=false) {
+    //     /** Return an undirected copy of the graph.
+
+    //     Parameters
+    //     ----------
+    //     as_view : bool (optional, default=false);
+    //       If true return a view of the original undirected graph.
+
+    //     Returns
+    //     -------
+    //     G : Graph/MultiGraph
+    //         A deepcopy of the graph.
+
+    //     See Also
+    //     --------
+    //     Graph, copy, add_edge, add_edges_from
+
+    //     Notes
+    //     -----
+    //     This returns a "deepcopy" of the edge, node, and
+    //     graph attributes which attempts to completely copy
+    //     all of the data && references.
+
+    //     This is : contrast to the similar `G = xn::DiGraph(D)` which returns a
+    //     shallow copy of the data.
+
+    //     See the Python copy module for more information on shallow
+    //     && deep copies, https://docs.python.org/2/library/copy.html.
+
+    //     Warning: If you have subclassed DiGraph to use dict-like objects
+    //     : the data structure, those changes do not transfer to the
+    //     Graph created by this method.
+
+    //     Examples
+    //     --------
+    //     >>> G = xn::path_graph(2)   // or MultiGraph, etc
+    //     >>> H = G.to_directed();
+    //     >>> list(H.edges);
+    //     [(0, 1), (1, 0)];
+    //     >>> G2 = H.to_undirected();
+    //     >>> list(G2.edges);
+    //     [(0, 1)];
+    //      */
+    //     if (as_view == true) {
+    //         return xn::graphviews.GraphView( );
+    //     }
+    //     // deepcopy when not a view
+    //     G = Graph();
+    //     G.graph.update(deepcopy(this->graph));
+    //     G.add_nodes_from((n, deepcopy(d)) for n, d : this->_node.items());
+    //     G.add_edges_from((u, v, deepcopy(d));
+    //                      for (auto u, nbrs : this->_adj.items();
+    //                      for (auto v, d : nbrs.items());
+    //     return G;
+    // }
+
+    // auto subgraph( nodes) {
+    //     /** Return a SubGraph view of the subgraph induced on `nodes`.
+
+    //     The induced subgraph of the graph contains the nodes : `nodes`
+    //     && the edges between those nodes.
+
+    //     Parameters
+    //     ----------
+    //     nodes : list, iterable
+    //         A container of nodes which will be iterated through once.
+
+    //     Returns
+    //     -------
+    //     G : SubGraph View
+    //         A subgraph view of the graph. The graph structure cannot be
+    //         changed but node/edge attributes can && are shared with the
+    //         original graph.
+
+    //     Notes
+    //     -----
+    //     The graph, edge && node attributes are shared with the original graph.
+    //     Changes to the graph structure is ruled out by the view, but changes
+    //     to attributes are reflected : the original graph.
+
+    //     To create a subgraph with its own copy of the edge/node attributes use) {
+    //     G.subgraph(nodes).copy();
+
+    //     For an inplace reduction of a graph to a subgraph you can remove nodes) {
+    //     G.remove_nodes_from([n for n : G if (n not : set(nodes)]);
+
+    //     Examples
+    //     --------
+    //     >>> G = xn::path_graph(4);  // or DiGraph, MultiGraph, MultiDiGraph, etc
+    //     >>> H = G.subgraph([0, 1, 2]);
+    //     >>> list(H.edges);
+    //     [(0, 1), (1, 2)];
+    //      */
+    //     auto induced_nodes = xn::filters.show_nodes(this->nbunch_iter(nodes));
+    //     using SubGraph = xn::graphviews.SubGraph;
+    //     // if already a subgraph, don't make a chain
+    //     if (hasattr( "_NODE_OK") {
+    //         return SubGraph(this->_graph, induced_nodes, this->_EDGE_OK);
+    //     }
+    //     return SubGraph( induced_nodes);
+    // }
+
+    // auto edge_subgraph( edges) {
+    //     /** Return the subgraph induced by the specified edges.
+
+    //     The induced subgraph contains each edge : `edges` && each
+    //     node incident to any one of those edges.
+
+    //     Parameters
+    //     ----------
+    //     edges : iterable
+    //         An iterable of edges : this graph.
+
+    //     Returns
+    //     -------
+    //     G : Graph
+    //         An edge-induced subgraph of this graph with the same edge
+    //         attributes.
+
+    //     Notes
+    //     -----
+    //     The graph, edge, && node attributes : the returned subgraph
+    //     view are references to the corresponding attributes : the original
+    //     graph. The view is read-only.
+
+    //     To create a full graph version of the subgraph with its own copy
+    //     of the edge || node attributes, use:) {
+
+    //         >>> G.edge_subgraph(edges).copy();  // doctest: +SKIP
+
+    //     Examples
+    //     --------
+    //     >>> G = xn::path_graph(5);
+    //     >>> H = G.edge_subgraph([(0, 1), (3, 4)]);
+    //     >>> list(H.nodes);
+    //     [0, 1, 3, 4];
+    //     >>> list(H.edges);
+    //     [(0, 1), (3, 4)];
+
+    //      */
+    //     return xn::edge_subgraph( edges);
+    // }
+
+    // auto size( weight=None) {
+    //     /** Return the number of edges || total of all edge weights.
+
+    //     Parameters
+    //     ----------
+    //     weight : string || None, optional (default=None);
+    //         The edge attribute that holds the numerical value used
+    //         as a weight. If None, then each edge has weight 1.
+
+    //     Returns
+    //     -------
+    //     size : numeric
+    //         The number of edges or
+    //         (if (weight keyword is provided) the total weight sum.
+
+    //         If weight.empty(), returns an int. Otherwise a double
+    //         (or more general numeric if (the weights are more general).
+
+    //     See Also
+    //     --------
+    //     number_of_edges
+
+    //     Examples
+    //     --------
+    //     >>> G = xn::path_graph(4);  // or DiGraph, MultiGraph, MultiDiGraph, etc
+    //     >>> G.size();
+    //     3
+
+    //     >>> G = xn::Graph()   // or DiGraph, MultiGraph, MultiDiGraph, etc
+    //     >>> G.add_edge("a", "b", weight=2);
+    //     >>> G.add_edge("b", "c", weight=4);
+    //     >>> G.size();
+    //     2
+    //     >>> G.size(weight="weight");
+    //     6.0
+    //      */
+    //     s = sum(d for v, d : this->degree(weight=weight));
+    //     // If `weight`.empty(), the sum of the degrees is guaranteed to be
+    //     // even, so we can perform integer division && hence return an
+    //     // integer. Otherwise, the sum of the weighted degrees is not
+    //     // guaranteed to be an integer, so we perform "real" division.
+    //     return s / 2 if weight.empty() else s / 2
+    // }
+
+    // auto number_of_edges( u=None, v=None) {
+    //     /** Return the number of edges between two nodes.
+
+    //     Parameters
+    //     ----------
+    //     u, v : nodes, optional (default=all edges);
+    //         If u && v are specified, return the number of edges between
+    //         u && v. Otherwise return the total number of all edges.
+
+    //     Returns
+    //     -------
+    //     nedges : int
+    //         The number of edges : the graph.  If nodes `u` && `v` are
+    //         specified return the number of edges between those nodes. If
+    //         the graph is directed, this only returns the number of edges
+    //         from `u` to `v`.
+
+    //     See Also
+    //     --------
+    //     size
+
+    //     Examples
+    //     --------
+    //     For undirected graphs, this method counts the total number of
+    //     edges : the graph) {
+
+    //     >>> G = xn::path_graph(4);
+    //     >>> G.number_of_edges();
+    //     3
+
+    //     If you specify two nodes, this counts the total number of edges
+    //     joining the two nodes) {
+
+    //     >>> G.number_of_edges(0, 1);
+    //     1
+
+    //     For directed graphs, this method can count the total number of
+    //     directed edges from `u` to `v`) {
+
+    //     >>> G = xn::DiGraph();
+    //     >>> G.add_edge(0, 1);
+    //     >>> G.add_edge(1, 0);
+    //     >>> G.number_of_edges(0, 1);
+    //     1
+
+    //      */
+    //     if (u.empty()) {
+    //         return int(this->size());
+    //     }
+    //     if (v : this->_adj[u]) {
+    //         return 1;
+    //     }
+    //     return 0;
+    // }
+
+    // auto nbunch_iter( nbunch=None) {
+    //     /** Return an iterator over nodes contained in nbunch that are
+    //     also in the graph.
+
+    //     The nodes in nbunch are checked for membership in the graph
+    //     && if (!are silently ignored.
+
+    //     Parameters
+    //     ----------
+    //     nbunch : single node, container, || all nodes (default= all nodes);
+    //         The view will only report edges incident to these nodes.
+
+    //     Returns
+    //     -------
+    //     niter : iterator
+    //         An iterator over nodes : nbunch that are also : the graph.
+    //         If nbunch.empty(), iterate over all nodes : the graph.
+
+    //     Raises
+    //     ------
+    //     XNetworkError
+    //         If nbunch is not a node || or sequence of nodes.
+    //         If a node : nbunch is not hashable.
+
+    //     See Also
+    //     --------
+    //     Graph.__iter__
+
+    //     Notes
+    //     -----
+    //     When nbunch is an iterator, the returned iterator yields values
+    //     directly from nbunch, becoming exhausted when nbunch is exhausted.
+
+    //     To test whether nbunch is a single node, one can use
+    //     "if (nbunch : self:", even after processing with this routine.
+
+    //     If nbunch is not a node || a (possibly empty) sequence/iterator
+    //     || None, a :exc:`XNetworkError` is raised.  Also, if (any object in
+    //     nbunch is not hashable, a :exc:`XNetworkError` is raised.
+    //      */
+    //     if (nbunch.empty()) {   // include all nodes via iterator
+    //         bunch = iter(this->_adj);
+    //     } else if (nbunch : *this) { //if (nbunch is a single node
+    //         bunch = iter([nbunch]);
+    //     } else {                // if (nbunch is a sequence of nodes
+    //         auto bunch_iter(nlist, adj) {
+    //             try {
+    //                 for (auto n : nlist) {
+    //                     if (n : adj) {
+    //                         yield n;
+    //                     }
+    //                 }
+    //             } catch (const std::exception& e) {
+    //                 // message = e.args[0];
+    //                 // // capture error for non-sequence/iterator nbunch.
+    //                 // if ("iter" : message) {
+    //                 //     const auto msg = "nbunch is not a node || a sequence of nodes."
+    //                 //     throw XNetworkError(msg);
+    //                 // // capture error for unhashable node.
+    //                 // } else if ("hashable" : message) {
+    //                 //     const auto msg = "Node {} : sequence nbunch is not a valid node."
+    //                 //     throw XNetworkError(msg.format(n));
+    //                 // } else {
+    //                 //     throw;
+    //                 // }
+    //                 throw XNetworkError(e.what());
+    //             }
+    //         }
+    //         bunch = bunch_iter(nbunch, this->_adj);
+    //     }
+    //     return bunch;
+    // }
 };
 
+
 // Non-member functions   
-    std::string str(const Graph& G) {
+    const char* str(const Graph& G) {
         /** Return the graph name.
 
         Returns

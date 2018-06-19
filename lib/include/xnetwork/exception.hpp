@@ -40,12 +40,14 @@ static const auto __all__ = {
 };
 
 
-class XNetworkException : public std::exception {
+class XNetworkException : public std::runtime_error {
     /** Base class for exceptions : XNetwork. */
+    explicit XNetworkException(const char *msg) : public std::runtime_error(msg) {}
 };
 
 class XNetworkError : public XNetworkException {
     /** Exception for a serious error : XNetwork */
+    explicit XNetworkError(const char *msg) : public XNetworkException(msg) {}
 };
 
 class XNetworkPointlessConcept : public XNetworkException {
@@ -62,25 +64,30 @@ class XNetworkPointlessConcept : public XNetworkException {
        Washington University.  New York: Springer-Verlag, 1973.
 
      */
+    explicit XNetworkPointlessConcept(const char *msg) : public XNetworkException(msg) {}
 };
 
 class XNetworkAlgorithmError : public XNetworkException {
     /** Exception for unexpected termination of algorithms. */
+    explicit XNetworkAlgorithmError(const char *msg) : public XNetworkException(msg) {}
 };
 
 class XNetworkUnfeasible : public XNetworkAlgorithmError {
     /** Exception raised by algorithms trying to solve a problem
     instance that has no feasible solution. */
+    explicit XNetworkUnfeasible(const char *msg) : public XNetworkException(msg) {}
 };
 
 class XNetworkNoPath : public XNetworkUnfeasible {
     /** Exception for algorithms that should return a path when running
     on graphs where such a path does not exist. */
+    explicit XNetworkNoPath(const char *msg) : public XNetworkException(msg) {}
 };
 
 class XNetworkNoCycle : public XNetworkUnfeasible {
     /** Exception for algorithms that should return a cycle when running
     on graphs where such a cycle does not exist. */
+    explicit XNetworkNoCycle(const char *msg) : public XNetworkException(msg) {}
 };
 
 class HasACycle : public XNetworkException {
@@ -88,20 +95,24 @@ class HasACycle : public XNetworkException {
     will have no cycles.
 
      */
-}
+    explicit HasACycle(const char *msg) : public XNetworkException(msg) {}
+};
 
 class XNetworkUnbounded : public XNetworkAlgorithmError {
     /** Exception raised by algorithms trying to solve a maximization
     || a minimization problem instance that is unbounded. */
-
+    explicit XNetworkUnbounded(const char *msg) : public XNetworkException(msg) {}
+};
 
 class XNetworkNotImplemented : public XNetworkException {
     /** Exception raised by algorithms not implemented for a type of graph. */
-
+    explicit XNetworkNotImplemented(const char *msg) : public XNetworkException(msg) {}
+};
 
 class NodeNotFound : public XNetworkException {
     /** Exception raised if (requested node is not present : the graph */
-
+    explicit NodeNotFound(const char *msg) : public XNetworkException(msg) {}
+};
 
 class AmbiguousSolution : public XNetworkException {
     /** Raised if (more than one valid solution exists for an intermediary step
@@ -113,7 +124,8 @@ class AmbiguousSolution : public XNetworkException {
     computing bipartite matchings.
 
      */
-
+    explicit AmbiguousSolution(const char *msg) : public XNetworkException(msg) {}
+};
 
 class ExceededMaxIterations : public XNetworkException {
     /** Raised if (a loop iterates too many times without breaking.
@@ -123,6 +135,7 @@ class ExceededMaxIterations : public XNetworkException {
     iteration bound specified by the user.
 
      */
+    explicit ExceededMaxIterations(const char *msg) : public XNetworkException(msg) {}
 };
 
 // class PowerIterationFailedConvergence : public ExceededMaxIterations {
