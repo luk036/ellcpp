@@ -33,7 +33,8 @@ auto bsearch(Oracle &evaluate, const Space &I,
     return std::tuple{u, niter, feasible};
 }
 
-template <typename Oracle, typename Space> class bsearch_adaptor {
+template <typename Oracle, typename Space> //
+class bsearch_adaptor {
   private:
     Oracle &_P;
     Space &_S;
@@ -42,7 +43,9 @@ template <typename Oracle, typename Space> class bsearch_adaptor {
   public:
     explicit bsearch_adaptor(Oracle &P, Space &S,
                              const Options &options = Options())
-        : _P{P}, _S{S}, _options{options} {}
+      : _P{P},  //
+        _S{S},  //
+        _options{options} {}
 
     auto x_best() const { return _S.xc(); }
 
@@ -51,7 +54,7 @@ template <typename Oracle, typename Space> class bsearch_adaptor {
         _P.update(t);
         auto [x, _1, feasible, _2] = cutting_plane_feas(_P, S, _options);
         if (feasible) {
-            _S.set_xc(x);
+            _S.xc() = x;
             return true;
         }
         return false;
@@ -162,23 +165,24 @@ auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
                      const Options &options = Options()) {
     bool feasible = false;
     auto x_best = S.xc();
-    auto niter = 1u, status = 1u;
+    auto status = 1u;
+    auto niter = 1u;
     for (; niter < options.max_it; ++niter) {
-        auto [g, h, t1, x, loop] = evaluate(S.xc(), t, (status != 3) ? 0 : 1);
+        auto [g, h, t1, x0, loop] = evaluate(S.xc(), t, (status != 3) ? 0 : 1);
         if (status != 3) {
             if (loop == 1) { // discrete sol'n
-                h += xt::linalg::dot(g, x - S.xc())();
+                h += xt::linalg::dot(g, x0 - S.xc())();
             }
         } else { // can't cut in the previous iteration
             if (loop == 0) {
                 break; // no more alternative cut
             }
-            h += xt::linalg::dot(g, x - S.xc())();
+            h += xt::linalg::dot(g, x0 - S.xc())();
         }
         if (t != t1) { // best t obtained
             feasible = true;
             t = t1;
-            x_best = x;
+            x_best = x0;
         }
         double tau;
         std::tie(status, tau) = S.update(g, h);

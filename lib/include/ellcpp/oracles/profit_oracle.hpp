@@ -9,113 +9,93 @@
 #include <xtensor/xarray.hpp>
 
 class profit_oracle {
-    using Vec = xt::xarray<double>;
+    using xarray = xt::xarray<double>;
+
+  private:
+    double _log_pA;
+    double _log_k;
+    xarray _v;
 
   public:
-    profit_oracle(double p, double A, double alpha, double beta, double v1,
-                  double v2, double k)
-        : _log_pA{std::log(p * A)}, _log_k{std::log(k)}, _v{Vec{v1, v2}},
-          _a{Vec{alpha, beta}} {}
+    xarray _a;
 
-    auto operator()(const Vec &y, double t) const {
+  public:
+    profit_oracle(double p, double A, double k, xarray a, xarray v)
+        : _log_pA{std::log(p * A)}, //
+          _log_k{std::log(k)},      //
+          _v{v},                    //
+          _a{a}                     //
+    {}
+
+    auto operator()(const xarray &y, double t) const {
         double fj = y[0] - _log_k; // constraint
-        if (fj > 0.0) {
-            auto g = Vec{1., 0.};
+        if (fj > 0.) {
+            auto g = xarray{1., 0.};
             return std::tuple{g, fj, t};
         }
         double log_Cobb = _log_pA + xt::linalg::dot(_a, y)();
         auto x = xt::exp(y);
-        // Vec x(2);
-        // x[0] = std::exp(y[0]);
-        // x[1] = std::exp(y[1]);
         double vx = xt::linalg::dot(_v, x)();
         auto te = t + vx;
         fj = std::log(te) - log_Cobb;
-        if (fj < 0.0) {
+        if (fj < 0.) {
             te = std::exp(log_Cobb);
             t = te - vx;
-            fj = 0.0;
+            fj = 0.;
         }
-        Vec g = (_v * x) / te - _a;
+        xarray g = (_v * x) / te - _a;
         return std::tuple{g, fj, t};
     }
-
-  private:
-    double _log_pA;
-    double _log_k;
-    Vec _v;
-    Vec _a;
 };
 
 class profit_rb_oracle {
-    using Vec = xt::xarray<double>;
-
-  public:
-    profit_rb_oracle(double p, double A, double alpha, double beta, double v1,
-                     double v2, double k, double ui, double e1, double e2,
-                     double e3)
-        : _uie1{ui * e1}, _uie2{ui * e2}, _log_pA{std::log((p - ui * e3) * A)},
-          _log_k{std::log(k - ui * e3)}, _v{Vec{v1 + ui * e3, v2 + ui * e3}},
-          _a{Vec{alpha, beta}} {}
-
-    auto operator()(const Vec &y, double t) const {
-        double fj = y[0] - _log_k; // constraint
-        if (fj > 0.0) {
-            auto g = Vec{1., 0.};
-            return std::tuple{g, fj, t};
-        }
-        auto a_rb = _a;
-        a_rb[0] += _uie1 * (y[0] > 0. ? -1 : +1);
-        a_rb[1] += _uie2 * (y[1] > 0. ? -1 : +1);
-
-        double log_Cobb = _log_pA + xt::linalg::dot(a_rb, y)();
-        auto x = xt::exp(y);
-        double vx = xt::linalg::dot(_v, x)();
-        auto te = t + vx;
-        fj = std::log(te) - log_Cobb;
-        if (fj < 0.0) {
-            te = std::exp(log_Cobb);
-            t = te - vx;
-            fj = 0.0;
-        }
-        Vec g = (_v * x) / te - a_rb;
-        return std::tuple{g, fj, t};
-    }
+    using xarray = xt::xarray<double>;
 
   private:
-    double _uie1, _uie2;
-    double _log_pA;
-    double _log_k;
-    Vec _v;
-    Vec _a;
-};
-
-class profit_q_oracle : profit_oracle {
-    // using Vec = bnu::vector<double>;
-    // using Vec = std::valarray<double>;
-    using Vec = xt::xarray<double>;
+    xarray _uie;
+    xarray _a;
+    double _uie3;
+    profit_oracle _P;
 
   public:
-    profit_q_oracle(double p, double A, double alpha, double beta, double v1,
-                    double v2, double k)
-        : profit_oracle(p, A, alpha, beta, v1, v2, k) {}
+    profit_rb_oracle(double p, double A, double k, xarray a, xarray v,
+                     double ui, xarray e, double e3)
+        : _uie{ui * e},                             //
+          _a{a},                                    //
+          _uie3{ui * e3},                           //
+          _P(p - _uie3, A, k - _uie3, a, v + _uie3) //
+    {}
 
-    auto operator()(const Vec &y, double t, int /*unused*/) const {
-        // Vec yd = y;
-        // for (double &e : yd) {
-        //   auto temp = std::round(std::exp(e));
-        //   if (temp == 0.0) {
-        //     temp = 1.0;
-        //   }
-        //   e = std::log(temp);
-        // }
-        Vec x = xt::round(xt::exp(y));
-        if (x[0] == 0.0)
+    auto operator()(const xarray &y, double t) {
+        auto a_rb = _a;
+        for (auto i : {0, 1}) {
+            a_rb[i] += _uie[i] * (y[i] > 0. ? -1 : +1);
+        }
+        _P._a = a_rb;
+        return _P(y, t);
+    }
+};
+
+class profit_q_oracle {
+    using xarray = xt::xarray<double>;
+
+  private:
+    profit_oracle _P;
+
+  public:
+    profit_q_oracle(double p, double A, double k, xarray a, xarray v)
+        : _P(p, A, k, a, v) {}
+
+    auto operator()(const xarray &y, double t, int /*unused*/) const {
+        xarray x = xt::round(xt::exp(y));
+        if (x[0] == 0.0) {
             x[0] = 1.0;
-        if (x[1] == 0.0)
+        }
+        if (x[1] == 0.0) {
             x[1] = 1.0;
-        Vec yd = xt::log(x);
-        auto [g, fj, t1] = profit_oracle::operator()(yd, t);
+        }
+        xarray yd = xt::log(x);
+        auto [g, fj, t1] = _P(yd, t);
         return std::tuple{g, fj, t1, yd, 1};
     }
 };
