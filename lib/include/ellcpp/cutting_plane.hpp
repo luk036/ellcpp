@@ -6,7 +6,7 @@
 
 struct Options {
     unsigned int max_it = 2000;
-    double tol = 1e-4;
+    double tol = 1e-8;
 };
 
 template <typename Oracle, typename Space>
@@ -88,12 +88,12 @@ auto cutting_plane_feas(Oracle &evaluate, Space &S,
             feasible = true;
             break;
         }
-        double tau;
-        std::tie(status, tau) = S.update(g, h);
+        double tsq;
+        std::tie(status, tsq) = S.update(g, h);
         if (status != 0) {
             break;
         }
-        if (tau < options.tol) { // no more
+        if (tsq < options.tol) { // no more
             status = 2;
             break;
         }
@@ -130,12 +130,12 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
             t = t1;
             x_best = S.xc();
         }
-        double tau;
-        std::tie(status, tau) = S.update(g, h);
+        double tsq;
+        std::tie(status, tsq) = S.update(g, h);
         if (status == 1) {
             break;
         }
-        if (tau < options.tol) { // no more
+        if (tsq < options.tol) { // no more
             status = 2;
             break;
         }
@@ -184,12 +184,12 @@ auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
             t = t1;
             x_best = x0;
         }
-        double tau;
-        std::tie(status, tau) = S.update(g, h);
+        double tsq;
+        std::tie(status, tsq) = S.update(g, h);
         if (status == 1) {
             break;
         }
-        if (tau < options.tol) {
+        if (tsq < options.tol) {
             status = 2;
             break;
         }

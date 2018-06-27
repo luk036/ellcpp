@@ -132,5 +132,5 @@ TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]") {
 TEST_CASE("Lowpass Filter (w/o parallel cut)", "[lowpass]") {
     auto [feasible, num_iters] = run_lowpass(false);
     CHECK(feasible);
-    CHECK(num_iters >= 15110);
+    CHECK(num_iters >= 7479);
 }

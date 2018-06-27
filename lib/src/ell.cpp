@@ -5,9 +5,10 @@
 /**
  * @brief Central Cut
  */
-ell::params_t ell::calc_cc(std::size_t n) const {
-    double rho = 1. / (n + 1);
-    double sigma = 2. * rho;
+ell::params_t ell::calc_cc(double tsq) const {
+    auto np1 = this->_n + 1;
+    auto sigma = 2. / np1;
+    double rho = std::sqrt(tsq) / np1;
     double delta = _c1;
     return std::tuple{rho, sigma, delta};
 }
@@ -15,54 +16,78 @@ ell::params_t ell::calc_cc(std::size_t n) const {
 /**
  * @brief Deep Cut
  */
-ell::return_t ell::calc_dc(double alpha) const {
-    std::size_t n = _xc.size();
-    if (alpha == 0.) {
-        return std::tuple{0, this->calc_cc(n)};
+ell::return_t ell::calc_dc(double h0, double tsq) const {
+    if (h0 == 0.) {
+        return std::tuple{0, this->calc_cc(tsq)};
     }
-    // auto [status, rho, sigma, delta] = std::tuple{0, 0., 0., 0.0};
-    auto status = 0;
     auto params = std::tuple{0., 0., 0.};
 
-    if (alpha > 1.) {
-        status = 1; // no sol'n
-    } else if (n * alpha < -1.) {
-        status = 3; // no effect
-    } else {
-        double rho = (1. + n * alpha) / (n + 1);
-        double sigma = 2. * rho / (1. + alpha);
-        double delta = _c1 * (1. - alpha * alpha);
-        params = std::tuple{rho, sigma, delta};
+    auto t0 = tsq - h0*h0;
+    if (t0 < 0) {
+        return std::tuple{1, params}; // no sol'n
     }
-    return std::tuple{status, params};
+
+    auto n = this->_n;
+    auto tau = std::sqrt(tsq);
+    auto gamma = tau + n * h0;    
+    if (gamma < 0) {
+        return std::tuple{3, params}; // no effect
+    }
+
+    double rho = gamma / (n + 1);
+    double sigma = 2. * rho / (tau + h0);
+    double delta = this->_c1 * t0/tsq;
+    params = std::tuple{rho, sigma, delta};
+    return std::tuple{0, params};
 }
 
 /** Situation when feasible cut. */
-ell::params_t ell::calc_ll_cc(double a1, std::size_t n) const {
-    double asq1 = a1 * a1;
-    double nasq1 = n * asq1;
-    double xi = std::sqrt(nasq1 * nasq1 - 4. * asq1 + 4.);
-    double sigma = (n + (2. - xi) / asq1) / (n + 1);
-    double rho = a1 * sigma / 2.;
-    double delta = _c1 * (1 - (asq1 - xi / n) / 2.);
+ell::params_t ell::calc_ll_cc(double h1, double t1, double tsq) const {
+    auto n = this->_n;
+    auto hsq1 = tsq - t1;
+    auto temp = n * hsq1 / 2;
+    auto xi = std::sqrt(tsq*t1 + temp*temp);
+    auto sigma = (n + 2*(tsq - xi) / hsq1) / (n + 1);
+    auto rho = sigma * h1 / 2;
+    auto delta = this->_c1 * (tsq - hsq1/2 - xi/n) / tsq;
     return std::tuple{rho, sigma, delta};
 }
 
-ell::params_t ell::calc_ll_general(double a0, double a1, std::size_t n) const {
-    double asum = a0 + a1;
-    double asq0 = a0 * a0, asq1 = a1 * a1;
-    double asqdiff = asq1 - asq0;
-    double nasqdiff = n * asqdiff;
-    double xi = std::sqrt(4. * (1. - asq0) * (1. - asq1) + nasqdiff * nasqdiff);
-    double sigma =
-        (n + (2. * (1. + a0 * a1 - xi / 2.) / (asum * asum))) / (n + 1);
-    double rho = asum * sigma / 2.;
-    double delta = _c1 * (1. - (asq0 + asq1 - xi / n) / 2.);
-    return std::tuple{rho, sigma, delta};
+ell::return_t ell::calc_ll_core(double h0, double h1, double tsq) const {
+    auto t1 = tsq - h1*h1;
+    if (t1 < 0 || !this->_use_parallel) {
+        return this->calc_dc(h0, tsq);
+    }
+    auto params = std::tuple{0., 0., 0.};
+    auto l = h1 - h0;
+    if (l < 0) {
+        return std::tuple{1, params}; // no sol'n
+    }
+    auto n = this->_n;
+    auto p = h0*h1;
+    if (n*p < -tsq) {
+        return std::tuple{3, params}; // no effect
+    }
+    
+    if (h0 == 0.) {
+        params = this->calc_ll_cc(h1, t1, tsq);
+    } else {
+        auto t0 = tsq - h0*h0;
+        auto h = (h0 + h1)/2;
+        auto temp = n*h*l;
+        auto xi = std::sqrt(t0*t1 + temp*temp);
+        auto sigma = (n + (tsq - p - xi)/(2*h*h)) / (n + 1);
+        auto rho = sigma * h;
+        auto delta = _c1 * ((t0 + t1)/2 + xi/n) / tsq;
+        params = std::tuple{rho, sigma, delta};
+    }
+    return std::tuple{0, params};
 }
+
 
 ell1d::return_t ell1d::update(double g, double beta) {
     auto tau = std::abs(_r * g);
+    auto tsq = tau * tau;
     if (beta == 0.) {
         _r /= 2;
         if (g > 0.) {
@@ -70,13 +95,13 @@ ell1d::return_t ell1d::update(double g, double beta) {
         } else {
             _xc += _r;
         }
-        return std::tuple{0, tau};
+        return std::tuple{0, tsq};
     }
     if (beta > tau) {
-        return std::tuple{1, tau}; // no sol'n
+        return std::tuple{1, tsq}; // no sol'n
     }
     if (beta < -tau) {
-        return std::tuple{3, tau}; // no effect
+        return std::tuple{3, tsq}; // no effect
     }
     double l, u;
     double bound = _xc - beta / g;
@@ -89,5 +114,5 @@ ell1d::return_t ell1d::update(double g, double beta) {
     }
     _r = (u - l) / 2;
     _xc = l + _r;
-    return std::tuple{0, tau};
+    return std::tuple{0, tsq};
 }
