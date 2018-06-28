@@ -2,11 +2,10 @@
 // from __future__ import print_function
 // from pprint import pprint
 
-#include <xnetwork.hpp> // as xn
 #include <parametric.hpp> // import max_parametric
+#include <xnetwork.hpp>   // as xn
 
-
-auto set_default(const Graph& G, auto weight, auto value) {
+auto set_default(const Graph &G, auto weight, auto value) {
     for (auto [u, v] : G.edges) {
         if (G[u][v].get(weight, None) is None) {
             G[u][v][weight] = value;
@@ -14,14 +13,12 @@ auto set_default(const Graph& G, auto weight, auto value) {
     }
 }
 
-
-auto calc_weight(const Graph& G, double r, auto e) {
+auto calc_weight(const Graph &G, double r, auto e) {
     auto [u, v] = e;
     return G[u][v]["cost"] - r * G[u][v]["time"];
 }
 
-
-auto calc_ratio(const Graph& G, auto C) {
+auto calc_ratio(const Graph &G, auto C) {
     /** Calculate the ratio of the cycle
 
     Arguments) {
@@ -35,20 +32,20 @@ auto calc_ratio(const Graph& G, auto C) {
     auto total_time = 0;
     for (auto [u, v] : C) {
         total_cost += G[u][v]["cost"];
-        total_time += G[u][v]["time"];        
+        total_time += G[u][v]["time"];
     }
-    return total_cost/total_time;
+    return total_cost / total_time;
 }
 
 struct edge_cmp {
-    using dtype = std::tuple<Node*, Node*, int>;
+    using dtype = std::tuple<Node *, Node *, int>;
 
-    bool operator<(const dtype& a, const dtype& b) {
+    bool operator<(const dtype &a, const dtype &b) {
         return std::get<2>(a) < std::get<2>(b);
     }
 };
 
-auto min_cycle_ratio(const Graph& G) {
+auto min_cycle_ratio(const Graph &G) {
     auto mu = "cost";
     auto sigma = "time";
     set_default(G, mu, 1);
@@ -62,7 +59,6 @@ auto min_cycle_ratio(const Graph& G) {
     auto r0 = max_cost * G.number_of_edges() / min_time;
     return max_parametric(G, r0, calc_weight, calc_ratio);
 }
-
 
 // if (__name__ == "__main__") {
 //     #include <xnetwork.hpp> // as xn

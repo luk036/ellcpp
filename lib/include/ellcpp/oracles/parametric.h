@@ -3,12 +3,12 @@
 // from pprint import pprint
 
 // from xnetwork.utils import generate_unique_node
-#include <xnetwork.hpp> // as xn
 #include "neg_cycle.h" // import negCycleFinder
-#include <vector>
 #include <tuple>
+#include <vector>
+#include <xnetwork.hpp> // as xn
 
-auto max_parametric(const Graph& G, auto r, auto d, auto zero_cancel) {
+auto max_parametric(const Graph &G, auto r, auto d, auto zero_cancel) {
     /** maximum parametric problem) {
 
         max  r
@@ -17,7 +17,7 @@ auto max_parametric(const Graph& G, auto r, auto d, auto zero_cancel) {
 
     Arguments) {
         G {[type]} -- [description];
-        r {float} -- parameter to be maximized, initially a large number (infeasible);
+        r {float} -- parameter to be maximized, initially a large number (infeasible)
         d {[type]} -- monotone decreasing function w.r.t. r
         zero_cancel {[type]} -- [description];
 
@@ -27,12 +27,12 @@ auto max_parametric(const Graph& G, auto r, auto d, auto zero_cancel) {
         dist -- optimal sol"n
 
     **/
-    auto get_weight = [](const Graph& G, const std::tuple<Node*, Node*>& e) {
+    auto get_weight = [](const Graph &G, const std::tuple<Node *, Node *> &e) {
         return d(G, r, e);
     };
 
     auto S = negCycleFinder(G, get_weight);
-    std::vector<std::tuple<Node*, Node*>> C_opt{};
+    std::vector<std::tuple<Node *, Node *>> C_opt{};
     auto r_opt = r;
 
     while (true) {
@@ -53,7 +53,6 @@ auto max_parametric(const Graph& G, auto r, auto d, auto zero_cancel) {
 
     return std::tuple{r_opt, C_opt, S.dist};
 }
-
 
 // if (__name__ == "__main__") {
 //     #include <xnetwork.hpp> // as xn

@@ -43,9 +43,9 @@ class bsearch_adaptor {
   public:
     explicit bsearch_adaptor(Oracle &P, Space &S,
                              const Options &options = Options())
-      : _P{P},  //
-        _S{S},  //
-        _options{options} {}
+        : _P{P}, //
+          _S{S}, //
+          _options{options} {}
 
     auto x_best() const { return _S.xc(); }
 

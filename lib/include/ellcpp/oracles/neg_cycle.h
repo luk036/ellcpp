@@ -2,26 +2,25 @@
 /**
 Negative cycle detection for (auto weighed graphs.
 **/
-#include <xnetwork.hpp> // as xn
 #include <vector>
+#include <xnetwork.hpp> // as xn
 // #include <unordered_map>
 #include <py2cpp/py2cpp.hpp>
 
-auto default_get_weight(const Graph& G, const std::tuple<Node*, Node*>& e) {
+auto default_get_weight(const Graph &G, const std::tuple<Node *, Node *> &e) {
     auto [u, v] = e;
     return G[u][v].get("weight", 1);
 }
 
-
 class negCycleFinder {
-private:
+  private:
     Graph G;
-    py::dict<Node*, int> dist; // int???
-    py::dict<Node*, Node*> pred;
+    py::dict<Node *, int> dist; // int???
+    py::dict<Node *, Node *> pred;
 
-
-public:
-    explicit negCycleFinder( const Graph& G, auto get_weight=default_get_weight) {
+  public:
+    explicit negCycleFinder(const Graph &G,
+                            auto get_weight = default_get_weight) {
         this->G = G;
         for (auto v : this->G) {
             this->dist[v] = 0;
@@ -31,18 +30,18 @@ public:
         this->get_weight = get_weight;
     }
 
-    auto find_cycle( ) {
+    auto find_cycle() {
         /** Find a cycle on policy graph
 
         Arguments) {
-            G {xnetwork graph} 
+            G {xnetwork graph}
             pred {dictionary} -- policy graph
 
         Returns) {
             handle -- a start node of the cycle
         **/
 
-        py::dict<Node*, Node*> visited{};
+        py::dict<Node *, Node *> visited{};
 
         for (auto v : this->G) {
             if (visited.contains(v)) {
@@ -68,7 +67,7 @@ public:
         }
     }
 
-    auto relax( ) {
+    auto relax() {
         /** Perform a updating of dist and pred
 
         Arguments) {
@@ -84,12 +83,12 @@ public:
         **/
 
         bool changed = false;
-        for (auto& e : this->G.edges) {
+        for (auto &e : this->G.edges) {
             auto wt = this->get_weight(this->G, e);
             auto [u, v] = e;
             auto d = this->dist[u] + wt;
             if (this->dist[v] > d) {
-                this->dist[v] = d
+                this->dist[v] = d;
                 this->pred[v] = u;
                 changed = true;
             }
@@ -97,7 +96,7 @@ public:
         return changed;
     }
 
-    auto find_neg_cycle( ) {
+    auto find_neg_cycle() {
         /** Perform a updating of dist and pred
 
         Arguments) {
@@ -118,7 +117,7 @@ public:
         return this->neg_cycle_relax();
     }
 
-    auto neg_cycle_relax( ) {
+    auto neg_cycle_relax() {
         for (auto v : this->G) {
             this->pred[v] = nullptr;
         }
@@ -129,7 +128,7 @@ public:
                 // if (v != nullptr) {
                 auto v = this->find_cycle();
                 if (v != nullptr) {
-                    return this->cycle_list(v);                    
+                    return this->cycle_list(v);
                 }
             } else {
                 break;
@@ -137,9 +136,9 @@ public:
         }
     }
 
-    auto cycle_list( const Node* handle) {
+    auto cycle_list(const Node *handle) {
         auto v = handle;
-        std::vector<std::tuple<Node*, Node*>> cycle{}; // ???
+        std::vector<std::tuple<Node *, Node *>> cycle{}; // ???
         while (true) {
             auto u = this->pred[v];
             cycle.emplace_back(std::tuple{u, v});
@@ -151,7 +150,7 @@ public:
         return cycle;
     }
 
-    auto is_negative( const Node* handle) {
+    auto is_negative(const Node *handle) {
         auto v = handle;
         while (true) {
             auto u = this->pred[v];

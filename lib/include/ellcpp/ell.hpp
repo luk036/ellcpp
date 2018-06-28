@@ -30,10 +30,9 @@ class ell {
   public:
     template <typename T>
     ell(const T &val, const Arr &x)
-        : _n{x.size()} // n
-        , _c1{double(_n * _n) / (_n * _n - 1)} // 
-        , _xc{x} //
-    {
+        : _n{x.size()},                         // n
+          _c1{double(_n * _n) / (_n * _n - 1)}, //
+          _xc{x} {
         if constexpr (std::is_scalar<T>::value) { // C++17
             this->_Q = xt::eye(_n);
             this->_kappa = val;
@@ -54,49 +53,50 @@ class ell {
     /**
      * @brief Update ellipsoid core function using the cut
      *          g' * (x - xc) + beta <= 0
-     * 
-     * @tparam T 
-     * @tparam V 
-     * @param g 
-     * @param beta 
-     * @return auto 
+     *
+     * @tparam T
+     * @tparam V
+     * @param g
+     * @param beta
+     * @return auto
      */
     template <typename T>
-    auto update_core(const Arr &g, const T &beta) {
+    std::tuple<int, double> update_core(const Arr &g, const T &beta) {
         auto Qg = xt::linalg::dot(_Q, g);
         auto omega = xt::linalg::dot(g, Qg)();
         auto tsq = this->_kappa * omega;
         if (tsq <= 0.) {
-            return std::tuple{4, 0.};
+            return {4, 0.};
         }
         // auto tau = std::sqrt(_kappa * tsq);
         // auto alpha = beta / tau;
         auto [status, params] = this->calc_ll(beta, tsq);
         if (status != 0) {
-            return std::tuple{status, tsq};
+            return {status, tsq};
         }
         auto [rho, sigma, delta] = params;
         this->_xc -= (rho / omega) * Qg;
         this->_Q -= (sigma / omega) * xt::linalg::outer(Qg, Qg);
         this->_kappa *= delta;
-        return std::tuple{status, tsq}; // g++-7 is ok
+        return {status, tsq}; // g++-7 is ok
     }
 
     /* parallel or deep cut */
-    template <typename T> 
-    auto calc_ll(const T &beta, double tsq) {
+    template <typename T> //
+    return_t calc_ll(const T &beta, double tsq) {
         if constexpr (std::is_scalar<T>::value) { // C++17
             return this->calc_dc(beta, tsq);
         } else { // parallel cut
-            auto h0 = beta[0];
+            auto b0 = beta[0];
             if (beta.shape()[0] < 2) {
-                return this->calc_dc(h0, tsq);
+                return this->calc_dc(b0, tsq);
             }
-            return this->calc_ll_core(h0, beta[1], tsq);
+            return this->calc_ll_core(b0, beta[1], tsq);
         }
     }
 
-    template <typename T> auto update(const Arr &g, const T &beta) {
+    template <typename T> //
+    auto update(const Arr &g, const T &beta) {
         return this->update_core(g, beta);
     }
 
@@ -108,7 +108,7 @@ class ell {
      * @param n
      * @return auto
      */
-    return_t calc_ll_core(double h0, double h1, double tsq) const;    
+    return_t calc_ll_core(double b0, double b1, double tsq) const;
 
     /**
      * @brief Parallel Cut, one of them is central
@@ -117,12 +117,12 @@ class ell {
      * @param n
      * @return auto
      */
-    params_t calc_ll_cc(double h1, double t1, double tsq) const;
+    params_t calc_ll_cc(double b1, double t1, double tsq) const;
 
     /**
      * @brief Deep Cut
      */
-    return_t calc_dc(double h0, double tsq) const;
+    return_t calc_dc(double b0, double tsq) const;
 
     /**
      * @brief Central Cut
@@ -139,10 +139,9 @@ class ell1d {
     double _xc;
 
   public:
-    ell1d(double l, double u)  //
-        : _r{(u - l) / 2}  //
-        , _xc{l + _r}  // 
-        {}
+    ell1d(double l, double u) //
+        : _r{(u - l) / 2},    //
+          _xc{l + _r} {}
 
     auto &xc() { return _xc; }
 
