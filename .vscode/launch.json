@@ -6,7 +6,7 @@
                 "name": "(gdb) Launch",
                 "type": "cppdbg",
                 "request": "launch",
-                "program": "${workspaceRoot}/build/lib/test/EllLibTest",
+                "program": "${workspaceRoot}/build/app/EllApp",
                 "args": [],
                 "stopAtEntry": false,
                 "cwd": "${workspaceRoot}",

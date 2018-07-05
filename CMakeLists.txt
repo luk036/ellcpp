@@ -18,7 +18,7 @@ message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}")
 set(LIBS ${LIBS} "-L${xtensor_INCLUDE_DIRS}/../lib")
 message(STATUS "Test: ${LIBS}")
 
-add_definitions ( -std=c++1z )
+add_definitions ( -std=c++1z -g)
 add_subdirectory (third_party EXCLUDE_FROM_ALL)
 
 # add_executable (Main profit_main.cpp)

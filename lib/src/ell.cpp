@@ -8,8 +8,8 @@
 ell::params_t ell::calc_cc(double tsq) const {
     auto np1 = this->_n + 1;
     auto sigma = 2. / np1;
-    double rho = std::sqrt(tsq) / np1;
-    double delta = _c1;
+    auto rho = std::sqrt(tsq) / np1;
+    auto delta = _c1;
     return {rho, sigma, delta};
 }
 
@@ -23,7 +23,7 @@ ell::return_t ell::calc_dc(double b0, double tsq) const {
     auto params = std::tuple{0., 0., 0.};
 
     auto t0 = tsq - b0 * b0;
-    if (t0 < 0) {
+    if (t0 < 0.) {
         return {1, params}; // no sol'n
     }
 

@@ -71,7 +71,7 @@ class lowpass_oracle {
         // case 3,
         // 3. stopband constraint
         N = _As.shape()[0];
-        Arr w = xt::zeros<double>({N});
+        // Arr w = xt::zeros<double>({N});
         auto fmax = std::numeric_limits<double>::min();
         auto imax = 0u;
         // for (k in chain(range(i_As, N), range(i_As))) {

@@ -48,37 +48,37 @@ static double PI = std::acos(-1);
 // filter specs (for a low-pass filter)
 // *********************************************************************
 // number of FIR coefficients (including zeroth)
-static auto N = 32;
-static auto wpass = 0.12 * PI; // end of passband
-static auto wstop = 0.20 * PI; // start of stopband
-static auto delta0_wpass = 0.125;
-static auto delta0_wstop = 0.125;
+static const int N = 32;
+static const double wpass = 0.12 * PI; // end of passband
+static const double wstop = 0.20 * PI; // start of stopband
+static const double delta0_wpass = 0.125;
+static const double delta0_wstop = 0.125;
 // maximum passband ripple in dB (+/- around 0 dB)
-static auto delta = 20 * std::log10(1 + delta0_wpass);
+static const double delta = 20 * std::log10(1 + delta0_wpass);
 // stopband attenuation desired in dB
-static auto delta2 = 20 * std::log10(delta0_wstop);
+static const double delta2 = 20 * std::log10(delta0_wstop);
 
 // *********************************************************************
 // optimization parameters
 // *********************************************************************
 // rule-of-thumb discretization (from Cheney's Approximation Theory)
-static auto m = 15 * N;
+static const int m = 15 * N;
 static Arr w = xt::linspace<double>(0, PI, m); // omega
 
 // A is the matrix used to compute the power spectrum
 // A(w,:) = [1 2*cos(w) 2*cos(2*w) ... 2*cos(N*w)]
-static auto An = 2 * xt::cos(xt::linalg::outer(w, xt::arange(1, N)));
-static auto A = xt::concatenate(xt::xtuple(xt::ones<double>({m}), An), 1);
+static Arr An = 2 * xt::cos(xt::linalg::outer(w, xt::arange(1, N)));
+static Arr A = xt::concatenate(xt::xtuple(xt::ones<double>({m, 1}), An), 1);
 
 // passband 0 <= w <= w_pass
 static auto ind_p = xt::where(w <= wpass)[0]; // passband
-static double Lp = std::pow(10, -delta / 20);
-static double Up = std::pow(10, +delta / 20);
+static const double Lp = std::pow(10, -delta / 20);
+static const double Up = std::pow(10, +delta / 20);
 static Arr Ap = xt::view(A, xt::range(0, ind_p.size()), xt::all());
 
 // stopband (w_stop <= w)
 static auto ind_s = xt::where(wstop <= w)[0]; // stopband
-static double Sp = std::pow(10, delta2 / 20);
+static const double Sp = std::pow(10, delta2 / 20);
 
 using xt::placeholders::_;
 static Arr As = xt::view(A, xt::range(ind_s[0], _), xt::all());
@@ -92,9 +92,9 @@ static auto ind_beg = ind_p[ind_p.size() - 1];
 static auto ind_end = ind_s[0];
 static Arr Anr = xt::view(A, xt::range(ind_beg, ind_end), xt::all());
 
-static double Lpsq = Lp * Lp;
-static double Upsq = Up * Up;
-static double Spsq = Sp * Sp;
+static const double Lpsq = Lp * Lp;
+static const double Upsq = Up * Up;
+static const double Spsq = Sp * Sp;
 // ********************************************************************
 // optimization
 // ********************************************************************
@@ -107,7 +107,7 @@ auto run_lowpass(bool use_parallel) {
     auto P = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
     auto options = Options();
     options.max_it = 20000;
-    options.tol = 1e-4;
+    options.tol = 1e-8;
     auto [r, Spsq_new, num_iters, feasible, status] =
         cutting_plane_dc(P, E, Spsq, options);
     return std::tuple<bool, unsigned int>{feasible, num_iters};
