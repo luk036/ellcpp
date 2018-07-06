@@ -25,16 +25,19 @@ class qmi_oracle {
     double _t;
     std::size_t _nx = 0;
     std::size_t _count;
-    chol_ext _Q;
     Arr _Fx;
     Arr _A;
 
   public:
+    chol_ext _Q;
+
+  public:
     explicit qmi_oracle(const Arr &F, const Arr &F0)
         : _F{F}, _F0{F0}, _t{0.}, _count{0},
-          _Q(F0.shape()[0]), _Fx{xt::zeros<double>(F0.shape())},
-          _A{xt::zeros<double>(F0.shape())} {}
-
+          _A{xt::zeros<double>(F0.shape())},
+          _Q(F0.shape()[0]), _Fx{xt::zeros<double>(F0.shape())}
+          {}
+          
     void update(double t) { _t = t; }
 
     auto operator()(const Arr &x) {

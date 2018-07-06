@@ -3,7 +3,7 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <iostream>
-#include <ellcpp/oracles/qmi_oracle.hpp>
+// #include <ellcpp/oracles/qmi_oracle.hpp>
 #include <tuple>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
@@ -14,7 +14,8 @@
 
 using Arr = xt::xarray<double>;
 
-extern Arr lsq_corr_poly(const Arr &, const Arr &, std::size_t);
+extern std::size_t lsq_corr_poly(const Arr &, const Arr &, std::size_t);
+extern std::size_t lsq_corr_poly2(const Arr &, const Arr &, std::size_t);
 
 // a fake dataset to make the bumps with
 static const auto nx = 11; // number of points
@@ -64,5 +65,8 @@ TEST_CASE("Corr_fn", "[corr_fn]") {
     Y /= N;
 
     // lsq_corr_bspline(Y, s, 4);
-    Arr a = lsq_corr_poly(Y, s, 4);
+    auto num_iters = lsq_corr_poly2(Y, s, 4);
+    CHECK(num_iters >= 257);
+    CHECK(num_iters <= 657);
+
 }
