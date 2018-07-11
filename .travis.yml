@@ -10,6 +10,7 @@ matrix:
           packages:
             - g++-7
             - catch
+            - libboost-graph-dev
       env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
       addons:

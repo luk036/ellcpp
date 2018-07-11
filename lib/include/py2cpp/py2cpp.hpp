@@ -5,13 +5,11 @@
 #include <unordered_set>
 #include <initializer_list>
 #include <utility>
-#include <string>
 
 namespace py {
 
 template <typename Key>
-struct set : std::unordered_set<Key>
-{
+struct set : std::unordered_set<Key> {
     using _Self = set<Key>;
 
     explicit set(std::initializer_list<Key> init) : 
@@ -49,8 +47,7 @@ set(std::initializer_list<Key> ) -> set<Key>;
 
 
 template <typename Key, typename T>
-struct dict : std::unordered_map<Key, T>
-{
+struct dict : std::unordered_map<Key, T> {
     using value_type = std::pair<const Key, T>;
     using _Self = dict<Key, T>;
 
