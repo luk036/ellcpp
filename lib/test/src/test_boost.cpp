@@ -9,14 +9,14 @@
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 
 // using namespace boost; 
-  template <class Graph> struct exercise_vertex {
+  template <class grAdaptor> struct exercise_vertex {
     //...
-    typedef typename boost::graph_traits<Graph>
+    typedef typename boost::graph_traits<grAdaptor>
       ::vertex_descriptor Vertex;
 
-    exercise_vertex(Graph& g_) : g(g_) {}
+    exercise_vertex(grAdaptor& g_) : g(g_) {}
     //...
-    Graph& g;
+    grAdaptor& g;
 
     void operator()(const Vertex& v) const
     {
@@ -27,7 +27,7 @@
       std::cout << "out-edges: ";
       // typename GraphTraits::out_edge_iterator out_i, out_end;
       // typename GraphTraits::edge_descriptor e;
-      for (auto e : xn::OutEdgeView(v, g)) {
+      for (auto e : g.neighbors(v)) {
         auto src = boost::source(e, g);
         auto targ = boost::target(e, g);
         std::cout << "(" << index[src] << "," 
@@ -86,6 +86,6 @@ TEST_CASE("Test Boost", "[test_boost]") {
     std::cout << std::endl;
 
     std::for_each(boost::vertices(G).first, boost::vertices(G).second,
-                  exercise_vertex<Graph>(G));
+                  exercise_vertex<xn::grAdaptor<Graph>>(G));
     
 }

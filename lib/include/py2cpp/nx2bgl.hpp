@@ -58,13 +58,13 @@ class EdgeView {
 
 
 template <typename Vertex, typename Graph>
-class OutEdgeView {
+class AtlasView {
   private:
     const Vertex& _v;
     const Graph& _G;
 
   public:
-    explicit OutEdgeView(const Vertex& v, const Graph& G) : _v{v}, _G{G} {}
+    explicit AtlasView(const Vertex& v, const Graph& G) : _v{v}, _G{G} {}
     auto begin() { 
         auto [e_iter, e_end] = boost::out_edges(_v, _G);
         return e_iter;
@@ -94,6 +94,12 @@ class grAdaptor : public VertexView<Graph> {
     }
 
     EdgeView<Graph> edges() const { return EdgeView<Graph>(*this); }
+
+    template <typename Vertex>
+    AtlasView<Vertex, Graph> neighbors(const Vertex& v) const { 
+        return AtlasView<Vertex, Graph>(v, *this); 
+    }
+
 };
  
 
