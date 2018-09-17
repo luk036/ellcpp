@@ -50,6 +50,11 @@ class ell {
 
     void set_xc(const Arr &xc) { _xc = xc; }
 
+    template <typename T> //
+    auto update(const Arr &g, const T &beta) {
+        return this->update_core(g, beta);
+    }
+
     /**
      * @brief Update ellipsoid core function using the cut
      *          g' * (x - xc) + beta <= 0
@@ -87,17 +92,11 @@ class ell {
         if constexpr (std::is_scalar<T>::value) { // C++17
             return this->calc_dc(beta, tsq);
         } else { // parallel cut
-            auto b0 = beta[0];
             if (beta.shape()[0] < 2) {
-                return this->calc_dc(b0, tsq);
+                return this->calc_dc(beta[0], tsq);
             }
-            return this->calc_ll_core(b0, beta[1], tsq);
+            return this->calc_ll_core( beta[0], beta[1], tsq);
         }
-    }
-
-    template <typename T> //
-    auto update(const Arr &g, const T &beta) {
-        return this->update_core(g, beta);
     }
 
     /**
@@ -117,7 +116,7 @@ class ell {
      * @param n
      * @return auto
      */
-    params_t calc_ll_cc(double b1, double t1, double tsq) const;
+    return_t calc_ll_cc(double b1, double t1, double tsq) const;
 
     /**
      * @brief Deep Cut
@@ -127,8 +126,9 @@ class ell {
     /**
      * @brief Central Cut
      */
-    params_t calc_cc(double tsq) const;
+    return_t calc_cc(double tsq) const;
 }; // } ell
+
 
 class ell1d {
   public:
