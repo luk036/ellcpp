@@ -28,8 +28,8 @@
       // typename GraphTraits::out_edge_iterator out_i, out_end;
       // typename GraphTraits::edge_descriptor e;
       for (auto e : g.neighbors(v)) {
-        auto src = boost::source(e, g);
-        auto targ = boost::target(e, g);
+        auto src = g.source(e);
+        auto targ = g.target(e);
         std::cout << "(" << index[src] << "," 
                   << index[targ] << ") ";
       }
@@ -56,12 +56,12 @@ TEST_CASE("Test Boost", "[test_boost]") {
     const int num_edges = sizeof(edge_array)/sizeof(edge_array[0]);
 
     // declare a graph object
-    xn::grAdaptor<Graph> G(num_vertices);
+    Graph g(num_vertices);
+    xn::grAdaptor<Graph> G(g);
 
     // add the edges to the graph object
     for (int i = 0; i < num_edges; ++i)
         G.add_edge(edge_array[i].first, edge_array[i].second);
-
 
     // typedef graph_traits<Graph>::vertex_descriptor Vertex;
 

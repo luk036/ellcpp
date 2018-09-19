@@ -5,12 +5,11 @@
 #include <boost/graph/graph_utility.hpp>
 
 namespace xn {
-
+ 
 template <typename Graph>
 class VertexView : public Graph {
   public:
-    explicit VertexView() = default;
-    explicit VertexView(int num_vertices) : Graph(num_vertices) {}
+    explicit VertexView(Graph& G) : Graph(G) {}
 
     auto begin() { 
         auto [v_iter, v_end] = boost::vertices(*this);
@@ -60,11 +59,11 @@ class EdgeView {
 template <typename Vertex, typename Graph>
 class AtlasView {
   private:
-    const Vertex& _v;
+    Vertex _v;
     const Graph& _G;
 
   public:
-    explicit AtlasView(const Vertex& v, const Graph& G) : _v{v}, _G{G} {}
+    explicit AtlasView(Vertex v, const Graph& G) : _v{v}, _G{G} {}
     auto begin() { 
         auto [e_iter, e_end] = boost::out_edges(_v, _G);
         return e_iter;
@@ -86,20 +85,28 @@ class AtlasView {
 template <typename Graph>
 class grAdaptor : public VertexView<Graph> {
   public:
-    explicit grAdaptor() = default;
-    explicit grAdaptor(int num_vertices) : VertexView<Graph>(num_vertices) {}
+    explicit grAdaptor() = delete;
+    explicit grAdaptor(Graph& G) : VertexView<Graph>(G) {}
+
+    using Vertex = typename boost::graph_traits<Graph>::vertex_descriptor;
+
+    EdgeView<Graph> edges() { return EdgeView<Graph>(*this); }
+
+    AtlasView<Vertex, Graph> neighbors(Vertex v) { 
+        return AtlasView<Vertex, Graph>(v, *this); 
+    }
 
     auto add_edge(int u, int v) {
         return boost::add_edge(u, v, *this);
     }
 
-    EdgeView<Graph> edges() const { return EdgeView<Graph>(*this); }
+    static Vertex null_vertex() { return boost::graph_traits<Graph>::null_vertex(); }
 
-    template <typename Vertex>
-    AtlasView<Vertex, Graph> neighbors(const Vertex& v) const { 
-        return AtlasView<Vertex, Graph>(v, *this); 
-    }
+    template <typename Edge>
+    Vertex source(const Edge& e) const { return boost::source(e, *this); }
 
+    template <typename Edge>
+    Vertex target(const Edge& e) const { return boost::target(e, *this); }
 };
  
 
