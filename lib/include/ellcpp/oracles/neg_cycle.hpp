@@ -1,12 +1,11 @@
 // -*- coding: utf-8 -*-
+#ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_NEG_CYCLE_HPP
+#define _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_NEG_CYCLE_HPP 1
+
 /**
 Negative cycle detection for (auto weighed graphs.
 **/
-#include <type_traits>
 #include <vector>
-// #include <xnetwork.hpp> // as xn
-// #include <unordered_map>
-#include <py2cpp/nx2bgl.hpp>
 #include <py2cpp/py2cpp.hpp>
 
 /**
@@ -15,31 +14,30 @@ Negative cycle detection for (auto weighed graphs.
  * @tparam Graph
  * @tparam WeightFn
  */
-template <typename Graph, typename WeightFn, typename edge_wt_t>
+template <typename Graph, typename WeightFn, typename wt_t>
 class negCycleFinder {
     using Node = decltype(Graph::null_vertex());
-    using Edge = std::pair<Node, Node>;
     using edge_t = decltype(*(std::declval<Graph>().edges().begin()));
-    // using edge_wt_t = decltype( boost::get(boost::edge_weight,
+    // using wt_t = decltype( boost::get(boost::edge_weight,
     // std::declval<Graph>() )[std::declval<edge_t>()] );
-
-    // using ret_t = typename std::invoke_result<WeightFn(Graph&,
-    // edge_t&)>::type;
 
   private:
     Graph &_G;
     WeightFn _get_weight;
-    py::dict<Node, edge_wt_t> _dist; // int???
-    py::dict<Node, Node> _pred;
-    // EdgeWeightPMap _weightmap;
+
+  public:
+    py::dict<Node, wt_t>    _dist;
+    py::dict<Node, Node>    _pred;
+    py::dict<Node, edge_t>  _edge;
 
   public:
     explicit negCycleFinder(Graph &G, WeightFn &get_weight,
-                            edge_wt_t /* for type id only, better idea??? */)
-        : _G{G}, _get_weight{get_weight} {
+                            wt_t /* better idea??? */) :
+        _G{G}, 
+        _get_weight{get_weight} {
 
         for (Node v : _G) {
-            _dist[v] = edge_wt_t(0);
+            _dist[v] = wt_t(0);
             _pred[v] = _G.null_vertex();
         }
         // _pred = {v: None for v : _G};
@@ -93,59 +91,56 @@ class negCycleFinder {
             if (_dist[v] > d) {
                 _dist[v] = d;
                 _pred[v] = u;
+                _edge[v] = e;
                 changed = true;
             }
         }
         return changed;
     }
 
-    std::vector<Edge> find_neg_cycle() {
-        /** Perform a updating of dist and pred
-
-        Arguments) {
-            G {[type]} -- [description];
-            dist {dictionary} -- [description];
-            pred {dictionary} -- [description];
-
-        Keyword Arguments) {
-            weight {str} -- [description] (default: {"weight"});
-
-        Returns) {
-            [type] -- [description];
-        **/
+    /** Perform a updating of dist and pred
+     *    Arguments:
+     *        G {[type]} -- [description];
+     *        dist {dictionary} -- [description];
+     *        pred {dictionary} -- [description];
+     *    Keyword Arguments:
+     *        weight {str} -- [description] (default: {"weight"});
+     *    Returns:
+     *        [type] -- [description];
+     */
+    auto find_neg_cycle() {
         for (Node v : _G) {
-            _dist[v] = edge_wt_t(0);
+            _dist[v] = wt_t(0);
             _pred[v] = _G.null_vertex();
         }
         return this->neg_cycle_relax();
     }
 
-    std::vector<Edge> neg_cycle_relax() {
+    auto neg_cycle_relax() {
         for (Node v : _G) {
             _pred[v] = _G.null_vertex();
         }
 
         while (true) {
             auto changed = this->relax();
-            if (changed) {
-                // if (v != _G.null_vertex()) {
-                Node v = this->find_cycle();
-                if (v != _G.null_vertex()) {
-                    return this->cycle_list(v);
-                }
-            } else {
+            if (!changed) {
                 break;
             }
+            // if (v != _G.null_vertex()) {
+            Node v = this->find_cycle();
+            if (v != _G.null_vertex()) {
+                return this->cycle_list(v);
+            }
         }
-        return std::vector<Edge>{}; // ???
+        return std::vector<edge_t>{}; // ???
     }
 
     auto cycle_list(Node handle) {
         Node v = handle;
-        std::vector<Edge> cycle{}; // ???
+        std::vector<edge_t> cycle{}; // ???
         while (true) {
             auto u = _pred[v];
-            cycle.emplace_back(Edge{u, v});
+            cycle.push_back(_edge[v]);
             v = u;
             if (v == handle) {
                 break;
@@ -170,3 +165,5 @@ class negCycleFinder {
     //     return false;
     // }
 };
+
+#endif
