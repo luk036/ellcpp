@@ -3,12 +3,13 @@
 // from pprint import pprint
 
 // from xnetwork.utils import generate_unique_node
-#include "neg_cycle.h" // import negCycleFinder
+#include "neg_cycle.hpp" // import negCycleFinder
 #include <tuple>
 #include <vector>
 #include <xnetwork.hpp> // as xn
 
-auto max_parametric(const Graph &G, auto r, auto d, auto zero_cancel) {
+template <typename Graph, typename Fn1, typename Fn2>
+auto max_parametric(const Graph &G, double r, Fn1& d, Fn2& zero_cancel) {
     /** maximum parametric problem) {
 
         max  r
@@ -27,7 +28,7 @@ auto max_parametric(const Graph &G, auto r, auto d, auto zero_cancel) {
         dist -- optimal sol"n
 
     **/
-    auto get_weight = [](const Graph &G, const std::tuple<Node *, Node *> &e) {
+    auto get_weight = [](const Graph &G, auto &e) -> int {
         return d(G, r, e);
     };
 

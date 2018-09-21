@@ -3,6 +3,8 @@
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_utility.hpp>
+#include <boost/graph/graph_traits.hpp>
+#include <type_traits>
 
 namespace xn {
  
@@ -85,10 +87,11 @@ class AtlasView {
 template <typename Graph>
 class grAdaptor : public VertexView<Graph> {
   public:
+    using Vertex = typename boost::graph_traits<Graph>::vertex_descriptor;
+    //using edge_wt_t = decltype( boost::get(boost::edge_weight, std::declval<Graph>()) );
+
     explicit grAdaptor() = delete;
     explicit grAdaptor(Graph& G) : VertexView<Graph>(G) {}
-
-    using Vertex = typename boost::graph_traits<Graph>::vertex_descriptor;
 
     EdgeView<Graph> edges() { return EdgeView<Graph>(*this); }
 

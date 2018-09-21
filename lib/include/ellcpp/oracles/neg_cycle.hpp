@@ -2,31 +2,44 @@
 /**
 Negative cycle detection for (auto weighed graphs.
 **/
+#include <type_traits>
 #include <vector>
 // #include <xnetwork.hpp> // as xn
 // #include <unordered_map>
-#include <py2cpp/py2cpp.hpp>
 #include <py2cpp/nx2bgl.hpp>
+#include <py2cpp/py2cpp.hpp>
 
-template <typename Graph, typename WeightFn>
+/**
+ * @brief negative cycle
+ *
+ * @tparam Graph
+ * @tparam WeightFn
+ */
+template <typename Graph, typename WeightFn, typename edge_wt_t>
 class negCycleFinder {
     using Node = decltype(Graph::null_vertex());
     using Edge = std::pair<Node, Node>;
+    using edge_t = decltype(*(std::declval<Graph>().edges().begin()));
+    // using edge_wt_t = decltype( boost::get(boost::edge_weight,
+    // std::declval<Graph>() )[std::declval<edge_t>()] );
+
+    // using ret_t = typename std::invoke_result<WeightFn(Graph&,
+    // edge_t&)>::type;
 
   private:
-    Graph& _G;
+    Graph &_G;
     WeightFn _get_weight;
-    py::dict<Node, int> _dist; // int???
+    py::dict<Node, edge_wt_t> _dist; // int???
     py::dict<Node, Node> _pred;
-    //EdgeWeightPMap _weightmap;
+    // EdgeWeightPMap _weightmap;
 
   public:
-    explicit negCycleFinder(Graph &G, WeightFn& get_weight)
-        : _G{G}, 
-          _get_weight{ get_weight } {
+    explicit negCycleFinder(Graph &G, WeightFn &get_weight,
+                            edge_wt_t /* for type id only, better idea??? */)
+        : _G{G}, _get_weight{get_weight} {
 
         for (Node v : _G) {
-            _dist[v] = 0;
+            _dist[v] = edge_wt_t(0);
             _pred[v] = _G.null_vertex();
         }
         // _pred = {v: None for v : _G};
@@ -34,8 +47,8 @@ class negCycleFinder {
 
     /**
      * @brief Find a cycle on policy graph
-     * 
-     * @return handle -- a start node of the cycle 
+     *
+     * @return handle -- a start node of the cycle
      */
     Node find_cycle() {
         py::dict<Node, Node> visited{};
@@ -54,8 +67,8 @@ class negCycleFinder {
                 if (visited.contains(u)) {
                     if (visited[u] == v) {
                         // if (this->is_negative(u)) {
-                            // should be "yield u";
-                            return u;
+                        // should be "yield u";
+                        return u;
                         // }
                     }
                     break;
@@ -66,16 +79,16 @@ class negCycleFinder {
 
     /**
      * @brief Perform a updating of dist and pred
-     * 
-     * @return auto 
+     *
+     * @return auto
      */
     bool relax() {
         bool changed = false;
-        for (auto e : _G.edges() ) {
-            int wt = this->_get_weight(_G, e);
+        for (auto e : _G.edges()) {
+            auto wt = _get_weight(_G, e);
             // auto [u, v] = e;
-            Node u = _G.source(e);
-            Node v = _G.target(e);
+            auto u = _G.source(e);
+            auto v = _G.target(e);
             auto d = _dist[u] + wt;
             if (_dist[v] > d) {
                 _dist[v] = d;
@@ -101,7 +114,7 @@ class negCycleFinder {
             [type] -- [description];
         **/
         for (Node v : _G) {
-            _dist[v] = 0;
+            _dist[v] = edge_wt_t(0);
             _pred[v] = _G.null_vertex();
         }
         return this->neg_cycle_relax();
@@ -125,7 +138,6 @@ class negCycleFinder {
             }
         }
         return std::vector<Edge>{}; // ???
-
     }
 
     auto cycle_list(Node handle) {

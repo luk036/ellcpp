@@ -47,11 +47,13 @@ auto create_test_case2() {
 }
 
 bool do_case(xn::grAdaptor<graph_t>& G) {    
-    auto get_weight = [](xn::grAdaptor<graph_t> &G, auto &e) -> int {
+    using edge_t = decltype(*(G.edges().begin()));
+
+    auto get_weight = [](xn::grAdaptor<graph_t> &G, edge_t &e) -> int {
         auto weightmap = boost::get(boost::edge_weight, G);
         return weightmap[e];
     };
-    auto N = negCycleFinder(G, get_weight);
+    auto N = negCycleFinder(G, get_weight, int());
     bool hasNeg = false;
     auto cycle = N.find_neg_cycle();
     if (!cycle.empty()) {
