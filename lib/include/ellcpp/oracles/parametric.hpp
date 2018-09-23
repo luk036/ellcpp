@@ -51,7 +51,7 @@ auto max_parametric(const Graph &G, double r, Fn1 &d, Fn2 &zero_cancel) {
         }
     }
 
-    return std::tuple{r_opt, C_opt, S.dist};
+    return std::tuple{r_opt, C_opt, S._dist};
 }
 
 // if (__name__ == "__main__") {

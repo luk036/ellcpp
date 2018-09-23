@@ -1,28 +1,23 @@
 // -*- coding: utf-8 -*-
-#ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_MIN_CYCLE_RATIO_HPP
-#define _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_MIN_CYCLE_RATIO_HPP 1
+// from __future__ import print_function
+// from pprint import pprint
 
-#include "parametric.hpp" // import negCycleFinder
-#include <xtensor-blas/xlinalg.hpp>
-#include <xtensor/xarray.hpp>
+#include <parametric.hpp> // import max_parametric
+#include <xnetwork.hpp>   // as xn
 
+auto set_default(const Graph &G, auto weight, auto value) {
+    for (auto [u, v] : G.edges) {
+        if (G[u][v].get(weight, None) is None) {
+            G[u][v][weight] = value;
+        }
+    }
+}
 
-// template <typename Graph, typename Fn_Eval, typename T>
-// auto set_default(const Graph &G, auto weight, T value) {
-//     for (auto e : G.edges()) {
-//         if (get_weight(weight, None) is None) {
-//             G[u][v][weight] = value;
-//         }
-//     }
-// }
-
-template <typename Graph, typename Fn_Eval, typename Grad_Fn>
 auto calc_weight(const Graph &G, double r, auto e) {
     auto [u, v] = e;
     return G[u][v]["cost"] - r * G[u][v]["time"];
 }
 
-template <typename Graph, typename Fn_Eval, typename Grad_Fn>
 auto calc_ratio(const Graph &G, auto C) {
     /** Calculate the ratio of the cycle
 
@@ -50,7 +45,6 @@ struct edge_cmp {
     }
 };
 
-template <typename Graph, typename Fn_Eval, typename Grad_Fn>
 auto min_cycle_ratio(const Graph &G) {
     auto mu = "cost";
     auto sigma = "time";
@@ -88,5 +82,3 @@ auto min_cycle_ratio(const Graph &G) {
 //     print(r);
 //     print(c);
 //     print(dist.items());
-
-#endif

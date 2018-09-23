@@ -13,33 +13,36 @@ Negative cycle detection for (auto weighed graphs.
  *
  * @tparam Graph
  * @tparam WeightFn
+ * 
+ * Note: Bellman-Ford's shortest-path algorithm (BF) is NOT the best way to
+ *       detect negative cycles, because
+ * 
+ *  1. BF needs a source node.
+ *  2. BF detect whether there is a negative cycle at the fianl stage.
+ *  3. BF restarts the solution (dist[u]) every time.
  */
-template <typename Graph, typename WeightFn, typename wt_t>
+template <typename Graph, typename WeightFn>
 class negCycleFinder {
-    using Node = decltype(Graph::null_vertex());
-    using edge_t = decltype(*(std::declval<Graph>().edges().begin()));
-    // using wt_t = decltype( boost::get(boost::edge_weight,
-    // std::declval<Graph>() )[std::declval<edge_t>()] );
-
   private:
     Graph &_G;
     WeightFn _get_weight;
 
-  public:
-    py::dict<Node, wt_t>    _dist;
-    py::dict<Node, Node>    _pred;
-    py::dict<Node, edge_t>  _edge;
+    using Node = decltype(Graph::null_vertex());
+    using edge_t = decltype(*(_G.edges().begin()));
+    using wt_t = decltype(_get_weight(_G, std::declval<edge_t&>()));
 
   public:
-    explicit negCycleFinder(Graph &G, WeightFn &get_weight,
-                            wt_t /* better idea??? */) :
+    py::dict<Node, Node>    _pred;
+    py::dict<Node, edge_t>  _edge;
+    py::dict<Node, wt_t>    _dist;
+
+  public:
+    explicit negCycleFinder(Graph &G, WeightFn &get_weight) :
         _G{G}, 
         _get_weight{get_weight} {
 
-        for (Node v : _G) {
-            _dist[v] = wt_t(0);
-            _pred[v] = _G.null_vertex();
-        }
+        for (Node v : _G) _dist[v] = wt_t(0);
+        _pred.clear();
         // _pred = {v: None for v : _G};
     }
 
@@ -58,10 +61,10 @@ class negCycleFinder {
             auto u = v;
             while (true) {
                 visited[u] = v;
-                u = _pred[u];
-                if (u == _G.null_vertex()) {
+                if (!_pred.contains(u)) {
                     break;
                 }
+                u = _pred[u];
                 if (visited.contains(u)) {
                     if (visited[u] == v) {
                         // if (this->is_negative(u)) {
@@ -73,6 +76,8 @@ class negCycleFinder {
                 }
             }
         }
+
+        return _G.null_vertex();
     }
 
     /**
@@ -83,7 +88,7 @@ class negCycleFinder {
     bool relax() {
         bool changed = false;
         for (auto e : _G.edges()) {
-            auto wt = _get_weight(_G, e);
+            wt_t wt = _get_weight(_G, e);
             // auto [u, v] = e;
             auto u = _G.source(e);
             auto v = _G.target(e);
@@ -109,17 +114,16 @@ class negCycleFinder {
      *        [type] -- [description];
      */
     auto find_neg_cycle() {
-        for (Node v : _G) {
-            _dist[v] = wt_t(0);
-            _pred[v] = _G.null_vertex();
-        }
+        for (Node v : _G) _dist[v] = wt_t(0);
+        _pred.clear();
         return this->neg_cycle_relax();
     }
 
     auto neg_cycle_relax() {
-        for (Node v : _G) {
-            _pred[v] = _G.null_vertex();
-        }
+        // for (Node v : _G) {
+        //     _pred[v] = _G.null_vertex();
+        // }
+        _pred.clear();
 
         while (true) {
             auto changed = this->relax();

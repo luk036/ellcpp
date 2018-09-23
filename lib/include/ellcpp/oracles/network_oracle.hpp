@@ -8,12 +8,12 @@
 
 template <typename Graph, typename Fn_Eval, typename Grad_Fn>
 class network_oracle {
-    using edge_t = decltype(*(std::declval<Graph>().edges().begin()));
-
   private:
     Graph    &_G;
     Fn_Eval  _f;
     Grad_Fn  _p;
+
+    using edge_t = decltype(*(_G.edges().begin()));
 
   public:
     explicit network_oracle(Graph &G, Fn_Eval &f, Grad_Fn &p) :
@@ -27,7 +27,7 @@ class network_oracle {
             return _f(G, e, x);
         };
 
-        auto S = negCycleFinder(G, get_weight, double());
+        auto S = negCycleFinder(G, get_weight);
         auto C = S.find_neg_cycle();
 
         auto n = x.size();
@@ -35,7 +35,7 @@ class network_oracle {
         double f = 0.0;
 
         if (C.empty()) {
-            return std::tuple{g, 0, true};
+            return std::tuple{g, 0., true};
         }
         for (auto e : C) {
             f -= _f(_G, e, x);
