@@ -6,43 +6,39 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
-using Arr = xt::xarray<double>;
-
-template <typename Graph, typename Edge>
-auto constr(Graph& G, Edge& e, const Arr& x) {
-    auto u = G.source(e);
-    auto v = G.target(e);
-    if (u <= v) { // ???
-        return x(0) - G[u][v]['cost'];
-    }
-    return G[u][v]['cost'] - x(1);
-}
-
-template <typename Graph, typename Edge>
-auto pconstr(Graph& G, Edge& e, const Arr& x) {
-    auto u = G.source(e);
-    auto v = G.target(e);
-    if (u <= v) {
-        return Arr{1., 0.};
-    }
-    return Arr{0., -1.};
-}
-
-
-template <typename Graph, typename Fn_Eval, typename Grad_Fn>
-class optscaling_oracle {
+template <typename Graph, typename CostFn> class optscaling_oracle {
   private:
-    Graph  &_G;
-    network_oracle<Graph,Fn_Eval,Grad_Fn> _network;
+    Graph &_G;
+    CostFn _get_cost;
+
+    using Arr = xt::xarray<double>;
+    using edge_t = decltype(*(_G.edges().begin()));
 
   public:
-    explicit optscaling_oracle(self, G) :
-        _G{G},
-        _network{network_oracle<Graph,Fn_Eval,Grad_Fn>(G, constr, pconstr)}
-        {}
+    explicit optscaling_oracle(Graph &G, CostFn get_cost)
+        : _G{G}, _get_cost{get_cost} {}
 
     auto operator()(const Arr &x, double t) {
-        auto [g, f, feasible] = _network(x);
+        auto constr = [this](Graph &G, edge_t &e, const Arr &x) {
+            auto u = G.source(e);
+            auto v = G.target(e);
+            if (u <= v) { // ???
+                return x(0) - this->_get_cost(G, e, x);
+            }
+            return this->_get_cost(G, e, x) - x(1);
+        };
+
+        auto pconstr = [](Graph &G, edge_t &e, const Arr &) {
+            auto u = G.source(e);
+            auto v = G.target(e);
+            if (u <= v) {
+                return Arr{1., 0.};
+            }
+            return Arr{0., -1.};
+        };
+
+        auto P = network_oracle(_G, constr, pconstr);
+        auto [g, f, feasible] = P(x);
         if (!feasible) {
             return std::tuple{g, f, t};
         }

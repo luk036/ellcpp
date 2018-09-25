@@ -8,6 +8,7 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <ellcpp/oracles/neg_cycle.hpp> // import negCycleFinder
+#include <ellcpp/oracles/min_cycle_ratio.hpp>
 
 typedef boost::adjacency_list < boost::listS, boost::vecS, boost::directedS, boost::no_property, boost::property < boost::edge_weight_t, int > > graph_t;
 typedef boost::graph_traits< graph_t >::vertex_descriptor Vertex;
@@ -22,7 +23,7 @@ typedef boost::graph_traits< graph_t >::edge_iterator Edge_it;
 // }
 
 
-auto create_test_case1() {
+static auto create_test_case1() {
     using Edge = std::pair<int, int>;
     const int num_nodes = 5;
     enum nodes { A, B, C, D, E };
@@ -34,7 +35,7 @@ auto create_test_case1() {
     return xn::grAdaptor<graph_t>(g);
 }
 
-auto create_test_case2() {
+static auto create_test_case2() {
     using Edge = std::pair<int, int>;
     const int num_nodes = 5;
     enum nodes { A, B, C, D, E };

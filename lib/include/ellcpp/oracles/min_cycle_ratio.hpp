@@ -1,61 +1,43 @@
 // -*- coding: utf-8 -*-
-// from __future__ import print_function
-// from pprint import pprint
+#ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_MIN_CYCLE_RATIO_HPP
+#define _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_MIN_CYCLE_RATIO_HPP 1
 
-#include <parametric.hpp> // import max_parametric
-#include <xnetwork.hpp>   // as xn
+#include "parametric.hpp" // import max_parametric
+#include <py2cpp/py2cpp.hpp>
+#include <algorithm>
 
-auto set_default(const Graph &G, auto weight, auto value) {
-    for (auto [u, v] : G.edges) {
-        if (G[u][v].get(weight, None) is None) {
-            G[u][v][weight] = value;
+template <typename Graph, typename Dict, typename T>
+void set_default(const Graph &G, Dict& map, T value) {
+    for (auto e : G.edges()) {
+        if (!map.contains(&e)) {
+            map[&e] = value;
         }
     }
 }
 
-auto calc_weight(const Graph &G, double r, auto e) {
-    auto [u, v] = e;
-    return G[u][v]["cost"] - r * G[u][v]["time"];
-}
 
-auto calc_ratio(const Graph &G, auto C) {
-    /** Calculate the ratio of the cycle
+template <typename Graph, typename Dict>
+auto min_cycle_ratio(const Graph &G, Dict& cost, Dict& time) {
+    using edge_t = decltype(*(G.edges().begin()));
 
-    Arguments) {
-        G {xnetwork Graph} -- [description];
-        C {list} -- [description];
+    auto calc_weight = [cost, time](const Graph &G, double r, edge_t& e) {
+        return cost[&e] - r * time[&e];
+    };
 
-    Returns) {
-        float -- cycle ratio
-    **/
-    auto total_cost = 0;
-    auto total_time = 0;
-    for (auto [u, v] : C) {
-        total_cost += G[u][v]["cost"];
-        total_time += G[u][v]["time"];
-    }
-    return total_cost / total_time;
-}
+    auto calc_ratio = [cost, time](const Graph &G, auto& C) {
+        auto total_cost = 0;
+        auto total_time = 0;
+        for (auto e : C) {
+            total_cost += cost[e];
+            total_time += time[e];
+        }
+        return total_cost / total_time;
+    };
 
-struct edge_cmp {
-    using dtype = std::tuple<Node *, Node *, int>;
-
-    bool operator<(const dtype &a, const dtype &b) {
-        return std::get<2>(a) < std::get<2>(b);
-    }
-};
-
-auto min_cycle_ratio(const Graph &G) {
-    auto mu = "cost";
-    auto sigma = "time";
-    set_default(G, mu, 1);
-    set_default(G, sigma, 1);
-    // auto max_cost = max(cost for (auto _, _, cost : G.edges.data(mu));
-    // auto min_time = min(time for (auto _, _, time : G.edges.data(sigma));
-    auto Rmu = G.edges.data(mu);
-    auto max_cost = std::max_elemnt(Rmu.begin(), Rmu.end(), edge_cmp{});
-    auto Rsigma = G.edges.data(sigma);
-    auto min_time = std::min_elemnt(Rsigma.begin(), Rsigma.end(), edge_cmp{});
+    set_default(G, cost, 1);
+    set_default(G, time, 1);
+    auto max_cost = std::max_element(cost.begin(), cost.end());
+    auto min_time = std::min_element(time.begin(), time.end());
     auto r0 = max_cost * G.number_of_edges() / min_time;
     return max_parametric(G, r0, calc_weight, calc_ratio);
 }
@@ -82,3 +64,5 @@ auto min_cycle_ratio(const Graph &G) {
 //     print(r);
 //     print(c);
 //     print(dist.items());
+
+#endif

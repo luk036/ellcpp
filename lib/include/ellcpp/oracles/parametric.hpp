@@ -1,5 +1,4 @@
 // -*- coding: utf-8 -*-
-// -*- coding: utf-8 -*-
 #ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_PARAMETRIC_HPP
 #define _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_PARAMETRIC_HPP 1
 
@@ -26,12 +25,14 @@
  */
 template <typename Graph, typename Fn1, typename Fn2>
 auto max_parametric(const Graph &G, double r, Fn1 &d, Fn2 &zero_cancel) {
-    auto get_weight = [](const Graph &G, auto &e) -> int { // int???
+    using edge_t = decltype(*(G.edges().begin()));
+
+    auto get_weight = [d, r](const Graph &G, edge_t &e) -> int { // int???
         return d(G, r, e); 
     };
 
     auto S = negCycleFinder(G, get_weight, double());
-    std::vector<std::tuple<Node *, Node *>> C_opt{};
+    std::vector<edge_t> C_opt{};
     auto r_opt = r;
 
     while (true) {

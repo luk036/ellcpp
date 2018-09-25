@@ -25,7 +25,7 @@ template <typename Graph, typename WeightFn>
 class negCycleFinder {
   private:
     Graph &_G;
-    WeightFn _get_weight;
+    WeightFn _get_weight; // for nonlinear and lazy evaluation
 
     using Node = decltype(Graph::null_vertex());
     using edge_t = decltype(*(_G.edges().begin()));

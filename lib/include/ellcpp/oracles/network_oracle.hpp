@@ -9,25 +9,24 @@
 template <typename Graph, typename Fn_Eval, typename Grad_Fn>
 class network_oracle {
   private:
-    Graph    &_G;
-    Fn_Eval  _f;
-    Grad_Fn  _p;
+    Graph &_G;
+    Fn_Eval _f;
+    Grad_Fn _p;
 
     using edge_t = decltype(*(_G.edges().begin()));
+    using Arr = xt::xarray<double>;
 
   public:
-    explicit network_oracle(Graph &G, Fn_Eval &f, Grad_Fn &p) :
-        _G{G},
-        _f{f},
-        _p{p}  // partial derivative of f w.r.t x
-        {}
+    explicit network_oracle(Graph &G, Fn_Eval &f, Grad_Fn &p)
+        : _G{G}, _f{f}, _p{p} // partial derivative of f w.r.t x
+    {}
 
     auto operator()(const Arr &x) {
-        auto get_weight = [](Graph &G, edge_t &e) -> double {
-            return _f(G, e, x);
+        auto get_weight = [this, x](Graph &G, edge_t &e) -> double {
+            return this->_f(G, e, x);
         };
 
-        auto S = negCycleFinder(G, get_weight);
+        auto S = negCycleFinder(_G, get_weight);
         auto C = S.find_neg_cycle();
 
         auto n = x.size();
@@ -44,5 +43,9 @@ class network_oracle {
         return std::tuple{g, f, false};
     }
 };
+
+// Template guided deduction
+template <typename Graph, typename Fn_Eval, typename Grad_Fn>
+network_oracle(Graph &G, Fn_Eval &f, Grad_Fn &p) -> network_oracle<Graph, Fn_Eval, Grad_Fn>;
 
 #endif
