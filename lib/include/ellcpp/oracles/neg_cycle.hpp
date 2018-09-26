@@ -170,4 +170,8 @@ class negCycleFinder {
     // }
 };
 
+// Template guided deduction
+template <typename Graph, typename WeightFn>
+negCycleFinder(Graph &G, WeightFn &get_weight) -> negCycleFinder<Graph, WeightFn>;
+
 #endif

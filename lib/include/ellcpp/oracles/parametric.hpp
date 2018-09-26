@@ -5,6 +5,7 @@
 #include "neg_cycle.hpp" // import negCycleFinder
 #include <tuple>
 #include <vector>
+#include <iostream>
 
 /** 
  * maximum parametric problem:
@@ -24,20 +25,23 @@
  *       dist -- optimal sol"n
  */
 template <typename Graph, typename Fn1, typename Fn2>
-auto max_parametric(const Graph &G, double r, Fn1 &d, Fn2 &zero_cancel) {
+auto max_parametric(Graph &G, double r, Fn1 &d, Fn2 &zero_cancel) {
+    std::cout << "r=" << r << '\n';
+
     using edge_t = decltype(*(G.edges().begin()));
 
-    auto get_weight = [d, r](const Graph &G, edge_t &e) -> int { // int???
+    auto get_weight = [d, r](const Graph &G, edge_t &e) -> double { // int???
         return d(G, r, e); 
     };
 
-    auto S = negCycleFinder(G, get_weight, double());
+    auto S = negCycleFinder(G, get_weight);
     std::vector<edge_t> C_opt{};
-    auto r_opt = r;
+    double r_opt = r;
 
     while (true) {
         auto C = S.neg_cycle_relax();
         auto r_min = zero_cancel(G, C);
+        std::cout << "r_min=" << r_min << '\n';
 
         if (r_min >= r_opt) {
             break;
@@ -48,11 +52,11 @@ auto max_parametric(const Graph &G, double r, Fn1 &d, Fn2 &zero_cancel) {
         for (auto e : C_opt) {
             auto u = G.source(e);
             auto v = G.target(e);
-            S.dist[u] = S.dist[v] - get_weight(G, e);
+            S._dist[u] = S._dist[v] - get_weight(G, e);
         }
     }
 
-    return std::tuple{r_opt, C_opt, S._dist};
+    return std::tuple{r_opt, C_opt};
 }
 
 // if (__name__ == "__main__") {

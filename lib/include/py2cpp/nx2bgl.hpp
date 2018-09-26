@@ -39,11 +39,11 @@ class EdgeView {
 
   public:
     explicit EdgeView(const Graph& G) : _G{G} {}
-    auto begin() { 
+    auto begin() const { 
         auto [e_iter, e_end] = boost::edges(_G);
         return e_iter;
     }
-    auto end() { 
+    auto end() const { 
         auto [e_iter, e_end] = boost::edges(_G);
         return e_end;
     }
@@ -66,11 +66,11 @@ class AtlasView {
 
   public:
     explicit AtlasView(Vertex v, const Graph& G) : _v{v}, _G{G} {}
-    auto begin() { 
+    auto begin() const { 
         auto [e_iter, e_end] = boost::out_edges(_v, _G);
         return e_iter;
     }
-    auto end() { 
+    auto end() const { 
         auto [e_iter, e_end] = boost::out_edges(_v, _G);
         return e_end;
     }
@@ -93,9 +93,11 @@ class grAdaptor : public VertexView<Graph> {
     explicit grAdaptor() = delete;
     explicit grAdaptor(Graph& G) : VertexView<Graph>(G) {}
 
-    EdgeView<Graph> edges() { return EdgeView<Graph>(*this); }
+    auto number_of_edges() const { return boost::num_edges(*this); }
 
-    AtlasView<Vertex, Graph> neighbors(Vertex v) { 
+    EdgeView<Graph> edges() const { return EdgeView<Graph>(*this); }
+
+    AtlasView<Vertex, Graph> neighbors(Vertex v) const { 
         return AtlasView<Vertex, Graph>(v, *this); 
     }
 
