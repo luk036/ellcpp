@@ -5,43 +5,42 @@
 /**
 Negative cycle detection for (auto weighed graphs.
 **/
-#include <vector>
 #include <py2cpp/py2cpp.hpp>
+#include <vector>
 
 /**
  * @brief negative cycle
  *
  * @tparam Graph
  * @tparam WeightFn
- * 
+ *
  * Note: Bellman-Ford's shortest-path algorithm (BF) is NOT the best way to
  *       detect negative cycles, because
- * 
+ *
  *  1. BF needs a source node.
  *  2. BF detect whether there is a negative cycle at the fianl stage.
  *  3. BF restarts the solution (dist[u]) every time.
  */
-template <typename Graph, typename WeightFn>
-class negCycleFinder {
+template <typename Graph, typename WeightFn> class negCycleFinder {
   private:
     Graph &_G;
     WeightFn _get_weight; // for nonlinear and lazy evaluation
 
     using Node = decltype(Graph::null_vertex());
     using edge_t = decltype(*(_G.edges().begin()));
-    using wt_t = decltype(_get_weight(_G, std::declval<edge_t&>()));
+    using wt_t = decltype(_get_weight(_G, std::declval<edge_t &>()));
 
   public:
-    py::dict<Node, Node>    _pred;
-    py::dict<Node, edge_t>  _edge;
-    py::dict<Node, wt_t>    _dist;
+    py::dict<Node, Node> _pred;
+    py::dict<Node, edge_t> _edge;
+    py::dict<Node, wt_t> _dist;
 
   public:
-    explicit negCycleFinder(Graph &G, WeightFn &get_weight) :
-        _G{G}, 
-        _get_weight{get_weight} {
+    explicit negCycleFinder(Graph &G, WeightFn &get_weight)
+        : _G{G}, _get_weight{get_weight} {
 
-        for (Node v : _G) _dist[v] = wt_t(0);
+        for (Node v : _G)
+            _dist[v] = wt_t(0);
         _pred.clear();
         // _pred = {v: None for v : _G};
     }
@@ -114,7 +113,8 @@ class negCycleFinder {
      *        [type] -- [description];
      */
     auto find_neg_cycle() {
-        for (Node v : _G) _dist[v] = wt_t(0);
+        for (Node v : _G)
+            _dist[v] = wt_t(0);
         _pred.clear();
         return this->neg_cycle_relax();
     }
@@ -172,6 +172,6 @@ class negCycleFinder {
 
 // Template guided deduction
 template <typename Graph, typename WeightFn>
-negCycleFinder(Graph &G, WeightFn &get_weight) -> negCycleFinder<Graph, WeightFn>;
+negCycleFinder(Graph &G, WeightFn &get_weight)->negCycleFinder<Graph, WeightFn>;
 
 #endif

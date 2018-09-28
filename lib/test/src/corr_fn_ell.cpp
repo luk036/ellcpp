@@ -68,5 +68,4 @@ TEST_CASE("Corr_fn", "[corr_fn]") {
     auto num_iters = lsq_corr_poly2(Y, s, 4);
     CHECK(num_iters >= 257);
     CHECK(num_iters <= 657);
-
 }

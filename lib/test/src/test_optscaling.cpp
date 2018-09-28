@@ -8,12 +8,12 @@
 #include <utility> // for std::pair
 #include <vector>
 // from fractions import Fraction
+#include <algorithm>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/optscaling_oracle.hpp> // import optscaling
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
-#include <algorithm>
 
 namespace boost {
 
@@ -60,17 +60,14 @@ TEST_CASE("Test Optimal Scaling", "[test_optscaling]") {
     EdgeIndexMap edge_id = boost::get(boost::id_tag, G);
     IterMap cost_pa(cost, edge_id);
 
-    auto cmax = *std::max_element(cost, cost+N);
-    auto cmin = *std::min_element(cost, cost+N);
+    auto cmax = *std::max_element(cost, cost + N);
+    auto cmin = *std::min_element(cost, cost + N);
 
     auto x0 = Arr{cmax, cmin};
     auto t = cmax - cmin;
-    auto E = ell(1.5*t, x0);
+    auto E = ell(1.5 * t, x0);
     auto P = optscaling_oracle(G, cost_pa, double(0.0));
-    auto [xb, fb, niter, feasible, status] = 
-        cutting_plane_dc(P, E, 1.001*t);
+    auto [xb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 1.001 * t);
     CHECK(feasible);
     CHECK(niter <= 27);
 }
-
-

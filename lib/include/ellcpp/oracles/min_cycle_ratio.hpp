@@ -19,7 +19,7 @@ void set_default(const Graph &G, Dict &map, T value) {
 }
 
 template <typename Graph, typename Dict, typename T>
-auto min_cycle_ratio(Graph &G, Dict cost, Dict time, T& /** dummy */ ) {
+auto min_cycle_ratio(Graph &G, Dict cost, Dict time, T && /** dummy */) {
     using edge_t = decltype(*G.edges().begin());
     edge_t e0 = *G.edges().begin();
 
@@ -54,8 +54,10 @@ auto min_cycle_ratio(Graph &G, Dict cost, Dict time, T& /** dummy */ ) {
         cost_t c = boost::get(cost, e);
         time_t t = boost::get(time, e);
         std::cout << "mincost: c = " << c << '\n';
-        if (max_cost < c) max_cost = c;
-        if (min_time > t) min_time = t;
+        if (max_cost < c)
+            max_cost = c;
+        if (min_time > t)
+            min_time = t;
     }
     auto r0 = max_cost * G.number_of_edges() / min_time;
     return max_parametric(G, r0, calc_weight, calc_ratio);

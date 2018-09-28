@@ -3,11 +3,11 @@
 #define _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_PARAMETRIC_HPP 1
 
 #include "neg_cycle.hpp" // import negCycleFinder
+#include <iostream>
 #include <tuple>
 #include <vector>
-#include <iostream>
 
-/** 
+/**
  * maximum parametric problem:
  *    max  r
  *    s.t. dist[v] - dist[v] <= d(u,v,r);
@@ -15,7 +15,8 @@
  *
  *   Arguments:
  *       G {[type]} -- [description];
- *       r {float} -- parameter to be maximized, initially a large number (infeasible) 
+ *       r {float} -- parameter to be maximized, initially a large number
+ * (infeasible)
  *       d {[type]} -- monotone decreasing function w.r.t. r 
  *       zero_cancel {[type]} -- [description];
  *
@@ -31,7 +32,7 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
     using edge_t = decltype(*(G.edges().begin()));
 
     auto get_weight = [d, r](const Graph &G, edge_t &e) -> T { // int???
-        return d(G, r, e); 
+        return d(G, r, e);
     };
 
     auto S = negCycleFinder(G, get_weight);

@@ -95,7 +95,7 @@ class ell {
             if (beta.shape()[0] < 2) {
                 return this->calc_dc(beta[0], tsq);
             }
-            return this->calc_ll_core( beta[0], beta[1], tsq);
+            return this->calc_ll_core(beta[0], beta[1], tsq);
         }
     }
 
@@ -128,7 +128,6 @@ class ell {
      */
     return_t calc_cc(double tsq) const;
 }; // } ell
-
 
 class ell1d {
   public:

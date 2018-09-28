@@ -46,6 +46,7 @@ class network_oracle {
 
 // Template guided deduction
 template <typename Graph, typename Fn_Eval, typename Grad_Fn>
-network_oracle(Graph &G, Fn_Eval &f, Grad_Fn &p) -> network_oracle<Graph, Fn_Eval, Grad_Fn>;
+network_oracle(Graph &G, Fn_Eval &f, Grad_Fn &p)
+    ->network_oracle<Graph, Fn_Eval, Grad_Fn>;
 
 #endif

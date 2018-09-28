@@ -3,14 +3,14 @@
 #define _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_OPTSCALING_ORACLE_HPP 1
 
 #include "network_oracle.hpp"
-#include <xtensor-blas/xlinalg.hpp>
-#include <xtensor/xarray.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
 #include <boost/property_map/property_map.hpp>
+#include <xtensor-blas/xlinalg.hpp>
+#include <xtensor/xarray.hpp>
 
-template <typename Graph, typename Dict, typename T> 
+template <typename Graph, typename Dict, typename T> //
 class optscaling_oracle {
   private:
     Graph &_G;
@@ -20,7 +20,7 @@ class optscaling_oracle {
     using edge_t = decltype(*(_G.edges().begin()));
 
   public:
-    explicit optscaling_oracle(Graph &G, Dict cost, T&& /* dummy */ )
+    explicit optscaling_oracle(Graph &G, Dict cost, T && /* dummy */)
         : _G{G}, _cost{cost} {}
 
     auto operator()(const Arr &x, double t) {

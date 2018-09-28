@@ -33,11 +33,9 @@ class qmi_oracle {
 
   public:
     explicit qmi_oracle(const Arr &F, const Arr &F0)
-        : _F{F}, _F0{F0}, _t{0.}, _count{0},
-          _A{xt::zeros<double>(F0.shape())},
-          _Q(F0.shape()[0]), _Fx{xt::zeros<double>(F0.shape())}
-          {}
-          
+        : _F{F}, _F0{F0}, _t{0.}, _count{0}, _A{xt::zeros<double>(F0.shape())},
+          _Q(F0.shape()[0]), _Fx{xt::zeros<double>(F0.shape())} {}
+
     void update(double t) { _t = t; }
 
     auto operator()(const Arr &x) {
