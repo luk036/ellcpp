@@ -24,19 +24,19 @@
  *       C_opt -- Most critial cycle
  *       dist -- optimal sol"n
  */
-template <typename Graph, typename Fn1, typename Fn2>
-auto max_parametric(Graph &G, double r, Fn1 &d, Fn2 &zero_cancel) {
+template <typename Graph, typename T, typename Fn1, typename Fn2>
+auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
     std::cout << "r=" << r << '\n';
 
     using edge_t = decltype(*(G.edges().begin()));
 
-    auto get_weight = [d, r](const Graph &G, edge_t &e) -> double { // int???
+    auto get_weight = [d, r](const Graph &G, edge_t &e) -> T { // int???
         return d(G, r, e); 
     };
 
     auto S = negCycleFinder(G, get_weight);
     std::vector<edge_t> C_opt{};
-    double r_opt = r;
+    T r_opt = r;
 
     while (true) {
         auto C = S.neg_cycle_relax();

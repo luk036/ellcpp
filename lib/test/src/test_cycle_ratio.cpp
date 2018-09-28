@@ -5,14 +5,17 @@
 #include <boost/property_map/property_map.hpp>
 #include <catch.hpp>
 #include <ellcpp/oracles/min_cycle_ratio.hpp> // import min_cycle_ratio, set_default
+#include <ellcpp/oracles/fraction.hpp> // import Fraction
 #include <py2cpp/nx2bgl.hpp>
 #include <utility> // for std::pair
 #include <vector>
 // from fractions import Fraction
 
 namespace boost {
+
 enum edge_id_tag_t { id_tag }; // a unique #
 BOOST_INSTALL_PROPERTY(edge, id_tag);
+
 } // namespace boost
 
 typedef boost::adjacency_list<
@@ -39,17 +42,18 @@ TEST_CASE("Test Cycle Ratio", "[test_cycle_ratio]") {
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;
     using IterMap =
-        boost::iterator_property_map<double *, EdgeIndexMap, double, double &>;
+        boost::iterator_property_map<fun::Fraction<int> *, EdgeIndexMap, fun::Fraction<int>, fun::Fraction<int> &>;
 
     xn::grAdaptor<graph_t> G = create_test_case1();
-    double cost[] = {5., 1., 1., 1., 1.};
-    double time[] = {1., 1., 1., 1., 1.};
+    fun::Fraction<int> cost[] = {{5, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}};
+    fun::Fraction<int> time[] = {{1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}};
     EdgeIndexMap edge_id = boost::get(boost::id_tag, G);
     IterMap cost_pa(cost, edge_id), time_pa(time, edge_id);
-    auto [r, c] = min_cycle_ratio(G, cost_pa, time_pa);
+    fun::Fraction<int> dummy{1, 0};
+    auto [r, c] = min_cycle_ratio(G, cost_pa, time_pa, dummy);
     CHECK(!c.empty());
     CHECK(c.size() == 5);
-    CHECK(r == 9. / 5.);
+    CHECK(r == fun::Fraction<int>(9, 5) );
     // print(r);
     // print(c);
     // print(dist.items());

@@ -16,20 +16,20 @@ void set_default(const Graph &G, Dict &map, T value) {
     }
 }
 
-template <typename Graph, typename Dict>
-auto min_cycle_ratio(Graph &G, Dict cost, Dict time) {
+template <typename Graph, typename Dict, typename T>
+auto min_cycle_ratio(Graph &G, Dict cost, Dict time, T& /** dummy */ ) {
     using edge_t = decltype(*G.edges().begin());
     edge_t e0 = *G.edges().begin();
 
     // using cost_t = decltype(boost::get(cost, e0));
-    using cost_t = double;
+    using cost_t = T;
     cost_t c0 = boost::get(cost, e0);
 
     // using time_t = decltype(boost::get(time, e0));
-    using time_t = double;
+    using time_t = T;
     time_t t0 = boost::get(time, e0);
 
-    auto calc_weight = [&](const Graph &, double r, auto &e) {
+    auto calc_weight = [&](const Graph &, T r, auto &e) {
         return boost::get(cost, e) - r * boost::get(time, e);
     };
 
