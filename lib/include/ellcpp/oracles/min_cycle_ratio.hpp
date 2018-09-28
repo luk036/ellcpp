@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <py2cpp/py2cpp.hpp>
 #include <tuple>
+#include <xtensor-blas/xlinalg.hpp>
+#include <xtensor/xarray.hpp>
 
 template <typename Graph, typename Dict, typename T>
 void set_default(const Graph &G, Dict &map, T value) {

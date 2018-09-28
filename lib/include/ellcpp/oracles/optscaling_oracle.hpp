@@ -5,27 +5,32 @@
 #include "network_oracle.hpp"
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/graph_traits.hpp>
+#include <boost/graph/properties.hpp>
+#include <boost/property_map/property_map.hpp>
 
-template <typename Graph, typename CostFn> class optscaling_oracle {
+template <typename Graph, typename Dict, typename T> 
+class optscaling_oracle {
   private:
     Graph &_G;
-    CostFn _get_cost;
+    Dict _cost;
 
     using Arr = xt::xarray<double>;
     using edge_t = decltype(*(_G.edges().begin()));
 
   public:
-    explicit optscaling_oracle(Graph &G, CostFn get_cost)
-        : _G{G}, _get_cost{get_cost} {}
+    explicit optscaling_oracle(Graph &G, Dict cost, T&& /* dummy */ )
+        : _G{G}, _cost{cost} {}
 
     auto operator()(const Arr &x, double t) {
         auto constr = [this](Graph &G, edge_t &e, const Arr &x) {
             auto u = G.source(e);
             auto v = G.target(e);
             if (u <= v) { // ???
-                return x(0) - this->_get_cost(G, e, x);
+                return x(0) - boost::get(this->_cost, e);
             }
-            return this->_get_cost(G, e, x) - x(1);
+            return boost::get(this->_cost, e) - x(1);
         };
 
         auto pconstr = [](Graph &G, edge_t &e, const Arr &) {

@@ -6,6 +6,10 @@
 #include <numeric>
 #include <type_traits>
 
+// template <typename Z> bool concept Integer = requires {
+//     std::is_integral<Z>::value;
+// };
+
 namespace fun {
 
 // Integer { Z }
