@@ -16,7 +16,6 @@ TEST_CASE("PY2CPP", "[py2cpp]") {
     for (auto e : S) {
         CHECK(S.contains(e));
     }
-    auto &S2 = S;
     auto S3 = S.copy();
 
     auto M = py::dict<int, std::any>{{1, "hello"}, {8, 5.6}, {9, 4.2}};
@@ -30,6 +29,5 @@ TEST_CASE("PY2CPP", "[py2cpp]") {
     CHECK(std::any_cast<double>(M[9]) != 4.1);
     CHECK(std::any_cast<double>(M.get(2, std::any(-1000.))) == -1000.);
 
-    auto &M2 = M;
     auto M3 = M.copy();
 }

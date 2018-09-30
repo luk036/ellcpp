@@ -13,7 +13,7 @@ template <class grAdaptor> struct exercise_vertex {
     //...
     typedef typename boost::graph_traits<grAdaptor>::vertex_descriptor Vertex;
 
-    exercise_vertex(grAdaptor &g_) : g(g_) {}
+    explicit exercise_vertex(grAdaptor &g_) : g(g_) {}
     //...
     grAdaptor &g;
 
@@ -43,7 +43,7 @@ TEST_CASE("Test Boost", "[test_boost]") {
     // Make convenient labels for the vertices
     enum { A, B, C, D, E, N };
     const int num_vertices = N;
-    const char *name = "ABCDE";
+    // const char *name = "ABCDE";
 
     // writing out the edges in the graph
     typedef std::pair<int, int> Edge;

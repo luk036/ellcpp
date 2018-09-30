@@ -27,7 +27,7 @@ static auto create_test_case1() {
     using Edge = std::pair<int, int>;
     const int num_nodes = 5;
     enum nodes { A, B, C, D, E };
-    char name[] = "ABCDE";
+    // char name[] = "ABCDE";
     static Edge edge_array[] = {Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E),
                                 Edge(E, A)};
     int weights[] = {-5, 1, 1, 1, 1};
@@ -40,7 +40,7 @@ static auto create_test_case2() {
     using Edge = std::pair<int, int>;
     const int num_nodes = 5;
     enum nodes { A, B, C, D, E };
-    char name[] = "ABCDE";
+    // char name[] = "ABCDE";
     static Edge edge_array[] = {Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E),
                                 Edge(E, A)};
     int weights[] = {2, 1, 1, 1, 1};

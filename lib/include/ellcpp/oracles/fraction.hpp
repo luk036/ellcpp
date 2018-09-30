@@ -36,7 +36,7 @@ template <typename Z> class Fraction {
         _denominator = denominator / common;
     }
 
-    constexpr Fraction(const Z &numerator)
+    explicit constexpr Fraction(const Z &numerator)
         : _numerator{numerator}, _denominator{1} {}
 
     constexpr Fraction() = default;

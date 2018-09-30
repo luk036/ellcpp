@@ -35,7 +35,7 @@ static auto create_test_case1() {
     using Edge = std::pair<int, int>;
     const int num_nodes = 5;
     enum nodes { A, B, C, D, E };
-    char name[] = "ABCDE";
+    // char name[] = "ABCDE";
     static Edge edge_array[] = {Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E),
                                 Edge(E, A)};
     std::size_t indices[] = {0, 1, 2, 3, 4};
