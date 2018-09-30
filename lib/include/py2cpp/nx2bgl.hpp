@@ -119,9 +119,7 @@ class grAdaptor : public VertexView<Graph> {
         auto t = boost::target(e, *this);
         return std::pair{s, t}; 
     }
-
 };
- 
 
 
 }
