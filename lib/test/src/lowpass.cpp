@@ -99,11 +99,11 @@ static const double Spsq = Sp * Sp;
 // optimization
 // ********************************************************************
 
-auto run_lowpass(bool use_parallel) {
+auto run_lowpass(bool use_parallel_cut) {
     Arr r0 = xt::zeros<double>({N}); // initial x0
     // r0[0] = 0;
     auto E = ell(4., r0);
-    E._use_parallel = use_parallel;
+    E._use_parallel_cut = use_parallel_cut;
     auto P = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
     auto options = Options();
     options.max_it = 20000;

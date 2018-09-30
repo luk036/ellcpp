@@ -23,7 +23,7 @@ class ell {
     using return_t = std::tuple<int, params_t>;
 
   public:
-    bool _use_parallel = true;
+    bool _use_parallel_cut = true;
 
   private:
     std::size_t _n;

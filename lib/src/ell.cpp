@@ -16,7 +16,7 @@ ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
     }
 
     auto b1sq = b1 * b1;
-    if (b1sq > tsq || !this->_use_parallel) {
+    if (b1sq > tsq || !this->_use_parallel_cut) {
         return this->calc_dc(b0, tsq);
     }
 
