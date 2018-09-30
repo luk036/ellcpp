@@ -6,6 +6,11 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
+/* linux-2.6.38.8/include/linux/compiler.h */
+#include <stdio.h>
+#define likely(x)    __builtin_expect(!!(x), 1)
+#define unlikely(x)  __builtin_expect(!!(x), 0)
+
 /**
  * @brief Ellipsoid Search Space
  *
@@ -70,7 +75,7 @@ class ell {
         auto Qg = xt::linalg::dot(_Q, g);
         auto omega = xt::linalg::dot(g, Qg)();
         auto tsq = this->_kappa * omega;
-        if (tsq <= 0.) {
+        if (unlikely(tsq <= 0.)) {
             return {4, 0.};
         }
         // auto tau = std::sqrt(_kappa * tsq);

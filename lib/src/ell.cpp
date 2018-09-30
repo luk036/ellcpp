@@ -5,13 +5,13 @@
 ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
     auto params = std::tuple{0., 0., 0.};
 
-    if (b1 < b0) {
+    if (unlikely(b1 < b0)) {
         return {1, params}; // no sol'n
     }
 
     auto n = this->_n;
     auto b0b1 = b0 * b1;
-    if (n * b0b1 < -tsq) {
+    if (unlikely(n * b0b1 < -tsq)) {
         return {3, params}; // no effect
     }
 
