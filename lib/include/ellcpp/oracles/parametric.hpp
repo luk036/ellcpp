@@ -51,8 +51,7 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
         r_opt = r_min;
         // update ???
         for (auto e : C_opt) {
-            auto u = G.source(e);
-            auto v = G.target(e);
+            auto [u, v] = G.end_points(e);
             S._dist[u] = S._dist[v] - get_weight(G, e);
         }
     }

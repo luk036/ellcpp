@@ -112,6 +112,14 @@ class grAdaptor : public VertexView<Graph> {
 
     template <typename Edge>
     Vertex target(const Edge& e) const { return boost::target(e, *this); }
+
+    template <typename Edge>
+    auto end_points(const Edge& e) const { 
+        auto s = boost::source(e, *this); 
+        auto t = boost::target(e, *this);
+        return std::pair{s, t}; 
+    }
+
 };
  
 

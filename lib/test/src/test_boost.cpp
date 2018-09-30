@@ -26,8 +26,7 @@ template <class grAdaptor> struct exercise_vertex {
         // typename GraphTraits::out_edge_iterator out_i, out_end;
         // typename GraphTraits::edge_descriptor e;
         for (auto e : g.neighbors(v)) {
-            auto src = g.source(e);
-            auto targ = g.target(e);
+            auto [src, targ] = g.end_points(e);
             std::cout << "(" << index[src] << "," << index[targ] << ") ";
         }
         std::cout << std::endl;
