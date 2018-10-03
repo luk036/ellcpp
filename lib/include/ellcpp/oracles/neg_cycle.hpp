@@ -86,11 +86,12 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
      */
     bool relax() {
         bool changed = false;
-        for (auto e : _G.edges()) {
+        for (const auto& e : _G.edges()) {
             wt_t wt = _get_weight(_G, e);
             // auto [u, v] = e;
-            auto u = _G.source(e);
-            auto v = _G.target(e);
+            // auto u = _G.source(e);
+            // auto v = _G.target(e);
+            auto [u, v] = _G.end_points(e);
             auto d = _dist[u] + wt;
             if (_dist[v] > d) {
                 _dist[v] = d;

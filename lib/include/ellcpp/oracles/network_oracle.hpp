@@ -22,7 +22,7 @@ class network_oracle {
     {}
 
     auto operator()(const Arr &x) {
-        auto get_weight = [this, x](Graph &G, edge_t &e) -> double {
+        auto get_weight = [this, x](Graph &G, const edge_t &e) -> double {
             return this->_f(G, e, x);
         };
 

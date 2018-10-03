@@ -24,7 +24,7 @@ class optscaling_oracle {
         : _G{G}, _cost{cost} {}
 
     auto operator()(const Arr &x, double t) {
-        auto constr = [this](Graph &G, edge_t &e, const Arr &x) {
+        auto constr = [this](Graph &G, const edge_t &e, const Arr &x) {
             auto [u, v] = G.end_points(e);
             if (u <= v) { // ???
                 return x(0) - boost::get(this->_cost, e);
@@ -32,9 +32,10 @@ class optscaling_oracle {
             return boost::get(this->_cost, e) - x(1);
         };
 
-        auto pconstr = [](Graph &G, edge_t &e, const Arr &) {
-            auto u = G.source(e);
-            auto v = G.target(e);
+        auto pconstr = [](Graph &G, const edge_t &e, const Arr &) {
+            // auto u = G.source(e);
+            // auto v = G.target(e);
+            auto [u, v] = G.end_points(e);
             if (u <= v) {
                 return Arr{1., 0.};
             }

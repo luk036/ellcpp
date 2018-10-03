@@ -52,7 +52,7 @@ static auto create_test_case2() {
 bool do_case(xn::grAdaptor<graph_t> &G) {
     using edge_t = decltype(*(G.edges().begin()));
 
-    auto get_weight = [](const xn::grAdaptor<graph_t> &G, edge_t &e) -> int {
+    auto get_weight = [](const xn::grAdaptor<graph_t> &G, const edge_t &e) -> int {
         auto weightmap = boost::get(boost::edge_weight, G);
         return weightmap[e];
     };

@@ -71,13 +71,13 @@ static Arr An = 2 * xt::cos(xt::linalg::outer(w, xt::arange(1, N)));
 static Arr A = xt::concatenate(xt::xtuple(xt::ones<double>({m, 1}), An), 1);
 
 // passband 0 <= w <= w_pass
-static auto ind_p = xt::where(w <= wpass)[0]; // passband
+static const auto ind_p = xt::where(w <= wpass)[0]; // passband
 static const double Lp = std::pow(10, -delta / 20);
 static const double Up = std::pow(10, +delta / 20);
 static Arr Ap = xt::view(A, xt::range(0, ind_p.size()), xt::all());
 
 // stopband (w_stop <= w)
-static auto ind_s = xt::where(wstop <= w)[0]; // stopband
+static const auto ind_s = xt::where(wstop <= w)[0]; // stopband
 static const double Sp = std::pow(10, delta2 / 20);
 
 using xt::placeholders::_;
@@ -86,10 +86,10 @@ static Arr As = xt::view(A, xt::range(ind_s[0], _), xt::all());
 // remove redundant contraints
 // ind_nr = setdiff(1:m,ind_p)   // fullband less passband
 // ind_nr = setdiff(ind_nr, ind_s) // luk: for making parallel cut
-// auto ind_nr = np.setdiff1d(xt::arange(m), ind_p);
-// auto ind_nr = np.setdiff1d(ind_nr, ind_s);
-static auto ind_beg = ind_p[ind_p.size() - 1];
-static auto ind_end = ind_s[0];
+// const auto ind_nr = np.setdiff1d(xt::arange(m), ind_p);
+// const auto ind_nr = np.setdiff1d(ind_nr, ind_s);
+static const auto ind_beg = ind_p[ind_p.size() - 1];
+static const auto ind_end = ind_s[0];
 static Arr Anr = xt::view(A, xt::range(ind_beg, ind_end), xt::all());
 
 static const double Lpsq = Lp * Lp;
@@ -104,7 +104,7 @@ auto run_lowpass(bool use_parallel_cut) {
     // r0[0] = 0;
     auto E = ell(4., r0);
     E._use_parallel_cut = use_parallel_cut;
-    auto P = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
+    const auto P = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
     auto options = Options();
     options.max_it = 20000;
     options.tol = 1e-8;

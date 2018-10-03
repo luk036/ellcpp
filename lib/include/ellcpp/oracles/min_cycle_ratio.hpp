@@ -31,16 +31,16 @@ auto min_cycle_ratio(Graph &G, Dict cost, Dict time, T && /** dummy */) {
     using time_t = T;
     time_t t0 = boost::get(time, e0);
 
-    auto calc_weight = [&](const Graph &, T r, auto &e) {
+    auto calc_weight = [&](const Graph &, T r, const auto &e) {
         return boost::get(cost, e) - r * boost::get(time, e);
     };
 
     auto calc_ratio = [&](const Graph &G, auto &C) {
         cost_t total_cost = cost_t(0);
         time_t total_time = time_t(0);
-        for (auto e : C)
+        for (const auto& e : C)
             total_cost += boost::get(cost, e);
-        for (auto e : C)
+        for (const auto& e : C)
             total_time += boost::get(time, e);
         return total_cost / total_time;
     };
@@ -50,7 +50,7 @@ auto min_cycle_ratio(Graph &G, Dict cost, Dict time, T && /** dummy */) {
     cost_t max_cost = c0;
     time_t min_time = t0;
 
-    for (auto e : G.edges()) {
+    for (const auto& e : G.edges()) {
         cost_t c = boost::get(cost, e);
         time_t t = boost::get(time, e);
         std::cout << "mincost: c = " << c << '\n';
@@ -59,7 +59,7 @@ auto min_cycle_ratio(Graph &G, Dict cost, Dict time, T && /** dummy */) {
         if (min_time > t)
             min_time = t;
     }
-    auto r0 = max_cost * G.number_of_edges() / min_time;
+    const auto r0 = max_cost * G.number_of_edges() / min_time;
     return max_parametric(G, r0, calc_weight, calc_ratio);
 }
 

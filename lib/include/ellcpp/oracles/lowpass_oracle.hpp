@@ -17,10 +17,10 @@ class lowpass_oracle {
     const Arr &_Anr;
     double _Lpsq;
     double _Upsq;
-    unsigned int _i_Anr;
-    unsigned int _i_As;
-    unsigned int _i_Ap;
-    unsigned int _count;
+    mutable unsigned int _i_Anr;
+    mutable unsigned int _i_As;
+    mutable unsigned int _i_Ap;
+    mutable unsigned int _count;
 
   public:
     lowpass_oracle(const Arr &Ap, const Arr &As, const Arr &Anr, double Lpsq,
@@ -28,11 +28,11 @@ class lowpass_oracle {
         : _Ap{Ap}, _As{As}, _Anr{Anr}, _Lpsq{Lpsq}, _Upsq{Upsq}, _i_Anr{0},
           _i_As{0}, _i_Ap{0}, _count{0} {}
 
-    auto operator()(const Arr &x, double Spsq) {
+    auto operator()(const Arr &x, double Spsq) const {
         using xt::linalg::dot;
 
         // 1. nonnegative-real constraint
-        auto n = x.shape()[0];
+        const auto n = x.shape()[0];
 
         // case 1,
         if (x[0] < 0.) {
@@ -50,7 +50,7 @@ class lowpass_oracle {
             if (k == N) {
                 k = 0; // round robin
             }
-            auto v = dot(xt::view(_Ap, k, xt::all()), x)();
+            const auto v = dot(xt::view(_Ap, k, xt::all()), x)();
             if (v > _Upsq) {
                 // f = v - Upsq;
                 Arr g = xt::view(_Ap, k, xt::all());
@@ -78,7 +78,7 @@ class lowpass_oracle {
         for (auto i = 0u, k = _i_As; i < N; ++i, ++k) {
             if (k == N)
                 k = 0; // round robin
-            auto v = dot(xt::view(_As, k, xt::all()), x)();
+            const auto v = dot(xt::view(_As, k, xt::all()), x)();
             if (v > Spsq) {
                 // f = v - Spsq;
                 Arr g = xt::view(_As, k, xt::all());
@@ -106,7 +106,7 @@ class lowpass_oracle {
         // 1. nonnegative-real constraint
         N = _Anr.shape()[0];
         for (auto k = 0u; k < N; ++k) {
-            auto v = dot(xt::view(_Anr, k, xt::all()), x)();
+            const auto v = dot(xt::view(_Anr, k, xt::all()), x)();
             if (v < 0) {
                 Arr f{-v};
                 Arr g = -xt::view(_Anr, k, xt::all());

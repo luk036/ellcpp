@@ -31,7 +31,7 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
 
     using edge_t = decltype(*(G.edges().begin()));
 
-    auto get_weight = [d, r](const Graph &G, edge_t &e) -> T { // int???
+    auto get_weight = [d, r](const Graph &G, const edge_t &e) -> T { // int???
         return d(G, r, e);
     };
 
