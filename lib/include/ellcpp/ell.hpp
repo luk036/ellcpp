@@ -56,7 +56,7 @@ class ell {
     void set_xc(const Arr &xc) { _xc = xc; }
 
     template <typename T> //
-    auto update(const Arr &g, const T &beta) {
+    std::tuple<int, double> update(const Arr &g, const T &beta) {
         return this->update_core(g, beta);
     }
 
@@ -73,8 +73,8 @@ class ell {
     template <typename T>
     std::tuple<int, double> update_core(const Arr &g, const T &beta) {
         auto Qg = xt::linalg::dot(_Q, g);
-        auto omega = xt::linalg::dot(g, Qg)();
-        auto tsq = this->_kappa * omega;
+        double omega = xt::linalg::dot(g, Qg)();
+        double tsq = this->_kappa * omega;
         if (unlikely(tsq <= 0.)) {
             return {4, 0.};
         }
@@ -147,7 +147,7 @@ class ell1d {
         : _r{(u - l) / 2},    //
           _xc{l + _r} {}
 
-    auto &xc() { return _xc; }
+    double xc() const { return _xc; }
 
     ell1d(const ell1d &E) = default;
 

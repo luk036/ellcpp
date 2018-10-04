@@ -31,7 +31,7 @@ template <typename Z> class Fraction {
 
   public:
     constexpr Fraction(const Z &numerator, const Z &denominator) {
-        auto common = std::gcd(numerator, denominator);
+        const auto& common = std::gcd(numerator, denominator);
         _numerator = numerator / common;
         _denominator = denominator / common;
     }
@@ -45,77 +45,76 @@ template <typename Z> class Fraction {
 
     constexpr const Z &denominator() const { return _denominator; }
 
-    constexpr auto abs() const {
+    constexpr _Self abs() const {
         return _Self(std::abs(_numerator), std::abs(_denominator));
     }
 
-    constexpr auto reciprocal() const {
+    constexpr _Self reciprocal() const {
         return _Self(_denominator, _numerator);
     }
 
-    constexpr auto operator-() const {
+    constexpr _Self operator-() const {
         return _Self(-_numerator, _denominator);
     }
 
-    constexpr auto operator+(const _Self &frac) const {
-        auto common = std::lcm(_denominator, frac._denominator);
-        auto n = common / _denominator * _numerator +
+    constexpr _Self operator+(const _Self &frac) const {
+        const auto& common = std::lcm(_denominator, frac._denominator);
+        const auto& n = common / _denominator * _numerator +
                  common / frac._denominator * frac._numerator;
         return _Self(n, common);
     }
 
-    constexpr auto operator-(const _Self &frac) const {
+    constexpr _Self operator-(const _Self &frac) const {
         return *this + (-frac);
     }
 
-    constexpr auto operator*(const _Self &frac) const {
+    constexpr _Self operator*(const _Self &frac) const {
         return _Self(_numerator * frac._numerator,
                      _denominator * frac._denominator);
     }
 
-    constexpr auto operator/(const _Self &frac) const {
+    constexpr _Self operator/(const _Self &frac) const {
         return *this * frac.reciprocal();
     }
 
-    constexpr auto operator+(const Z &i) const {
-        auto common = _denominator;
-        auto n = _numerator + _denominator * i;
-        return _Self(n, common);
+    constexpr _Self operator+(const Z &i) const {
+        const auto& n = _numerator + _denominator * i;
+        return _Self(n, _denominator);
     }
 
-    constexpr auto operator-(const Z &i) const { return *this + (-i); }
+    constexpr _Self operator-(const Z &i) const { return *this + (-i); }
 
-    constexpr auto operator*(const Z &i) const {
+    constexpr _Self operator*(const Z &i) const {
         return _Self(_numerator * i, _denominator);
     }
 
-    constexpr auto operator/(const Z &i) const {
+    constexpr _Self operator/(const Z &i) const {
         return _Self(_numerator, _denominator * i);
     }
 
-    constexpr auto operator+=(const _Self &frac) {
+    constexpr _Self operator+=(const _Self &frac) {
         return *this = *this + frac;
     }
 
-    constexpr auto operator-=(const _Self &frac) {
+    constexpr _Self operator-=(const _Self &frac) {
         return *this = *this - frac;
     }
 
-    constexpr auto operator*=(const _Self &frac) {
+    constexpr _Self operator*=(const _Self &frac) {
         return *this = *this * frac;
     }
 
-    constexpr auto operator/=(const _Self &frac) {
+    constexpr _Self operator/=(const _Self &frac) {
         return *this = *this / frac;
     }
 
-    constexpr auto operator+=(const Z &i) { return *this = *this + i; }
+    constexpr _Self operator+=(const Z &i) { return *this = *this + i; }
 
-    constexpr auto operator-=(const Z &i) { return *this = *this - i; }
+    constexpr _Self operator-=(const Z &i) { return *this = *this - i; }
 
-    constexpr auto operator*=(const Z &i) { return *this = *this * i; }
+    constexpr _Self operator*=(const Z &i) { return *this = *this * i; }
 
-    constexpr auto operator/=(const Z &i) { return *this = *this / i; }
+    constexpr _Self operator/=(const Z &i) { return *this = *this / i; }
 
     /**
      * @brief Three way comparison
@@ -165,7 +164,7 @@ template <typename Z> class Fraction {
 };
 
 template <typename Z>
-constexpr auto operator-(const Z &c, const Fraction<Z> &frac) {
+constexpr Fraction<Z> operator-(const Z &c, const Fraction<Z> &frac) {
     return Fraction<Z>(frac.denominator() * c - frac.numerator(),
                        frac.denominator());
 }

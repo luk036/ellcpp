@@ -11,7 +11,7 @@
 // using namespace boost;
 template <class grAdaptor> struct exercise_vertex {
     //...
-    typedef typename boost::graph_traits<grAdaptor>::vertex_descriptor Vertex;
+    using Vertex = typename boost::graph_traits<grAdaptor>::vertex_descriptor;
 
     explicit exercise_vertex(grAdaptor &g_) : g(g_) {}
     //...
@@ -36,9 +36,8 @@ template <class grAdaptor> struct exercise_vertex {
 
 TEST_CASE("Test Boost", "[test_boost]") {
     // create a typedef for the Graph type
-    typedef boost::adjacency_list<boost::vecS, boost::vecS,
-                                  boost::bidirectionalS>
-        Graph;
+    using Graph = boost::adjacency_list<boost::vecS, boost::vecS,
+                                  boost::bidirectionalS>;
 
     // Make convenient labels for the vertices
     enum { A, B, C, D, E, N };
@@ -46,7 +45,7 @@ TEST_CASE("Test Boost", "[test_boost]") {
     // const char *name = "ABCDE";
 
     // writing out the edges in the graph
-    typedef std::pair<int, int> Edge;
+    using Edge = std::pair<int, int>;
     Edge edge_array[] = {Edge(A, B), Edge(A, D), Edge(C, A), Edge(D, C),
                          Edge(C, E), Edge(B, D), Edge(D, E)};
     const int num_edges = sizeof(edge_array) / sizeof(edge_array[0]);
@@ -54,6 +53,7 @@ TEST_CASE("Test Boost", "[test_boost]") {
     // declare a graph object
     Graph g(num_vertices);
     xn::grAdaptor<Graph> G(g);
+    using Vertex = typename boost::graph_traits<Graph>::vertex_descriptor;
 
     // add the edges to the graph object
     for (int i = 0; i < num_edges; ++i)
@@ -68,14 +68,14 @@ TEST_CASE("Test Boost", "[test_boost]") {
     std::cout << "vertices(g) = ";
     // typedef graph_traits<Graph>::vertex_iterator vertex_iter;
     // std::pair<vertex_iter, vertex_iter> vp;
-    for (auto v : G) {
+    for (const Vertex& v : G) {
         std::cout << index[v] << " ";
     }
     std::cout << std::endl;
 
     std::cout << "edges(g) = ";
     // graph_traits<Graph>::edge_iterator ei, ei_end;
-    for (auto e : G.edges())
+    for (const auto& e : G.edges())
         std::cout << "(" << index[boost::source(e, G)] << ","
                   << index[boost::target(e, G)] << ") ";
     std::cout << std::endl;

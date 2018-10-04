@@ -7,13 +7,12 @@
 #include <py2cpp/nx2bgl.hpp>
 #include <utility> // for std::pair
 
-typedef boost::adjacency_list<
+using graph_t = boost::adjacency_list<
     boost::listS, boost::vecS, boost::directedS, boost::no_property,
     boost::property<boost::edge_weight_t, int,
-                    boost::property<boost::edge_index_t, int>>>
-    graph_t;
-typedef boost::graph_traits<graph_t>::vertex_descriptor Vertex;
-typedef boost::graph_traits<graph_t>::edge_iterator Edge_it;
+                    boost::property<boost::edge_index_t, int>>>;
+using Vertex = boost::graph_traits<graph_t>::vertex_descriptor;
+using Edge_it = boost::graph_traits<graph_t>::edge_iterator;
 
 // auto get_weight(const graph_t &G, const Edge_it &e) {
 //     auto weightmap = boost::get(boost::edge_weight_t(), G);

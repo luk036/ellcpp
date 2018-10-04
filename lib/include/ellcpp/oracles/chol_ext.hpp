@@ -101,7 +101,7 @@ class chol_ext {
 
     bool is_spd() const { return _p == 0; }
 
-    auto witness() const {
+    Vec witness() const {
         assert(!this->is_spd());
         Vec v = xt::zeros<double>({_p});
         using xt::placeholders::_;

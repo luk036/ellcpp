@@ -34,7 +34,7 @@ class profit_oracle {
             return std::tuple{g, fj, t};
         }
         double log_Cobb = _log_pA + xt::linalg::dot(_a, y)();
-        auto x = xt::exp(y);
+        xarray x = xt::exp(y);
         double vx = xt::linalg::dot(_v, x)();
         auto te = t + vx;
         fj = std::log(te) - log_Cobb;
@@ -67,7 +67,7 @@ class profit_rb_oracle {
     {}
 
     auto operator()(const xarray &y, double t) {
-        auto a_rb = _a;
+        xarray a_rb = _a;
         for (auto i : {0, 1}) {
             a_rb[i] += _uie[i] * (y[i] > 0. ? -1 : +1);
         }

@@ -21,7 +21,7 @@ class network_oracle {
         : _G{G}, _f{f}, _p{p} // partial derivative of f w.r.t x
     {}
 
-    auto operator()(const Arr &x) {
+    auto operator()(const Arr &x) const {
         auto get_weight = [this, x](Graph &G, const edge_t &e) -> double {
             return this->_f(G, e, x);
         };
