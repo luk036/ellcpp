@@ -17,7 +17,7 @@
  *       G {[type]} -- [description];
  *       r {float} -- parameter to be maximized, initially a large number
  * (infeasible)
- *       d {[type]} -- monotone decreasing function w.r.t. r 
+ *       d {[type]} -- monotone decreasing function w.r.t. r
  *       zero_cancel {[type]} -- [description];
  *
  *   Returns:
@@ -31,7 +31,8 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
 
     using edge_t = decltype(*(G.edges().begin()));
 
-    auto get_weight = [d, r](const Graph &G, const edge_t &e) -> T { // int???
+    const auto get_weight = [d, r](const Graph &G,
+                                   const edge_t &e) -> T { // int???
         return d(G, r, e);
     };
 
@@ -40,8 +41,8 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
     T r_opt = r;
 
     while (true) {
-        auto C = S.neg_cycle_relax();
-        auto r_min = zero_cancel(G, C);
+        const auto &C = S.neg_cycle_relax();
+        const T &r_min = zero_cancel(G, C);
         std::cout << "r_min=" << r_min << '\n';
 
         if (r_min >= r_opt) {
@@ -50,8 +51,8 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
         C_opt = C;
         r_opt = r_min;
         // update ???
-        for (auto e : C_opt) {
-            auto [u, v] = G.end_points(e);
+        for (const edge_t &e : C_opt) {
+            const auto [u, v] = G.end_points(e);
             S._dist[u] = S._dist[v] - get_weight(G, e);
         }
     }

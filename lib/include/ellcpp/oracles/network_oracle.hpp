@@ -22,21 +22,21 @@ class network_oracle {
     {}
 
     auto operator()(const Arr &x) const {
-        auto get_weight = [this, x](Graph &G, const edge_t &e) -> double {
+        const auto get_weight = [this, x](Graph &G, const edge_t &e) -> double {
             return this->_f(G, e, x);
         };
 
         auto S = negCycleFinder(_G, get_weight);
-        auto C = S.find_neg_cycle();
+        const auto &C = S.find_neg_cycle();
 
-        auto n = x.size();
+        const size_t n = x.size();
         Arr g = xt::zeros<double>({n});
         double f = 0.0;
 
         if (C.empty()) {
             return std::tuple{g, 0., true};
         }
-        for (auto e : C) {
+        for (const auto &e : C) {
             f -= _f(_G, e, x);
             g -= _p(_G, e, x);
         }
