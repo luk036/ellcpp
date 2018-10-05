@@ -13,7 +13,7 @@ class network_oracle {
     Fn_Eval _f;
     Grad_Fn _p;
 
-    using edge_t = decltype(*(_G.edges().begin()));
+    using edge_t = decltype(*(std::begin(_G.edges())));
     using Arr = xt::xarray<double>;
 
   public:

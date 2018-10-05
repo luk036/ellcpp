@@ -17,7 +17,7 @@ class optscaling_oracle {
     Dict _cost;
 
     using Arr = xt::xarray<double>;
-    using edge_t = decltype(*(_G.edges().begin()));
+    using edge_t = decltype(*(std::begin(_G.edges())));
 
   public:
     explicit optscaling_oracle(Graph &G, Dict cost, T && /* dummy */)

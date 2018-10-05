@@ -29,7 +29,7 @@ template <typename Graph, typename T, typename Fn1, typename Fn2>
 auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
     std::cout << "r=" << r << '\n';
 
-    using edge_t = decltype(*(G.edges().begin()));
+    using edge_t = decltype(*(std::begin(G.edges())));
 
     const auto get_weight = [d, r](const Graph &G,
                                    const edge_t &e) -> T { // int???

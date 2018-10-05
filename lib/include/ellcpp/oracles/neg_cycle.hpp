@@ -27,7 +27,7 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
     WeightFn _get_weight; // for nonlinear and lazy evaluation
 
     using Node = decltype(Graph::null_vertex());
-    using edge_t = decltype(*(_G.edges().begin()));
+    using edge_t = decltype(*(std::begin(_G.edges())));
     using wt_t = decltype(_get_weight(_G, std::declval<edge_t &>()));
 
   public:

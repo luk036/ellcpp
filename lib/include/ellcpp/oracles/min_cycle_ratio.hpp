@@ -9,19 +9,19 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
-template <typename Graph, typename Dict, typename T>
-void set_default(const Graph &G, Dict &map, T value) {
-    for (auto e : G.edges()) {
-        if (!map.contains(&e)) {
-            map[&e] = value;
-        }
-    }
-}
+// template <typename Graph, typename Dict, typename T>
+// void set_default(const Graph &G, Dict &map, T value) {
+//     for (const auto& e : G.edges()) {
+//         if (!map.contains(&e)) {
+//             map[&e] = value;
+//         }
+//     }
+// }
 
 template <typename Graph, typename Dict, typename T>
 auto min_cycle_ratio(Graph &G, Dict cost, Dict time, T && /** dummy */) {
-    using edge_t = decltype(*G.edges().begin());
-    edge_t e0 = *G.edges().begin();
+    using edge_t = decltype(*std::begin(G.edges()));
+    const edge_t& e0 = *std::begin(G.edges());
 
     // using cost_t = decltype(boost::get(cost, e0));
     using cost_t = T;
