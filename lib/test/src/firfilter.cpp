@@ -22,7 +22,7 @@ static auto n = 20;
 
 // Rule-of-thumb frequency discretization (Cheney's Approx. Theory book).
 static auto m = 15 * n;
-static auto w = xt::linspace<double>(0, PI, m);
+static Arr w = xt::linspace<double>(0, PI, m);
 
 // ********************************************************************
 // Construct the desired filter.
@@ -67,12 +67,12 @@ class my_fir_oracle {
         Arr gmax = xt::zeros<double>({n});
 
         for (auto i = 0u; i < m; ++i) {
-            auto a_R = xt::view(A_R, i, xt::all());
-            auto a_I = xt::view(A_I, i, xt::all());
-            auto H_r = Hdes_r[i];
-            auto H_i = Hdes_i[i];
-            auto t_r = xt::linalg::dot(a_R, h)() - H_r;
-            auto t_i = xt::linalg::dot(a_I, h)() - H_i;
+            Arr a_R = xt::view(A_R, i, xt::all());
+            Arr a_I = xt::view(A_I, i, xt::all());
+            double H_r = Hdes_r[i];
+            double H_i = Hdes_i[i];
+            double t_r = xt::linalg::dot(a_R, h)() - H_r;
+            double t_i = xt::linalg::dot(a_I, h)() - H_i;
             double fj = t_r * t_r + t_i * t_i;
             if (fj >= t) {
                 Arr g = 2. * (t_r * a_R + t_i * a_I);
@@ -92,7 +92,7 @@ class my_fir_oracle {
 // def test_firfilter() {
 TEST_CASE("FIR Filter", "[firfilter]") {
 
-    auto h0 = xt::zeros<double>({n}); // initial x0
+    Arr h0 = xt::zeros<double>({n}); // initial x0
     auto E = ell(10., h0);
     auto P = my_fir_oracle();
     auto [hb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 100.);

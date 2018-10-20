@@ -48,6 +48,20 @@ static xn::grAdaptor<graph_t> create_test_case2() {
     return xn::grAdaptor<graph_t>(g);
 }
 
+static xn::grAdaptor<graph_t> create_test_case_timing() {
+    using Edge = std::pair<int, int>;
+    const int num_nodes = 3;
+    enum nodes { A, B, C };
+    // char name[] = "ABCDE";
+    static Edge edge_array[] = {Edge(A, B), Edge(B, A), Edge(B, C), Edge(C, B),
+                                Edge(B, C), Edge(C, B), Edge(C, A), Edge(A, C)};
+    int weights[] = {7, 0, 3, 1, 6, 4, 2, 5};
+    int num_arcs = sizeof(edge_array) / sizeof(Edge);
+    static graph_t g(edge_array, edge_array + num_arcs, weights, num_nodes);
+    return xn::grAdaptor<graph_t>(g);
+}
+
+
 bool do_case(xn::grAdaptor<graph_t> &G) {
     using edge_t = decltype(*(std::begin(G.edges())));
 
@@ -81,6 +95,12 @@ TEST_CASE("Test Negative Cycle", "[test_neg_cycle]") {
 
 TEST_CASE("Test No Negative Cycle", "[test_neg_cycle]") {
     xn::grAdaptor<graph_t> G = create_test_case2();
+    bool hasNeg = do_case(G);
+    CHECK(!hasNeg);
+}
+
+TEST_CASE("Test Timing Graph", "[test_neg_cycle]") {
+    xn::grAdaptor<graph_t> G = create_test_case_timing();
     bool hasNeg = do_case(G);
     CHECK(!hasNeg);
 }
