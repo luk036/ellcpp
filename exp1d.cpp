@@ -19,7 +19,7 @@ int main() {
   auto N = 500u;      // number of samples
 
   // auto dist = s_end - s_begin;
-  auto s = xt::linspace(s_begin, s_end, n);
+  Arr s = xt::linspace(s_begin, s_end, n);
 
   //shape_type shape = {n, n};
   Arr Sig = xt::ones<double>({n, n});

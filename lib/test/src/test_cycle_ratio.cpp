@@ -90,7 +90,7 @@ TEST_CASE("Test Cycle Ratio of Timing Graph", "[test_cycle_ratio]") {
                                      fun::Fraction<int>, fun::Fraction<int> &>;
 
     xn::grAdaptor<graph_t> G = create_test_case_timing();
-    fun::Fraction<int> cost[] = {{7, 1}, {0, 1}, {3, 1}, {1, 1}, {6, 1}, {4, 1}, {2, 1}, {5, 1}};
+    fun::Fraction<int> cost[] = {{7, 1}, {-1, 1}, {3, 1}, {0, 1}, {5, 1}, {4, 1}, {2, 1}, {4, 1}};
     fun::Fraction<int> time[] = {{1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}};
     EdgeIndexMap edge_id = boost::get(boost::id_tag, G);
     IterMap cost_pa(cost, edge_id), time_pa(time, edge_id);
@@ -104,7 +104,7 @@ TEST_CASE("Test Cycle Ratio of Timing Graph", "[test_cycle_ratio]") {
 
     auto [r, c] = min_cycle_ratio(G, get_cost, get_time, fun::Fraction<int>{});
     CHECK(!c.empty());
-    CHECK(r == fun::Fraction<int>(2, 1));
+    CHECK(r == fun::Fraction<int>(3, 2));
     CHECK(c.size() == 2);
     // print(r);
     // print(c);
