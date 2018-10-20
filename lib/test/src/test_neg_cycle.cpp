@@ -22,7 +22,7 @@ using Edge_it = boost::graph_traits<graph_t>::edge_iterator;
 //     //return G[u][v].get("weight", 1);
 // }
 
-static auto create_test_case1() {
+static xn::grAdaptor<graph_t> create_test_case1() {
     using Edge = std::pair<int, int>;
     const int num_nodes = 5;
     enum nodes { A, B, C, D, E };
@@ -35,7 +35,7 @@ static auto create_test_case1() {
     return xn::grAdaptor<graph_t>(g);
 }
 
-static auto create_test_case2() {
+static xn::grAdaptor<graph_t> create_test_case2() {
     using Edge = std::pair<int, int>;
     const int num_nodes = 5;
     enum nodes { A, B, C, D, E };
@@ -51,12 +51,13 @@ static auto create_test_case2() {
 bool do_case(xn::grAdaptor<graph_t> &G) {
     using edge_t = decltype(*(std::begin(G.edges())));
 
-    auto get_weight = [](const xn::grAdaptor<graph_t> &G, const edge_t &e) -> int {
-        auto weightmap = boost::get(boost::edge_weight, G);
+    auto get_weight = [](const xn::grAdaptor<graph_t> &G,
+                         const edge_t &e) -> int {
+        auto &&weightmap = boost::get(boost::edge_weight, G);
         return weightmap[e];
     };
 
-    auto N = negCycleFinder(G, get_weight);
+    negCycleFinder N(G, get_weight);
     bool hasNeg = false;
     auto cycle = N.find_neg_cycle();
     if (!cycle.empty()) {

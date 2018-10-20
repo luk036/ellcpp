@@ -24,13 +24,14 @@ BOOST_INSTALL_PROPERTY(edge, id_tag);
 
 using Arr = xt::xarray<double>;
 
-using graph_t = boost::adjacency_list<
-    boost::vecS, boost::vecS, boost::directedS, boost::no_property,
-    boost::property<boost::edge_id_tag_t, std::size_t>>;
+using graph_t =
+    boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS,
+                          boost::no_property,
+                          boost::property<boost::edge_id_tag_t, std::size_t>>;
 using Vertex = boost::graph_traits<graph_t>::vertex_descriptor;
 using edge_t = boost::graph_traits<graph_t>::edge_iterator;
 
-static auto create_test_case1() {
+static xn::grAdaptor<graph_t> create_test_case1() {
     using Edge = std::pair<int, int>;
     const int num_nodes = 5;
     enum nodes { A, B, C, D, E };
@@ -50,22 +51,25 @@ TEST_CASE("Test Optimal Scaling", "[test_optscaling]") {
         boost::iterator_property_map<double *, EdgeIndexMap, double, double &>;
 
     xn::grAdaptor<graph_t> G = create_test_case1();
-    const int N = 5;
-    double elem[N] = {1.2, 2.3, 3.4, -4.5, 5.6};
-    double cost[N];
-    for (auto i = 0; i < N; ++i) {
+    double elem[] = {1.2, 2.3, 3.4, -4.5, 5.6};
+    const int num_of_nodes = sizeof(elem) / sizeof(double);
+    double cost[num_of_nodes];
+    for (auto i = 0; i < num_of_nodes; ++i) {
         cost[i] = std::log(std::abs(elem[i]));
     }
     EdgeIndexMap edge_id = boost::get(boost::id_tag, G);
     IterMap cost_pa(cost, edge_id);
+    auto get_cost = [&](const xn::grAdaptor<graph_t> &G,
+                        const auto &e) -> double {
+        return boost::get(cost_pa, e);
+    };
+    double cmax = *std::max_element(cost, cost + num_of_nodes);
+    double cmin = *std::min_element(cost, cost + num_of_nodes);
 
-    auto cmax = *std::max_element(cost, cost + N);
-    auto cmin = *std::min_element(cost, cost + N);
-
-    auto x0 = Arr{cmax, cmin};
-    auto t = cmax - cmin;
-    auto E = ell(1.5 * t, x0);
-    auto P = optscaling_oracle(G, cost_pa, double(0.0));
+    Arr x0{cmax, cmin};
+    double t = cmax - cmin;
+    ell E(1.5 * t, x0);
+    optscaling_oracle P(G, get_cost, double(0.0));
     auto [xb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 1.001 * t);
     CHECK(feasible);
     CHECK(niter <= 27);

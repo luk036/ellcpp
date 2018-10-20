@@ -49,7 +49,15 @@ TEST_CASE("Test Cycle Ratio", "[test_cycle_ratio]") {
     fun::Fraction<int> time[] = {{1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}};
     EdgeIndexMap edge_id = boost::get(boost::id_tag, G);
     IterMap cost_pa(cost, edge_id), time_pa(time, edge_id);
-    auto [r, c] = min_cycle_ratio(G, cost_pa, time_pa, fun::Fraction<int>{});
+
+    auto get_cost = [&](const xn::grAdaptor<graph_t>& G, const auto& e) -> fun::Fraction<int> {
+        return boost::get(cost_pa, e);
+    };
+    auto get_time = [&](const xn::grAdaptor<graph_t>& G, const auto& e) -> fun::Fraction<int> {
+        return boost::get(time_pa, e);
+    };
+
+    auto [r, c] = min_cycle_ratio(G, get_cost, get_time, fun::Fraction<int>{});
     CHECK(!c.empty());
     CHECK(c.size() == 5);
     CHECK(r == fun::Fraction<int>(9, 5));

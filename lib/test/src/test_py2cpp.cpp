@@ -9,20 +9,20 @@
 TEST_CASE("PY2CPP", "[py2cpp]") {
     // using namespace std::string_literals;
 
-    auto S = py::set{"hello", "world", "test"};
+    py::set S{"hello", "world", "test"};
     CHECK(S.contains("test"));
     CHECK(!S.contains("test2"));
     CHECK(py::len(S) == 3);
-    for (auto e : S) {
+    for (const auto& e : S) {
         CHECK(S.contains(e));
     }
     auto S3 = S.copy();
 
-    auto M = py::dict<int, std::any>{{1, "hello"}, {8, 5.6}, {9, 4.2}};
+    py::dict<int, std::any> M{{1, "hello"}, {8, 5.6}, {9, 4.2}};
     CHECK(M.contains(8));
     CHECK(!M.contains(10));
     CHECK(py::len(M) == 3);
-    for (auto [e, v] : M) {
+    for (const auto& [e, v] : M) {
         CHECK(M.contains(e));
     }
     CHECK(std::any_cast<double>(M[8]) == 5.6);

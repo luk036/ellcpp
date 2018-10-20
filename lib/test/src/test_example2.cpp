@@ -9,10 +9,10 @@
 using Arr = xt::xarray<double>;
 
 auto my_oracle2(const Arr &z) {
-    auto x = z[0], y = z[1];
+    double x = z[0], y = z[1];
 
     // constraint 1: x + y <= 3
-    auto fj = x + y - 3;
+    double fj = x + y - 3;
     if (fj > 0.) {
         return std::tuple{Arr{1., 1.}, fj, false};
     }
@@ -25,8 +25,8 @@ auto my_oracle2(const Arr &z) {
 }
 
 TEST_CASE("Example 2", "[example2]") {
-    auto x0 = Arr{0., 0.}; // initial x0
-    auto E = ell(10., x0);
+    Arr x0{0., 0.}; // initial x0
+    ell E(10., x0);
     auto P = my_oracle2;
     auto [xb, niter, feasible, status] = cutting_plane_feas(P, E);
     CHECK(feasible);

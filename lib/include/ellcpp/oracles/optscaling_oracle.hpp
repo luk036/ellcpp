@@ -10,26 +10,26 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
-template <typename Graph, typename Dict, typename T> //
+template <typename Graph, typename Fn, typename T> //
 class optscaling_oracle {
   private:
     Graph &_G;
-    Dict _cost;
+    Fn _get_cost;
 
     using Arr = xt::xarray<double>;
     using edge_t = decltype(*(std::begin(_G.edges())));
 
   public:
-    explicit optscaling_oracle(Graph &G, Dict cost, T && /* dummy */)
-        : _G{G}, _cost{cost} {}
+    explicit optscaling_oracle(Graph &G, Fn get_cost, T && /* dummy */)
+        : _G{G}, _get_cost{get_cost} {}
 
     auto operator()(const Arr &x, double t) {
         auto constr = [this](Graph &G, const edge_t &e, const Arr &x) {
             const auto [u, v] = G.end_points(e);
             if (u <= v) { // ???
-                return x(0) - boost::get(this->_cost, e);
+                return x(0) - this->_get_cost(G, e);
             }
-            return boost::get(this->_cost, e) - x(1);
+            return this->_get_cost(G, e) - x(1);
         };
 
         auto pconstr = [](Graph &G, const edge_t &e, const Arr &) {

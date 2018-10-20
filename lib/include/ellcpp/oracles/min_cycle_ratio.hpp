@@ -18,30 +18,30 @@
 //     }
 // }
 
-template <typename Graph, typename Dict, typename T>
-auto min_cycle_ratio(Graph &G, Dict cost, Dict time, T && /** dummy */) {
+template <typename Graph, typename Fn1, typename Fn2, typename T>
+auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */) {
     using edge_t = decltype(*std::begin(G.edges()));
-    const edge_t& e0 = *std::begin(G.edges());
+    edge_t e0 = *std::begin(G.edges());
 
     // using cost_t = decltype(boost::get(cost, e0));
     using cost_t = T;
-    cost_t c0 = boost::get(cost, e0);
+    cost_t c0 = get_cost(G, e0);
 
     // using time_t = decltype(boost::get(time, e0));
     using time_t = T;
-    time_t t0 = boost::get(time, e0);
+    time_t t0 = get_time(G, e0);
 
     auto calc_weight = [&](const Graph &, T r, const auto &e) {
-        return boost::get(cost, e) - r * boost::get(time, e);
+        return get_cost(G, e) - r * get_time(G, e);
     };
 
     auto calc_ratio = [&](const Graph &G, auto &C) {
         cost_t total_cost = cost_t(0);
         time_t total_time = time_t(0);
         for (const auto& e : C)
-            total_cost += boost::get(cost, e);
+            total_cost += get_cost(G, e);
         for (const auto& e : C)
-            total_time += boost::get(time, e);
+            total_time += get_time(G, e);
         return total_cost / total_time;
     };
 
@@ -51,8 +51,8 @@ auto min_cycle_ratio(Graph &G, Dict cost, Dict time, T && /** dummy */) {
     time_t min_time = t0;
 
     for (const auto& e : G.edges()) {
-        cost_t c = boost::get(cost, e);
-        time_t t = boost::get(time, e);
+        cost_t c = get_cost(G, e);
+        time_t t = get_time(G, e);
         std::cout << "mincost: c = " << c << '\n';
         if (max_cost < c)
             max_cost = c;
