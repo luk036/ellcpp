@@ -56,9 +56,9 @@ TEST_CASE("Corr_fn", "[corr_fn]") {
     // Y = xt::cov(Ys, bias=True);
     Arr Y = xt::zeros<double>({n, n});
     for (auto k = 0u; k < N; ++k) {
-        auto x = var * xt::random::randn<double>({n});
+        Arr x = var * xt::random::randn<double>({n});
         // auto y = dot(A, x)() + tau*xt::random::randn<double>({n});
-        auto y = dot(A, x);
+        Arr y = dot(A, x);
         // Ys[:, k] = y;
         Y += xt::linalg::outer(y, y);
     }
@@ -66,6 +66,6 @@ TEST_CASE("Corr_fn", "[corr_fn]") {
 
     // lsq_corr_bspline(Y, s, 4);
     auto num_iters = lsq_corr_poly2(Y, s, 4);
-    CHECK(num_iters >= 257);
+    CHECK(num_iters >= 88);
     CHECK(num_iters <= 657);
 }

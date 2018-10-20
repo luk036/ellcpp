@@ -72,7 +72,7 @@ class ell {
      */
     template <typename T>
     std::tuple<int, double> update_core(const Arr &g, const T &beta) {
-        auto Qg = xt::linalg::dot(_Q, g);
+        Arr Qg = xt::linalg::dot(_Q, g);
         double omega = xt::linalg::dot(g, Qg)();
         double tsq = this->_kappa * omega;
         if (unlikely(tsq <= 0.)) {

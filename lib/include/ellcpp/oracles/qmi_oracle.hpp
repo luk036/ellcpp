@@ -48,14 +48,14 @@ class qmi_oracle {
         auto getA = [this, x](std::size_t i, std::size_t j) -> double { // ???
             using xt::linalg::dot;
             assert(i >= j);
-            auto Fxi = xt::view(_Fx, i, xt::all());
-            auto Fxj = xt::view(_Fx, j, xt::all());
+            Arr Fxi = xt::view(_Fx, i, xt::all());
+            Arr Fxj = xt::view(_Fx, j, xt::all());
             if (_count < i + 1) {
                 _count = i + 1;
                 Fxi = xt::view(_F0, i, xt::all());
                 for (auto k = 0u; k < _nx; ++k) {
                     // Arr Fk = _F[k];
-                    auto Fki = xt::view(_F, k, i, xt::all());
+                    Arr Fki = xt::view(_F, k, i, xt::all());
                     Fxi -= Fki * x(k);
                 }
             }

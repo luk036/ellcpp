@@ -10,7 +10,7 @@ inline static auto quad(const xt::xarray<double> &A,
                         const xt::xarray<double> &v, size_t p) {
     double res = 0.0;
     for (auto i = 0u; i < p; ++i) {
-        double s = 0;
+        auto s = 0.;
         for (auto j = 0u; j < p; ++j) {
             s += A(i, j) * v(j);
         }
@@ -47,7 +47,7 @@ class lmi_oracle {
         Arr g = xt::zeros<double>({n});
         auto fj = -1.0;
         for (auto i = 0u; i < n; ++i) {
-            auto Fi = xt::view(_F, i, xt::all(), xt::all());
+            Arr Fi = xt::view(_F, i, xt::all(), xt::all());
             // Arr Fi = _F(i);
             A -= Fi * x(i);
         }
@@ -59,7 +59,7 @@ class lmi_oracle {
         auto p = v.size();
         fj = 1.0;
         for (auto i = 0u; i < n; ++i) {
-            auto Fipp = xt::view(_F, i, xt::range(_, p), xt::range(_, p));
+            Arr Fipp = xt::view(_F, i, xt::range(_, p), xt::range(_, p));
             g(i) = quad(Fipp, v, p);
         }
         return std::tuple{g, fj};

@@ -50,7 +50,7 @@ class lowpass_oracle {
             if (k == N) {
                 k = 0; // round robin
             }
-            const auto v = dot(xt::view(_Ap, k, xt::all()), x)();
+            double v = dot(xt::view(_Ap, k, xt::all()), x)();
             if (v > _Upsq) {
                 // f = v - Upsq;
                 Arr g = xt::view(_Ap, k, xt::all());
@@ -78,7 +78,7 @@ class lowpass_oracle {
         for (auto i = 0u, k = _i_As; i < N; ++i, ++k) {
             if (k == N)
                 k = 0; // round robin
-            const auto v = dot(xt::view(_As, k, xt::all()), x)();
+            double v = dot(xt::view(_As, k, xt::all()), x)();
             if (v > Spsq) {
                 // f = v - Spsq;
                 Arr g = xt::view(_As, k, xt::all());
@@ -106,7 +106,7 @@ class lowpass_oracle {
         // 1. nonnegative-real constraint
         N = _Anr.shape()[0];
         for (auto k = 0u; k < N; ++k) {
-            const auto v = dot(xt::view(_Anr, k, xt::all()), x)();
+            double v = dot(xt::view(_Anr, k, xt::all()), x)();
             if (v < 0) {
                 Arr f{-v};
                 Arr g = -xt::view(_Anr, k, xt::all());

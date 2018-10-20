@@ -25,7 +25,7 @@ Arr construct_distance_matrix(const Arr &s) {
     for (auto i = 0u; i < n; ++i) {
         for (auto j = i + 1; i < n; ++i) {
             Arr h = xt::view(s, j, xt::all()) - xt::view(s, i, xt::all());
-            auto d = xt::sqrt(xt::linalg::dot(h, h))();
+            double d = xt::sqrt(xt::linalg::dot(h, h))();
             D(i, j) = d;
             D(j, i) = d;
         }

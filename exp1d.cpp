@@ -9,6 +9,7 @@
 
 int main() {
   using xt::linalg::dot;
+  using Arr = xt::xarray<double>;
 
   auto n = 4u;   // number of points
   auto s_begin = 1u;
@@ -21,7 +22,7 @@ int main() {
   auto s = xt::linspace(s_begin, s_end, n);
 
   //shape_type shape = {n, n};
-  xt::xarray<double> Sig = xt::ones<double>({n, n});
+  Arr Sig = xt::ones<double>({n, n});
 
   for (auto i = 0u; i < n; ++i) {
     for (auto j = i+1; j < n; ++j) {
@@ -31,21 +32,20 @@ int main() {
     }
   }
 
-  auto A = xt::linalg::cholesky(Sig);
-  xt::xarray<double> Ys = xt::zeros<double>({n, N});
+  Arr A = xt::linalg::cholesky(Sig);
+  Arr Ys = xt::zeros<double>({n, N});
 
-  auto ym = xt::random::randn<double>({n});
+  Arr ym = xt::random::randn<double>({n});
   for (auto k = 0u; k < N; ++k) {
-    auto x = var * xt::random::randn<double>({n});
-    auto y = dot(A,x) + ym + 0.5*xt::random::randn<double>({n});
+    Arr x = var * xt::random::randn<double>({n});
+    Arr y = dot(A,x) + ym + 0.5*xt::random::randn<double>({n});
     xt::view(Ys, xt::all(), k) = y;
   }
   
-  auto Ys_T = xt::transpose(Ys);
-  auto Y = dot(Ys, Ys_T);
+  Arr Ys_T = xt::transpose(Ys);
+  Arr Y = dot(Ys, Ys_T);
   Y *= 1./N;
 
   //auto Y = xt::cov(Ys, bias=True);
   std::cout << Y << std::endl;
-
 }
