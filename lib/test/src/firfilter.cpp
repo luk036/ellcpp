@@ -67,8 +67,8 @@ class my_fir_oracle {
         Arr gmax = xt::zeros<double>({n});
 
         for (auto i = 0u; i < m; ++i) {
-            Arr a_R = xt::view(A_R, i, xt::all());
-            Arr a_I = xt::view(A_I, i, xt::all());
+            auto a_R = xt::view(A_R, i, xt::all());
+            auto a_I = xt::view(A_I, i, xt::all());
             double H_r = Hdes_r[i];
             double H_i = Hdes_i[i];
             double t_r = xt::linalg::dot(a_R, h)() - H_r;

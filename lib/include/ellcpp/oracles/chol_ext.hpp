@@ -118,6 +118,20 @@ class chol_ext {
         }
         return v;
     }
+
+    double sym_quad(const xt::xarray<double> &v,
+                    const xt::xarray<double> &A) {
+        auto res = 0.0;
+        for (auto i = 0u; i < _p; ++i) {
+            auto s = 0.;
+            for (auto j = i+1; j < _p; ++j) {
+                s += A(i, j) * v(j);
+            }
+            res += v(i) * (A(i, i) * v(i) + 2. * s);
+            // res += v(i) * s;
+        }
+        return res;
+    }
 };
 
 /**

@@ -3,26 +3,26 @@
 #include <tuple>
 
 ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
+    auto b1sq = b1 * b1;
+    if (b1sq > tsq || !this->_use_parallel_cut) {
+        return this->calc_dc(b0, tsq);
+    }
+
     auto params = std::tuple{0., 0., 0.};
 
     if (unlikely(b1 < b0)) {
         return {1, params}; // no sol'n
     }
 
+    if (b0 == 0.) {
+        return this->calc_ll_cc(b1, b1sq, tsq);
+    } 
+
     auto n = this->_n;
     auto b0b1 = b0 * b1;
     if (unlikely(n * b0b1 < -tsq)) {
         return {3, params}; // no effect
     }
-
-    auto b1sq = b1 * b1;
-    if (b1sq > tsq || !this->_use_parallel_cut) {
-        return this->calc_dc(b0, tsq);
-    }
-
-    if (b0 == 0.) {
-        return this->calc_ll_cc(b1, b1sq, tsq);
-    } 
 
     auto t0 = tsq - b0 * b0;
     auto t1 = tsq - b1sq;

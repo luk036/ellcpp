@@ -33,13 +33,13 @@ class my_oracle {
             return std::tuple{_c, fj1, t};
         }
 
-        auto [g2, fj2] = _lmi1.chk_spd(x);
-        if (fj2 > 0.) {
+        auto [g2, fj2, feasible2] = _lmi1(x);
+        if (!feasible2) {
             return std::tuple{g2, fj2, t};
         }
 
-        auto [g3, fj3] = _lmi2.chk_spd(x);
-        if (fj3 > 0.) {
+        auto [g3, fj3, feasible3] = _lmi2(x);
+        if (!feasible3) {
             return std::tuple{g3, fj3, t};
         }
 
