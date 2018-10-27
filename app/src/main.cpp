@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
-// #include <catch.hpp>
+#define CATCH_CONFIG_MAIN
+#include <catch.hpp>
 #include <iostream>
 #include <tuple>
 
@@ -123,23 +124,21 @@ auto run_lowpass(bool use_parallel_cut) {
 //     assert result == 568
 // }
 
-// TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]") {
-void test1() {
+TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]") {
+// void test1() {
     auto [feasible, num_iters] = run_lowpass(true);
-    assert(feasible);
-    assert(num_iters <= 414);
-    std::cout << num_iters << "\n";
+    CHECK(feasible);
+    CHECK(num_iters <= 510);
 }
 
-// TEST_CASE("Lowpass Filter (w/o parallel cut)", "[lowpass]") {
-void test2() {
+TEST_CASE("Lowpass Filter (w/o parallel cut)", "[lowpass]") {
+// void test2() {
     auto [feasible, num_iters] = run_lowpass(false);
-    assert(feasible);
-    assert(num_iters >= 7479);
-    std::cout << num_iters << "\n";
+    CHECK(feasible);
+    CHECK(num_iters >= 14900);
 }
 
-int main() {
-    test1();
-    test2();
-}
+// int main() {
+//     test1();
+//     test2();
+// }
