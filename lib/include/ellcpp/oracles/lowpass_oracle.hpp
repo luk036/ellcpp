@@ -118,7 +118,7 @@ class lowpass_oracle {
         // Begin objective function
         // Spsq, imax = w.max(), w.argmax(); // update best so far Spsq
         Spsq = fmax;
-        Arr f{0.}; // ???
+        Arr f{0., fmax}; // ???
         // f = 0
         Arr g = xt::view(_As, imax, xt::all());
         return std::tuple{g, f, Spsq};

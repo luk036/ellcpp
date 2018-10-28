@@ -10,19 +10,21 @@
 #include <ellcpp/oracles/lmi_oracle.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
+#include <vector>
 
 // using namespace fun;
 class my_oracle {
     using Arr = xt::xarray<double>;
 
   private:
-    Arr _c;
     lmi_oracle _lmi1;
     lmi_oracle _lmi2;
+    Arr _c;
 
   public:
-    explicit my_oracle(Arr &c, Arr &F1, Arr &B1, Arr &F2, Arr &B2)
-        : _c{c}, _lmi1{F1, B1}, _lmi2{F2, B2} {}
+    explicit my_oracle(const std::vector<Arr> &F1, Arr &B1, 
+                       const std::vector<Arr> &F2, Arr &B2, Arr &c)
+        : _lmi1{F1, B1}, _lmi2{F2, B2}, _c{c} {}
 
     auto operator()(Arr &x, double t) {
         using xt::linalg::dot;
@@ -51,16 +53,18 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
     using Arr = xt::xarray<double>;
 
     auto c = Arr{1., -1., 1.};
-    auto F1 = Arr{{{-7., -11.}, {-11., 3.}},
+    auto F1 = std::vector<Arr>{
+                  {{-7., -11.}, {-11., 3.}},
                   {{7., -18.}, {-18., 8.}},
                   {{-2., -8.}, {-8., 1.}}};
     auto B1 = Arr{{33., -9.}, {-9., 26.}};
-    auto F2 = Arr{{{-21., -11., 0.}, {-11., 10., 8.}, {0., 8., 5.}},
+    auto F2 = std::vector<Arr>{
+                  {{-21., -11., 0.}, {-11., 10., 8.}, {0., 8., 5.}},
                   {{0., 10., 16.}, {10., -10., -10.}, {16., -10., 3.}},
                   {{-5., 2., -17.}, {2., -6., 8.}, {-17., 8., 6.}}};
     auto B2 = Arr{{14., 9., 40.}, {9., 91., 10.}, {40., 10., 15.}};
 
-    auto P = my_oracle(c, F1, B1, F2, B2);
+    auto P = my_oracle(F1, B1, F2, B2, c);
     auto E = ell(10.0, Arr{0.0, 0.0, 0.0});
 
     // double fb;

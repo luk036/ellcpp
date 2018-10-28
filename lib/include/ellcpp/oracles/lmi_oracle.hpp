@@ -5,7 +5,7 @@
 #include "chol_ext.hpp"
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
-
+#include <vector>
 
 /**
  * @brief  Oracle for Linear Matrix Inequality
@@ -20,13 +20,13 @@ class lmi_oracle {
     using shape_type = Arr::shape_type;
 
   private:
-    Arr &_F;
+    const std::vector<Arr> &_F;
     Arr &_F0;
     Arr _A;
     chol_ext _Q;
 
   public:
-    explicit lmi_oracle(Arr &F, Arr &B) : 
+    explicit lmi_oracle(const std::vector<Arr> &F, Arr &B): 
       _F{F}, //
       _F0{B}, //
       _A{xt::zeros<double>(B.shape())}, //
@@ -41,7 +41,7 @@ class lmi_oracle {
         auto getA = [&,this](unsigned i, unsigned j) -> double {
             this->_A(i, j) = this->_F0(i, j);
             for (auto k=0u; k < n; ++k) {
-                auto Fi = xt::view(_F, k, xt::all(), xt::all());
+                const auto& Fi = _F[k];
                 this->_A(i, j) -= Fi(i,j) * x(k);
             }
             return this->_A(i, j);
@@ -55,7 +55,7 @@ class lmi_oracle {
         }
         Arr v = _Q.witness();
         for (auto i = 0u; i < n; ++i) {
-            auto Fi = xt::view(_F, i, xt::all(), xt::all());
+            const auto& Fi = _F[i];
             g(i) = _Q.sym_quad(v, Fi);
         }
         return std::tuple{g, 1., false};

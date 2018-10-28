@@ -44,7 +44,7 @@ ell::return_t ell::calc_ll_cc(double b1, double b1sq, double tsq) const {
     auto xi = std::sqrt(tsq * (tsq - b1sq) + temp*temp);
     auto sigma = (n + 2*(tsq - xi) / b1sq) / (n + 1);
     auto rho = sigma * b1 / 2;
-    auto delta = this->_c1 * (tsq - b1sq/2 - xi/n) / tsq;
+    auto delta = this->_c1 * (tsq - b1sq/2 + xi/n) / tsq;
     return {0, ell::params_t{rho, sigma, delta}};
 }
 

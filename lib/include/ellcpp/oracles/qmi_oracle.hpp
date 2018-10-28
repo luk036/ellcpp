@@ -4,7 +4,7 @@
 
 #include "chol_ext.hpp"
 #include <cassert>
-// #include <vector>
+#include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
@@ -20,7 +20,7 @@ class qmi_oracle {
     using shape_type = Arr::shape_type;
 
   private:
-    const Arr &_F;
+    const std::vector<Arr> &_F;
     const Arr &_F0;
     double _t;
     std::size_t _nx = 0;
@@ -32,7 +32,7 @@ class qmi_oracle {
     chol_ext _Q;
 
   public:
-    explicit qmi_oracle(const Arr &F, const Arr &F0)
+    explicit qmi_oracle(const std::vector<Arr> &F, const Arr &F0)
         : _F{F}, _F0{F0}, _t{0.}, _count{0}, _A{xt::zeros<double>(F0.shape())},
           _Q(F0.shape()[0]), _Fx{xt::zeros<double>(F0.shape())} {}
 
@@ -49,16 +49,16 @@ class qmi_oracle {
             using xt::linalg::dot;
             assert(i >= j);
             Arr Fxi = xt::view(_Fx, i, xt::all());
-            Arr Fxj = xt::view(_Fx, j, xt::all());
             if (_count < i + 1) {
                 _count = i + 1;
                 Fxi = xt::view(_F0, i, xt::all());
                 for (auto k = 0u; k < _nx; ++k) {
                     // Arr Fk = _F[k];
-                    Arr Fki = xt::view(_F, k, i, xt::all());
+                    const Arr& Fki = xt::view(_F[k], i, xt::all());
                     Fxi -= Fki * x(k);
                 }
             }
+            Arr Fxj = xt::view(_Fx, j, xt::all());
             _A(i, j) = -dot(Fxi, Fxj)();
             if (i == j) {
                 _A(i, j) += _t;
@@ -78,7 +78,7 @@ class qmi_oracle {
         Arr Av = dot(Fxp, v);
         for (auto k = 0u; k < _nx; ++k) {
             // Arr Fk = _F[k];
-            Arr Fkp = xt::view(_F, k, xt::range(_, p), xt::all());
+            const Arr& Fkp = xt::view(_F[k], xt::range(_, p), xt::all());
             g(k) = -2. * dot(v, dot(Fkp, Av))();
         }
         return std::tuple{g, 1., false};

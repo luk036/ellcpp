@@ -8,7 +8,7 @@
 #include <xtensor/xarray.hpp>
 #include <xtensor/xmath.hpp>
 #include <xtensor/xnorm.hpp>
-// #include <vector>
+#include <vector>
 
 using Arr = xt::xarray<double>;
 
@@ -41,7 +41,7 @@ class basis_oracle2 {
     qmi_oracle _qmi;
 
   public:
-    explicit basis_oracle2(const Arr &F, const Arr &F0)
+    explicit basis_oracle2(const std::vector<Arr> &F, const Arr &F0)
         : _qmi(F, F0) {}
 
     auto operator()(const Arr &x, double t) {
@@ -88,14 +88,16 @@ std::size_t lsq_corr_poly2(const Arr &Y, const Arr &s, std::size_t m) {
     Arr D1 = construct_distance_matrix(s);
 
     Arr D = xt::ones<double>({n, n});
-    Arr Sig = xt::zeros<double>({m, n, n});
-    // Sig.push_back(D);
-    xt::view(Sig, 0, xt::all(), xt::all()) = D;
+    // Arr Sig = xt::zeros<double>({m, n, n});
+    // xt::view(Sig, 0, xt::all(), xt::all()) = D;
+    std::vector<Arr> Sig;
+    Sig.reserve(m);
+    Sig.push_back(D);
 
     for (auto i = 0u; i < m - 1; ++i) {
         D *= D1;
-        // Sig.push_back(D);
-        xt::view(Sig, i, xt::all(), xt::all()) = D;
+        Sig.push_back(D);
+        // xt::view(Sig, i, xt::all(), xt::all()) = D;
     }
     // Sig.reverse();
 
@@ -110,14 +112,16 @@ std::size_t lsq_corr_poly(const Arr &Y, const Arr &s, std::size_t m) {
     Arr D1 = construct_distance_matrix(s);
 
     Arr D = xt::ones<double>({n, n});
-    Arr Sig = xt::zeros<double>({m, n, n});
-    // Sig.push_back(D);
-    xt::view(Sig, 0, xt::all(), xt::all()) = D;
+    // Arr Sig = xt::zeros<double>({m, n, n});
+    // xt::view(Sig, 0, xt::all(), xt::all()) = D;
+    std::vector<Arr> Sig;
+    Sig.reserve(m);
+    Sig.push_back(D);
 
     for (auto i = 0u; i < m - 1; ++i) {
         D *= D1;
-        // Sig.push_back(D);
-        xt::view(Sig, i, xt::all(), xt::all()) = D;
+        // xt::view(Sig, i, xt::all(), xt::all()) = D;
+        Sig.push_back(D);
     }
     // Sig.reverse();
 
