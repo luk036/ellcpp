@@ -31,7 +31,7 @@ class network_oracle {
 
         const size_t n = x.size();
         Arr g = xt::zeros<double>({n});
-        double f = 0.0;
+        double f = 0.;
 
         if (C.empty()) {
             return std::tuple{g, 0., true};

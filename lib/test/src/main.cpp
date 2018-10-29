@@ -24,10 +24,10 @@ TEST_CASE("Profit Test 1", "[profit]") {
     bool feasible;
 
     {
-        ell E(100.0, Vec{0.0, 0.0});
+        ell E(100., Vec{0., 0.});
         profit_oracle P(p, A, k, a, v);
         std::tie(std::ignore, fb, niter, feasible, status) =
-            cutting_plane_dc(P, E, 0.0);
+            cutting_plane_dc(P, E, 0.);
         // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
         std::cout << fb << ", " << niter << ", " << feasible << ", " << status
                   << "\n";
@@ -35,13 +35,13 @@ TEST_CASE("Profit Test 1", "[profit]") {
     }
 
     {
-        double ui = 1.0, e3 = 1.0;
+        double ui = 1., e3 = 1.;
         Vec e{0.003, 0.007};
 
-        ell E1(100.0, Vec{0.0, 0.0});
+        ell E1(100., Vec{0., 0.});
         profit_rb_oracle P1(p, A, k, a, v, ui, e, e3);
         std::tie(std::ignore, fb, niter, feasible, status) =
-            cutting_plane_dc(P1, E1, 0.0);
+            cutting_plane_dc(P1, E1, 0.);
         // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
         std::cout << fb << ", " << niter << ", " << feasible << ", " << status
                   << "\n";
@@ -49,10 +49,10 @@ TEST_CASE("Profit Test 1", "[profit]") {
     }
 
     {
-        ell E2(100.0, Vec{2, 0.0});
+        ell E2(100., Vec{2, 0.});
         profit_q_oracle P2(p, A, k, a, v);
         std::tie(std::ignore, fb, niter, feasible, status) =
-            cutting_plane_q(P2, E2, 0.0);
+            cutting_plane_q(P2, E2, 0.);
         // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
         std::cout << fb << ", " << niter << ", " << feasible << ", " << status
                   << "\n";

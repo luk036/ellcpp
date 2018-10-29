@@ -67,7 +67,7 @@ class lmi_oracle {
 
     //     auto n = x.size();
     //     Arr g = xt::zeros<double>({n});
-    //     auto fj = -1.0;
+    //     auto fj = -1.;
     //     for (auto i = 0u; i < n; ++i) {
     //         auto Fi = xt::view(_F, i, xt::all(), xt::all());
     //         // Arr Fi = _F(i);
@@ -79,7 +79,7 @@ class lmi_oracle {
     //     }
     //     Arr v = _Q.witness();
     //     auto p = v.size();
-    //     fj = 1.0;
+    //     fj = 1.;
     //     for (auto i = 0u; i < n; ++i) {
     //         auto Fi = xt::view(_F, i, xt::all(), xt::all());
     //         g(i) = _Q.sym_quad(v, Fi);
@@ -103,7 +103,7 @@ class lmi_oracle {
     // auto operator()(const Arr &x, double t) {
     //     auto [g, fj] = this->chk_spd_t(x, t);
     //     if (fj < 0) {
-    //         t -= 1.0;
+    //         t -= 1.;
     //     }
     //     return std::make_tuple(g, fj, t);
     // }

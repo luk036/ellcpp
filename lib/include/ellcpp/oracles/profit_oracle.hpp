@@ -69,7 +69,7 @@ class profit_rb_oracle {
     auto operator()(const xarray &y, double t) {
         xarray a_rb = _a;
         for (auto i : {0, 1}) {
-            a_rb[i] += _uie[i] * (y[i] > 0. ? -1 : +1);
+            a_rb[i] += _uie[i] * (y[i] > 0 ? -1 : +1);
         }
         _P._a = a_rb;
         return _P(y, t);
@@ -89,10 +89,10 @@ class profit_q_oracle {
     auto operator()(const xarray &y, double t, int /*unused*/) const {
         xarray x = xt::round(xt::exp(y));
         if (x[0] == 0) {
-            x[0] = 1.0;
+            x[0] = 1.;
         }
         if (x[1] == 0) {
-            x[1] = 1.0;
+            x[1] = 1.;
         }
         xarray yd = xt::log(x);
         auto [g, fj, t1] = _P(yd, t);

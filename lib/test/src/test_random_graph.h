@@ -5,7 +5,7 @@ import numpy as np
 
 
 auto vdc(int n, int base=2) {
-    auto [vdc, denom] = {0.0, 1.0};
+    auto [vdc, denom] = {0., 1.};
     while (n) {
         denom *= base;
         int remainder;
@@ -46,7 +46,7 @@ auto formGraph(T, pos, eta, seed=None) {
     return G;
 }
 
-// auto showPaths(const Graph& G, pos, N, edgeProbs=1.0, path=None, visibleNodes=None, guards=None) {
+// auto showPaths(const Graph& G, pos, N, edgeProbs=1., path=None, visibleNodes=None, guards=None) {
 //     /** Takes directed graph G, node positions pos, and edge probabilities.
 //         Optionally uses path (a list of edge indices) to plot the smuggler"s path.
 
@@ -100,8 +100,8 @@ auto formGraph(T, pos, eta, seed=None) {
 
 //     // draw edges of graph, make transparent if (we"re drawing a path over them
 //     edges = xn::draw_xnetwork_edges(G, pos, edge_color=p, width=1,
-//                                    edge_cmap=plt.cm.RdYlGn, arrows=False, edgelist=edgelist, edge_vmin=0.0,
-//                                    edge_vmax=1.0, ax=ax, alpha=alpha);
+//                                    edge_cmap=plt.cm.RdYlGn, arrows=False, edgelist=edgelist, edge_vmin=0.,
+//                                    edge_vmax=1., ax=ax, alpha=alpha);
 
 //     // draw the path, only between visible nodes
 //     if (path is not None) {
@@ -109,8 +109,8 @@ auto formGraph(T, pos, eta, seed=None) {
 //         //path_pairs = [ind2edge[i] for (auto i : visiblePath];
 //         //path_colors = [edgeProbs[i] for (auto i : visiblePath];
 //         edges = xn::draw_xnetwork_edges(G, pos, edge_color="b", width=1,
-//                                        edge_cmap=plt.cm.RdYlGn, edgelist=path, arrows=true, edge_vmin=0.0,
-//                                        edge_vmax=1.0);
+//                                        edge_cmap=plt.cm.RdYlGn, edgelist=path, arrows=true, edge_vmin=0.,
+//                                        edge_vmax=1.);
 
 //     //// fig.colorbar(edges,label="??? graph");
 

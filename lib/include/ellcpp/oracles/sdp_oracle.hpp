@@ -24,7 +24,7 @@ class sdp_oracle {
         if (fj > 0) {
             return std::make_tuple(g, fj, t);
         }
-        return std::make_tuple(g, 0.0, f0);
+        return std::make_tuple(g, 0., f0);
     }
 
   private:

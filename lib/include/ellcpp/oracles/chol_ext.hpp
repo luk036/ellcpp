@@ -55,10 +55,10 @@ class chol_ext {
                     d -= _R(k, i) * _R(k, j);
                 }
                 if (i != j) {
-                    _R(j, i) = 1.0 / _R(j, j) * d;
+                    _R(j, i) = d / _R(j, j);
                 }
             }
-            if (d < 0) {
+            if (d <= 0) {
                 _p = i + 1;
                 _R(i, i) = std::sqrt(-d);
                 break;
@@ -87,10 +87,10 @@ class chol_ext {
                     d -= _R(k, i) * _R(k, j);
                 }
                 if (i != j) {
-                    _R(j, i) = 1.0 / _R(j, j) * d;
+                    _R(j, i) = d / _R(j, j);
                 }
             }
-            if (d < 0) {
+            if (d <= 0) {
                 _p = i + 1;
                 _R(i, i) = std::sqrt(-d);
                 break;
@@ -99,7 +99,7 @@ class chol_ext {
         }
     }
 
-    bool is_spd() const { return _p == 0; }
+    bool is_spd() const { return _p == 0 || _R(_p-1, _p-1) == 0; }
 
     Vec witness() const {
         assert(!this->is_spd());
@@ -108,7 +108,7 @@ class chol_ext {
 
         v[_p - 1] = 1.0 / _R(_p - 1, _p - 1);
         for (int i = _p - 2; i >= 0; --i) {
-            double s = 0.0;
+            double s = 0.;
             for (auto k = i + 1; k < _p; ++k) {
                 s += _R(i, k) * v[k];
             }
@@ -121,7 +121,7 @@ class chol_ext {
 
     double sym_quad(const xt::xarray<double> &v,
                     const xt::xarray<double> &A) {
-        auto res = 0.0;
+        auto res = 0.;
         for (auto i = 0u; i < _p; ++i) {
             auto s = 0.;
             for (auto j = i+1; j < _p; ++j) {
@@ -168,7 +168,7 @@ chol_ext::Vec chol_ext::witness() const
     v[_p] = 1.0 / _R(_p,_p);
 
     for (int i=_p-1; i>=0; --i) {
-        auto s = 0.0;
+        auto s = 0.;
         for (int j=_p; j>i; --j) {
             s += _R(i,j) * v[j];
         }

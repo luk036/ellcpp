@@ -15,7 +15,7 @@ int main() {
   auto s_begin = 1u;
   auto s_end = 10u;
   auto sdkern = 0.5;  // width of kernel
-  auto var = 2.0;     // standard derivation
+  auto var = 2.;     // standard derivation
   auto N = 500u;      // number of samples
 
   // auto dist = s_end - s_begin;

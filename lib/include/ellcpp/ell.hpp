@@ -75,7 +75,7 @@ class ell {
         auto Qg = Arr{xt::linalg::dot(_Q, g)};
         auto omega = xt::linalg::dot(g, Qg)();
         auto tsq = this->_kappa * omega;
-        if (unlikely(tsq <= 0.)) {
+        if (unlikely(tsq <= 0)) {
             return {4, 0.};
         }
         // auto tau = std::sqrt(_kappa * tsq);

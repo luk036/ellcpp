@@ -45,7 +45,7 @@ class my_oracle {
             return std::tuple{g3, fj3, t};
         }
 
-        return std::tuple{_c, 0.0, f0};
+        return std::tuple{_c, 0., f0};
     }
 };
 
@@ -65,13 +65,13 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
     auto B2 = Arr{{14., 9., 40.}, {9., 91., 10.}, {40., 10., 15.}};
 
     auto P = my_oracle(F1, B1, F2, B2, c);
-    auto E = ell(10.0, Arr{0.0, 0.0, 0.0});
+    auto E = ell(10., Arr{0., 0., 0.});
 
     // double fb;
     // int niter, feasible, status;
     // Arr xb;
 
-    auto [xb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 100.0);
+    auto [xb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 100.);
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
     std::cout << xb << "\n";
     std::cout << fb << ", " << niter << ", " << feasible << ", " << status
