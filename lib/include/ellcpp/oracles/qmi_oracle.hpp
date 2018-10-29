@@ -79,7 +79,7 @@ class qmi_oracle {
         for (auto k = 0u; k < _nx; ++k) {
             // Arr Fk = _F[k];
             const Arr& Fkp = xt::view(_F[k], xt::range(_, p), xt::all());
-            g(k) = -2. * dot(v, dot(Fkp, Av))();
+            g(k) = -2 * dot(v, dot(Fkp, Av))();
         }
         return std::tuple{g, 1., false};
     }

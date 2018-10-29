@@ -35,7 +35,7 @@ class lowpass_oracle {
         const auto n = x.shape()[0];
 
         // case 1,
-        if (x[0] < 0.) {
+        if (x[0] < 0) {
             Arr g = xt::zeros<double>({n});
             g[0] = -1.;
             Arr f{-x[0]};

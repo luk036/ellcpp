@@ -58,7 +58,7 @@ class chol_ext {
                     _R(j, i) = 1.0 / _R(j, j) * d;
                 }
             }
-            if (d < 0.) {
+            if (d < 0) {
                 _p = i + 1;
                 _R(i, i) = std::sqrt(-d);
                 break;
@@ -90,7 +90,7 @@ class chol_ext {
                     _R(j, i) = 1.0 / _R(j, j) * d;
                 }
             }
-            if (d < 0.) {
+            if (d < 0) {
                 _p = i + 1;
                 _R(i, i) = std::sqrt(-d);
                 break;
@@ -127,7 +127,7 @@ class chol_ext {
             for (auto j = i+1; j < _p; ++j) {
                 s += A(i, j) * v(j);
             }
-            res += v(i) * (A(i, i) * v(i) + 2. * s);
+            res += v(i) * (A(i, i) * v(i) + 2 * s);
             // res += v(i) * s;
         }
         return res;

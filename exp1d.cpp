@@ -27,7 +27,7 @@ int main() {
   for (auto i = 0u; i < n; ++i) {
     for (auto j = i+1; j < n; ++j) {
       auto d = s[j] - s[i];
-      Sig(i, j) = std::exp(-0.5*(d*d)/(sdkern*sdkern)/2.0);
+      Sig(i, j) = std::exp(-0.5*(d*d)/(sdkern*sdkern)/2);
       Sig(j, i) = Sig(i,j);
     }
   }

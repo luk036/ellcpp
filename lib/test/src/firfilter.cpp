@@ -75,13 +75,13 @@ class my_fir_oracle {
             double t_i = xt::linalg::dot(a_I, h)() - H_i;
             double fj = t_r * t_r + t_i * t_i;
             if (fj >= t) {
-                Arr g = 2. * (t_r * a_R + t_i * a_I);
+                Arr g = 2 * (t_r * a_R + t_i * a_I);
                 return std::tuple{g, fj - t, t};
             }
             if (fmax < fj) {
                 fmax = fj;
                 // imax = i;
-                gmax = 2. * (t_r * a_R + t_i * a_I);
+                gmax = 2 * (t_r * a_R + t_i * a_I);
             }
         }
 

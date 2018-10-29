@@ -23,7 +23,7 @@ class ell {
     using return_t = std::tuple<int, params_t>;
 
   public:
-    bool _use_parallel_cut = true;
+     bool _use_parallel_cut = true;
 
   private:
     std::size_t _n;
@@ -49,9 +49,9 @@ class ell {
 
     ell(const ell &E) = default;
 
-    const Arr &xc() const { return _xc; }
+    auto xc() const -> const Arr & { return _xc; }
 
-    Arr &xc() { return _xc; }
+    auto xc() -> Arr & { return _xc; }
 
     void set_xc(const Arr &xc) { _xc = xc; }
 
@@ -72,9 +72,9 @@ class ell {
      */
     template <typename T>
     std::tuple<int, double> update_core(const Arr &g, const T &beta) {
-        Arr Qg = xt::linalg::dot(_Q, g);
-        double omega = xt::linalg::dot(g, Qg)();
-        double tsq = this->_kappa * omega;
+        auto Qg = Arr{xt::linalg::dot(_Q, g)};
+        auto omega = xt::linalg::dot(g, Qg)();
+        auto tsq = this->_kappa * omega;
         if (unlikely(tsq <= 0.)) {
             return {4, 0.};
         }

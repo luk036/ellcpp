@@ -50,7 +50,7 @@ class basis_oracle2 {
         g(n-1) = 1.;
         auto tc = x(n-1);
         auto f0 = tc - t;
-        if (f0 > 0.) {
+        if (f0 > 0) {
             return std::tuple{g, f0, t};
         }
 

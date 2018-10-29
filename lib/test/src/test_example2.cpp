@@ -13,12 +13,12 @@ auto my_oracle2(const Arr &z) {
 
     // constraint 1: x + y <= 3
     double fj = x + y - 3;
-    if (fj > 0.) {
+    if (fj > 0) {
         return std::tuple{Arr{1., 1.}, fj, false};
     }
     // constraint 2: x - y >= 1
     fj = -x + y + 1;
-    if (fj > 0.) {
+    if (fj > 0) {
         return std::tuple{Arr{-1., 1.}, fj, false};
     }
     return std::tuple{Arr{0., 0.}, 0., true};

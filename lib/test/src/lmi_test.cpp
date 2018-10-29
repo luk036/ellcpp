@@ -31,7 +31,7 @@ class my_oracle {
 
         auto f0 = dot(_c, x)();
         auto fj1 = f0 - t;
-        if (fj1 > 0.0) {
+        if (fj1 > 0) {
             return std::tuple{_c, fj1, t};
         }
 

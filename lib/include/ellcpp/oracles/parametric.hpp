@@ -11,7 +11,7 @@
  * maximum parametric problem:
  *    max  r
  *    s.t. dist[v] - dist[v] <= d(u,v,r);
- *         for (auto all (u, v] : G
+ *         for all (u, v] : G
  *
  *   Arguments:
  *       G {[type]} -- [description];

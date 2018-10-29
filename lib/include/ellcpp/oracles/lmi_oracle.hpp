@@ -102,7 +102,7 @@ class lmi_oracle {
 
     // auto operator()(const Arr &x, double t) {
     //     auto [g, fj] = this->chk_spd_t(x, t);
-    //     if (fj < 0.0) {
+    //     if (fj < 0) {
     //         t -= 1.0;
     //     }
     //     return std::make_tuple(g, fj, t);

@@ -49,7 +49,7 @@ class optscaling_oracle {
         }
         auto s = x(0) - x(1);
         auto fj = s - t;
-        if (fj < 0.) {
+        if (fj < 0) {
             t = s;
             fj = 0.;
         }

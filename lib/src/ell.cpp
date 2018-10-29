@@ -14,7 +14,7 @@ ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
         return {1, params}; // no sol'n
     }
 
-    if (b0 == 0.) {
+    if (b0 == 0) {
         return this->calc_ll_cc(b1, b1sq, tsq);
     } 
 
@@ -32,9 +32,8 @@ ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
     auto sigma = ( n + (tsq-b0b1-xi)/(2*bav*bav) ) / (n+1);
     auto rho = sigma * bav;
     auto delta = _c1 * ((t0 + t1)/2 + xi/n) / tsq;
-    params = {rho, sigma, delta};
 
-    return {0, params};
+    return {0, ell::params_t{rho, sigma, delta}};
 }
 
 /** Situation when feasible cut. */
@@ -59,21 +58,20 @@ ell::return_t ell::calc_dc(double beta, double tsq) const {
         return {1, params}; // no sol'n
     }
 
-    if (beta == 0.) {
+    if (beta == 0) {
         return this->calc_cc(tsq);
     }
 
     auto n = this->_n;
     auto gamma = tau + n * beta;
-    if (gamma < 0) {
+    if (unlikely(gamma < 0)) {
         return {3, params}; // no effect
     }
 
-    double rho = gamma / (n + 1);
-    double sigma = 2. * rho / (tau + beta);
-    double delta = this->_c1 * (tsq - beta*beta) / tsq;
-    params = {rho, sigma, delta};
-    return {0, params};
+    auto rho = gamma / (n + 1);
+    auto sigma = 2 * rho / (tau + beta);
+    auto delta = this->_c1 * (tsq - beta*beta) / tsq;
+    return {0, ell::params_t{rho, sigma, delta}};
 }
 
 /**
@@ -91,30 +89,21 @@ ell::return_t ell::calc_cc(double tsq) const {
 ell1d::return_t ell1d::update(double g, double beta) {
     auto tau = std::abs(_r * g);
     auto tsq = tau * tau;
-    if (beta == 0.) {
+    if (beta == 0) {
         _r /= 2;
-        if (g > 0.) {
-            _xc -= _r;
-        } else {
-            _xc += _r;
-        }
+        _xc += g > 0 ? -_r : _r;
         return {0, tsq};
     }
     if (beta > tau) {
         return {1, tsq}; // no sol'n
     }
-    if (beta < -tau) {
+    if (unlikely(beta < -tau)) {
         return {3, tsq}; // no effect
     }
-    double l, u;
-    double bound = _xc - beta / g;
-    if (g > 0.) {
-        u = bound;
-        l = _xc - _r;
-    } else {
-        l = bound;
-        u = _xc + _r;
-    }
+
+    auto bound = _xc - beta / g;
+    auto u = g > 0 ? bound : _xc + _r;
+    auto l = g > 0 ? _xc - _r : bound;
     _r = (u - l) / 2;
     _xc = l + _r;
     return {0, tsq};

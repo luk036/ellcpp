@@ -29,7 +29,7 @@ class profit_oracle {
 
     auto operator()(const xarray &y, double t) const {
         double fj = y[0] - _log_k; // constraint
-        if (fj > 0.) {
+        if (fj > 0) {
             auto g = xarray{1., 0.};
             return std::tuple{g, fj, t};
         }
@@ -38,7 +38,7 @@ class profit_oracle {
         double vx = xt::linalg::dot(_v, x)();
         auto te = t + vx;
         fj = std::log(te) - log_Cobb;
-        if (fj < 0.) {
+        if (fj < 0) {
             te = std::exp(log_Cobb);
             t = te - vx;
             fj = 0.;
@@ -88,10 +88,10 @@ class profit_q_oracle {
 
     auto operator()(const xarray &y, double t, int /*unused*/) const {
         xarray x = xt::round(xt::exp(y));
-        if (x[0] == 0.0) {
+        if (x[0] == 0) {
             x[0] = 1.0;
         }
-        if (x[1] == 0.0) {
+        if (x[1] == 0) {
             x[1] = 1.0;
         }
         xarray yd = xt::log(x);

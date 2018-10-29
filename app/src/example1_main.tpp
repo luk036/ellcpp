@@ -12,18 +12,18 @@ auto my_oracle(const Arr &z, double t) {
 
   // constraint 1: x + y <= 3
   auto fj = x + y - 3;
-  if (fj > 0.) {
+  if (fj > 0) {
     return std::tuple{Arr{1., 1.}, fj, t};
   }
   // constraint 2: x - y >= 1
   fj = -x + y + 1;
-  if (fj > 0.) {
+  if (fj > 0) {
     return std::tuple{Arr{-1., 1.}, fj, t};
   }
   // objective: maximize x + y
   auto f0 = x + y;
   fj = t - f0;
-  if (fj < 0.) {
+  if (fj < 0) {
     fj = 0.;
     t = f0;
   }
