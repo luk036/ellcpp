@@ -17,15 +17,15 @@ class lmi0_oracle {
     using shape_type = Arr::shape_type;
 
   private:
-    Arr &_F;
+    const std::vector<Arr> &_F;
     size_t _n;
     Arr _A;
     chol_ext _Q;
 
   public:
-    explicit lmi0_oracle(Arr &F)
+    explicit lmi0_oracle(const std::vector<Arr> &F)
         : _F{F},                           //
-          _n{F.shape()[-1]},               //
+          _n{F[0].shape()[0]},               //
           _A{xt::zeros<double>({_n, _n})}, //
           _Q(_n)                           //
     {}
@@ -38,7 +38,7 @@ class lmi0_oracle {
         auto getA = [&, this](unsigned i, unsigned j) -> double {
             this->_A(i, j) = 0.;
             for (auto k = 0u; k < n; ++k) {
-                auto Fi = xt::view(_F, k, xt::all(), xt::all());
+                auto Fi = _F[k];
                 this->_A(i, j) += Fi(i, j) * x(k);
             }
             return this->_A(i, j);
@@ -52,7 +52,7 @@ class lmi0_oracle {
         }
         Arr v = _Q.witness();
         for (auto i = 0u; i < n; ++i) {
-            auto Fi = xt::view(_F, i, xt::all(), xt::all());
+            auto Fi = _F[i];
             g(i) = -_Q.sym_quad(v, Fi);
         }
         return std::tuple{std::move(g), 1., false};

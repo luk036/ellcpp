@@ -1,6 +1,7 @@
 // -*- coding: utf-8 -*-
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
+#include <ellcpp/oracles/lmi0_oracle.hpp>
 #include <ellcpp/oracles/qmi_oracle.hpp>
 #include <iostream>
 #include <tuple>
@@ -81,28 +82,31 @@ Arr construct_distance_matrix(const Arr &s) {
     return std::move(D);
 }
 
-class basis_oracle2 {
+class lsq_oracle {
     using Arr = xt::xarray<double>;
     using shape_type = Arr::shape_type;
 
   private:
     qmi_oracle _qmi;
+    lmi0_oracle _lmi0;
 
   public:
-    explicit basis_oracle2(const std::vector<Arr> &F, const Arr &F0)
-        : _qmi(F, F0) {}
+    explicit lsq_oracle(const std::vector<Arr> &F, const Arr &F0)
+        : _qmi(F, F0), //
+          _lmi0(F) {}
 
     auto operator()(const Arr &x, double t) {
         auto n = x.shape()[0];
         Arr g = xt::zeros<double>({n});
-        g(n-1) = 1.;
-        auto tc = x(n-1);
-        auto f0 = tc - t;
-        if (f0 > 0) {
-            return std::tuple{std::move(g), f0, t};
+
+        auto [g10, fj0, feasible0] = this->_lmi0(xt::view(x, xt::range(0, n-1)));
+        if (!feasible0) {
+            xt::view(g, xt::range(0, n-1)) = g10;
+            g(n-1) = 0.;
+            return std::tuple{std::move(g), fj0, t};
         }
 
-        this->_qmi.update(tc);
+        this->_qmi.update(x(n-1));
         auto [g1, fj, feasible] = this->_qmi(xt::view(x, xt::range(0, n-1)));
         if (!feasible) {
             xt::view(g, xt::range(0, n-1)) = g1;
@@ -111,12 +115,19 @@ class basis_oracle2 {
             return std::tuple{std::move(g), fj, t};
         }
 
+        g(n-1) = 1.;
+        auto tc = x(n-1);
+        auto f0 = tc - t;
+        if (f0 > 0) {
+            return std::tuple{std::move(g), f0, t};
+        }
+
         return std::tuple{std::move(g), 0., tc};
     }
 };
 
 
-auto lsq_corr_core2(const Arr &Y, std::size_t m, basis_oracle2 &P) {
+auto lsq_corr_core2(const Arr &Y, std::size_t m, lsq_oracle &P) {
     auto normY = 100.;
     auto normY2 = 32*normY*normY;
     Arr val = 256*xt::ones<double>({m + 1});
@@ -149,7 +160,7 @@ std::size_t lsq_corr_poly2(const Arr &Y, const Arr &s, std::size_t m) {
     }
     // Sig.reverse();
 
-    auto P = basis_oracle2(Sig, Y);
+    auto P = lsq_oracle(Sig, Y);
     auto [num_iters, a] = lsq_corr_core2(Y, m, P);
     std::cout << a << "\n";
     return num_iters;
