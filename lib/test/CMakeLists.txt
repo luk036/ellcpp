@@ -32,3 +32,4 @@ enable_testing()
 
 #parse catch tests
 ## ParseAndAddCatchTests (${TEST_APP_NAME})
+add_test (NAME ${TEST_APP_NAME} COMMAND ${TEST_APP_NAME} )

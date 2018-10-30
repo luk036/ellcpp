@@ -8,9 +8,57 @@
 #include <xtensor/xarray.hpp>
 #include <xtensor/xmath.hpp>
 #include <xtensor/xnorm.hpp>
+#include <xtensor/xrandom.hpp>
 #include <vector>
 
 using Arr = xt::xarray<double>;
+
+
+/**
+ * @brief 
+ * 
+ * @param s 
+ * @return Arr 
+ */
+std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u, size_t N = 3000u) {
+    using xt::linalg::dot;
+
+    const auto n = nx * ny;
+    const double s_end[] = {10., 8.};
+    const auto sdkern = 0.3;  // width of kernel
+    const auto var = 2.;      // standard derivation
+    const auto tau = 0.00001; // standard derivation of white noise
+    xt::random::seed(5);
+
+    // create sites s
+    Arr sx = xt::linspace<double>(0., 10., nx);
+    Arr sy = xt::linspace<double>(0., 8., ny);
+    auto [xx, yy] = xt::meshgrid(sx, sy);
+    Arr s = xt::stack(xt::xtuple(xt::flatten(xx), xt::flatten(yy)), 0);
+    s = xt::transpose(s);
+
+    Arr Sig = xt::zeros<double>({n, n});
+    for (auto i = 0u; i < n; ++i) {
+        for (auto j = i; j < n; ++j) {
+            Arr d = xt::view(s, j, xt::all()) - xt::view(s, i, xt::all());
+            double g = -sdkern * std::sqrt(dot(d, d)());
+            Sig(i, j) = std::exp(g);
+            Sig(j, i) = Sig(i, j);
+        }
+    }
+
+    Arr A = xt::linalg::cholesky(Sig);
+    Arr Y = xt::zeros<double>({n, n});
+    for (auto k = 0u; k < N; ++k) {
+        Arr x = var * xt::random::randn<double>({n});
+        // auto y = dot(A, x)() + tau*xt::random::randn<double>({n});
+        Arr y = dot(A, x);
+        Y += xt::linalg::outer(y, y);
+    }
+    Y /= N;
+
+    return std::tuple{std::move(Y), std::move(s)};
+}
 
 /**
  * @brief 
