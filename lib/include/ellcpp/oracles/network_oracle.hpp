@@ -34,13 +34,13 @@ class network_oracle {
         double f = 0.;
 
         if (C.empty()) {
-            return std::tuple{g, 0., true};
+            return std::tuple{std::move(g), 0., true};
         }
         for (const auto &e : C) {
             f -= _f(_G, e, x);
             g -= _p(_G, e, x);
         }
-        return std::tuple{g, f, false};
+        return std::tuple{std::move(g), f, false};
     }
 };
 

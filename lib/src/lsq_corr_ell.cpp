@@ -30,7 +30,7 @@ Arr construct_distance_matrix(const Arr &s) {
             D(j, i) = d;
         }
     }
-    return D;
+    return std::move(D);
 }
 
 class basis_oracle2 {
@@ -51,7 +51,7 @@ class basis_oracle2 {
         auto tc = x(n-1);
         auto f0 = tc - t;
         if (f0 > 0) {
-            return std::tuple{g, f0, t};
+            return std::tuple{std::move(g), f0, t};
         }
 
         this->_qmi.update(tc);
@@ -60,10 +60,10 @@ class basis_oracle2 {
             xt::view(g, xt::range(0, n-1)) = g1;
             auto v = this->_qmi._Q.witness();
             g(n-1) = -xt::linalg::dot(v,v)();
-            return std::tuple{g, fj, t};
+            return std::tuple{std::move(g), fj, t};
         }
 
-        return std::tuple{g, 0., tc};
+        return std::tuple{std::move(g), 0., tc};
     }
 };
 
@@ -79,7 +79,7 @@ auto lsq_corr_core2(const Arr &Y, std::size_t m, basis_oracle2 &P) {
     auto [x_best, fb, num_iters, feasible, status] = cutting_plane_dc(P, E, normY2);
     assert(feasible);
     Arr a = xt::view(x_best, xt::range(0, m));
-    return std::tuple{num_iters, a};
+    return std::tuple{num_iters, std::move(a)};
 }
 
 

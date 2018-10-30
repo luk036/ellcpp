@@ -45,7 +45,7 @@ class optscaling_oracle {
         auto P = network_oracle(_G, constr, pconstr);
         auto [g, f, feasible] = P(x);
         if (!feasible) {
-            return std::tuple{g, f, t};
+            return std::tuple{std::move(g), f, t};
         }
         auto s = x(0) - x(1);
         auto fj = s - t;

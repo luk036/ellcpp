@@ -8,6 +8,21 @@
 
 using Arr = xt::xarray<double>;
 
+class nocopymove {
+private:
+    int i = 3;
+
+public:
+    nocopymove() = default;
+    nocopymove(const nocopymove& ) = delete;
+    nocopymove(nocopymove&& ) = default;    
+};
+
+auto func() {
+    nocopymove a{};
+    return std::tuple{std::move(a), 1.};
+}
+
 auto my_oracle(const Arr &z, double t) {
     double x = z[0], y = z[1];
 
@@ -39,4 +54,6 @@ TEST_CASE("Example 1", "[example1]") {
     CHECK(feasible);
     std::cout << niter << "," << feasible << "," << status << "\n";
     std::cout << xb << "\n";
+
+    auto [c, d] = func();
 }

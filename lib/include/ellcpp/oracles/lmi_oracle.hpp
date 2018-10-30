@@ -51,14 +51,14 @@ class lmi_oracle {
 
         _Q.factor(getA);
         if (_Q.is_spd()) {
-            return std::tuple{g, -1., true};
+            return std::tuple{std::move(g), -1., true};
         }
         Arr v = _Q.witness();
         for (auto i = 0u; i < n; ++i) {
             const auto& Fi = _F[i];
             g(i) = _Q.sym_quad(v, Fi);
         }
-        return std::tuple{g, 1., false};
+        return std::tuple{std::move(g), 1., false};
     }
 
     // auto chk_mtx(Arr A, const Arr &x) {
@@ -75,7 +75,7 @@ class lmi_oracle {
     //     }
     //     _Q.factorize(A);
     //     if (_Q.is_spd()) {
-    //         return std::tuple{g, fj};
+    //         return std::tuple{std::move(g), fj};
     //     }
     //     Arr v = _Q.witness();
     //     auto p = v.size();
@@ -84,7 +84,7 @@ class lmi_oracle {
     //         auto Fi = xt::view(_F, i, xt::all(), xt::all());
     //         g(i) = _Q.sym_quad(v, Fi);
     //     }
-    //     return std::tuple{g, fj};
+    //     return std::tuple{std::move(g), fj};
     // }
 
     // auto chk_spd_t(const Arr &x, double t) {

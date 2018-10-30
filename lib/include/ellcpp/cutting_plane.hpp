@@ -140,7 +140,7 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
             break;
         }
     }
-    return std::tuple{x_best, t, niter, feasible, status};
+    return std::tuple{std::move(x_best), t, niter, feasible, status};
 } // END
 
 /**
@@ -195,7 +195,7 @@ auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
         }
     }
 
-    return std::tuple{x_best, t, niter, feasible, status};
+    return std::tuple{std::move(x_best), t, niter, feasible, status};
 } // END
 
 #endif

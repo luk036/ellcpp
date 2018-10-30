@@ -31,7 +31,7 @@ class profit_oracle {
         double fj = y[0] - _log_k; // constraint
         if (fj > 0) {
             auto g = xarray{1., 0.};
-            return std::tuple{g, fj, t};
+            return std::tuple{std::move(g), fj, t};
         }
         double log_Cobb = _log_pA + xt::linalg::dot(_a, y)();
         xarray x = xt::exp(y);
@@ -44,7 +44,7 @@ class profit_oracle {
             fj = 0.;
         }
         xarray g = (_v * x) / te - _a;
-        return std::tuple{g, fj, t};
+        return std::tuple{std::move(g), fj, t};
     }
 };
 
@@ -96,7 +96,7 @@ class profit_q_oracle {
         }
         xarray yd = xt::log(x);
         auto [g, fj, t1] = _P(yd, t);
-        return std::tuple{g, fj, t1, yd, 1};
+        return std::tuple{std::move(g), fj, t1, yd, 1};
     }
 };
 

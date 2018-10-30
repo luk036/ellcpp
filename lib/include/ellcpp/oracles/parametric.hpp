@@ -57,7 +57,7 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
         }
     }
 
-    return std::tuple{r_opt, C_opt};
+    return std::tuple{r_opt, std::move(C_opt)};
 }
 
 // if (__name__ == "__main__") {

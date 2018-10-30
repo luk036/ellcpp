@@ -76,7 +76,7 @@ class my_fir_oracle {
             double fj = t_r * t_r + t_i * t_i;
             if (fj >= t) {
                 Arr g = 2 * (t_r * a_R + t_i * a_I);
-                return std::tuple{g, fj - t, t};
+                return std::tuple{std::move(g), fj - t, t};
             }
             if (fmax < fj) {
                 fmax = fj;
@@ -85,7 +85,7 @@ class my_fir_oracle {
             }
         }
 
-        return std::tuple{gmax, 0., fmax};
+        return std::tuple{std::move(gmax), 0., fmax};
     }
 };
 

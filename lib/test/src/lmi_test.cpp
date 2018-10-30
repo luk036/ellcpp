@@ -37,12 +37,12 @@ class my_oracle {
 
         auto [g2, fj2, feasible2] = _lmi1(x);
         if (!feasible2) {
-            return std::tuple{g2, fj2, t};
+            return std::tuple{std::move(g2), fj2, t};
         }
 
         auto [g3, fj3, feasible3] = _lmi2(x);
         if (!feasible3) {
-            return std::tuple{g3, fj3, t};
+            return std::tuple{std::move(g3), fj3, t};
         }
 
         return std::tuple{_c, 0., f0};

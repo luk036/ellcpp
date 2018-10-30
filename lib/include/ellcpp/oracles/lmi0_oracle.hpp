@@ -49,14 +49,14 @@ class lmi0_oracle {
 
         _Q.factor(getA);
         if (_Q.is_spd()) {
-            return std::tuple{g, -1., true};
+            return std::tuple{std::move(g), -1., true};
         }
         Arr v = _Q.witness();
         for (auto i = 0u; i < n; ++i) {
             auto Fi = xt::view(_F, i, xt::all(), xt::all());
             g(i) = -_Q.sym_quad(v, Fi);
         }
-        return std::tuple{g, 1., false};
+        return std::tuple{std::move(g), 1., false};
     }
 };
 

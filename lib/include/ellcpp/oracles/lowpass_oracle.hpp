@@ -39,7 +39,7 @@ class lowpass_oracle {
             Arr g = xt::zeros<double>({n});
             g[0] = -1.;
             Arr f{-x[0]};
-            return std::tuple{g, f, Spsq};
+            return std::tuple{std::move(g), f, Spsq};
         }
 
         // case 2,
@@ -56,7 +56,7 @@ class lowpass_oracle {
                 Arr g = xt::view(_Ap, k, xt::all());
                 Arr f{v - _Upsq, v - _Lpsq};
                 _i_Ap = k + 1;
-                return std::tuple{g, f, Spsq};
+                return std::tuple{std::move(g), f, Spsq};
             }
 
             if (v < _Lpsq) {
@@ -64,7 +64,7 @@ class lowpass_oracle {
                 Arr g = -xt::view(_Ap, k, xt::all());
                 Arr f{-v + _Lpsq, -v + _Upsq};
                 _i_Ap = k + 1;
-                return std::tuple{g, f, Spsq};
+                return std::tuple{std::move(g), f, Spsq};
             }
         }
 
@@ -85,7 +85,7 @@ class lowpass_oracle {
                 // f = (v - Spsq, v);
                 Arr f{v - Spsq, v};
                 _i_As = k + 1; // k or k+1
-                return std::tuple{g, f, Spsq};
+                return std::tuple{std::move(g), f, Spsq};
             }
 
             if (v < 0) {
@@ -93,7 +93,7 @@ class lowpass_oracle {
                 Arr g = -xt::view(_As, k, xt::all());
                 Arr f{-v, -v + Spsq};
                 _i_As = k + 1;
-                return std::tuple{g, f, Spsq};
+                return std::tuple{std::move(g), f, Spsq};
             }
 
             if (v > fmax) {
@@ -111,7 +111,7 @@ class lowpass_oracle {
                 Arr f{-v};
                 Arr g = -xt::view(_Anr, k, xt::all());
                 // _i_Anr = k
-                return std::tuple{g, f, Spsq};
+                return std::tuple{std::move(g), f, Spsq};
             }
         }
 
@@ -121,7 +121,7 @@ class lowpass_oracle {
         Arr f{0., fmax}; // ???
         // f = 0
         Arr g = xt::view(_As, imax, xt::all());
-        return std::tuple{g, f, Spsq};
+        return std::tuple{std::move(g), f, Spsq};
     }
 };
 
