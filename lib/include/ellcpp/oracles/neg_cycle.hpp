@@ -91,8 +91,8 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
             // auto [u, v] = e;
             // auto u = _G.source(e);
             // auto v = _G.target(e);
-            const auto [u, v] = _G.end_points(e);
-            const auto d = _dist[u] + wt;
+            const auto &[u, v] = _G.end_points(e);
+            auto d = _dist[u] + wt;
             if (_dist[v] > d) {
                 _dist[v] = d;
                 _pred[v] = u;

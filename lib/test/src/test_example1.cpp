@@ -9,13 +9,13 @@
 using Arr = xt::xarray<double>;
 
 class nocopymove {
-private:
+  private:
     int i = 3;
 
-public:
+  public:
     nocopymove() = default;
-    nocopymove(const nocopymove& ) = delete;
-    nocopymove(nocopymove&& ) = default;    
+    nocopymove(const nocopymove &) = delete;
+    nocopymove(nocopymove &&) = default;
 };
 
 auto func() {

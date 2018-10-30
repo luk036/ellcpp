@@ -3,9 +3,9 @@
 
 //#include "mat.hpp"
 #include "chol_ext.hpp"
+#include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
-#include <vector>
 
 /**
  * @brief  Oracle for Linear Matrix Inequality
@@ -26,11 +26,11 @@ class lmi_oracle {
     chol_ext _Q;
 
   public:
-    explicit lmi_oracle(const std::vector<Arr> &F, Arr &B): 
-      _F{F}, //
-      _F0{B}, //
-      _A{xt::zeros<double>(B.shape())}, //
-      _Q(B.shape()[0]) // 
+    explicit lmi_oracle(const std::vector<Arr> &F, Arr &B)
+        : _F{F},                            //
+          _F0{B},                           //
+          _A{xt::zeros<double>(B.shape())}, //
+          _Q(B.shape()[0])                  //
     {}
 
     auto operator()(const Arr &x) {
@@ -38,11 +38,11 @@ class lmi_oracle {
         using xt::placeholders::_;
         auto n = x.size();
 
-        auto getA = [&,this](unsigned i, unsigned j) -> double {
+        auto getA = [&, this](unsigned i, unsigned j) -> double {
             this->_A(i, j) = this->_F0(i, j);
-            for (auto k=0u; k < n; ++k) {
-                const auto& Fi = _F[k];
-                this->_A(i, j) -= Fi(i,j) * x(k);
+            for (auto k = 0u; k < n; ++k) {
+                const auto &Fi = _F[k];
+                this->_A(i, j) -= Fi(i, j) * x(k);
             }
             return this->_A(i, j);
         };
@@ -55,7 +55,7 @@ class lmi_oracle {
         }
         Arr v = _Q.witness();
         for (auto i = 0u; i < n; ++i) {
-            const auto& Fi = _F[i];
+            const auto &Fi = _F[i];
             g(i) = _Q.sym_quad(v, Fi);
         }
         return std::tuple{std::move(g), 1., false};

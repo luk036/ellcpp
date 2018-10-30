@@ -11,7 +11,7 @@ ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
     auto params = std::tuple{0., 0., 0.};
 
     if (unlikely(b1 < b0)) {
-        return {1, params}; // no sol'n
+        return {1, std::move(params)}; // no sol'n
     }
 
     if (b0 == 0) {
@@ -21,7 +21,7 @@ ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
     auto n = this->_n;
     auto b0b1 = b0 * b1;
     if (unlikely(n * b0b1 < -tsq)) {
-        return {3, params}; // no effect
+        return {3, std::move(params)}; // no effect
     }
 
     auto t0 = tsq - b0 * b0;
@@ -32,8 +32,8 @@ ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
     auto sigma = ( n + (tsq-b0b1-xi)/(2*bav*bav) ) / (n+1);
     auto rho = sigma * bav;
     auto delta = _c1 * ((t0 + t1)/2 + xi/n) / tsq;
-
-    return {0, ell::params_t{rho, sigma, delta}};
+    auto ret = ell::params_t{rho, sigma, delta};
+    return {0, std::move(ret)};
 }
 
 /** Situation when feasible cut. */
@@ -44,7 +44,8 @@ ell::return_t ell::calc_ll_cc(double b1, double b1sq, double tsq) const {
     auto sigma = (n + 2*(tsq - xi) / b1sq) / (n + 1);
     auto rho = sigma * b1 / 2;
     auto delta = this->_c1 * (tsq - b1sq/2 + xi/n) / tsq;
-    return {0, ell::params_t{rho, sigma, delta}};
+    auto ret = ell::params_t{rho, sigma, delta};
+    return {0, std::move(ret)};
 }
 
 /**
@@ -55,7 +56,7 @@ ell::return_t ell::calc_dc(double beta, double tsq) const {
     auto tau = std::sqrt(tsq);
 
     if (beta > tau) {
-        return {1, params}; // no sol'n
+        return {1, std::move(params)}; // no sol'n
     }
 
     if (beta == 0) {
@@ -65,13 +66,14 @@ ell::return_t ell::calc_dc(double beta, double tsq) const {
     auto n = this->_n;
     auto gamma = tau + n * beta;
     if (unlikely(gamma < 0)) {
-        return {3, params}; // no effect
+        return {3, std::move(params)}; // no effect
     }
 
     auto rho = gamma / (n + 1);
     auto sigma = 2 * rho / (tau + beta);
     auto delta = this->_c1 * (tsq - beta*beta) / tsq;
-    return {0, ell::params_t{rho, sigma, delta}};
+    auto ret = ell::params_t{rho, sigma, delta};
+    return {0, std::move(ret)};
 }
 
 /**
@@ -82,7 +84,8 @@ ell::return_t ell::calc_cc(double tsq) const {
     auto sigma = 2. / np1;
     auto rho = std::sqrt(tsq) / np1;
     auto delta = _c1;
-    return {0, ell::params_t{rho, sigma, delta}};
+    auto ret = ell::params_t{rho, sigma, delta};
+    return {0, std::move(ret)};
 }
 
 

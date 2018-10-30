@@ -6,7 +6,6 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
-
 /**
  * @brief  Oracle for Linear Matrix Inequality
  *
@@ -24,11 +23,11 @@ class lmi0_oracle {
     chol_ext _Q;
 
   public:
-    explicit lmi0_oracle(Arr &F) : 
-      _F{F}, //
-      _n{F.shape()[-1]}, //
-      _A{xt::zeros<double>({_n, _n})}, //
-      _Q(_n) // 
+    explicit lmi0_oracle(Arr &F)
+        : _F{F},                           //
+          _n{F.shape()[-1]},               //
+          _A{xt::zeros<double>({_n, _n})}, //
+          _Q(_n)                           //
     {}
 
     auto operator()(const Arr &x) {
@@ -36,11 +35,11 @@ class lmi0_oracle {
         using xt::placeholders::_;
         auto n = x.size();
 
-        auto getA = [&,this](unsigned i, unsigned j) -> double {
+        auto getA = [&, this](unsigned i, unsigned j) -> double {
             this->_A(i, j) = 0.;
-            for (auto k=0u; k < n; ++k) {
+            for (auto k = 0u; k < n; ++k) {
                 auto Fi = xt::view(_F, k, xt::all(), xt::all());
-                this->_A(i, j) += Fi(i,j) * x(k);
+                this->_A(i, j) += Fi(i, j) * x(k);
             }
             return this->_A(i, j);
         };

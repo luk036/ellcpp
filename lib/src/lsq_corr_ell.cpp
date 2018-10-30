@@ -131,7 +131,8 @@ std::size_t lsq_corr_poly(const Arr &Y, const Arr &s, std::size_t m) {
     auto E = ell(10., a);
     auto P = bsearch_adaptor(Q, E);
     // double normY = xt::norm_l2(Y);
-    auto [fb, niter, feasible] = bsearch(P, std::tuple{0., 100. * 100.});
+    auto I = std::tuple{0., 100. * 100.};
+    auto [fb, niter, feasible] = bsearch(P, I);
 
     std::cout << niter << ", " << feasible << '\n';
     a = P.x_best();

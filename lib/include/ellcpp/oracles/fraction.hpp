@@ -17,8 +17,7 @@ template <typename _Mn> constexpr _Mn lcm(_Mn __m, _Mn __n) {
     return (__m != 0 && __n != 0) ? (abs(__m) / gcd(__m, __n)) * abs(__n) : 0;
 }
 
-template <typename Z>
-struct Fraction {
+template <typename Z> struct Fraction {
     using _Self = Fraction<Z>;
 
     Z _numerator;
@@ -44,9 +43,7 @@ struct Fraction {
         return _Self(std::abs(_numerator), std::abs(_denominator));
     }
 
-    constexpr void reciprocal() {
-        std::swap(_numerator, _denominator);
-    }
+    constexpr void reciprocal() { std::swap(_numerator, _denominator); }
 
     constexpr _Self operator-() const {
         return _Self(-_numerator, _denominator);

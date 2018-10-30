@@ -54,7 +54,7 @@ class qmi_oracle {
                 Fxi = xt::view(_F0, i, xt::all());
                 for (auto k = 0u; k < _nx; ++k) {
                     // Arr Fk = _F[k];
-                    const Arr& Fki = xt::view(_F[k], i, xt::all());
+                    const Arr &Fki = xt::view(_F[k], i, xt::all());
                     Fxi -= Fki * x(k);
                 }
             }
@@ -78,7 +78,7 @@ class qmi_oracle {
         Arr Av = dot(Fxp, v);
         for (auto k = 0u; k < _nx; ++k) {
             // Arr Fk = _F[k];
-            const Arr& Fkp = xt::view(_F[k], xt::range(_, p), xt::all());
+            const Arr &Fkp = xt::view(_F[k], xt::range(_, p), xt::all());
             g(k) = -2 * dot(v, dot(Fkp, Av))();
         }
         return std::tuple{std::move(g), 1., false};

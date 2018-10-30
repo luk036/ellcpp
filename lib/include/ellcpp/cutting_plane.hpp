@@ -10,11 +10,10 @@ struct Options {
 };
 
 template <typename Oracle, typename Space>
-auto bsearch(Oracle &evaluate, const Space &I,
-             const Options &options = Options()) {
+auto bsearch(Oracle &evaluate, Space &I, const Options &options = Options()) {
     // assume monotone
     bool feasible = false;
-    auto [l, u] = I;
+    auto &[l, u] = I;
     auto t = l + (u - l) / 2;
     auto niter = 1u;
     for (; niter <= options.max_it; ++niter) {

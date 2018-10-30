@@ -13,7 +13,7 @@ TEST_CASE("PY2CPP", "[py2cpp]") {
     CHECK(S.contains("test"));
     CHECK(!S.contains("test2"));
     CHECK(py::len(S) == 3);
-    for (const auto& e : S) {
+    for (const auto &e : S) {
         CHECK(S.contains(e));
     }
     auto S3 = S.copy();
@@ -22,7 +22,7 @@ TEST_CASE("PY2CPP", "[py2cpp]") {
     CHECK(M.contains(8));
     CHECK(!M.contains(10));
     CHECK(py::len(M) == 3);
-    for (const auto& [e, v] : M) {
+    for (const auto &[e, v] : M) {
         CHECK(M.contains(e));
     }
     CHECK(std::any_cast<double>(M[8]) == 5.6);

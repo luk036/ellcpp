@@ -25,8 +25,8 @@ template <class grAdaptor> struct exercise_vertex {
         std::cout << "out-edges: ";
         // typename GraphTraits::out_edge_iterator out_i, out_end;
         // typename GraphTraits::edge_descriptor e;
-        for (const auto& e : g.neighbors(v)) {
-            auto [src, targ] = g.end_points(e);
+        for (const auto &e : g.neighbors(v)) {
+            const auto &[src, targ] = g.end_points(e);
             std::cout << "(" << index[src] << "," << index[targ] << ") ";
         }
         std::cout << std::endl;
@@ -36,8 +36,8 @@ template <class grAdaptor> struct exercise_vertex {
 
 TEST_CASE("Test Boost", "[test_boost]") {
     // create a typedef for the Graph type
-    using Graph = boost::adjacency_list<boost::vecS, boost::vecS,
-                                  boost::bidirectionalS>;
+    using Graph =
+        boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS>;
 
     // Make convenient labels for the vertices
     enum { A, B, C, D, E, N };
@@ -68,14 +68,14 @@ TEST_CASE("Test Boost", "[test_boost]") {
     std::cout << "vertices(g) = ";
     // typedef graph_traits<Graph>::vertex_iterator vertex_iter;
     // std::pair<vertex_iter, vertex_iter> vp;
-    for (const Vertex& v : G) {
+    for (const Vertex &v : G) {
         std::cout << index[v] << " ";
     }
     std::cout << std::endl;
 
     std::cout << "edges(g) = ";
     // graph_traits<Graph>::edge_iterator ei, ei_end;
-    for (const auto& e : G.edges())
+    for (const auto &e : G.edges())
         std::cout << "(" << index[boost::source(e, G)] << ","
                   << index[boost::target(e, G)] << ") ";
     std::cout << std::endl;

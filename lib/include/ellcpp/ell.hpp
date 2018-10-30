@@ -8,8 +8,8 @@
 
 /* linux-2.6.38.8/include/linux/compiler.h */
 #include <stdio.h>
-#define likely(x)    __builtin_expect(!!(x), 1)
-#define unlikely(x)  __builtin_expect(!!(x), 0)
+#define likely(x) __builtin_expect(!!(x), 1)
+#define unlikely(x) __builtin_expect(!!(x), 0)
 
 /**
  * @brief Ellipsoid Search Space
@@ -23,7 +23,7 @@ class ell {
     using return_t = std::tuple<int, params_t>;
 
   public:
-     bool _use_parallel_cut = true;
+    bool _use_parallel_cut = true;
 
   private:
     std::size_t _n;
@@ -84,7 +84,7 @@ class ell {
         if (status != 0) {
             return {status, tsq};
         }
-        auto [rho, sigma, delta] = params;
+        const auto &[rho, sigma, delta] = params;
         this->_xc -= (rho / omega) * Qg;
         this->_Q -= (sigma / omega) * xt::linalg::outer(Qg, Qg);
         this->_kappa *= delta;

@@ -61,7 +61,6 @@ static xn::grAdaptor<graph_t> create_test_case_timing() {
     return xn::grAdaptor<graph_t>(g);
 }
 
-
 bool do_case(xn::grAdaptor<graph_t> &G) {
     using edge_t = decltype(*(std::begin(G.edges())));
 
