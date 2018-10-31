@@ -2,6 +2,7 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lmi0_oracle.hpp>
+#include <ellcpp/oracles/lmi_oracle.hpp>
 #include <ellcpp/oracles/qmi_oracle.hpp>
 #include <iostream>
 #include <tuple>
@@ -28,15 +29,15 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u, size_t
     const double s_end[] = {10., 8.};
     const auto sdkern = 0.3;  // width of kernel
     const auto var = 2.;      // standard derivation
-    const auto tau = 0.00001; // standard derivation of white noise
+    const auto tau = 0.001; // standard derivation of white noise
     xt::random::seed(5);
 
     // create sites s
-    Arr sx = xt::linspace<double>(0., 10., nx);
-    Arr sy = xt::linspace<double>(0., 8., ny);
+    Arr sx = xt::linspace<double>(0., s_end[0], nx);
+    Arr sy = xt::linspace<double>(0., s_end[1], ny);
     auto [xx, yy] = xt::meshgrid(sx, sy);
-    Arr s = xt::stack(xt::xtuple(xt::flatten(xx), xt::flatten(yy)), 0);
-    s = xt::transpose(s);
+    Arr st = xt::stack(xt::xtuple(xt::flatten(xx), xt::flatten(yy)), 0);
+    Arr s = xt::transpose(st);
 
     Arr Sig = xt::zeros<double>({n, n});
     for (auto i = 0u; i < n; ++i) {
@@ -52,8 +53,8 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u, size_t
     Arr Y = xt::zeros<double>({n, n});
     for (auto k = 0u; k < N; ++k) {
         Arr x = var * xt::random::randn<double>({n});
-        // auto y = dot(A, x)() + tau*xt::random::randn<double>({n});
-        Arr y = dot(A, x);
+        Arr y = dot(A, x)() + tau*xt::random::randn<double>({n});
+        // Arr y = dot(A, x);
         Y += xt::linalg::outer(y, y);
     }
     Y /= N;
@@ -91,7 +92,7 @@ class lsq_oracle {
     lmi0_oracle _lmi0;
 
   public:
-    explicit lsq_oracle(const std::vector<Arr> &F, const Arr &F0)
+    lsq_oracle(const std::vector<Arr> &F, const Arr &F0)
         : _qmi(F, F0), //
           _lmi0(F) {}
 
@@ -99,56 +100,52 @@ class lsq_oracle {
         auto n = x.shape()[0];
         Arr g = xt::zeros<double>({n});
 
-        auto [g10, fj0, feasible0] = this->_lmi0(xt::view(x, xt::range(0, n-1)));
+        auto [g0, fj0, feasible0] = this->_lmi0(xt::view(x, xt::range(0, n-1)));
         if (!feasible0) {
-            xt::view(g, xt::range(0, n-1)) = g10;
+            xt::view(g, xt::range(0, n-1)) = g0;
             g(n-1) = 0.;
             return std::tuple{std::move(g), fj0, t};
         }
 
         this->_qmi.update(x(n-1));
-        auto [g1, fj, feasible] = this->_qmi(xt::view(x, xt::range(0, n-1)));
+        auto [g1, fj1, feasible] = this->_qmi(xt::view(x, xt::range(0, n-1)));
         if (!feasible) {
             xt::view(g, xt::range(0, n-1)) = g1;
             auto v = this->_qmi._Q.witness();
             g(n-1) = -xt::linalg::dot(v,v)();
-            return std::tuple{std::move(g), fj, t};
+            return std::tuple{std::move(g), fj1, t};
         }
 
         g(n-1) = 1.;
         auto tc = x(n-1);
-        auto f0 = tc - t;
-        if (f0 > 0) {
-            return std::tuple{std::move(g), f0, t};
+        auto fj = tc - t;
+        if (fj > 0) {
+            return std::tuple{std::move(g), fj, t};
         }
-
         return std::tuple{std::move(g), 0., tc};
     }
 };
 
 
 auto lsq_corr_core2(const Arr &Y, std::size_t m, lsq_oracle &P) {
-    auto normY = 100.;
+    auto normY = xt::linalg::norm(Y);
     auto normY2 = 32*normY*normY;
     Arr val = 256*xt::ones<double>({m + 1});
     val(m) = normY2*normY2;
-    Arr x = xt::zeros<double>({m + 1});
+    Arr x = xt::ones<double>({m + 1});
     x(m) = normY2/2;
     auto E = ell(val, x);
     auto [x_best, fb, num_iters, feasible, status] = cutting_plane_dc(P, E, normY2);
-    assert(feasible);
     Arr a = xt::view(x_best, xt::range(0, m));
-    return std::tuple{num_iters, std::move(a)};
+    return std::tuple{std::move(a), num_iters, feasible};
 }
 
 
-std::size_t lsq_corr_poly2(const Arr &Y, const Arr &s, std::size_t m) {
+std::tuple<size_t, bool> lsq_corr_poly2(const Arr &Y, const Arr &s, std::size_t m) {
     auto n = s.shape()[0];
     Arr D1 = construct_distance_matrix(s);
 
     Arr D = xt::ones<double>({n, n});
-    // Arr Sig = xt::zeros<double>({m, n, n});
-    // xt::view(Sig, 0, xt::all(), xt::all()) = D;
     std::vector<Arr> Sig;
     Sig.reserve(m);
     Sig.push_back(D);
@@ -161,12 +158,118 @@ std::size_t lsq_corr_poly2(const Arr &Y, const Arr &s, std::size_t m) {
     // Sig.reverse();
 
     auto P = lsq_oracle(Sig, Y);
-    auto [num_iters, a] = lsq_corr_core2(Y, m, P);
-    std::cout << a << "\n";
-    return num_iters;
+    auto [a, num_iters, feasible] = lsq_corr_core2(Y, m, P);
+    std::cout << "lsq_corr_poly2 = " << a << "\n";
+    return {num_iters, feasible};
 }
 
-std::size_t lsq_corr_poly(const Arr &Y, const Arr &s, std::size_t m) {
+
+class mle_oracle {
+    using Arr = xt::xarray<double>;
+    using shape_type = Arr::shape_type;
+
+  private:
+    const Arr &_Y;
+    const std::vector<Arr> &_Sig;
+    lmi0_oracle _lmi0;
+    lmi_oracle _lmi;
+
+  public:
+    mle_oracle(const std::vector<Arr> &Sig, const Arr &Y)
+        : _Y{Y}, //
+          _Sig{Sig}, //
+          _lmi0(Sig), //
+          _lmi(Sig, 2*Y) {}
+
+    auto operator()(const Arr &x, double t) {
+        using xt::linalg::dot;
+
+        auto [g1, fj1, feasible1] = this->_lmi(x);
+        if (!feasible1) {
+            return std::tuple{std::move(g1), fj1, t};
+        }
+
+        auto [g0, fj0, feasible0] = this->_lmi0(x);
+        if (!feasible0) {
+            return std::tuple{std::move(g0), fj0, t};
+        }
+
+        auto n = x.shape()[0];
+        auto m = _Y.shape()[0];
+
+        Arr A = _lmi0._A;
+        A += 1e-9*xt::eye({m});
+        chol_ext Q(m);
+        Q.factorize(A);
+        const auto& R = Q._R;
+        auto invR = Arr{xt::linalg::inv(R)};
+        auto S = Arr{dot(invR, xt::transpose(invR))};
+        auto SY = Arr{dot(S, _Y)};
+
+        auto diag = xt::diagonal(R);
+        std::cout << "xt::sum(xt::log(diag))() = " << xt::sum(xt::log(diag))() << '\n';
+        std::cout << "xt::linalg::trace(SY)() = " << xt::linalg::trace(SY)() << '\n';
+
+        // // auto ld = xt::log(diag);
+        // // double sum = 0.;
+        // // for (auto k=0u; k<m; ++k) {
+        // //     sum += ld(k);
+        // // }
+        auto f1 = double{2. * xt::sum(xt::log(diag))() + xt::linalg::trace(SY)()};
+        // auto f1 = 0.;
+
+        auto f = f1 - t;
+        if (f < 0) {
+            t = f1;
+            f = 0.;
+        }
+
+        Arr g = xt::zeros<double>({n});
+
+        for (auto i = 0u; i<n; ++i) {
+            Arr SFsi = dot(S, _Sig[i]);
+            g(i) = xt::linalg::trace(SFsi)();
+            for (auto k=0u; k<m; ++k) {
+                Arr SFsik = xt::view(SFsi, k, xt::all());
+                Arr SYk = xt::view(SY, xt::all(), k);
+                g(i) -= dot(SFsik, SYk)();
+            }
+        }
+        return std::tuple{std::move(g), f, t};
+    }
+};
+
+auto mle_corr_core(const Arr &Y, std::size_t m, mle_oracle &P) {
+    Arr x = xt::zeros<double>({m});
+    x(0) = 1.;
+    auto E = ell(50., x);
+    auto [x_best, fb, num_iters, feasible, status] = cutting_plane_dc(P, E, 1e100);
+    return std::tuple{std::move(x_best), num_iters, feasible};
+}
+
+std::tuple<size_t, bool> mle_corr_poly(const Arr &Y, const Arr &s, std::size_t m) {
+    auto n = s.shape()[0];
+    Arr D1 = construct_distance_matrix(s);
+
+    Arr D = xt::ones<double>({n, n});
+    std::vector<Arr> Sig;
+    Sig.reserve(m);
+    Sig.push_back(D);
+
+    for (auto i = 0u; i < m - 1; ++i) {
+        D *= D1;
+        Sig.push_back(D);
+        // xt::view(Sig, i, xt::all(), xt::all()) = D;
+    }
+    // Sig.reverse();
+
+    auto P = mle_oracle(Sig, Y);
+    auto [a, num_iters, feasible] = mle_corr_core(Y, m, P);
+    std::cout << "mle_corr_poly = " << a << "\n";
+    return {num_iters, feasible};
+}
+
+std::tuple<size_t, bool> lsq_corr_poly(const Arr &Y, const Arr &s, size_t m) {
     auto n = s.shape()[0];
     Arr D1 = construct_distance_matrix(s);
 
@@ -195,6 +298,6 @@ std::size_t lsq_corr_poly(const Arr &Y, const Arr &s, std::size_t m) {
 
     std::cout << niter << ", " << feasible << '\n';
     a = P.x_best();
-    return niter;
+    return {niter, feasible};
     //  return prob.is_dcp()
 }

@@ -28,6 +28,8 @@ class chol_ext {
   private:
     std::size_t _p;
     std::size_t _n;
+
+  public:
     xt::xarray<double> _R{};
 
   public:
@@ -100,6 +102,8 @@ class chol_ext {
     }
 
     bool is_spd() const { return _p == 0 || _R(_p - 1, _p - 1) == 0; }
+
+    bool is_pd() const { return _p == 0 && _R(_p - 1, _p - 1) != 0; }
 
     Vec witness() const {
         assert(!this->is_spd());

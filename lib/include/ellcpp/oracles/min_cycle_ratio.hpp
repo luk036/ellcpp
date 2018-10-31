@@ -53,7 +53,7 @@ auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */) {
     for (const auto &e : G.edges()) {
         cost_t c = get_cost(G, e);
         time_t t = get_time(G, e);
-        std::cout << "mincost: c = " << c << '\n';
+        // std::cout << "mincost: c = " << c << '\n';
         if (max_cost < c)
             max_cost = c;
         if (min_time > t)

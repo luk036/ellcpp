@@ -19,6 +19,8 @@ class lmi0_oracle {
   private:
     const std::vector<Arr> &_F;
     size_t _n;
+
+  public:
     Arr _A;
     chol_ext _Q;
 

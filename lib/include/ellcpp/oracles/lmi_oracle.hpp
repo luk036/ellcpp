@@ -21,12 +21,12 @@ class lmi_oracle {
 
   private:
     const std::vector<Arr> &_F;
-    Arr &_F0;
+    Arr _F0;
     Arr _A;
     chol_ext _Q;
 
   public:
-    explicit lmi_oracle(const std::vector<Arr> &F, Arr &B)
+    explicit lmi_oracle(const std::vector<Arr> &F, const Arr &B)
         : _F{F},                            //
           _F0{B},                           //
           _A{xt::zeros<double>(B.shape())}, //
@@ -43,6 +43,9 @@ class lmi_oracle {
             for (auto k = 0u; k < n; ++k) {
                 const auto &Fi = _F[k];
                 this->_A(i, j) -= Fi(i, j) * x(k);
+            }
+            if (i != j) {
+                this->_A(j, i) = this->_A(i, j);
             }
             return this->_A(i, j);
         };
