@@ -48,7 +48,7 @@ static double PI = std::acos(-1);
 // filter specs (for a low-pass filter)
 // *********************************************************************
 // number of FIR coefficients (including zeroth)
-static const int N = 32;
+static const int N = 48;
 static const double wpass = 0.12 * PI; // end of passband
 static const double wstop = 0.20 * PI; // start of stopband
 static const double delta0_wpass = 0.125;
@@ -90,7 +90,7 @@ static Arr As = xt::view(A, xt::range(ind_s[0], _), xt::all());
 // auto ind_nr = np.setdiff1d(ind_nr, ind_s);
 static auto ind_beg = ind_p[ind_p.size() - 1];
 static auto ind_end = ind_s[0];
-static Arr Anr = xt::view(A, xt::range(ind_beg, ind_end), xt::all());
+static Arr Anr = xt::view(A, xt::range(ind_beg+1, ind_end), xt::all());
 
 static const double Lpsq = Lp * Lp;
 static const double Upsq = Up * Up;
@@ -102,14 +102,17 @@ static const double Spsq = Sp * Sp;
 auto run_lowpass(bool use_parallel_cut) {
     Arr r0 = xt::zeros<double>({N}); // initial x0
     // r0[0] = 0;
-    auto E = ell(4., r0);
+    auto E = ell(40., r0);
     E._use_parallel_cut = use_parallel_cut;
     auto P = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
     auto options = Options();
-    options.max_it = 20000;
-    options.tol = 1e-8;
+    options.max_it = 50000;
+    // options.tol = 1e-8;
     auto [r, Spsq_new, num_iters, feasible, status] =
         cutting_plane_dc(P, E, Spsq, options);
+    std::cout << "lowpass r: " << r << '\n';
+    auto Ustop = 20*std::log10(std::sqrt(Spsq_new));
+    std::cout << "Min attenuation in the stopband is " << Ustop << " dB.\n";
     return std::tuple<bool, unsigned int>{feasible, num_iters};
 }
 
@@ -126,7 +129,7 @@ auto run_lowpass(bool use_parallel_cut) {
 TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]") {
     auto [feasible, num_iters] = run_lowpass(true);
     CHECK(feasible);
-    CHECK(num_iters <= 504);
+    CHECK(num_iters <= 620);
 }
 
 TEST_CASE("Lowpass Filter (w/o parallel cut)", "[lowpass]") {

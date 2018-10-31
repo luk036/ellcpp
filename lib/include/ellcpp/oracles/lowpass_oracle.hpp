@@ -105,12 +105,14 @@ class lowpass_oracle {
         // case 4,
         // 1. nonnegative-real constraint
         N = _Anr.shape()[0];
-        for (auto k = 0u; k < N; ++k) {
+        for (auto i = 0u, k = _i_Anr; i < N; ++i, ++k) {
+            if (k == N)
+                k = 0; // round robin
             double v = dot(xt::view(_Anr, k, xt::all()), x)();
             if (v < 0) {
                 Arr f{-v};
                 Arr g = -xt::view(_Anr, k, xt::all());
-                // _i_Anr = k
+                _i_Anr = k + 1;
                 return std::tuple{std::move(g), f, Spsq};
             }
         }

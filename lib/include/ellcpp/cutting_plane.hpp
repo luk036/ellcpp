@@ -3,6 +3,8 @@
 
 #include <cmath>
 #include <tuple>
+#include <xtensor-blas/xlinalg.hpp>
+#include <xtensor/xarray.hpp>
 
 struct Options {
     unsigned int max_it = 2000;
@@ -119,8 +121,10 @@ auto cutting_plane_feas(Oracle &evaluate, Space &S,
 template <typename Oracle, typename Space, typename T>
 auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
                       const Options &options = Options()) {
+    using Arr = xt::xarray<double>;
+
     bool feasible = false;
-    auto x_best = S.xc();
+    auto x_best = Arr{S.xc()};
     auto niter = 1u, status = 0u;
     for (; niter <= options.max_it; ++niter) {
         auto [g, h, t1] = evaluate(S.xc(), t);
@@ -162,8 +166,10 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
 template <typename Oracle, typename Space, typename T>
 auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
                      const Options &options = Options()) {
+    using Arr = xt::xarray<double>;
+
     bool feasible = false;
-    auto x_best = S.xc();
+    auto x_best = Arr{S.xc()};
     auto status = 1u;
     auto niter = 1u;
     for (; niter < options.max_it; ++niter) {

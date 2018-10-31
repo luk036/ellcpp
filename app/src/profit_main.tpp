@@ -76,7 +76,7 @@ int main() {
   if (!Q1.is_sd()) {
     auto v = Q1.witness();
     auto p = v.size();
-    auto sub = xt::range(_, p);
+    auto sub = xt::range(0, p);
     Arr App = xt::view(m1, sub, sub);
     Arr Appv = dot(App, v);
     auto fj = -dot(v, Appv)();
@@ -94,7 +94,7 @@ int main() {
   if (!Q2.is_sd()) {
     auto v = Q2.witness();
     auto p = v.size();
-    auto sub = xt::range(_, p);
+    auto sub = xt::range(0, p);
     Arr App = xt::view(m2, sub, sub);
     Arr Appv = dot(App, v);
     auto fj = -dot(v, Appv)();

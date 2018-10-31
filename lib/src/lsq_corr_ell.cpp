@@ -128,7 +128,7 @@ class lsq_oracle {
 
 
 auto lsq_corr_core2(const Arr &Y, std::size_t m, lsq_oracle &P) {
-    auto normY = 10.*xt::linalg::norm(Y);
+    auto normY = 100.*xt::linalg::norm(Y);
     auto normY2 = 32.*normY*normY;
     Arr val = 256.*xt::ones<double>({m + 1});
     val(m) = normY2*normY2;
@@ -230,9 +230,7 @@ class mle_oracle {
             Arr SFsi = dot(S, _Sig[i]);
             g(i) = xt::linalg::trace(SFsi)();
             for (auto k=0u; k<m; ++k) {
-                Arr SFsik = xt::view(SFsi, k, xt::all());
-                Arr SYk = xt::view(SY, xt::all(), k);
-                g(i) -= dot(SFsik, SYk)();
+                g(i) -= dot(xt::view(SFsi, k, xt::all()), xt::view(SY, xt::all(), k))();
             }
         }
         return std::tuple{std::move(g), f, t};
@@ -242,7 +240,7 @@ class mle_oracle {
 auto mle_corr_core(const Arr &Y, std::size_t m, mle_oracle &P) {
     Arr x = xt::zeros<double>({m});
     x(0) = 1.;
-    auto E = ell(50., x);
+    auto E = ell(500., x);
     auto [x_best, fb, num_iters, feasible, status] = cutting_plane_dc(P, E, 1e100);
     return std::tuple{std::move(x_best), num_iters, feasible};
 }

@@ -27,7 +27,7 @@ class lmi0_oracle {
   public:
     explicit lmi0_oracle(const std::vector<Arr> &F)
         : _F{F},                           //
-          _n{F[0].shape()[0]},               //
+          _n{F[0].shape()[0]},             //
           _A{xt::zeros<double>({_n, _n})}, //
           _Q(_n)                           //
     {}
