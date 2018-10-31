@@ -120,7 +120,7 @@ class chol_ext {
             //                    xt::view(v, xt::range(i+1, _p)))();
             v[i] = -s / _R(i, i);
         }
-        return v;
+        return std::move(v);
     }
 
     double sym_quad(const xt::xarray<double> &v, const xt::xarray<double> &A) {

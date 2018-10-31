@@ -48,18 +48,20 @@ class qmi_oracle {
         auto getA = [this, x](std::size_t i, std::size_t j) -> double { // ???
             using xt::linalg::dot;
             assert(i >= j);
-            Arr Fxi = xt::view(_Fx, i, xt::all());
+            // Arr Fxi = xt::view(_Fx, i, xt::all());
             if (_count < i + 1) {
                 _count = i + 1;
-                Fxi = xt::view(_F0, i, xt::all());
+                xt::view(_Fx, i, xt::all()) = xt::view(_F0, i, xt::all());
                 for (auto k = 0u; k < _nx; ++k) {
                     // Arr Fk = _F[k];
-                    const Arr &Fki = xt::view(_F[k], i, xt::all());
-                    Fxi -= Fki * x(k);
+                    // const Arr &Fki = xt::view(_F[k], i, xt::all());
+                    xt::view(_Fx, i, xt::all()) -= xt::view(_F[k], i, xt::all()) * x(k);
                 }
             }
-            Arr Fxj = xt::view(_Fx, j, xt::all());
-            _A(i, j) = -dot(Fxi, Fxj)();
+            // Arr Fxi = xt::view(_Fx, i, xt::all());
+            // Arr Fxj = xt::view(_Fx, j, xt::all());
+            // _A(i, j) = -dot(Fxi, Fxj)();
+            _A(i, j) = -dot(xt::view(_Fx, i, xt::all()), xt::view(_Fx, j, xt::all()))();
             if (i == j) {
                 _A(i, j) += _t;
             }
@@ -74,12 +76,12 @@ class qmi_oracle {
         }
         Arr v = _Q.witness();
         auto p = v.size();
-        Arr Fxp = xt::transpose(xt::view(_Fx, xt::range(_, p), xt::all()));
-        Arr Av = dot(Fxp, v);
+        Arr Fxp = xt::view(_Fx, xt::range(_, p), xt::all());
+        Arr Av = dot(v, Fxp);
         for (auto k = 0u; k < _nx; ++k) {
             // Arr Fk = _F[k];
-            const Arr &Fkp = xt::view(_F[k], xt::range(_, p), xt::all());
-            g(k) = -2 * dot(v, dot(Fkp, Av))();
+            Arr Fkp = xt::view(_F[k], xt::range(_, p), xt::all());
+            g(k) = -2 * dot(dot(v, Fkp), Av)();
         }
         return std::tuple{std::move(g), 1., false};
     }

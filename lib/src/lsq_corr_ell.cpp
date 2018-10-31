@@ -111,7 +111,7 @@ class lsq_oracle {
         auto [g1, fj1, feasible] = this->_qmi(xt::view(x, xt::range(0, n-1)));
         if (!feasible) {
             xt::view(g, xt::range(0, n-1)) = g1;
-            auto v = this->_qmi._Q.witness();
+            Arr v = this->_qmi._Q.witness();
             g(n-1) = -xt::linalg::dot(v,v)();
             return std::tuple{std::move(g), fj1, t};
         }
@@ -128,12 +128,12 @@ class lsq_oracle {
 
 
 auto lsq_corr_core2(const Arr &Y, std::size_t m, lsq_oracle &P) {
-    auto normY = xt::linalg::norm(Y);
-    auto normY2 = 32*normY*normY;
-    Arr val = 256*xt::ones<double>({m + 1});
+    auto normY = 10.*xt::linalg::norm(Y);
+    auto normY2 = 32.*normY*normY;
+    Arr val = 256.*xt::ones<double>({m + 1});
     val(m) = normY2*normY2;
     Arr x = xt::ones<double>({m + 1});
-    x(m) = normY2/2;
+    x(m) = normY2/2.;
     auto E = ell(val, x);
     auto [x_best, fb, num_iters, feasible, status] = cutting_plane_dc(P, E, normY2);
     Arr a = xt::view(x_best, xt::range(0, m));
@@ -179,7 +179,7 @@ class mle_oracle {
         : _Y{Y}, //
           _Sig{Sig}, //
           _lmi0(Sig), //
-          _lmi(Sig, 2*Y) {}
+          _lmi(Sig, std::move(2*Y)) {}
 
     auto operator()(const Arr &x, double t) {
         using xt::linalg::dot;

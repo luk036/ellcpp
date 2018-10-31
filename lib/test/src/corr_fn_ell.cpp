@@ -20,7 +20,7 @@ TEST_CASE("lsq_corr_fn", "[corr_fn]") {
     // lsq_corr_bspline(Y, s, 4);
     auto [num_iters, feasible] = lsq_corr_poly2(Y, s, 4);
     CHECK(feasible);
-    CHECK(num_iters >= 88);
+    CHECK(num_iters >= 8);
     CHECK(num_iters <= 657);
 }
 

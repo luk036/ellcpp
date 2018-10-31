@@ -41,11 +41,8 @@ class lmi_oracle {
         auto getA = [&, this](unsigned i, unsigned j) -> double {
             this->_A(i, j) = this->_F0(i, j);
             for (auto k = 0u; k < n; ++k) {
-                const auto &Fi = _F[k];
-                this->_A(i, j) -= Fi(i, j) * x(k);
-            }
-            if (i != j) {
-                this->_A(j, i) = this->_A(i, j);
+                // const auto &Fi = _F[k];
+                this->_A(i, j) -= _F[k](i, j) * x(k);
             }
             return this->_A(i, j);
         };
@@ -58,8 +55,8 @@ class lmi_oracle {
         }
         Arr v = _Q.witness();
         for (auto i = 0u; i < n; ++i) {
-            const auto &Fi = _F[i];
-            g(i) = _Q.sym_quad(v, Fi);
+            // const auto &Fi = _F[i];
+            g(i) = _Q.sym_quad(v, _F[i]);
         }
         return std::tuple{std::move(g), 1., false};
     }
