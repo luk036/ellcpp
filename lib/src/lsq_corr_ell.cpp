@@ -29,7 +29,7 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u, size_t
     const double s_end[] = {10., 8.};
     const auto sdkern = 0.3;  // width of kernel
     const auto var = 2.;      // standard derivation
-    const auto tau = 0.001; // standard derivation of white noise
+    const auto tau = 0.00001; // standard derivation of white noise
     xt::random::seed(5);
 
     // create sites s
@@ -53,7 +53,7 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u, size_t
     Arr Y = xt::zeros<double>({n, n});
     for (auto k = 0u; k < N; ++k) {
         Arr x = var * xt::random::randn<double>({n});
-        Arr y = dot(A, x)() + tau*xt::random::randn<double>({n});
+        Arr y = dot(A, x) + tau*xt::random::randn<double>({n});
         // Arr y = dot(A, x);
         Y += xt::linalg::outer(y, y);
     }
@@ -73,14 +73,14 @@ Arr construct_distance_matrix(const Arr &s) {
     // c = cvx.Variable(m)
     Arr D = xt::zeros<double>({n, n});
     for (auto i = 0u; i < n; ++i) {
-        for (auto j = i + 1; i < n; ++i) {
+        for (auto j = i + 1; j < n; ++j) {
             Arr h = xt::view(s, j, xt::all()) - xt::view(s, i, xt::all());
-            double d = xt::sqrt(xt::linalg::dot(h, h))();
+            double d = std::sqrt(xt::linalg::dot(h, h)());
             D(i, j) = d;
             D(j, i) = d;
         }
     }
-    return std::move(D);
+    return D;
 }
 
 class lsq_oracle {
@@ -111,7 +111,7 @@ class lsq_oracle {
         auto [g1, fj1, feasible] = this->_qmi(xt::view(x, xt::range(0, n-1)));
         if (!feasible) {
             xt::view(g, xt::range(0, n-1)) = g1;
-            Arr v = this->_qmi._Q.witness();
+            auto [v, ep] = this->_qmi._Q.witness();
             g(n-1) = -xt::linalg::dot(v,v)();
             return std::tuple{std::move(g), fj1, t};
         }
@@ -132,7 +132,8 @@ auto lsq_corr_core2(const Arr &Y, std::size_t m, lsq_oracle &P) {
     auto normY2 = 32.*normY*normY;
     Arr val = 256.*xt::ones<double>({m + 1});
     val(m) = normY2*normY2;
-    Arr x = xt::ones<double>({m + 1});
+    Arr x = xt::zeros<double>({m + 1});
+    x(0) = 4;
     x(m) = normY2/2.;
     auto E = ell(val, x);
     auto [x_best, fb, num_iters, feasible, status] = cutting_plane_dc(P, E, normY2);
@@ -198,7 +199,7 @@ class mle_oracle {
         auto m = _Y.shape()[0];
 
         Arr A = _lmi0._A;
-        A += 1e-9*xt::eye({m});
+        // A += 1e-9*xt::eye({m});
         chol_ext Q(m);
         Q.factorize(A);
         const auto& R = Q._R;
@@ -207,8 +208,8 @@ class mle_oracle {
         auto SY = Arr{dot(S, _Y)};
 
         auto diag = xt::diagonal(R);
-        std::cout << "xt::sum(xt::log(diag))() = " << xt::sum(xt::log(diag))() << '\n';
-        std::cout << "xt::linalg::trace(SY)() = " << xt::linalg::trace(SY)() << '\n';
+        // std::cout << "xt::sum(xt::log(diag))() = " << xt::sum(xt::log(diag))() << '\n';
+        // std::cout << "xt::linalg::trace(SY)() = " << xt::linalg::trace(SY)() << '\n';
 
         // // auto ld = xt::log(diag);
         // // double sum = 0.;
@@ -239,7 +240,7 @@ class mle_oracle {
 
 auto mle_corr_core(const Arr &Y, std::size_t m, mle_oracle &P) {
     Arr x = xt::zeros<double>({m});
-    x(0) = 1.;
+    x(0) = 4.;
     auto E = ell(500., x);
     auto [x_best, fb, num_iters, feasible, status] = cutting_plane_dc(P, E, 1e100);
     return std::tuple{std::move(x_best), num_iters, feasible};

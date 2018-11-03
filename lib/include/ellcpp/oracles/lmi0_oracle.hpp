@@ -52,12 +52,12 @@ class lmi0_oracle {
         if (_Q.is_spd()) {
             return std::tuple{std::move(g), -1., true};
         }
-        Arr v = _Q.witness();
+        auto [v, ep] = _Q.witness();
         for (auto i = 0u; i < n; ++i) {
             // auto Fi = _F[i];
             g(i) = -_Q.sym_quad(v, _F[i]);
         }
-        return std::tuple{std::move(g), 1., false};
+        return std::tuple{std::move(g), ep, false};
     }
 };
 

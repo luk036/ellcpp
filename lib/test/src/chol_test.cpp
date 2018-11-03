@@ -20,9 +20,18 @@ TEST_CASE("Cholesky test", "[chol_ext]") {
     auto Q2 = chol_ext(m2.shape()[0]);
     Q2.factorize(m2);
     CHECK(!Q2.is_spd());
-
-    auto v = Q2.witness();
+    auto [v, ep] = Q2.witness();
     auto p = v.size();
-
     CHECK(p == 2);
+
+
+    auto m3 = Arr{{0., 15., -5.}, {15., 18., 0.}, {-5., 0., 11.}};
+    auto Q3 = chol_ext(m3.shape()[0]);
+    Q3.factorize(m3);
+    CHECK(!Q3.is_spd());
+    auto [v3, ep3] = Q3.witness();
+    p = v3.size();
+    CHECK(p == 1);
+    CHECK(v3(0) == 1.);
+    CHECK(ep3 == 0.);
 }

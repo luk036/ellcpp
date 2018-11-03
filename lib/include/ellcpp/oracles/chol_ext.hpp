@@ -101,16 +101,17 @@ class chol_ext {
         }
     }
 
-    bool is_spd() const { return _p == 0 || _R(_p - 1, _p - 1) == 0; }
+    bool is_spd() const { return _p == 0; }
 
-    bool is_pd() const { return _p == 0 && _R(_p - 1, _p - 1) != 0; }
-
-    Vec witness() const {
+    auto witness() const {
         assert(!this->is_spd());
         Vec v = xt::zeros<double>({_p});
         using xt::placeholders::_;
 
-        v[_p - 1] = 1.0 / _R(_p - 1, _p - 1);
+        auto r = _R(_p - 1, _p - 1);
+        auto ep = (r == 0)? 0. : 1.;
+        v[_p - 1] = (r == 0)? 1. : 1. / r;
+        
         for (int i = _p - 2; i >= 0; --i) {
             double s = 0.;
             for (auto k = i + 1; k < _p; ++k) {
@@ -120,7 +121,7 @@ class chol_ext {
             //                    xt::view(v, xt::range(i+1, _p)))();
             v[i] = -s / _R(i, i);
         }
-        return std::move(v);
+        return std::tuple{std::move(v), ep};
     }
 
     double sym_quad(const xt::xarray<double> &v, const xt::xarray<double> &A) {

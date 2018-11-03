@@ -70,7 +70,7 @@ class qmi_oracle {
         if (_Q.is_spd()) {
             return std::tuple{std::move(g), -1., true};
         }
-        Arr v = _Q.witness();
+        auto [v, ep] = _Q.witness();
         auto p = v.size();
         Arr Fxp = xt::view(_Fx, xt::range(0, p), xt::all());
         Arr Av = dot(v, Fxp);
@@ -79,7 +79,7 @@ class qmi_oracle {
             Arr Fkp = xt::view(_F[k], xt::range(0, p), xt::all());
             g(k) = -2 * dot(dot(v, Fkp), Av)();
         }
-        return std::tuple{std::move(g), 1., false};
+        return std::tuple{std::move(g), ep, false};
     }
 };
 
