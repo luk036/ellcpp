@@ -44,29 +44,7 @@ class chol_ext {
      to make $v'*A[:p,:p]*v < 0$
     **/
     void factorize(const Mat &A) {
-        // auto shape = A.shape();
-        // _n = shape[0];
-        // _R = xt::zeros<double>(shape);
-        double d;
-        _p = 0;
-
-        for (auto i = 0u; i < _n; ++i) {
-            for (auto j = 0u; j <= i; ++j) {
-                d = A(i, j);
-                for (auto k = 0u; k < j; ++k) {
-                    d -= _R(k, i) * _R(k, j);
-                }
-                if (i != j) {
-                    _R(j, i) = d / _R(j, j);
-                }
-            }
-            if (d <= 0) {
-                _p = i + 1;
-                _R(i, i) = std::sqrt(-d);
-                break;
-            }
-            _R(i, i) = std::sqrt(d);
-        }
+        this->factor([&](unsigned i, unsigned j){ return A(i, j); });
     }
 
     /**
