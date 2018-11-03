@@ -135,7 +135,7 @@ TEST_CASE("Lowpass Filter (w/o parallel cut)", "[lowpass]") {
 // void test2() {
     auto [feasible, num_iters] = run_lowpass(false);
     CHECK(feasible);
-    CHECK(num_iters >= 14900);
+    CHECK(num_iters >= 14800);
 }
 
 // int main() {

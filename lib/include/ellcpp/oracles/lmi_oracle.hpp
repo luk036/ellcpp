@@ -26,7 +26,14 @@ class lmi_oracle {
     chol_ext _Q;
 
   public:
-    explicit lmi_oracle(const std::vector<Arr> &F, const Arr &B)
+    lmi_oracle(const std::vector<Arr> &F, Arr &&B)
+        : _F{F},                            //
+          _F0{std::forward<Arr>(B)},        //
+          _A{xt::zeros<double>(B.shape())}, //
+          _Q(B.shape()[0])                  //
+    {}
+
+    lmi_oracle(const std::vector<Arr> &F, const Arr &B)
         : _F{F},                            //
           _F0{B},                           //
           _A{xt::zeros<double>(B.shape())}, //
@@ -42,7 +49,7 @@ class lmi_oracle {
             this->_A(i, j) = this->_F0(i, j);
             for (auto k = 0u; k < n; ++k) {
                 // const auto &Fi = _F[k];
-                this->_A(i, j) -= _F[k](i, j) * x(k);
+                this->_A(i, j) -= this->_F[k](i, j) * x(k);
             }
             return this->_A(i, j);
         };
@@ -77,14 +84,13 @@ class lmi_oracle {
     //     if (_Q.is_spd()) {
     //         return std::tuple{std::move(g), fj};
     //     }
-    //     Arr v = _Q.witness();
+    //     auto [v, f] = _Q.witness();
     //     auto p = v.size();
-    //     fj = 1.;
     //     for (auto i = 0u; i < n; ++i) {
     //         auto Fi = xt::view(_F, i, xt::all(), xt::all());
     //         g(i) = _Q.sym_quad(v, Fi);
     //     }
-    //     return std::tuple{std::move(g), fj};
+    //     return std::tuple{std::move(g), f};
     // }
 
     // auto chk_spd_t(const Arr &x, double t) {
