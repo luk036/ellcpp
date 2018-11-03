@@ -22,21 +22,21 @@ class lmi_oracle {
   private:
     const std::vector<Arr> &_F;
     Arr _F0;
-    Arr _A;
+    // Arr _A;
     chol_ext _Q;
 
   public:
     lmi_oracle(const std::vector<Arr> &F, Arr &&B)
         : _F{F},                            //
           _F0{std::forward<Arr>(B)},        //
-          _A{xt::zeros<double>(B.shape())}, //
+          // _A{xt::zeros<double>(B.shape())}, //
           _Q(B.shape()[0])                  //
     {}
 
     lmi_oracle(const std::vector<Arr> &F, const Arr &B)
         : _F{F},                            //
           _F0{B},                           //
-          _A{xt::zeros<double>(B.shape())}, //
+          // _A{xt::zeros<double>(B.shape())}, //
           _Q(B.shape()[0])                  //
     {}
 
@@ -46,12 +46,12 @@ class lmi_oracle {
         auto n = x.size();
 
         auto getA = [&, this](unsigned i, unsigned j) -> double {
-            this->_A(i, j) = this->_F0(i, j);
+            auto a = this->_F0(i, j);
             for (auto k = 0u; k < n; ++k) {
                 // const auto &Fi = _F[k];
-                this->_A(i, j) -= this->_F[k](i, j) * x(k);
+                a -= this->_F[k](i, j) * x(k);
             }
-            return this->_A(i, j);
+            return a;
         };
 
         Arr g = xt::zeros<double>({n});

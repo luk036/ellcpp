@@ -21,14 +21,14 @@ class lmi0_oracle {
     size_t _n;
 
   public:
-    Arr _A;
+    // Arr _A;
     chol_ext _Q;
 
   public:
     explicit lmi0_oracle(const std::vector<Arr> &F)
         : _F{F},                           //
           _n{F[0].shape()[0]},             //
-          _A{xt::zeros<double>({_n, _n})}, //
+          // _A{xt::zeros<double>({_n, _n})}, //
           _Q(_n)                           //
     {}
 
@@ -38,12 +38,12 @@ class lmi0_oracle {
         auto n = x.size();
 
         auto getA = [&, this](unsigned i, unsigned j) -> double {
-            this->_A(i, j) = 0.;
+            auto a = 0.;
             for (auto k = 0u; k < n; ++k) {
                 // auto Fi = _F[k];
-                this->_A(i, j) += _F[k](i, j) * x(k);
+                a += _F[k](i, j) * x(k);
             }
-            return this->_A(i, j);
+            return a;
         };
 
         Arr g = xt::zeros<double>({n});

@@ -198,11 +198,11 @@ class mle_oracle {
         auto n = x.shape()[0];
         auto m = _Y.shape()[0];
 
-        Arr A = _lmi0._A;
+        // Arr A = _lmi0._A;
         // A += 1e-9*xt::eye({m});
-        chol_ext Q(m);
-        Q.factorize(A);
-        const auto& R = Q._R;
+        // chol_ext Q(m);
+        // Q.factorize(A);
+        const auto& R = _lmi0._Q._R;
         auto invR = Arr{xt::linalg::inv(R)};
         auto S = Arr{dot(invR, xt::transpose(invR))};
         auto SY = Arr{dot(S, _Y)};
