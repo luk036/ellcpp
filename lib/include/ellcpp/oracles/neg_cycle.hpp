@@ -36,6 +36,12 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
     py::dict<Node, wt_t> _dist;
 
   public:
+    /**
+     * @brief Construct a new neg Cycle Finder object
+     * 
+     * @param G 
+     * @param get_weight 
+     */
     explicit negCycleFinder(Graph &G, WeightFn &get_weight)
         : _G{G}, _get_weight{get_weight} {
 
@@ -120,6 +126,11 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
         return this->neg_cycle_relax();
     }
 
+    /**
+     * @brief 
+     * 
+     * @return auto 
+     */
     auto neg_cycle_relax() {
         // for (Node v : _G) {
         //     _pred[v] = _G.null_vertex();
@@ -140,6 +151,12 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
         return std::vector<edge_t>{}; // ???
     }
 
+    /**
+     * @brief 
+     * 
+     * @param handle 
+     * @return auto 
+     */
     auto cycle_list(Node handle) {
         Node v = handle;
         std::vector<edge_t> cycle{}; // ???
@@ -172,7 +189,7 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
 };
 
 // Template guided deduction
-template <typename Graph, typename WeightFn>
-negCycleFinder(Graph &G, WeightFn &get_weight)->negCycleFinder<Graph, WeightFn>;
+// template <typename Graph, typename WeightFn>
+// negCycleFinder(Graph &G, WeightFn &get_weight)->negCycleFinder<Graph, WeightFn>;
 
 #endif

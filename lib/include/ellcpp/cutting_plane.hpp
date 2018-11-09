@@ -6,11 +6,25 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
+/**
+ * @brief Options
+ *
+ */
 struct Options {
     unsigned int max_it = 2000;
     double tol = 1e-8;
 };
 
+/**
+ * @brief
+ *
+ * @tparam Oracle
+ * @tparam Space
+ * @param evaluate
+ * @param I
+ * @param options
+ * @return auto
+ */
 template <typename Oracle, typename Space>
 auto bsearch(Oracle &evaluate, Space &I, const Options &options = Options()) {
     // assume monotone
@@ -34,6 +48,12 @@ auto bsearch(Oracle &evaluate, Space &I, const Options &options = Options()) {
     return std::tuple{u, niter, feasible};
 }
 
+/**
+ * @brief
+ *
+ * @tparam Oracle
+ * @tparam Space
+ */
 template <typename Oracle, typename Space> //
 class bsearch_adaptor {
   private:
@@ -163,6 +183,18 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
+/**
+ * @brief
+ *
+ * @tparam Oracle
+ * @tparam Space
+ * @tparam T
+ * @param evaluate
+ * @param S
+ * @param t
+ * @param options
+ * @return auto
+ */
 template <typename Oracle, typename Space, typename T>
 auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
                      const Options &options = Options()) {

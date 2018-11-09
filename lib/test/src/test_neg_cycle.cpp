@@ -66,17 +66,13 @@ bool do_case(xn::grAdaptor<graph_t> &G) {
 
     auto get_weight = [](const xn::grAdaptor<graph_t> &G,
                          const edge_t &e) -> int {
-        auto &&weightmap = boost::get(boost::edge_weight, G);
+        const auto &weightmap = boost::get(boost::edge_weight, G);
         return weightmap[e];
     };
 
     negCycleFinder N(G, get_weight);
-    bool hasNeg = false;
     auto cycle = N.find_neg_cycle();
-    if (!cycle.empty()) {
-        hasNeg = true;
-    }
-    return hasNeg;
+    return !cycle.empty();
 }
 
 TEST_CASE("Test Negative Cycle", "[test_neg_cycle]") {

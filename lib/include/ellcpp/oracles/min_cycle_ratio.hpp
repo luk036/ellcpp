@@ -18,6 +18,18 @@
 //     }
 // }
 
+/**
+ * @brief 
+ * 
+ * @tparam Graph 
+ * @tparam Fn1 
+ * @tparam Fn2 
+ * @tparam T 
+ * @param G 
+ * @param get_cost 
+ * @param get_time 
+ * @return auto 
+ */
 template <typename Graph, typename Fn1, typename Fn2, typename T>
 auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */) {
     using edge_t = decltype(*std::begin(G.edges()));

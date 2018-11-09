@@ -21,26 +21,32 @@ class lmi0_oracle {
     size_t _n;
 
   public:
-    // Arr _A;
     chol_ext _Q;
 
   public:
+    /**
+     * @brief Construct a new lmi0 oracle object
+     * 
+     * @param F 
+     */
     explicit lmi0_oracle(const std::vector<Arr> &F)
-        : _F{F},                           //
-          _n{F[0].shape()[0]},             //
-          // _A{xt::zeros<double>({_n, _n})}, //
-          _Q(_n)                           //
+        : _F{F},               //
+          _n{F[0].shape()[0]}, //
+          _Q(_n)               //
     {}
 
+    /**
+     * @brief 
+     * 
+     * @param x 
+     * @return auto 
+     */
     auto operator()(const Arr &x) {
-        using xt::linalg::dot;
-        using xt::placeholders::_;
         auto n = x.size();
 
         auto getA = [&, this](unsigned i, unsigned j) -> double {
             auto a = 0.;
             for (auto k = 0u; k < n; ++k) {
-                // auto Fi = _F[k];
                 a += _F[k](i, j) * x(k);
             }
             return a;

@@ -1,7 +1,6 @@
 #ifndef _HOME_UBUNTU_CUBSTORE_ELLCPP_LMI_ORACLE_HPP
 #define _HOME_UBUNTU_CUBSTORE_ELLCPP_LMI_ORACLE_HPP 1
 
-//#include "mat.hpp"
 #include "chol_ext.hpp"
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
@@ -22,24 +21,39 @@ class lmi_oracle {
   private:
     const std::vector<Arr> &_F;
     Arr _F0;
-    // Arr _A;
     chol_ext _Q;
 
   public:
+    /**
+     * @brief Construct a new lmi oracle object
+     * 
+     * @param F 
+     * @param B 
+     */
     lmi_oracle(const std::vector<Arr> &F, Arr &&B)
-        : _F{F},                            //
-          _F0{std::forward<Arr>(B)},        //
-          // _A{xt::zeros<double>(B.shape())}, //
-          _Q(B.shape()[0])                  //
+        : _F{F},             //
+          _F0{std::move(B)}, //
+          _Q(B.shape()[0]) //
     {}
 
+    /**
+     * @brief Construct a new lmi oracle object
+     * 
+     * @param F 
+     * @param B 
+     */
     lmi_oracle(const std::vector<Arr> &F, const Arr &B)
-        : _F{F},                            //
-          _F0{B},                           //
-          // _A{xt::zeros<double>(B.shape())}, //
-          _Q(B.shape()[0])                  //
+        : _F{F},  //
+          _F0{B}, //
+          _Q(B.shape()[0]) //
     {}
 
+    /**
+     * @brief 
+     * 
+     * @param x 
+     * @return auto 
+     */
     auto operator()(const Arr &x) {
         using xt::linalg::dot;
         using xt::placeholders::_;
@@ -67,52 +81,6 @@ class lmi_oracle {
         }
         return std::tuple{std::move(g), ep, false};
     }
-
-    // auto chk_mtx(Arr A, const Arr &x) {
-    //     using xt::linalg::dot;
-    //     using xt::placeholders::_;
-
-    //     auto n = x.size();
-    //     Arr g = xt::zeros<double>({n});
-    //     auto fj = -1.;
-    //     for (auto i = 0u; i < n; ++i) {
-    //         auto Fi = xt::view(_F, i, xt::all(), xt::all());
-    //         // Arr Fi = _F(i);
-    //         A -= Fi * x(i);
-    //     }
-    //     _Q.factorize(A);
-    //     if (_Q.is_spd()) {
-    //         return std::tuple{std::move(g), fj};
-    //     }
-    //     auto [v, f] = _Q.witness();
-    //     auto p = v.size();
-    //     for (auto i = 0u; i < n; ++i) {
-    //         auto Fi = xt::view(_F, i, xt::all(), xt::all());
-    //         g(i) = _Q.sym_quad(v, Fi);
-    //     }
-    //     return std::tuple{std::move(g), f};
-    // }
-
-    // auto chk_spd_t(const Arr &x, double t) {
-    //     Arr A = _F0;
-    //     // ???
-    //     // auto m = A.size();
-    //     // for (auto i = 0u; i < m; ++i) {
-    //     //   A(i, i) += t;
-    //     // }
-    //     A += t;
-    //     return this->chk_mtx(A, x);
-    // }
-
-    // auto chk_spd(const Arr &x) { return this->chk_mtx(_F0, x); }
-
-    // auto operator()(const Arr &x, double t) {
-    //     auto [g, fj] = this->chk_spd_t(x, t);
-    //     if (fj < 0) {
-    //         t -= 1.;
-    //     }
-    //     return std::make_tuple(g, fj, t);
-    // }
 };
 
 #endif

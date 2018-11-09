@@ -8,6 +8,8 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
+#define myview(X, idx) xt::view(X, idx, xt::all())
+
 /**
  * @brief Oracle for Quadratic Matrix Inequality
  *
@@ -33,7 +35,7 @@ class qmi_oracle {
 
   public:
     explicit qmi_oracle(const std::vector<Arr> &F, const Arr &F0)
-        : _F{F}, _F0{F0}, _t{0.}, _count{0}, 
+        : _F{F}, _F0{F0}, _t{0.}, _count{0},
           // _A{xt::zeros<double>(F0.shape())},
           _Q(F0.shape()[0]), _Fx{xt::zeros<double>(F0.shape())} {}
 
@@ -46,19 +48,26 @@ class qmi_oracle {
         _count = 0;
         _nx = x.shape()[0];
 
-        auto getA = [this, &x](std::size_t i, std::size_t j) -> double { // ???
+        // auto myview = [](auto& X, const auto& idx) {
+        //     return xt::view(X, idx, xt::all());
+        // };
+
+        auto getA = [&, this](std::size_t i, std::size_t j) -> double { // ???
             using xt::linalg::dot;
             assert(i >= j);
             if (_count < i + 1) {
                 _count = i + 1;
-                xt::view(_Fx, i, xt::all()) = xt::view(_F0, i, xt::all());
+                // xt::view(_Fx, i, xt::all()) = xt::view(_F0, i, xt::all());
+                myview(_Fx, i) = myview(_F0, i);
                 for (auto k = 0u; k < _nx; ++k) {
-                    xt::view(_Fx, i, xt::all()) -=
-                        xt::view(_F[k], i, xt::all()) * x(k);
+                    // xt::view(_Fx, i, xt::all()) -=
+                    //     xt::view(_F[k], i, xt::all()) * x(k);
+                    myview(_Fx, i) -= myview(_F[k], i) * x(k);
                 }
             }
-            auto a = -dot(xt::view(_Fx, i, xt::all()),
-                            xt::view(_Fx, j, xt::all()))();
+            // auto a = -dot(xt::view(_Fx, i, xt::all()),
+            //                 xt::view(_Fx, j, xt::all()))();
+            auto a = -dot(myview(_Fx, i), myview(_Fx, j))();
             if (i == j) {
                 a += _t;
             }
@@ -66,18 +75,20 @@ class qmi_oracle {
         };
 
         _Q.factor(getA);
-        Arr g = xt::zeros<double>({_nx});
+        auto g = Arr{xt::zeros<double>({_nx})};
 
         if (_Q.is_spd()) {
             return std::tuple{std::move(g), -1., true};
         }
         auto [v, ep] = _Q.witness();
         auto p = v.size();
-        Arr Fxp = xt::view(_Fx, xt::range(0, p), xt::all());
+        // Arr Fxp = xt::view(_Fx, xt::range(0, p), xt::all());
+        Arr Fxp = myview(_Fx, xt::range(0, p));
         Arr Av = dot(v, Fxp);
         for (auto k = 0u; k < _nx; ++k) {
             // Arr Fk = _F[k];
-            Arr Fkp = xt::view(_F[k], xt::range(0, p), xt::all());
+            // Arr Fkp = xt::view(_F[k], xt::range(0, p), xt::all());
+            Arr Fkp = myview(_F[k], xt::range(0, p));
             g(k) = -2 * dot(dot(v, Fkp), Av)();
         }
         return std::tuple{std::move(g), ep, false};
