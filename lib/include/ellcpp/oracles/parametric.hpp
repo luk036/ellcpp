@@ -8,19 +8,20 @@
 #include <vector>
 
 /**
- * maximum parametric problem:
+ * @brief maximum parametric problem
  *    max  r
  *    s.t. dist[v] - dist[v] <= d(u,v,r);
  *         for all (u, v] : G
- *
- *   Arguments:
- *       G {[type]} -- [description];
- *       r {float} -- parameter to be maximized, initially a large number
- * (infeasible)
- *       d {[type]} -- monotone decreasing function w.r.t. r
- *       zero_cancel {[type]} -- [description];
- *
- *   Returns:
+ * 
+ * @tparam Graph 
+ * @tparam T 
+ * @tparam Fn1 
+ * @tparam Fn2 
+ * @param G 
+ * @param r parameter to be maximized, initially a large number
+ * @param d monotone decreasing function w.r.t. r
+ * @param zero_cancel 
+ * @return:
  *       r_opt -- optimal value
  *       C_opt -- Most critial cycle
  *       dist -- optimal sol"n

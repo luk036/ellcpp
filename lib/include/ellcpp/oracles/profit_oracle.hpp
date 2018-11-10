@@ -8,6 +8,10 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
+/**
+ * @brief Oracle for a profit maximization problem
+ * 
+ */
 class profit_oracle {
     using xarray = xt::xarray<double>;
 
@@ -20,6 +24,15 @@ class profit_oracle {
     xarray _a;
 
   public:
+    /**
+     * @brief Construct a new profit oracle object
+     * 
+     * @param p 
+     * @param A 
+     * @param k 
+     * @param a 
+     * @param v 
+     */
     profit_oracle(double p, double A, double k, xarray a, xarray v)
         : _log_pA{std::log(p * A)}, //
           _log_k{std::log(k)},      //
@@ -27,6 +40,13 @@ class profit_oracle {
           _a{a}                     //
     {}
 
+    /**
+     * @brief 
+     * 
+     * @param y 
+     * @param t 
+     * @return auto 
+     */
     auto operator()(const xarray &y, double t) const {
         double fj = y[0] - _log_k; // constraint
         if (fj > 0) {
@@ -48,6 +68,10 @@ class profit_oracle {
     }
 };
 
+/**
+ * @brief Oracle for a profit maximization problem (robust version)
+ * 
+ */
 class profit_rb_oracle {
     using xarray = xt::xarray<double>;
 
@@ -58,6 +82,18 @@ class profit_rb_oracle {
     profit_oracle _P;
 
   public:
+    /**
+     * @brief Construct a new profit rb oracle object
+     * 
+     * @param p 
+     * @param A 
+     * @param k 
+     * @param a 
+     * @param v 
+     * @param ui 
+     * @param e 
+     * @param e3 
+     */
     profit_rb_oracle(double p, double A, double k, xarray a, xarray v,
                      double ui, xarray e, double e3)
         : _uie{ui * e},                             //
@@ -66,9 +102,16 @@ class profit_rb_oracle {
           _P(p - _uie3, A, k - _uie3, a, v + _uie3) //
     {}
 
+    /**
+     * @brief 
+     * 
+     * @param y 
+     * @param t 
+     * @return auto 
+     */
     auto operator()(const xarray &y, double t) {
         xarray a_rb = _a;
-        for (auto i : {0, 1}) {
+        for (auto&& i : {0, 1}) {
             a_rb[i] += _uie[i] * (y[i] > 0 ? -1 : +1);
         }
         _P._a = a_rb;
@@ -76,6 +119,10 @@ class profit_rb_oracle {
     }
 };
 
+/**
+ * @brief Oracle for profit maximization problem (discrete version)
+ * 
+ */
 class profit_q_oracle {
     using xarray = xt::xarray<double>;
 
@@ -83,9 +130,25 @@ class profit_q_oracle {
     profit_oracle _P;
 
   public:
+    /**
+     * @brief Construct a new profit q oracle object
+     * 
+     * @param p 
+     * @param A 
+     * @param k 
+     * @param a 
+     * @param v 
+     */
     profit_q_oracle(double p, double A, double k, xarray a, xarray v)
         : _P(p, A, k, a, v) {}
 
+    /**
+     * @brief 
+     * 
+     * @param y 
+     * @param t 
+     * @return auto 
+     */
     auto operator()(const xarray &y, double t, int /*unused*/) const {
         xarray x = xt::round(xt::exp(y));
         if (x[0] == 0) {

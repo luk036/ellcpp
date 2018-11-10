@@ -10,6 +10,13 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
+/**
+ * @brief 
+ * 
+ * @tparam Graph 
+ * @tparam Fn 
+ * @tparam T 
+ */
 template <typename Graph, typename Fn, typename T> //
 class optscaling_oracle {
   private:
@@ -20,9 +27,22 @@ class optscaling_oracle {
     using edge_t = decltype(*(std::begin(_G.edges())));
 
   public:
+    /**
+     * @brief Construct a new optscaling oracle object
+     * 
+     * @param G 
+     * @param get_cost 
+     */
     explicit optscaling_oracle(Graph &G, Fn get_cost, T && /* dummy */)
         : _G{G}, _get_cost{get_cost} {}
 
+    /**
+     * @brief 
+     * 
+     * @param x 
+     * @param t 
+     * @return auto 
+     */
     auto operator()(const Arr &x, double t) {
         auto constr = [this](Graph &G, const edge_t &e, const Arr &x) {
             const auto &[u, v] = G.end_points(e);

@@ -2,6 +2,14 @@
 #include <ellcpp/ell.hpp>
 #include <tuple>
 
+/**
+ * @brief 
+ * 
+ * @param b0 
+ * @param b1 
+ * @param tsq 
+ * @return ell::return_t 
+ */
 ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
     auto b1sq = b1 * b1;
     if (b1sq > tsq || !this->_use_parallel_cut) {
@@ -36,7 +44,14 @@ ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
     return {0, std::move(ret)};
 }
 
-/** Situation when feasible cut. */
+/**
+ * @brief 
+ * 
+ * @param b1 
+ * @param b1sq 
+ * @param tsq 
+ * @return ell::return_t 
+ */
 ell::return_t ell::calc_ll_cc(double b1, double b1sq, double tsq) const {
     auto n = this->_n;
     auto temp = n*b1sq/2;
@@ -50,6 +65,10 @@ ell::return_t ell::calc_ll_cc(double b1, double b1sq, double tsq) const {
 
 /**
  * @brief Deep Cut
+ * 
+ * @param beta 
+ * @param tsq 
+ * @return ell::return_t 
  */
 ell::return_t ell::calc_dc(double beta, double tsq) const {
     auto params = std::tuple{0., 0., 0.};
@@ -78,6 +97,9 @@ ell::return_t ell::calc_dc(double beta, double tsq) const {
 
 /**
  * @brief Central Cut
+ * 
+ * @param tsq 
+ * @return ell::return_t 
  */
 ell::return_t ell::calc_cc(double tsq) const {
     auto np1 = this->_n + 1;
@@ -88,7 +110,13 @@ ell::return_t ell::calc_cc(double tsq) const {
     return {0, std::move(ret)};
 }
 
-
+/**
+ * @brief 
+ * 
+ * @param g 
+ * @param beta 
+ * @return ell1d::return_t 
+ */
 ell1d::return_t ell1d::update(double g, double beta) {
     auto tau = std::abs(_r * g);
     auto tsq = tau * tau;
