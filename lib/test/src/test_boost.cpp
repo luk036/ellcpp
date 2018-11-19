@@ -9,7 +9,9 @@
 #include <utility>  // for std::pair
 
 // using namespace boost;
-template <class grAdaptor> struct exercise_vertex {
+template <class grAdaptor>
+struct exercise_vertex
+{
     //...
     using Vertex = typename boost::graph_traits<grAdaptor>::vertex_descriptor;
 
@@ -17,7 +19,8 @@ template <class grAdaptor> struct exercise_vertex {
     //...
     grAdaptor &g;
 
-    void operator()(const Vertex &v) const {
+    void operator()(const Vertex &v) const
+    {
         // typedef boost::graph_traits<Graph> GraphTraits;
         // typename boost::property_map<Graph, boost::vertex_index_t>::type
         auto index = boost::get(boost::vertex_index, g);
@@ -25,7 +28,8 @@ template <class grAdaptor> struct exercise_vertex {
         std::cout << "out-edges: ";
         // typename GraphTraits::out_edge_iterator out_i, out_end;
         // typename GraphTraits::edge_descriptor e;
-        for (const auto &e : g.neighbors(v)) {
+        for (const auto &e : g.neighbors(v))
+        {
             const auto &[src, targ] = g.end_points(e);
             std::cout << "(" << index[src] << "," << index[targ] << ") ";
         }
@@ -34,13 +38,22 @@ template <class grAdaptor> struct exercise_vertex {
     //...
 };
 
-TEST_CASE("Test Boost", "[test_boost]") {
+TEST_CASE("Test Boost", "[test_boost]")
+{
     // create a typedef for the Graph type
     using Graph =
         boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS>;
 
     // Make convenient labels for the vertices
-    enum { A, B, C, D, E, N };
+    enum
+    {
+        A,
+        B,
+        C,
+        D,
+        E,
+        N
+    };
     const int num_vertices = N;
     // const char *name = "ABCDE";
 
@@ -68,7 +81,8 @@ TEST_CASE("Test Boost", "[test_boost]") {
     std::cout << "vertices(g) = ";
     // typedef graph_traits<Graph>::vertex_iterator vertex_iter;
     // std::pair<vertex_iter, vertex_iter> vp;
-    for (const Vertex &v : G) {
+    for (const Vertex &v : G)
+    {
         std::cout << index[v] << " ";
     }
     std::cout << std::endl;

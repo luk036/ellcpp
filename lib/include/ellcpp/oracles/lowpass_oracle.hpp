@@ -12,7 +12,8 @@
  * @brief Oracle for lowpass filter design
  * 
  */
-class lowpass_oracle {
+class lowpass_oracle
+{
     using Arr = xt::xarray<double>;
 
   private:
@@ -36,9 +37,10 @@ class lowpass_oracle {
      * @param Lpsq 
      * @param Upsq 
      */
-    lowpass_oracle(const Arr &Ap, const Arr &As, const Arr &Anr, double Lpsq,
-                   double Upsq)
-        : _Ap{Ap}, _As{As}, _Anr{Anr}, _Lpsq{Lpsq}, _Upsq{Upsq}, _i_Anr{0},
+    lowpass_oracle(const Arr &Ap, const Arr &As, const Arr &Anr,
+                   double Lpsq, double Upsq)
+        : _Ap{Ap}, _As{As}, _Anr{Anr},
+          _Lpsq{Lpsq}, _Upsq{Upsq}, _i_Anr{0},
           _i_As{0}, _i_Ap{0}, _count{0} {}
 
     /**
@@ -48,14 +50,16 @@ class lowpass_oracle {
      * @param Spsq 
      * @return auto 
      */
-    auto operator()(const Arr &x, double Spsq) const {
+    auto operator()(const Arr &x, double Spsq) const
+    {
         using xt::linalg::dot;
 
         // 1. nonnegative-real constraint
         const auto n = x.shape()[0];
 
         // case 1,
-        if (x[0] < 0) {
+        if (x[0] < 0)
+        {
             Arr g = xt::zeros<double>({n});
             g[0] = -1.;
             Arr f{-x[0]};
@@ -66,12 +70,15 @@ class lowpass_oracle {
         // 2. passband constraints
         auto N = _Ap.shape()[0];
         // for (k in chain(range(i_As, N), range(i_As))) {
-        for (auto i = 0u, k = _i_Ap; i < N; ++i, ++k) {
-            if (k == N) {
+        for (auto i = 0u, k = _i_Ap; i < N; ++i, ++k)
+        {
+            if (k == N)
+            {
                 k = 0; // round robin
             }
             double v = dot(xt::view(_Ap, k, xt::all()), x)();
-            if (v > _Upsq) {
+            if (v > _Upsq)
+            {
                 // f = v - Upsq;
                 Arr g = xt::view(_Ap, k, xt::all());
                 Arr f{v - _Upsq, v - _Lpsq};
@@ -79,7 +86,8 @@ class lowpass_oracle {
                 return std::tuple{std::move(g), f, Spsq};
             }
 
-            if (v < _Lpsq) {
+            if (v < _Lpsq)
+            {
                 // f = Lpsq - v;
                 Arr g = -xt::view(_Ap, k, xt::all());
                 Arr f{-v + _Lpsq, -v + _Upsq};
@@ -95,11 +103,13 @@ class lowpass_oracle {
         auto fmax = std::numeric_limits<double>::min();
         auto imax = 0u;
         // for (k in chain(range(i_As, N), range(i_As))) {
-        for (auto i = 0u, k = _i_As; i < N; ++i, ++k) {
+        for (auto i = 0u, k = _i_As; i < N; ++i, ++k)
+        {
             if (k == N)
                 k = 0; // round robin
             double v = dot(xt::view(_As, k, xt::all()), x)();
-            if (v > Spsq) {
+            if (v > Spsq)
+            {
                 // f = v - Spsq;
                 Arr g = xt::view(_As, k, xt::all());
                 // f = (v - Spsq, v);
@@ -108,7 +118,8 @@ class lowpass_oracle {
                 return std::tuple{std::move(g), f, Spsq};
             }
 
-            if (v < 0) {
+            if (v < 0)
+            {
                 // f = v - Spsq;
                 Arr g = -xt::view(_As, k, xt::all());
                 Arr f{-v, -v + Spsq};
@@ -116,7 +127,8 @@ class lowpass_oracle {
                 return std::tuple{std::move(g), f, Spsq};
             }
 
-            if (v > fmax) {
+            if (v > fmax)
+            {
                 fmax = v;
                 imax = k;
             }
@@ -125,11 +137,13 @@ class lowpass_oracle {
         // case 4,
         // 1. nonnegative-real constraint
         N = _Anr.shape()[0];
-        for (auto i = 0u, k = _i_Anr; i < N; ++i, ++k) {
+        for (auto i = 0u, k = _i_Anr; i < N; ++i, ++k)
+        {
             if (k == N)
                 k = 0; // round robin
             double v = dot(xt::view(_Anr, k, xt::all()), x)();
-            if (v < 0) {
+            if (v < 0)
+            {
                 Arr f{-v};
                 Arr g = -xt::view(_Anr, k, xt::all());
                 _i_Anr = k + 1;

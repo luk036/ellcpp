@@ -11,9 +11,13 @@
 #include <vector>
 // from fractions import Fraction
 
-namespace boost {
+namespace boost
+{
 
-enum edge_id_tag_t { id_tag }; // a unique #
+enum edge_id_tag_t
+{
+    id_tag
+}; // a unique #
 BOOST_INSTALL_PROPERTY(edge, id_tag);
 
 } // namespace boost
@@ -25,10 +29,18 @@ using graph_t =
 using Vertex = typename boost::graph_traits<graph_t>::vertex_descriptor;
 using edge_t = typename boost::graph_traits<graph_t>::edge_iterator;
 
-static auto create_test_case1() {
+static auto create_test_case1()
+{
     using Edge = std::pair<int, int>;
     const int num_nodes = 5;
-    enum nodes { A, B, C, D, E };
+    enum nodes
+    {
+        A,
+        B,
+        C,
+        D,
+        E
+    };
     // char name[] = "ABCDE";
     static Edge edge_array[] = {Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E),
                                 Edge(E, A)};
@@ -38,10 +50,16 @@ static auto create_test_case1() {
     return xn::grAdaptor<graph_t>(g);
 }
 
-static auto create_test_case_timing() {
+static auto create_test_case_timing()
+{
     using Edge = std::pair<int, int>;
     const int num_nodes = 3;
-    enum nodes { A, B, C };
+    enum nodes
+    {
+        A,
+        B,
+        C
+    };
     // char name[] = "ABCDE";
     static Edge edge_array[] = {Edge(A, B), Edge(B, A), Edge(B, C), Edge(C, B),
                                 Edge(B, C), Edge(C, B), Edge(C, A), Edge(A, C)};
@@ -52,7 +70,8 @@ static auto create_test_case_timing() {
     return xn::grAdaptor<graph_t>(g);
 }
 
-TEST_CASE("Test Cycle Ratio", "[test_cycle_ratio]") {
+TEST_CASE("Test Cycle Ratio", "[test_cycle_ratio]")
+{
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;
     using IterMap =
@@ -83,7 +102,8 @@ TEST_CASE("Test Cycle Ratio", "[test_cycle_ratio]") {
     // print(dist.items());
 }
 
-TEST_CASE("Test Cycle Ratio of Timing Graph", "[test_cycle_ratio]") {
+TEST_CASE("Test Cycle Ratio of Timing Graph", "[test_cycle_ratio]")
+{
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;
     using IterMap =
@@ -91,10 +111,8 @@ TEST_CASE("Test Cycle Ratio of Timing Graph", "[test_cycle_ratio]") {
                                      fun::Fraction<int>, fun::Fraction<int> &>;
 
     xn::grAdaptor<graph_t> G = create_test_case_timing();
-    fun::Fraction<int> cost[] = {{7, 1}, {-1, 1}, {3, 1}, {0, 1},
-                                 {5, 1}, {4, 1},  {2, 1}, {4, 1}};
-    fun::Fraction<int> time[] = {{1, 1}, {1, 1}, {1, 1}, {1, 1},
-                                 {1, 1}, {1, 1}, {1, 1}, {1, 1}};
+    fun::Fraction<int> cost[] = {{7, 1}, {-1, 1}, {3, 1}, {0, 1}, {5, 1}, {4, 1}, {2, 1}, {4, 1}};
+    fun::Fraction<int> time[] = {{1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}};
     EdgeIndexMap edge_id = boost::get(boost::id_tag, G);
     IterMap cost_pa(cost, edge_id), time_pa(time, edge_id);
 

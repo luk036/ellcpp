@@ -18,7 +18,8 @@
  * @tparam T 
  */
 template <typename Graph, typename Fn, typename T> //
-class optscaling_oracle {
+class optscaling_oracle
+{
   private:
     Graph &_G;
     Fn _get_cost;
@@ -43,33 +44,29 @@ class optscaling_oracle {
      * @param t 
      * @return auto 
      */
-    auto operator()(const Arr &x, double t) {
+    auto operator()(const Arr &x, double t)
+    {
         auto constr = [this](Graph &G, const edge_t &e, const Arr &x) {
             const auto &[u, v] = G.end_points(e);
-            if (u <= v) { // ???
-                return x(0) - this->_get_cost(G, e);
-            }
-            return this->_get_cost(G, e) - x(1);
+            auto cost = this->_get_cost(G, e);
+            return (u <= v) ? x(0) - cost : cost - x(1);
         };
 
         auto pconstr = [](Graph &G, const edge_t &e, const Arr &) {
-            // auto u = G.source(e);
-            // auto v = G.target(e);
             const auto &[u, v] = G.end_points(e);
-            if (u <= v) {
-                return Arr{1., 0.};
-            }
-            return Arr{0., -1.};
+            return (u <= v) ? Arr{1., 0.} : Arr{0., -1.};
         };
 
         auto P = network_oracle(_G, constr, pconstr);
         auto [g, f, feasible] = P(x);
-        if (!feasible) {
+        if (!feasible)
+        {
             return std::tuple{std::move(g), f, t};
         }
         auto s = x(0) - x(1);
         auto fj = s - t;
-        if (fj < 0) {
+        if (fj < 0)
+        {
             t = s;
             fj = 0.;
         }

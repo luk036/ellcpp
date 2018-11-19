@@ -10,7 +10,8 @@
  * @brief Options
  *
  */
-struct Options {
+struct Options
+{
     unsigned int max_it = 2000;
     double tol = 1e-8;
 };
@@ -26,22 +27,28 @@ struct Options {
  * @return auto
  */
 template <typename Oracle, typename Space>
-auto bsearch(Oracle &evaluate, Space &I, const Options &options = Options()) {
+auto bsearch(Oracle &evaluate, Space &I, const Options &options = Options())
+{
     // assume monotone
     bool feasible = false;
     auto &[l, u] = I;
     auto t = l + (u - l) / 2;
     auto niter = 1u;
-    for (; niter <= options.max_it; ++niter) {
-        if (evaluate(t)) { // feasible sol'n obtained
+    for (; niter <= options.max_it; ++niter)
+    {
+        if (evaluate(t))
+        { // feasible sol'n obtained
             feasible = true;
             u = t;
-        } else {
+        }
+        else
+        {
             l = t;
         }
         auto tau = (u - l) / 2;
         t = l + tau;
-        if (tau < options.tol) {
+        if (tau < options.tol)
+        {
             break;
         }
     }
@@ -55,7 +62,8 @@ auto bsearch(Oracle &evaluate, Space &I, const Options &options = Options()) {
  * @tparam Space
  */
 template <typename Oracle, typename Space> //
-class bsearch_adaptor {
+class bsearch_adaptor
+{
   private:
     Oracle &_P;
     Space &_S;
@@ -66,15 +74,19 @@ class bsearch_adaptor {
                              const Options &options = Options())
         : _P{P}, //
           _S{S}, //
-          _options{options} {}
+          _options{options}
+    {
+    }
 
     auto x_best() const { return _S.xc(); }
 
-    auto operator()(double t) {
+    auto operator()(double t)
+    {
         Space S(_S);
         _P.update(t);
         auto [x, _1, feasible, _2] = cutting_plane_feas(_P, S, _options);
-        if (feasible) {
+        if (feasible)
+        {
             _S.xc() = x;
             return true;
         }
@@ -99,22 +111,27 @@ class bsearch_adaptor {
  */
 template <typename Oracle, typename Space>
 auto cutting_plane_feas(Oracle &evaluate, Space &S,
-                        const Options &options = Options()) {
+                        const Options &options = Options())
+{
     bool feasible = false;
     auto niter = 1u, status = 0u;
 
-    for (; niter <= options.max_it; ++niter) {
+    for (; niter <= options.max_it; ++niter)
+    {
         auto [g, h, flag] = evaluate(S.xc());
-        if (flag) { // feasible sol'n obtained
+        if (flag)
+        { // feasible sol'n obtained
             feasible = true;
             break;
         }
         double tsq;
         std::tie(status, tsq) = S.update(g, h);
-        if (status != 0) {
+        if (status != 0)
+        {
             break;
         }
-        if (tsq < options.tol) { // no more
+        if (tsq < options.tol)
+        { // no more
             status = 2;
             break;
         }
@@ -140,25 +157,30 @@ auto cutting_plane_feas(Oracle &evaluate, Space &S,
  */
 template <typename Oracle, typename Space, typename T>
 auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
-                      const Options &options = Options()) {
+                      const Options &options = Options())
+{
     using Arr = xt::xarray<double>;
 
     bool feasible = false;
     auto x_best = Arr{S.xc()};
     auto niter = 1u, status = 0u;
-    for (; niter <= options.max_it; ++niter) {
+    for (; niter <= options.max_it; ++niter)
+    {
         auto [g, h, t1] = evaluate(S.xc(), t);
-        if (t != t1) { // best t obtained
+        if (t != t1)
+        { // best t obtained
             feasible = true;
             t = t1;
             x_best = S.xc();
         }
         double tsq;
         std::tie(status, tsq) = S.update(g, h);
-        if (status == 1) {
+        if (status == 1)
+        {
             break;
         }
-        if (tsq < options.tol) { // no more
+        if (tsq < options.tol)
+        { // no more
             status = 2;
             break;
         }
@@ -197,36 +219,46 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
  */
 template <typename Oracle, typename Space, typename T>
 auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
-                     const Options &options = Options()) {
+                     const Options &options = Options())
+{
     using Arr = xt::xarray<double>;
 
     bool feasible = false;
     auto x_best = Arr{S.xc()};
     auto status = 1u;
     auto niter = 1u;
-    for (; niter < options.max_it; ++niter) {
+    for (; niter < options.max_it; ++niter)
+    {
         auto [g, h, t1, x0, loop] = evaluate(S.xc(), t, (status != 3) ? 0 : 1);
-        if (status != 3) {
-            if (loop == 1) { // discrete sol'n
+        if (status != 3)
+        {
+            if (loop == 1)
+            { // discrete sol'n
                 h += xt::linalg::dot(g, x0 - S.xc())();
             }
-        } else { // can't cut in the previous iteration
-            if (loop == 0) {
+        }
+        else
+        { // can't cut in the previous iteration
+            if (loop == 0)
+            {
                 break; // no more alternative cut
             }
             h += xt::linalg::dot(g, x0 - S.xc())();
         }
-        if (t != t1) { // best t obtained
+        if (t != t1)
+        { // best t obtained
             feasible = true;
             t = t1;
             x_best = x0;
         }
         double tsq;
         std::tie(status, tsq) = S.update(g, h);
-        if (status == 1) {
+        if (status == 1)
+        {
             break;
         }
-        if (tsq < options.tol) {
+        if (tsq < options.tol)
+        {
             status = 2;
             break;
         }

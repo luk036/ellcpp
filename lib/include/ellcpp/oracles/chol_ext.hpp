@@ -17,7 +17,8 @@
  * @brief Cholesky factorization
  *
  */
-class chol_ext {
+class chol_ext
+{
     // using Mat = bnu::symmetric_matrix<double, bnu::upper>;
     // using UTMat = bnu::triangular_matrix<double, bnu::upper>;
     // using Vec = bnu::vector<double>;
@@ -40,7 +41,9 @@ class chol_ext {
      */
     explicit chol_ext(std::size_t n)
         : _p{0}, _n{n}, //
-          _R{xt::zeros<double>({n, n})} {}
+          _R{xt::zeros<double>({n, n})}
+    {
+    }
 
     /**
      * @brief
@@ -52,7 +55,8 @@ class chol_ext {
      * such that $v = R^{-1} e_p$ is a certificate vector
      * to make $v'*A[:p,:p]*v < 0$
      */
-    void factorize(const Mat &A) {
+    void factorize(const Mat &A)
+    {
         this->factor([&](unsigned i, unsigned j) { return A(i, j); });
     }
 
@@ -67,21 +71,28 @@ class chol_ext {
      * such that $v = R^{-1} e_p$ is a certificate vector
      * to make $v'*A[:p,:p]*v < 0$
      */
-    template <typename Fn> void factor(Fn getA) {
+    template <typename Fn>
+    void factor(Fn getA)
+    {
         double d;
         _p = 0;
 
-        for (auto i = 0u; i < _n; ++i) {
-            for (auto j = 0u; j <= i; ++j) {
+        for (auto i = 0u; i < _n; ++i)
+        {
+            for (auto j = 0u; j <= i; ++j)
+            {
                 d = getA(i, j);
-                for (auto k = 0u; k < j; ++k) {
+                for (auto k = 0u; k < j; ++k)
+                {
                     d -= _R(k, i) * _R(k, j);
                 }
-                if (i != j) {
+                if (i != j)
+                {
                     _R(j, i) = d / _R(j, j);
                 }
             }
-            if (d <= 0) {
+            if (d <= 0)
+            {
                 _p = i + 1;
                 _R(i, i) = std::sqrt(-d);
                 break;
@@ -103,7 +114,8 @@ class chol_ext {
      *
      * @return auto
      */
-    auto witness() const {
+    auto witness() const
+    {
         assert(!this->is_spd());
         Vec v = xt::zeros<double>({_p});
         using xt::placeholders::_;
@@ -112,9 +124,11 @@ class chol_ext {
         auto ep = (r == 0) ? 0. : 1.;
         v[_p - 1] = (r == 0) ? 1. : 1. / r;
 
-        for (int i = _p - 2; i >= 0; --i) {
+        for (int i = _p - 2; i >= 0; --i)
+        {
             double s = 0.;
-            for (auto k = i + 1; k < _p; ++k) {
+            for (auto k = i + 1; k < _p; ++k)
+            {
                 s += _R(i, k) * v[k];
             }
             v[i] = -s / _R(i, i);
@@ -129,11 +143,15 @@ class chol_ext {
      * @param A
      * @return double
      */
-    double sym_quad(const xt::xarray<double> &v, const xt::xarray<double> &A) {
+    double sym_quad(const xt::xarray<double> &v,
+                    const xt::xarray<double> &A)
+    {
         auto res = 0.;
-        for (auto i = 0u; i < _p; ++i) {
+        for (auto i = 0u; i < _p; ++i)
+        {
             auto s = 0.;
-            for (auto j = i + 1; j < _p; ++j) {
+            for (auto j = i + 1; j < _p; ++j)
+            {
                 s += A(i, j) * v(j);
             }
             res += v(i) * (A(i, i) * v(i) + 2 * s);
