@@ -8,20 +8,20 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-8
+            - g++-7
             - catch
             - libboost-graph-dev
-      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-8
+            - g++-7
             - catch
             - libboost-graph-dev
-      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Release'
+      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Release'
 env:
   global:
     - MINCONDA_VERSION="latest"
