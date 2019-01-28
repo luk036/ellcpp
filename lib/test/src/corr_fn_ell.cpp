@@ -21,7 +21,6 @@ TEST_CASE("check create_2d_isotropic", "[corr_fn]") {
     // CHECK(Y(2,3) == Approx(1.9365965488224368));
     CHECK(s(6, 0) == Approx(2.5));
     auto D1 = construct_distance_matrix(s);
-    CHECK(D1(2, 4) == Approx(5.0));    
 }
 
 TEST_CASE("lsq_corr_fn", "[corr_fn]") {
