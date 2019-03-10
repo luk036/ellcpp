@@ -10,10 +10,9 @@
 
 /**
  * @brief Oracle for a profit maximization problem
- * 
+ *
  */
-class profit_oracle
-{
+class profit_oracle {
     using xarray = xt::xarray<double>;
 
   private:
@@ -27,33 +26,30 @@ class profit_oracle
   public:
     /**
      * @brief Construct a new profit oracle object
-     * 
-     * @param p 
-     * @param A 
-     * @param k 
-     * @param a 
-     * @param v 
+     *
+     * @param p
+     * @param A
+     * @param k
+     * @param a
+     * @param v
      */
     profit_oracle(double p, double A, double k, xarray a, xarray v)
         : _log_pA{std::log(p * A)}, //
           _log_k{std::log(k)},      //
           _v{v},                    //
           _a{a}                     //
-    {
-    }
+    {}
 
     /**
-     * @brief 
-     * 
-     * @param y 
-     * @param t 
-     * @return auto 
+     * @brief
+     *
+     * @param y
+     * @param t
+     * @return auto
      */
-    auto operator()(const xarray &y, double t) const
-    {
+    auto operator()(const xarray &y, double t) const {
         double fj = y[0] - _log_k; // constraint
-        if (fj > 0)
-        {
+        if (fj > 0) {
             auto g = xarray{1., 0.};
             return std::tuple{std::move(g), fj, t};
         }
@@ -62,8 +58,7 @@ class profit_oracle
         double vx = xt::linalg::dot(_v, x)();
         auto te = t + vx;
         fj = std::log(te) - log_Cobb;
-        if (fj < 0)
-        {
+        if (fj < 0) {
             te = std::exp(log_Cobb);
             t = te - vx;
             fj = 0.;
@@ -75,10 +70,9 @@ class profit_oracle
 
 /**
  * @brief Oracle for a profit maximization problem (robust version)
- * 
+ *
  */
-class profit_rb_oracle
-{
+class profit_rb_oracle {
     using xarray = xt::xarray<double>;
 
   private:
@@ -90,15 +84,15 @@ class profit_rb_oracle
   public:
     /**
      * @brief Construct a new profit rb oracle object
-     * 
-     * @param p 
-     * @param A 
-     * @param k 
-     * @param a 
-     * @param v 
-     * @param ui 
-     * @param e 
-     * @param e3 
+     *
+     * @param p
+     * @param A
+     * @param k
+     * @param a
+     * @param v
+     * @param ui
+     * @param e
+     * @param e3
      */
     profit_rb_oracle(double p, double A, double k, xarray a, xarray v,
                      double ui, xarray e, double e3)
@@ -106,21 +100,18 @@ class profit_rb_oracle
           _a{a},                                    //
           _uie3{ui * e3},                           //
           _P(p - _uie3, A, k - _uie3, a, v + _uie3) //
-    {
-    }
+    {}
 
     /**
-     * @brief 
-     * 
-     * @param y 
-     * @param t 
-     * @return auto 
+     * @brief
+     *
+     * @param y
+     * @param t
+     * @return auto
      */
-    auto operator()(const xarray &y, double t)
-    {
+    auto operator()(const xarray &y, double t) {
         xarray a_rb = _a;
-        for (auto &&i : {0, 1})
-        {
+        for (auto &&i : {0, 1}) {
             a_rb[i] += _uie[i] * (y[i] > 0 ? -1 : +1);
         }
         _P._a = a_rb;
@@ -130,10 +121,9 @@ class profit_rb_oracle
 
 /**
  * @brief Oracle for profit maximization problem (discrete version)
- * 
+ *
  */
-class profit_q_oracle
-{
+class profit_q_oracle {
     using xarray = xt::xarray<double>;
 
   private:
@@ -142,32 +132,29 @@ class profit_q_oracle
   public:
     /**
      * @brief Construct a new profit q oracle object
-     * 
-     * @param p 
-     * @param A 
-     * @param k 
-     * @param a 
-     * @param v 
+     *
+     * @param p
+     * @param A
+     * @param k
+     * @param a
+     * @param v
      */
     profit_q_oracle(double p, double A, double k, xarray a, xarray v)
         : _P(p, A, k, a, v) {}
 
     /**
-     * @brief 
-     * 
-     * @param y 
-     * @param t 
-     * @return auto 
+     * @brief
+     *
+     * @param y
+     * @param t
+     * @return auto
      */
-    auto operator()(const xarray &y, double t, int /*unused*/) const
-    {
+    auto operator()(const xarray &y, double t, int /*unused*/) const {
         xarray x = xt::round(xt::exp(y));
-        if (x[0] == 0)
-        {
+        if (x[0] == 0) {
             x[0] = 1.;
         }
-        if (x[1] == 0)
-        {
+        if (x[1] == 0) {
             x[1] = 1.;
         }
         xarray yd = xt::log(x);

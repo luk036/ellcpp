@@ -41,7 +41,7 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u, size_t
     Arr s = xt::transpose(st);
 
     Arr Sig = xt::zeros<double>({n, n});
-    for (auto i = 0u; i < n; ++i) {
+    for (auto i = 0U; i < n; ++i) {
         for (auto j = i; j < n; ++j) {
             Arr d = xt::view(s, j, xt::all()) - xt::view(s, i, xt::all());
             double g = -sdkern * std::sqrt(dot(d, d)());
@@ -52,7 +52,7 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u, size_t
 
     Arr A = xt::linalg::cholesky(Sig);
     Arr Y = xt::zeros<double>({n, n});
-    for (auto k = 0u; k < N; ++k) {
+    for (auto k = 0U; k < N; ++k) {
         Arr x = var * xt::random::randn<double>({n});
         Arr y = dot(A, x) + tau*xt::random::randn<double>({n});
         // Arr y = dot(A, x);
@@ -73,7 +73,7 @@ Arr construct_distance_matrix(const Arr &s) {
     auto n = s.shape()[0];
     // c = cvx.Variable(m)
     Arr D = xt::zeros<double>({n, n});
-    for (auto i = 0u; i < n; ++i) {
+    for (auto i = 0U; i < n; ++i) {
         for (auto j = i + 1; j < n; ++j) {
             Arr h = xt::view(s, j, xt::all()) - xt::view(s, i, xt::all());
             double d = std::sqrt(xt::linalg::dot(h, h)());
@@ -183,7 +183,7 @@ std::tuple<size_t, bool> lsq_corr_poly2(const Arr &Y, const Arr &s, std::size_t 
     Sig.reserve(m);
     Sig.push_back(D);
 
-    for (auto i = 0u; i < m - 1; ++i) {
+    for (auto i = 0U; i < m - 1; ++i) {
         D *= D1;
         Sig.push_back(D);
         // xt::view(Sig, i, xt::all(), xt::all()) = D;
@@ -246,7 +246,7 @@ class mle_oracle {
         auto n = x.shape()[0];
         auto m = _Y.shape()[0];
 
-        const auto& R = _lmi0._Q._R;
+        const auto& R = _lmi0._Q.R;
         auto invR = Arr{xt::linalg::inv(R)};
         auto S = Arr{dot(invR, xt::transpose(invR))};
         auto SY = Arr{dot(S, _Y)};
@@ -263,10 +263,10 @@ class mle_oracle {
 
         Arr g = xt::zeros<double>({n});
 
-        for (auto i = 0u; i<n; ++i) {
+        for (auto i = 0U; i<n; ++i) {
             Arr SFsi = dot(S, _Sig[i]);
             g(i) = xt::linalg::trace(SFsi)();
-            for (auto k=0u; k<m; ++k) {
+            for (auto k=0U; k<m; ++k) {
                 g(i) -= dot(xt::view(SFsi, k, xt::all()), xt::view(SY, xt::all(), k))();
             }
         }
@@ -307,7 +307,7 @@ std::tuple<size_t, bool> mle_corr_poly(const Arr &Y, const Arr &s, std::size_t m
     Sig.reserve(m);
     Sig.push_back(D);
 
-    for (auto i = 0u; i < m - 1; ++i) {
+    for (auto i = 0U; i < m - 1; ++i) {
         D *= D1;
         Sig.push_back(D);
         // xt::view(Sig, i, xt::all(), xt::all()) = D;
@@ -339,7 +339,7 @@ std::tuple<size_t, bool> lsq_corr_poly(const Arr &Y, const Arr &s, size_t m) {
     Sig.reserve(m);
     Sig.push_back(D);
 
-    for (auto i = 0u; i < m - 1; ++i) {
+    for (auto i = 0U; i < m - 1; ++i) {
         D *= D1;
         // xt::view(Sig, i, xt::all(), xt::all()) = D;
         Sig.push_back(D);

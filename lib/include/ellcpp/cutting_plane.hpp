@@ -31,7 +31,7 @@ auto bsearch(Oracle &evaluate, Space &I, const Options &options = Options()) {
     bool feasible = false;
     auto &[l, u] = I;
     auto t = l + (u - l) / 2;
-    auto niter = 1u;
+    auto niter = 1U;
     for (; niter <= options.max_it; ++niter) {
         if (evaluate(t)) { // feasible sol'n obtained
             feasible = true;
@@ -101,7 +101,7 @@ template <typename Oracle, typename Space>
 auto cutting_plane_feas(Oracle &evaluate, Space &S,
                         const Options &options = Options()) {
     bool feasible = false;
-    auto niter = 1u, status = 0u;
+    auto niter = 1U, status = 0U;
 
     for (; niter <= options.max_it; ++niter) {
         auto [g, h, flag] = evaluate(S.xc());
@@ -145,7 +145,7 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
 
     bool feasible = false;
     auto x_best = Arr{S.xc()};
-    auto niter = 1u, status = 0u;
+    auto niter = 1U, status = 0U;
     for (; niter <= options.max_it; ++niter) {
         auto [g, h, t1] = evaluate(S.xc(), t);
         if (t != t1) { // best t obtained
@@ -202,8 +202,8 @@ auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
 
     bool feasible = false;
     auto x_best = Arr{S.xc()};
-    auto status = 1u;
-    auto niter = 1u;
+    auto status = 1U;
+    auto niter = 1U;
     for (; niter < options.max_it; ++niter) {
         auto [g, h, t1, x0, loop] = evaluate(S.xc(), t, (status != 3) ? 0 : 1);
         if (status != 3) {

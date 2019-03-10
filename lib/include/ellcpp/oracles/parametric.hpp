@@ -12,15 +12,15 @@
  *    max  r
  *    s.t. dist[v] - dist[v] <= d(u,v,r);
  *         for all (u, v] : G
- * 
- * @tparam Graph 
- * @tparam T 
- * @tparam Fn1 
- * @tparam Fn2 
- * @param G 
+ *
+ * @tparam Graph
+ * @tparam T
+ * @tparam Fn1
+ * @tparam Fn2
+ * @param G
  * @param r parameter to be maximized, initially a large number
  * @param d monotone decreasing function w.r.t. r
- * @param zero_cancel 
+ * @param zero_cancel
  * @return:
  *       r_opt -- optimal value
  *       C_opt -- Most critial cycle

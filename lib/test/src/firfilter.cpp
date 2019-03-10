@@ -66,7 +66,7 @@ class my_fir_oracle {
         // auto imax = -1;
         Arr gmax = xt::zeros<double>({n});
 
-        for (auto i = 0u; i < m; ++i) {
+        for (auto i = 0U; i < m; ++i) {
             auto a_R = xt::view(A_R, i, xt::all());
             auto a_I = xt::view(A_I, i, xt::all());
             double H_r = Hdes_r[i];

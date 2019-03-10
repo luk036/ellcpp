@@ -19,20 +19,19 @@
 // }
 
 /**
- * @brief 
- * 
- * @tparam Graph 
- * @tparam Fn1 
- * @tparam Fn2 
- * @tparam T 
- * @param G 
- * @param get_cost 
- * @param get_time 
- * @return auto 
+ * @brief
+ *
+ * @tparam Graph
+ * @tparam Fn1
+ * @tparam Fn2
+ * @tparam T
+ * @param G
+ * @param get_cost
+ * @param get_time
+ * @return auto
  */
 template <typename Graph, typename Fn1, typename Fn2, typename T>
-auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */)
-{
+auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */) {
     using edge_t = decltype(*std::begin(G.edges()));
     edge_t e0 = *std::begin(G.edges());
 
@@ -63,8 +62,7 @@ auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */)
     cost_t max_cost = c0;
     time_t min_time = t0;
 
-    for (const auto &e : G.edges())
-    {
+    for (const auto &e : G.edges()) {
         cost_t c = get_cost(G, e);
         time_t t = get_time(G, e);
         // std::cout << "mincost: c = " << c << '\n';
