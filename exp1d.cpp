@@ -47,5 +47,5 @@ int main() {
   Y *= 1./N;
 
   //auto Y = xt::cov(Ys, bias=True);
-  std::cout << Y << std::endl;
+  // std::cout << Y << std::endl;
 }

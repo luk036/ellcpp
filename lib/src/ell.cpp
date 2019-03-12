@@ -22,7 +22,7 @@ ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
         return {1, std::move(params)}; // no sol'n
     }
 
-    if (b0 == 0) {
+    if (b0 == 0.) {
         return this->calc_ll_cc(b1, b1sq, tsq);
     } 
 
@@ -78,7 +78,7 @@ ell::return_t ell::calc_dc(double beta, double tsq) const {
         return {1, std::move(params)}; // no sol'n
     }
 
-    if (beta == 0) {
+    if (beta == 0.) {
         return this->calc_cc(tsq);
     }
 
@@ -120,7 +120,7 @@ ell::return_t ell::calc_cc(double tsq) const {
 ell1d::return_t ell1d::update(double g, double beta) {
     auto tau = std::abs(_r * g);
     auto tsq = tau * tau;
-    if (beta == 0) {
+    if (beta == 0.) {
         _r /= 2;
         _xc += g > 0 ? -_r : _r;
         return {0, tsq};

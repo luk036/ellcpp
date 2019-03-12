@@ -151,10 +151,10 @@ class profit_q_oracle {
      */
     auto operator()(const xarray &y, double t, int /*unused*/) const {
         xarray x = xt::round(xt::exp(y));
-        if (x[0] == 0) {
+        if (x[0] == 0.) {
             x[0] = 1.;
         }
-        if (x[1] == 0) {
+        if (x[1] == 0.) {
             x[1] = 1.;
         }
         xarray yd = xt::log(x);

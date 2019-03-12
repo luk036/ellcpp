@@ -111,8 +111,8 @@ class chol_ext {
         using xt::placeholders::_;
 
         auto r = this->R(p - 1, p - 1);
-        auto ep = (r == 0) ? 0. : 1.;
-        v[p - 1] = (r == 0) ? 1. : 1. / r;
+        auto ep = (r == 0.) ? 0. : 1.;
+        v[p - 1] = (r == 0.) ? 1. : 1. / r;
 
         for (int i = p - 2; i >= 0; --i) {
             double s = 0.;

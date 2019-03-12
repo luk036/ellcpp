@@ -25,15 +25,15 @@ struct exercise_vertex
         // typename boost::property_map<Graph, boost::vertex_index_t>::type
         auto index = boost::get(boost::vertex_index, g);
 
-        std::cout << "out-edges: ";
+        // std::cout << "out-edges: ";
         // typename GraphTraits::out_edge_iterator out_i, out_end;
         // typename GraphTraits::edge_descriptor e;
         for (const auto &e : g.neighbors(v))
         {
             const auto &[src, targ] = g.end_points(e);
-            std::cout << "(" << index[src] << "," << index[targ] << ") ";
+            // std::cout << "(" << index[src] << "," << index[targ] << ") ";
         }
-        std::cout << std::endl;
+        // std::cout << std::endl;
     }
     //...
 };
@@ -78,21 +78,21 @@ TEST_CASE("Test Boost", "[test_boost]")
     // typedef property_map<Graph, vertex_index_t>::type IndexMap;
     auto index = boost::get(boost::vertex_index, G);
 
-    std::cout << "vertices(g) = ";
+    // std::cout << "vertices(g) = ";
     // typedef graph_traits<Graph>::vertex_iterator vertex_iter;
     // std::pair<vertex_iter, vertex_iter> vp;
     for (const Vertex &v : G)
     {
-        std::cout << index[v] << " ";
+        // std::cout << index[v] << " ";
     }
-    std::cout << std::endl;
+    // std::cout << std::endl;
 
-    std::cout << "edges(g) = ";
+    // std::cout << "edges(g) = ";
     // graph_traits<Graph>::edge_iterator ei, ei_end;
-    for (const auto &e : G.edges())
-        std::cout << "(" << index[boost::source(e, G)] << ","
-                  << index[boost::target(e, G)] << ") ";
-    std::cout << std::endl;
+    // for (const auto &e : G.edges())
+    //     std::cout << "(" << index[boost::source(e, G)] << ","
+    //               << index[boost::target(e, G)] << ") ";
+    // std::cout << std::endl;
 
     std::for_each(boost::vertices(G).first, boost::vertices(G).second,
                   exercise_vertex<xn::grAdaptor<Graph>>(G));

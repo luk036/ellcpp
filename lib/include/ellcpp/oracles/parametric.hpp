@@ -28,7 +28,7 @@
  */
 template <typename Graph, typename T, typename Fn1, typename Fn2>
 auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
-    std::cout << "r=" << r << '\n';
+    // std::cout << "r=" << r << '\n';
 
     using edge_t = decltype(*(std::begin(G.edges())));
 
@@ -44,7 +44,7 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
     while (true) {
         const auto &C = S.neg_cycle_relax();
         const T &r_min = zero_cancel(G, C);
-        std::cout << "r_min=" << r_min << '\n';
+        // std::cout << "r_min=" << r_min << '\n';
 
         if (r_min >= r_opt) {
             break;

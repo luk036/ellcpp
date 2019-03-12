@@ -52,8 +52,8 @@ TEST_CASE("Example 1", "[example1]") {
     auto P = my_oracle;
     auto [xb, fb, niter, feasible, status] = cutting_plane_dc(P, E, -100.);
     CHECK(feasible);
-    std::cout << "Example 1 result: " << fb << ", " << niter << "," << feasible << "," << status << "\n";
-    std::cout << "Example 1 xbest: " << xb << "\n";
+    // std::cout << "Example 1 result: " << fb << ", " << niter << "," << feasible << "," << status << "\n";
+    // std::cout << "Example 1 xbest: " << xb << "\n";
 
     auto [c, d] = func();
 }

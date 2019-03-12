@@ -98,8 +98,8 @@ TEST_CASE("FIR Filter", "[firfilter]") {
     auto [hb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 100.);
 
     CHECK(feasible);
-    std::cout << "optimal value " << fb << "\n";
-    std::cout << "optimal sol'n " << hb << "\n";
+    // std::cout << "optimal value " << fb << "\n";
+    // std::cout << "optimal sol'n " << hb << "\n";
 
     // fmt = '{ {f} {} {} {}'
     // print(prob1.optim_var)

@@ -135,7 +135,7 @@ class lsq_oracle {
         }
 
         g(n-1) = 1.;
-        auto tc = x(n-1);
+        auto tc = double(x(n-1));
         auto fj = tc - t;
         if (fj > 0) {
             return std::tuple{std::move(g), fj, t};
@@ -192,7 +192,7 @@ std::tuple<size_t, bool> lsq_corr_poly2(const Arr &Y, const Arr &s, std::size_t 
 
     auto P = lsq_oracle(Sig, Y);
     auto [a, num_iters, feasible] = lsq_corr_core2(Y, m, P);
-    std::cout << "lsq_corr_poly2 = " << a << "\n";
+    // std::cout << "lsq_corr_poly2 = " << a << "\n";
     return {num_iters, feasible};
 }
 
@@ -316,7 +316,7 @@ std::tuple<size_t, bool> mle_corr_poly(const Arr &Y, const Arr &s, std::size_t m
 
     auto P = mle_oracle(Sig, Y);
     auto [a, num_iters, feasible] = mle_corr_core(Y, m, P);
-    std::cout << "mle_corr_poly = " << a << "\n";
+    // std::cout << "mle_corr_poly = " << a << "\n";
     return {num_iters, feasible};
 }
 
@@ -355,7 +355,7 @@ std::tuple<size_t, bool> lsq_corr_poly(const Arr &Y, const Arr &s, size_t m) {
     auto I = std::tuple{0., 100. * 100.};
     auto [fb, niter, feasible] = bsearch(P, I);
 
-    std::cout << niter << ", " << feasible << '\n';
+    // std::cout << niter << ", " << feasible << '\n';
     a = P.x_best();
     return {niter, feasible};
     //  return prob.is_dcp()

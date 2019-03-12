@@ -72,9 +72,9 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
 
     auto [xb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 100.);
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
-    std::cout << "LMI xbest: " << xb << "\n";
-    std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible << ", " << status
-              << "\n";
+    // std::cout << "LMI xbest: " << xb << "\n";
+    // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible << ", " << status
+    //           << "\n";
 
     CHECK(feasible);
     CHECK(niter == 115);

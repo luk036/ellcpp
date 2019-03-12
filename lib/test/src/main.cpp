@@ -29,8 +29,8 @@ TEST_CASE("Profit Test 1", "[profit]") {
         std::tie(std::ignore, fb, niter, feasible, status) =
             cutting_plane_dc(P, E, 0.);
         // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
-        std::cout << "Profit: " << fb << ", " << niter << ", " << feasible << ", " << status
-                  << "\n";
+        // std::cout << "Profit: " << fb << ", " << niter << ", " << feasible << ", " << status
+        //           << "\n";
         CHECK(niter == 37);
     }
 
@@ -43,8 +43,8 @@ TEST_CASE("Profit Test 1", "[profit]") {
         std::tie(std::ignore, fb, niter, feasible, status) =
             cutting_plane_dc(P1, E1, 0.);
         // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
-        std::cout << "Profit rb: " << fb << ", " << niter << ", " << feasible << ", " << status
-                  << "\n";
+        // std::cout << "Profit rb: " << fb << ", " << niter << ", " << feasible << ", " << status
+        //           << "\n";
         CHECK(niter == 42);
     }
 
@@ -54,8 +54,8 @@ TEST_CASE("Profit Test 1", "[profit]") {
         std::tie(std::ignore, fb, niter, feasible, status) =
             cutting_plane_q(P2, E2, 0.);
         // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
-        std::cout << "Profit q: " << fb << ", " << niter << ", " << feasible << ", " << status
-                  << "\n";
+        // std::cout << "Profit q: " << fb << ", " << niter << ", " << feasible << ", " << status
+        //           << "\n";
         CHECK(niter == 28);
     }
 }
