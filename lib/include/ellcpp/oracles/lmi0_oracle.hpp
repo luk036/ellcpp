@@ -3,7 +3,6 @@
 
 //#include "mat.hpp"
 #include "chol_ext.hpp"
-#include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
 /**
@@ -41,30 +40,7 @@ class lmi0_oracle {
      * @param x
      * @return auto
      */
-    auto operator()(const Arr &x) {
-        auto n = x.size();
-
-        auto getA = [&, this](unsigned i, unsigned j) -> double {
-            auto a = 0.;
-            for (auto k = 0U; k < n; ++k) {
-                a += _F[k](i, j) * x(k);
-            }
-            return a;
-        };
-
-        Arr g = xt::zeros<double>({n});
-
-        _Q.factor(getA);
-        if (_Q.is_spd()) {
-            return std::tuple{std::move(g), -1., true};
-        }
-        auto [v, ep] = _Q.witness();
-        for (auto i = 0U; i < n; ++i) {
-            // auto Fi = _F[i];
-            g(i) = -_Q.sym_quad(v, _F[i]);
-        }
-        return std::tuple{std::move(g), ep, false};
-    }
+    auto operator()(const Arr &x) -> std::tuple<Arr, double, bool>;
 };
 
 #endif

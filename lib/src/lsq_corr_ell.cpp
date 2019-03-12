@@ -6,24 +6,25 @@
 #include <ellcpp/oracles/qmi_oracle.hpp>
 #include <iostream>
 #include <tuple>
+#include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 #include <xtensor/xmath.hpp>
 #include <xtensor/xnorm.hpp>
 #include <xtensor/xrandom.hpp>
-#include <vector>
 
 using Arr = xt::xarray<double>;
 
 /**
  * @brief Create a 2d isotropic example
- * 
- * @param nx 
- * @param ny 
- * @param N 
- * @return std::tuple<Arr, Arr> 
+ *
+ * @param nx
+ * @param ny
+ * @param N
+ * @return std::tuple<Arr, Arr>
  */
-std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u, size_t N = 3000u) {
+std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u,
+                                         size_t N = 3000u) {
     using xt::linalg::dot;
 
     const auto n = nx * ny;
@@ -54,7 +55,7 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u, size_t
     Arr Y = xt::zeros<double>({n, n});
     for (auto k = 0U; k < N; ++k) {
         Arr x = var * xt::random::randn<double>({n});
-        Arr y = dot(A, x) + tau*xt::random::randn<double>({n});
+        Arr y = dot(A, x) + tau * xt::random::randn<double>({n});
         // Arr y = dot(A, x);
         Y += xt::linalg::outer(y, y);
     }
@@ -64,10 +65,10 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u, size_t
 }
 
 /**
- * @brief 
- * 
- * @param s 
- * @return Arr 
+ * @brief
+ *
+ * @param s
+ * @return Arr
  */
 Arr construct_distance_matrix(const Arr &s) {
     auto n = s.shape()[0];
@@ -85,8 +86,8 @@ Arr construct_distance_matrix(const Arr &s) {
 }
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 class lsq_oracle {
     using Arr = xt::xarray<double>;
@@ -99,43 +100,44 @@ class lsq_oracle {
   public:
     /**
      * @brief Construct a new lsq oracle object
-     * 
-     * @param F 
-     * @param F0 
+     *
+     * @param F
+     * @param F0
      */
     lsq_oracle(const std::vector<Arr> &F, const Arr &F0)
         : _qmi(F, F0), //
           _lmi0(F) {}
 
     /**
-     * @brief 
-     * 
-     * @param x 
-     * @param t 
-     * @return auto 
+     * @brief
+     *
+     * @param x
+     * @param t
+     * @return auto
      */
     auto operator()(const Arr &x, double t) {
         auto n = x.shape()[0];
         Arr g = xt::zeros<double>({n});
 
-        auto [g0, fj0, feasible0] = this->_lmi0(xt::view(x, xt::range(0, n-1)));
+        auto [g0, fj0, feasible0] =
+            this->_lmi0(xt::view(x, xt::range(0, n - 1)));
         if (!feasible0) {
-            xt::view(g, xt::range(0, n-1)) = g0;
-            g(n-1) = 0.;
+            xt::view(g, xt::range(0, n - 1)) = g0;
+            g(n - 1) = 0.;
             return std::tuple{std::move(g), fj0, t};
         }
 
-        this->_qmi.update(x(n-1));
-        auto [g1, fj1, feasible] = this->_qmi(xt::view(x, xt::range(0, n-1)));
+        this->_qmi.update(x(n - 1));
+        auto [g1, fj1, feasible] = this->_qmi(xt::view(x, xt::range(0, n - 1)));
         if (!feasible) {
-            xt::view(g, xt::range(0, n-1)) = g1;
+            xt::view(g, xt::range(0, n - 1)) = g1;
             auto [v, ep] = this->_qmi._Q.witness();
-            g(n-1) = -xt::linalg::dot(v,v)();
+            g(n - 1) = -xt::linalg::dot(v, v)();
             return std::tuple{std::move(g), fj1, t};
         }
 
-        g(n-1) = 1.;
-        auto tc = double(x(n-1));
+        g(n - 1) = 1.;
+        auto tc = double(x(n - 1));
         auto fj = tc - t;
         if (fj > 0) {
             return std::tuple{std::move(g), fj, t};
@@ -145,36 +147,38 @@ class lsq_oracle {
 };
 
 /**
- * @brief 
- * 
- * @param Y 
- * @param m 
- * @param P 
- * @return auto 
+ * @brief
+ *
+ * @param Y
+ * @param m
+ * @param P
+ * @return auto
  */
 auto lsq_corr_core2(const Arr &Y, std::size_t m, lsq_oracle &P) {
-    auto normY = 100.*xt::linalg::norm(Y);
-    auto normY2 = 32.*normY*normY;
-    Arr val = 256.*xt::ones<double>({m + 1});
-    val(m) = normY2*normY2;
+    auto normY = 100. * xt::linalg::norm(Y);
+    auto normY2 = 32. * normY * normY;
+    Arr val = 256. * xt::ones<double>({m + 1});
+    val(m) = normY2 * normY2;
     Arr x = xt::zeros<double>({m + 1});
     x(0) = 4;
-    x(m) = normY2/2.;
+    x(m) = normY2 / 2.;
     auto E = ell(val, x);
-    auto [x_best, fb, num_iters, feasible, status] = cutting_plane_dc(P, E, normY2);
+    auto [x_best, fb, num_iters, feasible, status] =
+        cutting_plane_dc(P, E, normY2);
     Arr a = xt::view(x_best, xt::range(0, m));
     return std::tuple{std::move(a), num_iters, feasible};
 }
 
 /**
- * @brief 
- * 
- * @param Y 
- * @param s 
- * @param m 
- * @return std::tuple<size_t, bool> 
+ * @brief
+ *
+ * @param Y
+ * @param s
+ * @param m
+ * @return std::tuple<size_t, bool>
  */
-std::tuple<size_t, bool> lsq_corr_poly2(const Arr &Y, const Arr &s, std::size_t m) {
+std::tuple<size_t, bool> lsq_corr_poly2(const Arr &Y, const Arr &s,
+                                        std::size_t m) {
     auto n = s.shape()[0];
     Arr D1 = construct_distance_matrix(s);
 
@@ -197,8 +201,8 @@ std::tuple<size_t, bool> lsq_corr_poly2(const Arr &Y, const Arr &s, std::size_t 
 }
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 class mle_oracle {
     using Arr = xt::xarray<double>;
@@ -213,22 +217,22 @@ class mle_oracle {
   public:
     /**
      * @brief Construct a new mle oracle object
-     * 
-     * @param Sig 
-     * @param Y 
+     *
+     * @param Sig
+     * @param Y
      */
     mle_oracle(const std::vector<Arr> &Sig, const Arr &Y)
-        : _Y{Y}, //
-          _Sig{Sig}, //
+        : _Y{Y},      //
+          _Sig{Sig},  //
           _lmi0(Sig), //
-          _lmi(Sig, std::move(2*Y)) {}
+          _lmi(Sig, std::move(2 * Y)) {}
 
     /**
-     * @brief 
-     * 
-     * @param x 
-     * @param t 
-     * @return auto 
+     * @brief
+     *
+     * @param x
+     * @param t
+     * @return auto
      */
     auto operator()(const Arr &x, double t) {
         using xt::linalg::dot;
@@ -244,15 +248,16 @@ class mle_oracle {
         }
 
         auto n = x.shape()[0];
-        auto m = _Y.shape()[0];
+        auto m = this->_Y.shape()[0];
 
-        const auto& R = _lmi0._Q.R;
+        const auto &R = this->_lmi0._Q.R;
         auto invR = Arr{xt::linalg::inv(R)};
         auto S = Arr{dot(invR, xt::transpose(invR))};
-        auto SY = Arr{dot(S, _Y)};
+        auto SY = Arr{dot(S, this->_Y)};
 
         auto diag = xt::diagonal(R);
-        auto f1 = double{2. * xt::sum(xt::log(diag))() + xt::linalg::trace(SY)()};
+        auto f1 =
+            double{2. * xt::sum(xt::log(diag))() + xt::linalg::trace(SY)()};
         // auto f1 = 0.;
 
         auto f = f1 - t;
@@ -263,11 +268,12 @@ class mle_oracle {
 
         Arr g = xt::zeros<double>({n});
 
-        for (auto i = 0U; i<n; ++i) {
-            Arr SFsi = dot(S, _Sig[i]);
+        for (auto i = 0U; i < n; ++i) {
+            Arr SFsi = dot(S, this->_Sig[i]);
             g(i) = xt::linalg::trace(SFsi)();
-            for (auto k=0U; k<m; ++k) {
-                g(i) -= dot(xt::view(SFsi, k, xt::all()), xt::view(SY, xt::all(), k))();
+            for (auto k = 0U; k < m; ++k) {
+                g(i) -= dot(xt::view(SFsi, k, xt::all()),
+                            xt::view(SY, xt::all(), k))();
             }
         }
         return std::tuple{std::move(g), f, t};
@@ -275,30 +281,32 @@ class mle_oracle {
 };
 
 /**
- * @brief 
- * 
- * @param Y 
- * @param m 
- * @param P 
- * @return auto 
+ * @brief
+ *
+ * @param Y
+ * @param m
+ * @param P
+ * @return auto
  */
 auto mle_corr_core(const Arr &Y, std::size_t m, mle_oracle &P) {
     Arr x = xt::zeros<double>({m});
     x(0) = 4.;
     auto E = ell(500., x);
-    auto [x_best, fb, num_iters, feasible, status] = cutting_plane_dc(P, E, 1e100);
+    auto [x_best, fb, num_iters, feasible, status] =
+        cutting_plane_dc(P, E, 1e100);
     return std::tuple{std::move(x_best), num_iters, feasible};
 }
 
 /**
- * @brief 
- * 
- * @param Y 
- * @param s 
- * @param m 
- * @return std::tuple<size_t, bool> 
+ * @brief
+ *
+ * @param Y
+ * @param s
+ * @param m
+ * @return std::tuple<size_t, bool>
  */
-std::tuple<size_t, bool> mle_corr_poly(const Arr &Y, const Arr &s, std::size_t m) {
+std::tuple<size_t, bool> mle_corr_poly(const Arr &Y, const Arr &s,
+                                       std::size_t m) {
     auto n = s.shape()[0];
     Arr D1 = construct_distance_matrix(s);
 
@@ -321,12 +329,12 @@ std::tuple<size_t, bool> mle_corr_poly(const Arr &Y, const Arr &s, std::size_t m
 }
 
 /**
- * @brief 
- * 
- * @param Y 
- * @param s 
- * @param m 
- * @return std::tuple<size_t, bool> 
+ * @brief
+ *
+ * @param Y
+ * @param s
+ * @param m
+ * @return std::tuple<size_t, bool>
  */
 std::tuple<size_t, bool> lsq_corr_poly(const Arr &Y, const Arr &s, size_t m) {
     auto n = s.shape()[0];

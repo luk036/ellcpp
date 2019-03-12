@@ -8,10 +8,10 @@
 // namespace bnu = boost::numeric::ublas;
 
 #include <cassert>
-#include <xtensor-blas/xlinalg.hpp>
+// #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
-#include <iostream>
+// #include <iostream>
 
 /**
  * @brief Cholesky factorization
@@ -131,7 +131,7 @@ class chol_ext {
      * @param A
      * @return double
      */
-    double sym_quad(const xt::xarray<double> &v, const xt::xarray<double> &A) {
+    double sym_quad(const Vec &v, const Vec &A) {
         auto res = 0.;
         for (auto i = 0U; i < this->p; ++i) {
             auto s = 0.;

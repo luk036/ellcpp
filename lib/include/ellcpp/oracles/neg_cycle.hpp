@@ -119,11 +119,11 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
      *    Returns:
      *        [type] -- [description];
      */
-    auto find_neg_cycle() {
+    auto find_neg_cycle() -> std::vector<edge_t> {
         for (Node v : _G)
             _dist[v] = wt_t(0);
         _pred.clear();
-        return this->neg_cycle_relax();
+        return std::move(this->neg_cycle_relax());
     }
 
     /**
@@ -145,10 +145,10 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
             // if (v != _G.null_vertex()) {
             Node v = this->find_cycle();
             if (v != _G.null_vertex()) {
-                return this->cycle_list(v);
+                return std::move(this->cycle_list(v));
             }
         }
-        return std::vector<edge_t>{}; // ???
+        return std::move(std::vector<edge_t>{}); // ???
     }
 
     /**
@@ -168,7 +168,7 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
                 break;
             }
         }
-        return cycle;
+        return std::move(cycle);
     }
 
     // auto is_negative(const Node &handle) {

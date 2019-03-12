@@ -4,8 +4,6 @@
 //#include <valarray>
 #include <cmath>
 #include <tuple>
-
-#include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
 /**
@@ -47,25 +45,8 @@ class profit_oracle {
      * @param t
      * @return auto
      */
-    auto operator()(const xarray &y, double t) const {
-        double fj = y[0] - _log_k; // constraint
-        if (fj > 0) {
-            auto g = xarray{1., 0.};
-            return std::tuple{std::move(g), fj, t};
-        }
-        double log_Cobb = _log_pA + xt::linalg::dot(_a, y)();
-        xarray x = xt::exp(y);
-        double vx = xt::linalg::dot(_v, x)();
-        auto te = t + vx;
-        fj = std::log(te) - log_Cobb;
-        if (fj < 0) {
-            te = std::exp(log_Cobb);
-            t = te - vx;
-            fj = 0.;
-        }
-        xarray g = (_v * x) / te - _a;
-        return std::tuple{std::move(g), fj, t};
-    }
+    auto operator()(const xarray &y, double t) const
+                    -> std::tuple<xarray, double, double>;
 };
 
 /**
