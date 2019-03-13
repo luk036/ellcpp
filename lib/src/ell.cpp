@@ -1,6 +1,14 @@
 #include <cmath>
 #include <ellcpp/ell.hpp>
 #include <tuple>
+#include <xtensor-blas/xlinalg.hpp>
+
+/* linux-2.6.38.8/include/linux/compiler.h */
+#include <stdio.h>
+#define likely(x) __builtin_expect(!!(x), 1)
+#define unlikely(x) __builtin_expect(!!(x), 0)
+
+using Arr = xt::xarray<double>;
 
 /**
  * @brief
@@ -139,3 +147,56 @@ ell1d::return_t ell1d::update(double g, double beta) {
     this->_xc = l + this->_r;
     return {0, tsq};
 }
+
+/**
+ * @brief Update ellipsoid core function using the cut
+ *          g' * (x - xc) + beta <= 0
+ *
+ * @tparam T
+ * @param g
+ * @param beta
+ * @return std::tuple<int, double>
+ */
+template <typename T>
+std::tuple<int, double> ell::update(const Arr &g, const T &beta) {
+    auto Qg = Arr{xt::linalg::dot(_Q, g)};
+    auto omega = xt::linalg::dot(g, Qg)();
+    auto tsq = this->_kappa * omega;
+    if (unlikely(tsq <= 0)) {
+        return {4, 0.};
+    }
+    // auto tau = std::sqrt(_kappa * tsq);
+    // auto alpha = beta / tau;
+
+    // auto [status, params] = this->calc_ll(beta, tsq);
+    auto status = 0;
+    auto params = std::tuple{0., 0., 0.};
+
+    if constexpr (std::is_scalar<T>::value) { // C++17
+        std::tie(status, params) = this->calc_dc(beta, tsq);
+    } else { // parallel cut
+        if (unlikely(beta.shape()[0] < 2)) {
+            std::tie(status, params) = this->calc_dc(beta[0], tsq);
+        } else {
+            std::tie(status, params) = this->calc_ll_core(beta[0], beta[1], tsq);
+        }
+    }
+
+    if (status != 0) {
+        return {status, tsq};
+    }
+    auto &[rho, sigma, delta] = params;
+    this->_xc -= (rho / omega) * Qg;
+    this->_Q -= (sigma / omega) * xt::linalg::outer(Qg, Qg);
+    this->_kappa *= delta;
+    if (unlikely(this->_kappa > 1e100 || this->_kappa < 1e-100)) {
+        this->_Q *= this->_kappa;
+        this->_kappa = 1.;
+    }
+    return {status, tsq}; // g++-7 is ok
+}
+
+
+// Instantiation
+template std::tuple<int, double> ell::update(const Arr &g, const double &beta);
+template std::tuple<int, double> ell::update(const Arr &g, const Arr &beta);

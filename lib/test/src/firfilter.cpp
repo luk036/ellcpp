@@ -3,7 +3,10 @@
 #include <iostream>
 #include <tuple>
 
-#include <complex>
+// #include <complex>
+#include <xtensor/xview.hpp>
+#include <xtensor/xarray.hpp>
+#include <xtensor-blas/xlinalg.hpp>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <limits>
@@ -22,7 +25,6 @@ static auto n = 20;
 
 // Rule-of-thumb frequency discretization (Cheney's Approx. Theory book).
 static auto m = 15 * n;
-static Arr w = xt::linspace<double>(0, PI, m);
 
 // ********************************************************************
 // Construct the desired filter.
@@ -31,57 +33,59 @@ static Arr w = xt::linspace<double>(0, PI, m);
 static auto D = 8.25; // Delay value.
 // CArr Hdes = xt::exp(D * w); // Desired frequency response.
 
-// Gaussian filter with linear phase. (Uncomment lines below for this design.)
-// var = 0.05
-// Hdes = 1/(xt::sqrt(2*PI*var)) * xt::exp(-xt::square(w-PI/2)/(2*var))
-// Hdes = xt::multiply(Hdes, xt::exp(-1j*n/2*w))
-
-// A is the matrix used to compute the frequency response
-// from a vector of filter coefficients:
-//     A[w,:] = [1 exp(-j*w) exp(-j*2*w) ... exp(-j*n*w)]
-// CArr A = xt::exp(xt::linalg::kron(w, xt::arange(n)));
-
-// Presently CVXPY does not do complex-valued math, so the
-// problem must be formatted into a real-valued representation.
-
-// Split Hdes into a real part, and an imaginary part.
-// Arr Hdes_r = xt::real(Hdes);
-// Arr Hdes_i = xt::imag(Hdes);
-static Arr Hdes_theta = D * w;
-static Arr Hdes_r = xt::cos(Hdes_theta);
-static Arr Hdes_i = -xt::sin(Hdes_theta);
-static Arr A_theta = xt::linalg::outer(w, xt::arange(n));
-
-// Split A into a real part, and an imaginary part.
-// Arr A_R = xt::real(A);
-// Arr A_I = xt::imag(A);
-static Arr A_R = xt::cos(A_theta);
-static Arr A_I = -xt::sin(A_theta);
 
 // Optimal Chebyshev filter formulation.
 class my_fir_oracle {
+    // Gaussian filter with linear phase. (Uncomment lines below for this design.)
+    // var = 0.05
+    // Hdes = 1/(xt::sqrt(2*PI*var)) * xt::exp(-xt::square(w-PI/2)/(2*var))
+    // Hdes = xt::multiply(Hdes, xt::exp(-1j*n/2*w))
+    Arr w = xt::linspace<double>(0, PI, m);
+
+    // A is the matrix used to compute the frequency response
+    // from a vector of filter coefficients:
+    //     A[w,:] = [1 exp(-j*w) exp(-j*2*w) ... exp(-j*n*w)]
+    // CArr A = xt::exp(xt::linalg::kron(w, xt::arange(n)));
+
+    // Presently CVXPY does not do complex-valued math, so the
+    // problem must be formatted into a real-valued representation.
+
+    // Split Hdes into a real part, and an imaginary part.
+    // Arr Hdes_r = xt::real(Hdes);
+    // Arr Hdes_i = xt::imag(Hdes);
+    Arr Hdes_theta = D * w;
+    Arr Hdes_r = xt::cos(Hdes_theta);
+    Arr Hdes_i = -xt::sin(Hdes_theta);
+    Arr A_theta = xt::linalg::outer(w, xt::arange(n));
+
+    // Split A into a real part, and an imaginary part.
+    // Arr A_R = xt::real(A);
+    // Arr A_I = xt::imag(A);
+    Arr A_R = xt::cos(A_theta);
+    Arr A_I = -xt::sin(A_theta);
+
   public:
-    auto operator()(const Arr &h, double t) const {
+    auto operator()(const Arr &h, double t) const -> std::tuple<Arr, double, double> {
         auto fmax = std::numeric_limits<double>::min();
         // auto imax = -1;
         Arr gmax = xt::zeros<double>({n});
 
         for (auto i = 0U; i < m; ++i) {
-            auto a_R = xt::view(A_R, i, xt::all());
-            auto a_I = xt::view(A_I, i, xt::all());
+            Arr a_R = xt::view(A_R, i, xt::all());
+            Arr a_I = xt::view(A_I, i, xt::all());
             double H_r = Hdes_r[i];
             double H_i = Hdes_i[i];
             double t_r = xt::linalg::dot(a_R, h)() - H_r;
             double t_i = xt::linalg::dot(a_I, h)() - H_i;
             double fj = t_r * t_r + t_i * t_i;
             if (fj >= t) {
-                Arr g = 2 * (t_r * a_R + t_i * a_I);
+                Arr g = 2. * (t_r * a_R + t_i * a_I);
                 return std::tuple{std::move(g), fj - t, t};
             }
             if (fmax < fj) {
                 fmax = fj;
                 // imax = i;
-                gmax = 2 * (t_r * a_R + t_i * a_I);
+                gmax = 2. * (t_r * a_R + t_i * a_I);
             }
         }
 

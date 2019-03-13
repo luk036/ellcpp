@@ -3,13 +3,7 @@
 
 #include <cmath>
 #include <tuple>
-#include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
-
-/* linux-2.6.38.8/include/linux/compiler.h */
-#include <stdio.h>
-#define likely(x) __builtin_expect(!!(x), 1)
-#define unlikely(x) __builtin_expect(!!(x), 0)
 
 /**
  * @brief Ellipsoid Search Space
@@ -83,19 +77,6 @@ class ell {
     void set_xc(const Arr &xc) { _xc = xc; }
 
     /**
-     * @brief
-     *
-     * @tparam T
-     * @param g
-     * @param beta
-     * @return std::tuple<int, double>
-     */
-    template <typename T> //
-    std::tuple<int, double> update(const Arr &g, const T &beta) {
-        return this->update_core(g, beta);
-    }
-
-    /**
      * @brief Update ellipsoid core function using the cut
      *          g' * (x - xc) + beta <= 0
      *
@@ -105,50 +86,9 @@ class ell {
      * @return std::tuple<int, double>
      */
     template <typename T>
-    std::tuple<int, double> update_core(const Arr &g, const T &beta) {
-        auto Qg = Arr{xt::linalg::dot(_Q, g)};
-        auto omega = xt::linalg::dot(g, Qg)();
-        auto tsq = this->_kappa * omega;
-        if (unlikely(tsq <= 0)) {
-            return {4, 0.};
-        }
-        // auto tau = std::sqrt(_kappa * tsq);
-        // auto alpha = beta / tau;
-        auto [status, params] = this->calc_ll(beta, tsq);
-        if (status != 0) {
-            return {status, tsq};
-        }
-        const auto &[rho, sigma, delta] = params;
-        this->_xc -= (rho / omega) * Qg;
-        this->_Q -= (sigma / omega) * xt::linalg::outer(Qg, Qg);
-        this->_kappa *= delta;
-        if (unlikely(this->_kappa > 1e100 || this->_kappa < 1e-100)) {
-            this->_Q *= this->_kappa;
-            this->_kappa = 1.;
-        }
-        return {status, tsq}; // g++-7 is ok
-    }
+    std::tuple<int, double> update(const Arr &g, const T &beta);
 
-    /**
-     * @brief parallel or deep cut
-     *
-     * @tparam T
-     * @param beta
-     * @param tsq
-     * @return return_t
-     */
-    template <typename T> //
-    return_t calc_ll(const T &beta, double tsq) {
-        if constexpr (std::is_scalar<T>::value) { // C++17
-            return this->calc_dc(beta, tsq);
-        } else { // parallel cut
-            if (unlikely(beta.shape()[0] < 2)) {
-                return this->calc_dc(beta[0], tsq);
-            }
-            return this->calc_ll_core(beta[0], beta[1], tsq);
-        }
-    }
-
+  private:
     /**
      * @brief
      *

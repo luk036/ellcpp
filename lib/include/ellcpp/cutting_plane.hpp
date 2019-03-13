@@ -3,7 +3,7 @@
 
 #include <cmath>
 #include <tuple>
-#include <xtensor-blas/xlinalg.hpp>
+// #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
 /**
@@ -181,7 +181,7 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
 // #include <boost/numeric/ublas/symmetric.hpp>
 // namespace bnu = boost::numeric::ublas;
 #include <xtensor-blas/xlinalg.hpp>
-#include <xtensor/xarray.hpp>
+// #include <xtensor/xarray.hpp>
 
 /**
  * @brief
