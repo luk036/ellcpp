@@ -11,7 +11,7 @@ using Arr = xt::xarray<double>;
  */
 auto lmi_oracle::operator()(const Arr &x) -> std::tuple<Arr, double, bool> {
     using xt::linalg::dot;
-    using xt::placeholders::_;
+    // using xt::placeholders::_;
     auto n = x.size();
 
     auto getA = [&, this](unsigned i, unsigned j) -> double {

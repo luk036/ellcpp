@@ -108,7 +108,7 @@ class chol_ext {
         assert(!this->is_spd());
         auto &p = this->p;
         Vec v = xt::zeros<double>({p});
-        using xt::placeholders::_;
+        // using xt::placeholders::_;
 
         auto r = this->R(p - 1, p - 1);
         auto ep = (r == 0.) ? 0. : 1.;
