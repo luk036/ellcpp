@@ -22,7 +22,10 @@ TEST_CASE("PY2CPP", "[py2cpp]") {
     CHECK(M.contains(8));
     CHECK(!M.contains(10));
     CHECK(py::len(M) == 3);
-    for (const auto &[e, v] : M) {
+    for (const auto &[e, _] : M.items()) {
+        CHECK(M.contains(e));
+    }
+    for (const auto &e : M) {
         CHECK(M.contains(e));
     }
     CHECK(std::any_cast<double>(M[8]) == 5.6);

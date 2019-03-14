@@ -35,12 +35,10 @@ auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */) {
     using edge_t = decltype(*std::begin(G.edges()));
     edge_t e0 = *std::begin(G.edges());
 
-    // using cost_t = decltype(boost::get(cost, e0));
-    using cost_t = T;
+    using cost_t = decltype(get_cost(G, e0));
     cost_t c0 = get_cost(G, e0);
 
-    // using time_t = decltype(boost::get(time, e0));
-    using time_t = T;
+    using time_t = decltype(get_time(G, e0));
     time_t t0 = get_time(G, e0);
 
     auto calc_weight = [&](const Graph &, T r, const auto &e) {
@@ -54,7 +52,7 @@ auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */) {
             total_cost += get_cost(G, e);
         for (const auto &e : C)
             total_time += get_time(G, e);
-        return total_cost / total_time;
+        return T(total_cost) / total_time;
     };
 
     // auto max_cost = *std::max_element(cost.begin(), cost.end());
@@ -71,7 +69,7 @@ auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */) {
         if (min_time > t)
             min_time = t;
     }
-    const auto r0 = max_cost * G.number_of_edges() / min_time;
+    const auto r0 = T(max_cost * G.number_of_edges()) / min_time;
     return max_parametric(G, r0, calc_weight, calc_ratio);
 }
 
