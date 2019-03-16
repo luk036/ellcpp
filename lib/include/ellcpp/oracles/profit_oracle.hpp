@@ -108,7 +108,7 @@ class profit_q_oracle {
     using xarray = xt::xarray<double>;
 
   private:
-    profit_oracle _P;
+    profit_oracle P;
 
   public:
     /**
@@ -121,7 +121,7 @@ class profit_q_oracle {
      * @param v
      */
     profit_q_oracle(double p, double A, double k, xarray a, xarray v)
-        : _P(p, A, k, a, v) {}
+        : P(p, A, k, a, v) {}
 
     /**
      * @brief
@@ -139,7 +139,7 @@ class profit_q_oracle {
             x[1] = 1.;
         }
         xarray yd = xt::log(x);
-        auto [g, fj, t1] = _P(yd, t);
+        auto [g, fj, t1] = this->P(yd, t);
         return std::tuple{std::move(g), fj, t1, yd, 1};
     }
 };

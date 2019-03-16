@@ -35,7 +35,7 @@ auto qmi_oracle::operator()(const Arr &x) -> std::tuple<Arr, double, bool> {
     };
 
     this->_Q.factor(getA);
-    auto g = Arr{xt::zeros<double>({_nx})};
+    auto g = Arr{xt::zeros<double>({this->_nx})};
     if (this->_Q.is_spd()) {
         return {std::move(g), -1., true};
     }

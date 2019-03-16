@@ -18,7 +18,8 @@ using Arr = xt::xarray<double>;
  * @param tsq
  * @return ell::return_t
  */
-ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
+auto ell::calc_ll_core(double b0, double b1, double tsq) const
+    -> ell::return_t {
     auto b1sq = b1 * b1;
     if (b1sq > tsq || !this->_use_parallel_cut) {
         return this->calc_dc(b0, tsq);
@@ -48,8 +49,8 @@ ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
     auto sigma = (n + (tsq - b0b1 - xi) / (2 * bav * bav)) / (n + 1);
     auto rho = sigma * bav;
     auto delta = this->_c1 * ((t0 + t1) / 2 + xi / n) / tsq;
-    auto ret = ell::params_t{rho, sigma, delta};
-    return {0, std::move(ret)};
+    params = std::tuple{rho, sigma, delta};
+    return {0, std::move(params)};
 }
 
 /**
@@ -60,15 +61,16 @@ ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const {
  * @param tsq
  * @return ell::return_t
  */
-ell::return_t ell::calc_ll_cc(double b1, double b1sq, double tsq) const {
+auto ell::calc_ll_cc(double b1, double b1sq, double tsq) const
+    -> ell::return_t {
     auto n = this->_n;
     auto temp = n * b1sq / 2;
     auto xi = std::sqrt(tsq * (tsq - b1sq) + temp * temp);
     auto sigma = (n + 2 * (tsq - xi) / b1sq) / (n + 1);
     auto rho = sigma * b1 / 2;
     auto delta = this->_c1 * (tsq - b1sq / 2 + xi / n) / tsq;
-    auto ret = ell::params_t{rho, sigma, delta};
-    return {0, std::move(ret)};
+    auto params = ell::params_t{rho, sigma, delta};
+    return {0, std::move(params)};
 }
 
 /**
@@ -78,7 +80,7 @@ ell::return_t ell::calc_ll_cc(double b1, double b1sq, double tsq) const {
  * @param tsq
  * @return ell::return_t
  */
-ell::return_t ell::calc_dc(double beta, double tsq) const {
+auto ell::calc_dc(double beta, double tsq) const -> ell::return_t {
     auto params = std::tuple{0., 0., 0.};
     auto tau = std::sqrt(tsq);
 
@@ -109,13 +111,13 @@ ell::return_t ell::calc_dc(double beta, double tsq) const {
  * @param tsq
  * @return ell::return_t
  */
-ell::return_t ell::calc_cc(double tsq) const {
+auto ell::calc_cc(double tsq) const -> ell::return_t {
     auto np1 = this->_n + 1;
     auto sigma = 2. / np1;
     auto rho = std::sqrt(tsq) / np1;
     auto delta = this->_c1;
-    auto ret = ell::params_t{rho, sigma, delta};
-    return {0, std::move(ret)};
+    auto params = ell::params_t{rho, sigma, delta};
+    return std::tuple{0, std::move(params)};
 }
 
 /**
@@ -128,9 +130,10 @@ ell::return_t ell::calc_cc(double tsq) const {
 ell1d::return_t ell1d::update(double g, double beta) {
     auto tau = std::abs(this->_r * g);
     auto tsq = tau * tau;
+
     if (beta == 0.) {
         this->_r /= 2;
-        this->_xc += g > 0 ? -this->_r : this->_r;
+        this->_xc += g > 0. ? -this->_r : this->_r;
         return {0, tsq};
     }
     if (beta > tau) {
@@ -141,8 +144,8 @@ ell1d::return_t ell1d::update(double g, double beta) {
     }
 
     auto bound = this->_xc - beta / g;
-    auto u = g > 0 ? bound : this->_xc + this->_r;
-    auto l = g > 0 ? this->_xc - this->_r : bound;
+    auto u = g > 0. ? bound : this->_xc + this->_r;
+    auto l = g > 0. ? this->_xc - this->_r : bound;
     this->_r = (u - l) / 2;
     this->_xc = l + this->_r;
     return {0, tsq};
@@ -178,7 +181,8 @@ std::tuple<int, double> ell::update(const Arr &g, const T &beta) {
         if (unlikely(beta.shape()[0] < 2)) {
             std::tie(status, params) = this->calc_dc(beta[0], tsq);
         } else {
-            std::tie(status, params) = this->calc_ll_core(beta[0], beta[1], tsq);
+            std::tie(status, params) =
+                this->calc_ll_core(beta[0], beta[1], tsq);
         }
     }
 
@@ -195,7 +199,6 @@ std::tuple<int, double> ell::update(const Arr &g, const T &beta) {
     }
     return {status, tsq}; // g++-7 is ok
 }
-
 
 // Instantiation
 template std::tuple<int, double> ell::update(const Arr &g, const double &beta);

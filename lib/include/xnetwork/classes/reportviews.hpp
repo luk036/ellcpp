@@ -1059,33 +1059,40 @@ template <typename nodeview_t> class NodeView {
 //     }
 // };
 
-// // EdgeViews    have set operations && no data reported
-// class OutEdgeView(Set, Mapping) {
-//     /** A EdgeView class for outward edges of a DiGraph */
-//     static const auto __slots__ = ("_adjdict", "_graph", "_nodes_nbrs");
+// // EdgeViews    have set operations and no data reported
+// // Interface: Set, Mapping
+// /** A EdgeView class for outward edges of a DiGraph */
+// template <typename graph_t> 
+// class OutEdgeView {
+//     // static const auto __slots__ = ("_adjdict", "_graph", "_nodes_nbrs");
 
-//     auto __getstate__( ) {
-//         return {"_graph": this->_graph};
-//     }
+//     // auto __getstate__( ) {
+//     //     return {"_graph": this->_graph};
+//     // }
 
-//     auto __setstate__( state) {
-//         this->_graph = G = state["_graph"];
-//         this->_adjdict = G._succ if (hasattr(G, "succ") else G._adj;
-//         this->_nodes_nbrs = this->_adjdict.items;
-//     }
+//     // auto __setstate__( state) {
+//     //     this->_graph = G = state["_graph"];
+//     //     this->_adjdict = G._succ if (hasattr(G, "succ") else G._adj;
+//     //     this->_nodes_nbrs = this->_adjdict.items;
+//     // }
 
 //     /// @classmethod
-//     auto _from_iterable(cls, it) {
-//         return set(it);
-//     }
+//     // auto _from_iterable(cls, it) {
+//     //     return set(it);
+//     // }
 
-//     dataview = OutEdgeDataView;
+//     // dataview = OutEdgeDataView;
+//     graph_t& _graph;
+//     T& _adjdict;
+//     T  _nodes_nbrs;
 
-//     explicit _Self( G) {
-//         this->_graph = G;
-//         this->_adjdict = G._succ if (hasattr(G, "succ") else G._adj;
-//         this->_nodes_nbrs = this->_adjdict.items;
-//     }
+//     explicit OutEdgeView(graph_t& G) {
+//         _graph{G},
+//         // _adjdict = G._succ if (hasattr(G, "succ") else G._adj;
+//         _adjdict{G._adj},
+//         _nodes_nbrs{this->_adjdict.items()}
+//     {}
+
 
 //     // Set methods
 //     auto __len__( ) {
@@ -1093,7 +1100,7 @@ template <typename nodeview_t> class NodeView {
 //     }
 
 //     auto __iter__( ) {
-//         for (auto n, nbrs : this->_nodes_nbrs() {
+//         for (auto [n, nbrs] : this->_nodes_nbrs()) {
 //             for (auto nbr : nbrs) {
 //                 yield (n, nbr);
 //             }
@@ -1413,6 +1420,6 @@ template <typename nodeview_t> class NodeView {
 //     }
 // };
 
-}; // namespace xn
+} // namespace xn
 
 #endif

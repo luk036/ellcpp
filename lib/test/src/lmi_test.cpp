@@ -2,7 +2,7 @@
  *  Distributed under the MIT License (See accompanying file /LICENSE )
  */
 #include <catch.hpp>
-#include <iostream>
+// #include <iostream>
 #include <tuple>
 
 #include <ellcpp/cutting_plane.hpp>
@@ -17,35 +17,35 @@ class my_oracle {
     using Arr = xt::xarray<double>;
 
   private:
-    lmi_oracle _lmi1;
-    lmi_oracle _lmi2;
-    Arr _c;
+    lmi_oracle lmi1;
+    lmi_oracle lmi2;
+    Arr c;
 
   public:
     explicit my_oracle(const std::vector<Arr> &F1, Arr &B1,
                        const std::vector<Arr> &F2, Arr &B2, Arr &c)
-        : _lmi1{F1, B1}, _lmi2{F2, B2}, _c{c} {}
+        : lmi1{F1, B1}, lmi2{F2, B2}, c{c} {}
 
     auto operator()(Arr &x, double t) {
         using xt::linalg::dot;
 
-        auto f0 = dot(_c, x)();
+        auto f0 = dot(this->c, x)();
         auto fj1 = f0 - t;
         if (fj1 > 0) {
-            return std::tuple{_c, fj1, t};
+            return std::tuple{this->c, fj1, t};
         }
 
-        auto [g2, fj2, feasible2] = _lmi1(x);
+        auto [g2, fj2, feasible2] = this->lmi1(x);
         if (!feasible2) {
             return std::tuple{std::move(g2), fj2, t};
         }
 
-        auto [g3, fj3, feasible3] = _lmi2(x);
+        auto [g3, fj3, feasible3] = this->lmi2(x);
         if (!feasible3) {
             return std::tuple{std::move(g3), fj3, t};
         }
 
-        return std::tuple{_c, 0., f0};
+        return std::tuple{this->c, 0., f0};
     }
 };
 
