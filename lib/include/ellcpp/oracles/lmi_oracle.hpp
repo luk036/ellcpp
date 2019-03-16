@@ -15,7 +15,6 @@
  */
 class lmi_oracle {
     using Arr = xt::xarray<double>;
-    using shape_type = Arr::shape_type;
 
   private:
     const std::vector<Arr> &_F;
@@ -31,8 +30,8 @@ class lmi_oracle {
      */
     lmi_oracle(const std::vector<Arr> &F, Arr &&B)
         : _F{F},             //
-          _F0{std::move(B)}, //
-          _Q(B.shape()[0])   //
+          _F0{std::forward<Arr>(B)}, //
+          _Q{this->_F0.shape()[0]}   //
     {}
 
     /**
@@ -44,7 +43,7 @@ class lmi_oracle {
     lmi_oracle(const std::vector<Arr> &F, const Arr &B)
         : _F{F},           //
           _F0{B},          //
-          _Q(B.shape()[0]) //
+          _Q(this->_F0.shape()[0]) //
     {}
 
     /**

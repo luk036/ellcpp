@@ -3,13 +3,11 @@
 
 // #include <boost/numeric/ublas/symmetric.hpp>
 // #include <boost/numeric/ublas/triangular.hpp>
-// #include <cassert>
-
 // namespace bnu = boost::numeric::ublas;
 
 #include <cassert>
-// #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
+#include <stdexcept>
 
 // #include <iostream>
 
@@ -26,21 +24,19 @@ class chol_ext {
     using shape_type = Vec::shape_type;
 
   private:
-    std::size_t p;
+    std::size_t p = 0;
     std::size_t n;
 
   public:
-    xt::xarray<double> R{};
+    xt::xarray<double> R;
 
-  public:
     /**
      * @brief Construct a new chol ext object
      *
      * @param n
      */
-    explicit chol_ext(std::size_t n)
-        : p{0}, n{n}, //
-          R{xt::zeros<double>({n, n})} {}
+    explicit chol_ext(std::size_t N)
+        : n{N}, R{xt::zeros<double>({N, N})} {}
 
     /**
      * @brief
@@ -68,11 +64,12 @@ class chol_ext {
      * to make $v'*A[:p,:p]*v < 0$
      */
     template <typename Fn> void factor(Fn getA) {
-        double d;
         this->p = 0;
         auto &R = this->R;
 
         for (auto i = 0U; i < this->n; ++i) {
+            double d;
+    
             for (auto j = 0U; j <= i; ++j) {
                 d = getA(i, j);
                 for (auto k = 0U; k < j; ++k) {
@@ -82,7 +79,7 @@ class chol_ext {
                     R(j, i) = d / R(j, j);
                 }
             }
-            if (d <= 0) {
+            if (d <= 0.) {
                 this->p = i + 1;
                 R(i, i) = std::sqrt(-d);
                 break;
@@ -97,7 +94,7 @@ class chol_ext {
      * @return true
      * @return false
      */
-    bool is_spd() const { return this->p == 0; }
+    auto is_spd() const -> bool { return this->p == 0; }
 
     /**
      * @brief
@@ -105,11 +102,11 @@ class chol_ext {
      * @return auto
      */
     auto witness() const {
-        assert(!this->is_spd());
+        if (this->is_spd()) {
+            throw std::runtime_error{"Implementation Error."};
+        }
         auto &p = this->p;
-        Vec v = xt::zeros<double>({p});
-        // using xt::placeholders::_;
-
+        auto v = Vec{xt::zeros<double>({p})};
         auto r = this->R(p - 1, p - 1);
         auto ep = (r == 0.) ? 0. : 1.;
         v[p - 1] = (r == 0.) ? 1. : 1. / r;
