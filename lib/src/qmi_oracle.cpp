@@ -13,7 +13,6 @@ using Arr = xt::xarray<double>;
  */
 auto qmi_oracle::operator()(const Arr &x) -> std::tuple<Arr, double, bool> {
     using xt::linalg::dot;
-    // using xt::placeholders::_;
 
     this->_count = 0;
     this->_nx = x.shape()[0];

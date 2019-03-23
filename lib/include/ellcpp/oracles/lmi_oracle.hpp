@@ -6,7 +6,7 @@
 #include <xtensor/xarray.hpp>
 
 /**
- * @brief  Oracle for Linear Matrix Inequality
+ * @brief Oracle for Linear Matrix Inequality
  *
  * Oracle for:
  *    F * x <= B

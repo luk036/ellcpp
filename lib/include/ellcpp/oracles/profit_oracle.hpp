@@ -11,15 +11,15 @@
  *
  */
 class profit_oracle {
-    using xarray = xt::xarray<double>;
+    using Arr = xt::xarray<double>;
 
   private:
     double _log_pA;
     double _log_k;
-    xarray _v;
+    Arr _v;
 
   public:
-    xarray _a;
+    Arr _a;
 
   public:
     /**
@@ -31,7 +31,7 @@ class profit_oracle {
      * @param a
      * @param v
      */
-    profit_oracle(double p, double A, double k, xarray a, xarray v)
+    profit_oracle(double p, double A, double k, Arr a, Arr v)
         : _log_pA{std::log(p * A)}, //
           _log_k{std::log(k)},      //
           _v{v},                    //
@@ -45,8 +45,8 @@ class profit_oracle {
      * @param t
      * @return auto
      */
-    auto operator()(const xarray &y, double t) const
-                    -> std::tuple<xarray, double, double>;
+    auto operator()(const Arr &y, double t) const
+                    -> std::tuple<Arr, double, double>;
 };
 
 /**
@@ -54,11 +54,11 @@ class profit_oracle {
  *
  */
 class profit_rb_oracle {
-    using xarray = xt::xarray<double>;
+    using Arr = xt::xarray<double>;
 
   private:
-    xarray _uie;
-    xarray _a;
+    Arr _uie;
+    Arr _a;
     double _uie3;
     profit_oracle _P;
 
@@ -75,8 +75,8 @@ class profit_rb_oracle {
      * @param e
      * @param e3
      */
-    profit_rb_oracle(double p, double A, double k, xarray a, xarray v,
-                     double ui, xarray e, double e3)
+    profit_rb_oracle(double p, double A, double k, const Arr &a, const Arr &v,
+                     double ui, const Arr &e, double e3)
         : _uie{ui * e},                             //
           _a{a},                                    //
           _uie3{ui * e3},                           //
@@ -90,8 +90,8 @@ class profit_rb_oracle {
      * @param t
      * @return auto
      */
-    auto operator()(const xarray &y, double t) {
-        xarray a_rb = _a;
+    auto operator()(const Arr &y, double t) {
+        auto a_rb = _a;
         for (auto &&i : {0, 1}) {
             a_rb[i] += _uie[i] * (y[i] > 0 ? -1 : +1);
         }
@@ -105,7 +105,7 @@ class profit_rb_oracle {
  *
  */
 class profit_q_oracle {
-    using xarray = xt::xarray<double>;
+    using Arr = xt::xarray<double>;
 
   private:
     profit_oracle P;
@@ -120,7 +120,7 @@ class profit_q_oracle {
      * @param a
      * @param v
      */
-    profit_q_oracle(double p, double A, double k, xarray a, xarray v)
+    profit_q_oracle(double p, double A, double k, const Arr &a, const Arr &v)
         : P(p, A, k, a, v) {}
 
     /**
@@ -130,15 +130,15 @@ class profit_q_oracle {
      * @param t
      * @return auto
      */
-    auto operator()(const xarray &y, double t, int /*unused*/) const {
-        xarray x = xt::round(xt::exp(y));
+    auto operator()(const Arr &y, double t, int /*unused*/) const {
+        auto x = Arr{xt::round(xt::exp(y))};
         if (x[0] == 0.) {
             x[0] = 1.;
         }
         if (x[1] == 0.) {
             x[1] = 1.;
         }
-        xarray yd = xt::log(x);
+        auto yd = Arr{xt::log(x)};
         auto [g, fj, t1] = this->P(yd, t);
         return std::tuple{std::move(g), fj, t1, yd, 1};
     }

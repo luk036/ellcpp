@@ -1,5 +1,5 @@
 #include <ellcpp/oracles/lmi_oracle.hpp>
-#include <xtensor-blas/xlinalg.hpp>
+// #include <xtensor-blas/xlinalg.hpp>
 
 using Arr = xt::xarray<double>;
 
@@ -10,14 +10,11 @@ using Arr = xt::xarray<double>;
  * @return std::tuple<Arr, double, bool>
  */
 auto lmi_oracle::operator()(const Arr &x) -> std::tuple<Arr, double, bool> {
-    using xt::linalg::dot;
-    // using xt::placeholders::_;
     auto n = x.size();
 
     auto getA = [&, this](unsigned i, unsigned j) -> double {
         auto a = this->_F0(i, j);
         for (auto k = 0U; k < n; ++k) {
-            // const auto &Fi = this->_F[k];
             a -= this->_F[k](i, j) * x(k);
         }
         return a;
