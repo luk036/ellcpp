@@ -10,6 +10,7 @@
 #include <ellcpp/oracles/lowpass_oracle.hpp>
 #include <limits>
 #include <xtensor/xview.hpp>
+#include <xtensor-blas/xlinalg.hpp>
 
 using Arr = xt::xarray<double>;
 // using CArr = xt::xarray<std::complex<double>>;

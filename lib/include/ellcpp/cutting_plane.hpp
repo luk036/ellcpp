@@ -180,7 +180,7 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
 **/
 // #include <boost/numeric/ublas/symmetric.hpp>
 // namespace bnu = boost::numeric::ublas;
-#include <xtensor-blas/xlinalg.hpp>
+// #include <xtensor-blas/xlinalg.hpp>
 // #include <xtensor/xarray.hpp>
 
 /**
@@ -206,15 +206,16 @@ auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
     auto niter = 1U;
     for (; niter < options.max_it; ++niter) {
         auto [g, h, t1, x0, loop] = evaluate(S.xc(), t, (status != 3) ? 0 : 1);
-        if (status != 3) {
-            if (loop == 1) { // discrete sol'n
-                h += xt::linalg::dot(g, x0 - S.xc())();
-            }
-        } else { // can't cut in the previous iteration
+        // if (status != 3) {
+        //     if (loop == 1) { // discrete sol'n
+        //         h += xt::linalg::dot(g, x0 - S.xc())();
+        //     }
+        // } else { // can't cut in the previous iteration
+        if (status == 3) {
             if (loop == 0) {
                 break; // no more alternative cut
             }
-            h += xt::linalg::dot(g, x0 - S.xc())();
+            // h += xt::linalg::dot(g, x0 - S.xc())();
         }
         if (t != t1) { // best t obtained
             feasible = true;

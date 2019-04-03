@@ -130,18 +130,7 @@ class profit_q_oracle {
      * @param t
      * @return auto
      */
-    auto operator()(const Arr &y, double t, int /*unused*/) const {
-        auto x = Arr{xt::round(xt::exp(y))};
-        if (x[0] == 0.) {
-            x[0] = 1.;
-        }
-        if (x[1] == 0.) {
-            x[1] = 1.;
-        }
-        auto yd = Arr{xt::log(x)};
-        auto [g, fj, t1] = this->P(yd, t);
-        return std::tuple{std::move(g), fj, t1, yd, 1};
-    }
+    auto operator()(const Arr &y, double t, int /*unused*/) const -> std::tuple<Arr, double, double, Arr, int>;
 };
 
 #endif
