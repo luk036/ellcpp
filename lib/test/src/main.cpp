@@ -6,8 +6,6 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/profit_oracle.hpp>
-// #include <boost/numeric/ublas/symmetric.hpp>
-// #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
 // using namespace fun;
@@ -15,38 +13,31 @@
 TEST_CASE("Profit Test 1", "[profit]") {
     using Vec = xt::xarray<double>;
 
-    double p = 20, A = 40, k = 30.5;
-    Vec a{0.1, 0.4};
-    Vec v{10., 35.};
-
-    double fb;
-    int niter, status;
-    bool feasible;
+    auto p = 20., A = 40., k = 30.5;
+    auto a = Vec{0.1, 0.4};
+    auto v = Vec{10., 35.};
 
     {
-        ell E(100., Vec{0., 0.});
-        profit_oracle P(p, A, k, a, v);
-        std::tie(std::ignore, fb, niter, feasible, status) =
-            cutting_plane_dc(P, E, 0.);
+        auto E = ell(100., Vec{0., 0.});
+        auto P = profit_oracle(p, A, k, a, v);
+        auto [_, fb, niter, feasible, status] = cutting_plane_dc(P, E, 0.);
         CHECK(niter == 37);
     }
 
     {
-        double ui = 1., e3 = 1.;
-        Vec e{0.003, 0.007};
+        auto ui = 1., e3 = 1.;
+        auto e = Vec{0.003, 0.007};
 
-        ell E1(100., Vec{0., 0.});
-        profit_rb_oracle P1(p, A, k, a, v, ui, e, e3);
-        std::tie(std::ignore, fb, niter, feasible, status) =
-            cutting_plane_dc(P1, E1, 0.);
+        auto E = ell(100., Vec{0., 0.});
+        auto P = profit_rb_oracle(p, A, k, a, v, ui, e, e3);
+        auto [_, fb, niter, feasible, status] = cutting_plane_dc(P, E, 0.);
         CHECK(niter == 42);
     }
 
     {
-        ell E2(100., Vec{2, 0.});
-        profit_q_oracle P2(p, A, k, a, v);
-        std::tie(std::ignore, fb, niter, feasible, status) =
-            cutting_plane_q(P2, E2, 0.);
+        auto E = ell(100., Vec{2, 0.});
+        auto P = profit_q_oracle(p, A, k, a, v);
+        auto [_, fb, niter, feasible, status] = cutting_plane_q(P, E, 0.);
         CHECK(niter == 28);
     }
 }

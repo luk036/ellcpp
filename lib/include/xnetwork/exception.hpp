@@ -16,7 +16,7 @@ Base exceptions && errors for XNetwork.
 
 namespace xn {
 
-static const auto __all__ = {
+static auto const __all__ = {
     "HasACycle",
     "NodeNotFound",
     "PowerIterationFailedConvergence",
@@ -137,7 +137,7 @@ struct ExceededMaxIterations : XNetworkException {
 //      */
 // class PowerIterationFailedConvergence : ExceededMaxIterations {
 //     explicit _Self( num_iterations, *args, **kw) {
-//         const auto msg = "power iteration failed to converge within {}
+//         auto const msg = "power iteration failed to converge within {}
 //         iterations"; exception_message = msg.format(num_iterations);
 //         superinit = super(PowerIterationFailedConvergence, *this).__init__
 //         superinit( exception_message, *args, **kw);

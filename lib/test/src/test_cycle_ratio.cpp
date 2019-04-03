@@ -85,11 +85,11 @@ TEST_CASE("Test Cycle Ratio", "[test_cycle_ratio]")
     IterMap cost_pa(cost, edge_id), time_pa(time, edge_id);
 
     auto get_cost = [&](const xn::grAdaptor<graph_t> &G,
-                        const auto &e) -> fun::Fraction<int> {
+                        auto const &e) -> fun::Fraction<int> {
         return boost::get(cost_pa, e);
     };
     auto get_time = [&](const xn::grAdaptor<graph_t> &G,
-                        const auto &e) -> fun::Fraction<int> {
+                        auto const &e) -> fun::Fraction<int> {
         return boost::get(time_pa, e);
     };
 
@@ -117,11 +117,11 @@ TEST_CASE("Test Cycle Ratio of Timing Graph", "[test_cycle_ratio]")
     IterMap cost_pa(cost, edge_id), time_pa(time, edge_id);
 
     auto get_cost = [&](const xn::grAdaptor<graph_t> &G,
-                        const auto &e) -> fun::Fraction<int> {
+                        auto const &e) -> fun::Fraction<int> {
         return boost::get(cost_pa, e);
     };
     auto get_time = [&](const xn::grAdaptor<graph_t> &G,
-                        const auto &e) -> fun::Fraction<int> {
+                        auto const &e) -> fun::Fraction<int> {
         return boost::get(time_pa, e);
     };
 

@@ -32,7 +32,7 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
 
     using edge_t = decltype(*(std::begin(G.edges())));
 
-    const auto get_weight = [d, r](const Graph &G,
+    auto const get_weight = [d, r](const Graph &G,
                                    const edge_t &e) -> T { // int???
         return d(G, r, e);
     };
@@ -42,7 +42,7 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
     T r_opt = r;
 
     while (true) {
-        const auto &C = S.neg_cycle_relax();
+        auto const &C = S.neg_cycle_relax();
         const T &r_min = zero_cancel(G, C);
         // std::cout << "r_min=" << r_min << '\n';
 
@@ -53,7 +53,7 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
         r_opt = r_min;
         // update ???
         for (const edge_t &e : C_opt) {
-            const auto &[u, v] = G.end_points(e);
+            auto const &[u, v] = G.end_points(e);
             S._dist[u] = S._dist[v] - get_weight(G, e);
         }
     }

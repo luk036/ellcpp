@@ -2,7 +2,6 @@
  *  Distributed under the MIT License (See accompanying file /LICENSE )
  */
 #include <catch.hpp>
-// #include <iostream>
 #include <tuple>
 
 #include <ellcpp/cutting_plane.hpp>
@@ -22,30 +21,33 @@ class my_oracle {
     Arr c;
 
   public:
-    explicit my_oracle(const std::vector<Arr> &F1, Arr &B1,
-                       const std::vector<Arr> &F2, Arr &B2, Arr &c)
-        : lmi1{F1, B1}, lmi2{F2, B2}, c{c} {}
+    // my_oracle(const std::vector<Arr> &F1, Arr &B1,
+    //           const std::vector<Arr> &F2, Arr &B2, Arr &c)
+    //     : lmi1{F1, B1}, lmi2{F2, B2}, c{c} {}
 
-    auto operator()(Arr &x, double t) {
+    my_oracle(std::vector<Arr> &&F1, Arr &&B1,
+              std::vector<Arr> &&F2, Arr &&B2, Arr &c)
+        : lmi1{std::forward<std::vector<Arr>>(F1), std::forward<Arr>(B1)},
+          lmi2{std::forward<std::vector<Arr>>(F2), std::forward<Arr>(B2)},
+          c{c} {}
+
+    auto operator()(Arr &x, double t)  -> std::tuple<Arr, double, bool> {
         using xt::linalg::dot;
 
         auto f0 = dot(this->c, x)();
         auto fj1 = f0 - t;
         if (fj1 > 0) {
-            return std::tuple{this->c, fj1, t};
+            return {this->c, fj1, t};
         }
-
         auto [g2, fj2, feasible2] = this->lmi1(x);
         if (!feasible2) {
-            return std::tuple{std::move(g2), fj2, t};
+            return {std::move(g2), fj2, t};
         }
-
         auto [g3, fj3, feasible3] = this->lmi2(x);
         if (!feasible3) {
-            return std::tuple{std::move(g3), fj3, t};
+            return {std::move(g3), fj3, t};
         }
-
-        return std::tuple{this->c, 0., f0};
+        return {this->c, 0., f0};
     }
 };
 
@@ -63,7 +65,7 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
                          {{-5., 2., -17.}, {2., -6., 8.}, {-17., 8., 6.}}};
     auto B2 = Arr{{14., 9., 40.}, {9., 91., 10.}, {40., 10., 15.}};
 
-    auto P = my_oracle(F1, B1, F2, B2, c);
+    auto P = my_oracle(std::move(F1), std::move(B1), std::move(F2), std::move(B2), c);
     auto E = ell(10., Arr{0., 0., 0.});
 
     // double fb;

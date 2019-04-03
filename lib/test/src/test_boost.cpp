@@ -28,9 +28,9 @@ struct exercise_vertex
         // std::cout << "out-edges: ";
         // typename GraphTraits::out_edge_iterator out_i, out_end;
         // typename GraphTraits::edge_descriptor e;
-        for (const auto &e : g.neighbors(v))
+        for (auto const &e : g.neighbors(v))
         {
-            const auto &[src, targ] = g.end_points(e);
+            auto const &[src, targ] = g.end_points(e);
             // std::cout << "(" << index[src] << "," << index[targ] << ") ";
         }
         // std::cout << std::endl;
@@ -89,7 +89,7 @@ TEST_CASE("Test Boost", "[test_boost]")
 
     // std::cout << "edges(g) = ";
     // graph_traits<Graph>::edge_iterator ei, ei_end;
-    // for (const auto &e : G.edges())
+    // for (auto const &e : G.edges())
     //     std::cout << "(" << index[boost::source(e, G)] << ","
     //               << index[boost::target(e, G)] << ") ";
     // std::cout << std::endl;

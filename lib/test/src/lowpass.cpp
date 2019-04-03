@@ -101,20 +101,20 @@ static const double Spsq = Sp * Sp;
 // ********************************************************************
 
 auto run_lowpass(bool use_parallel_cut) {
-    Arr r0 = xt::zeros<double>({N}); // initial x0
-    // r0[0] = 0;
+    auto r0 = Arr{xt::zeros<double>({N})}; // initial x0
     auto E = ell(40., r0);
-    E._use_parallel_cut = use_parallel_cut;
     auto P = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
     auto options = Options();
+
     options.max_it = 50000;
+    E._use_parallel_cut = use_parallel_cut;
     // options.tol = 1e-8;
     auto [r, Spsq_new, num_iters, feasible, status] =
         cutting_plane_dc(P, E, Spsq, options);
     // std::cout << "lowpass r: " << r << '\n';
     auto Ustop = 20*std::log10(std::sqrt(Spsq_new));
     // std::cout << "Min attenuation in the stopband is " << Ustop << " dB.\n";
-    return std::tuple<bool, unsigned int>{feasible, num_iters};
+    return std::tuple{feasible, num_iters};
 }
 
 // auto test_lowpass0(benchmark) {

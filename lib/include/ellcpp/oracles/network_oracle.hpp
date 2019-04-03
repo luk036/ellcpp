@@ -57,7 +57,7 @@ class network_oracle {
         if (C.empty()) {
             return std::tuple{std::move(g), 0., true};
         }
-        for (const auto &e : C) {
+        for (auto const &e : C) {
             f -= _f(_G, e, x);
             g -= _p(_G, e, x);
         }

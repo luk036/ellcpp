@@ -16,7 +16,7 @@
 // from collections import Mapping
 // #include <xnetwork.hpp> // as xn
 
-static const auto __all__ = {
+static auto const __all__ = {
     "AtlasView",           "AdjacencyView",        "MultiAdjacencyView",
     "UnionAtlas",          "UnionAdjacency",       "UnionMultiInner",
     "UnionMultiAdjacency", "FilterAtlas",          "FilterAdjacency",
@@ -101,7 +101,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     AtlasView - View into dict-of-dict
 //     AdjacencyView - View into dict-of-dict-of-dict
 //      */
-//     // static const auto __slots__ = ();   // Still uses AtlasView slots
+//     // static auto const __slots__ = ();   // Still uses AtlasView slots
 //     names _atlas static const char *__slots__ = nullptr;   // Still uses
 //     AtlasView slots names _atlas
 
@@ -129,7 +129,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //      */
 //     using _Self = UnionAtlas;
 
-//     static const auto __slots__ = {"_succ", "_pred"};
+//     static auto const __slots__ = {"_succ", "_pred"};
 
 //     auto __getstate__( ) {
 //         return {"_succ": this->_succ, "_pred": this->_pred};
@@ -202,7 +202,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //      */
 //     using _Self = UnionAdjacency;
 
-//     static const auto __slots__ = {"_succ", "_pred"};
+//     static auto const __slots__ = {"_succ", "_pred"};
 
 //     auto __getstate__( ) {
 //         return {"_succ": this->_succ, "_pred": this->_pred};
@@ -262,7 +262,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     UnionAdjacency - View into dict-of-dict-of-dict
 //     UnionMultiAdjacency - View into dict-of-dict-of-dict-of-dict
 //      */
-//     static const auto __slots__ = ()   // Still uses UnionAtlas slots names
+//     static auto const __slots__ = ()   // Still uses UnionAtlas slots names
 //     _succ, _pred;
 
 //     auto operator[]( node) {
@@ -295,7 +295,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     UnionAtlas - View into dict-of-dict
 //     UnionMultiInner - View into dict-of-dict-of-dict
 //      */
-//     static const auto __slots__ = ();   // Still uses UnionAdjacency slots
+//     static auto const __slots__ = ();   // Still uses UnionAdjacency slots
 //     names _succ, _pred;
 
 //     auto operator[]( node) {
@@ -306,7 +306,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     /** A Mixin Class to mask the write methods of a graph class. */
 
 //     auto not_allowed( *args, **kwds) {
-//         const auto msg = "SubGraph Views are readonly. Mutations not
+//         auto const msg = "SubGraph Views are readonly. Mutations not
 //         allowed"; throw xn::XNetworkError(msg);
 //     }
 

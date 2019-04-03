@@ -11,7 +11,7 @@
 
 // template <typename Graph, typename Dict, typename T>
 // void set_default(const Graph &G, Dict &map, T value) {
-//     for (const auto& e : G.edges()) {
+//     for (auto const& e : G.edges()) {
 //         if (!map.contains(&e)) {
 //             map[&e] = value;
 //         }
@@ -41,16 +41,16 @@ auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */) {
     using time_t = decltype(get_time(G, e0));
     time_t t0 = get_time(G, e0);
 
-    auto calc_weight = [&](const Graph &, T r, const auto &e) {
+    auto calc_weight = [&](const Graph &, T r, auto const &e) {
         return get_cost(G, e) - r * get_time(G, e);
     };
 
     auto calc_ratio = [&](const Graph &G, auto &C) {
         cost_t total_cost = cost_t(0);
         time_t total_time = time_t(0);
-        for (const auto &e : C)
+        for (auto const &e : C)
             total_cost += get_cost(G, e);
-        for (const auto &e : C)
+        for (auto const &e : C)
             total_time += get_time(G, e);
         return T(total_cost) / total_time;
     };
@@ -60,7 +60,7 @@ auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */) {
     cost_t max_cost = c0;
     time_t min_time = t0;
 
-    for (const auto &e : G.edges()) {
+    for (auto const &e : G.edges()) {
         cost_t c = get_cost(G, e);
         time_t t = get_time(G, e);
         // std::cout << "mincost: c = " << c << '\n';
@@ -69,7 +69,7 @@ auto min_cycle_ratio(Graph &G, Fn1 get_cost, Fn2 get_time, T && /** dummy */) {
         if (min_time > t)
             min_time = t;
     }
-    const auto r0 = T(max_cost * G.number_of_edges()) / min_time;
+    auto const r0 = T(max_cost * G.number_of_edges()) / min_time;
     return max_parametric(G, r0, calc_weight, calc_ratio);
 }
 

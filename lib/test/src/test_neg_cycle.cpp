@@ -66,7 +66,7 @@ bool do_case(xn::grAdaptor<graph_t> &G) {
 
     auto get_weight = [](const xn::grAdaptor<graph_t> &G,
                          const edge_t &e) -> int {
-        const auto &weightmap = boost::get(boost::edge_weight, G);
+        auto const &weightmap = boost::get(boost::edge_weight, G);
         return weightmap[e];
     };
 

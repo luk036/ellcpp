@@ -365,7 +365,7 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         return this->_succ[this->_node_map[u]]; 
     }
 
-    const auto& successors(const Node &n) const {
+    auto const& successors(const Node &n) const {
         return this->_succ[this->_node_map[u]]; 
     }
 

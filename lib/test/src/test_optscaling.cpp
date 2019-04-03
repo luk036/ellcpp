@@ -60,7 +60,7 @@ TEST_CASE("Test Optimal Scaling", "[test_optscaling]") {
     EdgeIndexMap edge_id = boost::get(boost::id_tag, G);
     IterMap cost_pa(cost, edge_id);
     auto get_cost = [&](const xn::grAdaptor<graph_t> &G,
-                        const auto &e) -> double {
+                        auto const &e) -> double {
         return boost::get(cost_pa, e);
     };
     double cmax = *std::max_element(cost, cost + num_of_nodes);
