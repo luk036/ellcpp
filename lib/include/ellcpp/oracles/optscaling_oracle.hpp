@@ -7,7 +7,7 @@
 // #include <boost/graph/graph_traits.hpp>
 // #include <boost/graph/properties.hpp>
 // #include <boost/property_map/property_map.hpp>
-#include <xtensor-blas/xlinalg.hpp>
+// #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
 /**

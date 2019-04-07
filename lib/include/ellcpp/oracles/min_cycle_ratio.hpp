@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <py2cpp/py2cpp.hpp>
 #include <tuple>
-#include <xtensor-blas/xlinalg.hpp>
+// #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
 // template <typename Graph, typename Dict, typename T>

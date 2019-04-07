@@ -3,7 +3,7 @@
 #define _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_NETWORK_ORACLE_HPP 1
 
 #include "neg_cycle.hpp" // import negCycleFinder
-#include <xtensor-blas/xlinalg.hpp>
+// #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
 /**
