@@ -250,7 +250,7 @@ class mle_oracle {
         auto n = x.shape()[0];
         auto m = this->_Y.shape()[0];
 
-        auto const &R = this->_lmi0._Q.R;
+        auto const &R = this->_lmi0._Q.sqrt();
         auto invR = Arr{xt::linalg::inv(R)};
         auto S = Arr{dot(invR, xt::transpose(invR))};
         auto SY = Arr{dot(S, this->_Y)};

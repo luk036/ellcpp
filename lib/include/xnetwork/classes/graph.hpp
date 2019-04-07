@@ -197,7 +197,7 @@ struct object : py::dict<const char *, std::any> {};
 */
 template <typename nodeview_t, typename nodemap_t,
           typename adjlist_inner_dict_factory = 
-                py::set<typename nodeview_t::value_type>>
+                py::set<Value_type<nodeview_t>>>
 class Graph : public object {
   public:
     using Node = typename nodeview_t::value_type; // luk

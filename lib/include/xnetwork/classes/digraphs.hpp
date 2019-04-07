@@ -197,7 +197,7 @@ namespace xn {
 */
 template <typename nodeview_t, typename nodemap_t,
           typename adjlist_inner_dict_factory = 
-                py::dict<typename nodeview_t::value_type, std::any>>
+                py::dict<Value_type<nodeview_t>, std::any>>
 class DiGraphS : public Graph<nodeview_t, nodemap_t,
                               adjlist_inner_dict_factory> {
     using _Base = Graph<nodeview_t, nodemap_t,
@@ -205,7 +205,7 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
     using graph_attr_dict_factory = typename _Base::graph_attr_dict_factory;
     using adjlist_outer_dict_factory = typename _Base::adjlist_outer_dict_factory;
     using key_type = typename _Base::key_type;
-    using value_type = typename _Base::value_type;
+    using value_type = Value_type<_Base>;
 
   public:
     adjlist_outer_dict_factory& _succ; // successor

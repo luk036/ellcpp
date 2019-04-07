@@ -8,6 +8,9 @@
 #include <unordered_set>
 #include <utility>
 
+template <typename T>
+using Value_type = typename T::value_type;
+
 namespace py {
 
 /**
