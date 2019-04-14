@@ -72,14 +72,14 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
     // int niter, feasible, status;
     // Arr xb;
 
-    auto [xb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 100.);
+    auto ell_info = cutting_plane_dc(P, E, 100.);
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
     // std::cout << "LMI xbest: " << xb << "\n";
     // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible << ", " << status
     //           << "\n";
 
-    CHECK(feasible);
-    CHECK(niter == 115);
+    CHECK(ell_info.feasible);
+    CHECK(ell_info.num_iters == 115);
 }
 
 // TEST_CASE( "Projective Point", "[proj_plane]" ) {

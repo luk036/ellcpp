@@ -20,8 +20,8 @@ TEST_CASE("Profit Test 1", "[profit]") {
     {
         auto E = ell(100., Vec{0., 0.});
         auto P = profit_oracle(p, A, k, a, v);
-        auto [_, fb, niter, feasible, status] = cutting_plane_dc(P, E, 0.);
-        CHECK(niter == 37);
+        auto ell_info = cutting_plane_dc(P, E, 0.);
+        CHECK(ell_info.num_iters == 37);
     }
 
     {
@@ -30,15 +30,15 @@ TEST_CASE("Profit Test 1", "[profit]") {
 
         auto E = ell(100., Vec{0., 0.});
         auto P = profit_rb_oracle(p, A, k, a, v, ui, e, e3);
-        auto [_, fb, niter, feasible, status] = cutting_plane_dc(P, E, 0.);
-        CHECK(niter == 42);
+        auto ell_info = cutting_plane_dc(P, E, 0.);
+        CHECK(ell_info.num_iters == 42);
     }
 
     {
         auto E = ell(100., Vec{2, 0.});
         auto P = profit_q_oracle(p, A, k, a, v);
-        auto [_, fb, niter, feasible, status] = cutting_plane_q(P, E, 0.);
-        CHECK(niter == 28);
+        auto ell_info = cutting_plane_q(P, E, 0.);
+        CHECK(ell_info.num_iters == 28);
     }
 }
 

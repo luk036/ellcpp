@@ -70,7 +70,7 @@ TEST_CASE("Test Optimal Scaling", "[test_optscaling]") {
     double t = cmax - cmin;
     ell E(1.5 * t, x0);
     optscaling_oracle P(G, get_cost, double(0.));
-    auto [xb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 1.001 * t);
-    CHECK(feasible);
-    CHECK(niter <= 27);
+    auto ell_info = cutting_plane_dc(P, E, 1.001 * t);
+    CHECK(ell_info.feasible);
+    CHECK(ell_info.num_iters <= 27);
 }

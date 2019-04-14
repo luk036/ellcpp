@@ -15,6 +15,20 @@ struct Options {
     double tol = 1e-8;
 };
 
+
+struct CInfo {
+    xt::xarray<double> val;
+    double value = 0.;
+    size_t num_iters;
+    bool feasible;
+    int status;
+
+    CInfo(bool feasible, size_t num_iters, int status) :
+        feasible{feasible},
+        num_iters{num_iters},
+        status{status} {}
+};
+
 /**
  * @brief
  *
@@ -45,7 +59,9 @@ auto bsearch(Oracle &evaluate, Space &I, const Options &options = Options()) {
             break;
         }
     }
-    return std::tuple{u, niter, feasible};
+    auto ret = CInfo(feasible, niter, 0);
+    ret.value = u;
+    return std::move(ret);
 }
 
 /**
@@ -73,9 +89,9 @@ class bsearch_adaptor {
     auto operator()(double t) {
         Space S(_S);
         _P.update(t);
-        auto [x, _1, feasible, _2] = cutting_plane_feas(_P, S, _options);
-        if (feasible) {
-            _S.xc() = x;
+        auto ret_info = cutting_plane_feas(_P, S, _options);
+        if (ret_info.feasible) {
+            _S.xc() = S.xc();
             return true;
         }
         return false;
@@ -119,7 +135,8 @@ auto cutting_plane_feas(Oracle &evaluate, Space &S,
             break;
         }
     }
-    return std::tuple{S.xc(), niter, feasible, status};
+    return CInfo(feasible, niter, status);
+    // return std::tuple{S.xc(), niter, feasible, status};
 }
 
 /**
@@ -138,8 +155,8 @@ auto cutting_plane_feas(Oracle &evaluate, Space &S,
  * @return feasible   solution found or not
  * @return status how is the final cut
  */
-template <typename Oracle, typename Space, typename T>
-auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
+template <typename Oracle, typename Space>
+auto cutting_plane_dc(Oracle &evaluate, Space &S, double t,
                       const Options &options = Options()) {
     using Arr = xt::xarray<double>;
 
@@ -163,7 +180,10 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
             break;
         }
     }
-    return std::tuple{std::move(x_best), t, niter, feasible, status};
+    auto ret = CInfo(feasible, niter, status);
+    ret.val = std::move(x_best);
+    ret.value = t;
+    return std::move(ret);
 } // END
 
 /**
@@ -195,8 +215,8 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, T t,
  * @param options
  * @return auto
  */
-template <typename Oracle, typename Space, typename T>
-auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
+template <typename Oracle, typename Space>
+auto cutting_plane_q(Oracle &evaluate, Space &S, double t,
                      const Options &options = Options()) {
     using Arr = xt::xarray<double>;
 
@@ -204,7 +224,7 @@ auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
     auto x_best = Arr{S.xc()};
     auto status = 1U;
     auto niter = 1U;
-    for (; niter < options.max_it; ++niter) {
+    for (; niter <= options.max_it; ++niter) {
         auto [g, h, t1, x0, loop] = evaluate(S.xc(), t, (status != 3) ? 0 : 1);
         // if (status != 3) {
         //     if (loop == 1) { // discrete sol'n
@@ -232,8 +252,10 @@ auto cutting_plane_q(Oracle &evaluate, Space &S, T t,
             break;
         }
     }
-
-    return std::tuple{std::move(x_best), t, niter, feasible, status};
+    auto ret = CInfo(feasible, niter, status);
+    ret.val = std::move(x_best);
+    ret.value = t;
+    return std::move(ret);
 } // END
 
 #endif

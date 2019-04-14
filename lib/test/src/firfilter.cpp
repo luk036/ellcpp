@@ -95,9 +95,9 @@ TEST_CASE("FIR Filter", "[firfilter]") {
     auto h0 = Arr{xt::zeros<double>({n})}; // initial x0
     auto E = ell(40., h0);
     auto P = my_fir_oracle();
-    auto [hb, fb, niter, feasible, status] = cutting_plane_dc(P, E, 100.);
+    auto ell_info = cutting_plane_dc(P, E, 100.);
 
-    CHECK(feasible);
+    CHECK(ell_info.feasible);
     // std::cout << "optimal value " << fb << "\n";
     // std::cout << "optimal sol'n " << hb << "\n";
 

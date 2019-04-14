@@ -28,8 +28,8 @@ TEST_CASE("Example 2", "[example2]") {
     auto x0 = Arr{0., 0.}; // initial x0
     auto E = ell{10., x0};
     auto P = my_oracle2;
-    auto [xb, niter, feasible, status] = cutting_plane_feas(P, E);
-    CHECK(feasible);
+    auto ell_info = cutting_plane_feas(P, E);
+    CHECK(ell_info.feasible);
     // std::cout << "Example 2 result: " << niter << "," << feasible << "," << status << "\n";
     // std::cout << "Example 2 xbest: " << xb << "\n";
 }

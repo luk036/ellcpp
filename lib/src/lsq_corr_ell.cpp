@@ -355,16 +355,16 @@ std::tuple<size_t, bool> lsq_corr_poly(const Arr &Y, const Arr &s, size_t m) {
     // Sig.reverse();
 
     // P = mtx_norm_oracle(Sig, Y, a)
-    Arr a = xt::zeros<double>({m});
+    auto a = Arr{xt::zeros<double>({m})};
     auto Q = qmi_oracle(Sig, Y);
     auto E = ell(10., a);
     auto P = bsearch_adaptor(Q, E);
     // double normY = xt::norm_l2(Y);
     auto I = std::tuple{0., 100. * 100.};
-    auto [fb, niter, feasible] = bsearch(P, I);
+    auto bs_info = bsearch(P, I);
 
     // std::cout << niter << ", " << feasible << '\n';
     a = P.x_best();
-    return {niter, feasible};
+    return {bs_info.num_iters, bs_info.feasible};
     //  return prob.is_dcp()
 }
