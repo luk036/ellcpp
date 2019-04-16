@@ -165,9 +165,9 @@ std::tuple<int, double> ell::update(const Arr &g, const T &beta) {
     auto Qg = Arr{xt::linalg::dot(_Q, g)};
     auto omega = xt::linalg::dot(g, Qg)();
     auto tsq = this->_kappa * omega;
-    if (unlikely(tsq <= 0)) {
-        return {4, 0.};
-    }
+    // if (unlikely(tsq <= 0)) {
+    //     return {4, 0.};
+    // }
     // auto tau = std::sqrt(_kappa * tsq);
     // auto alpha = beta / tau;
 
@@ -193,10 +193,10 @@ std::tuple<int, double> ell::update(const Arr &g, const T &beta) {
     this->_xc -= (rho / omega) * Qg;
     this->_Q -= (sigma / omega) * xt::linalg::outer(Qg, Qg);
     this->_kappa *= delta;
-    if (unlikely(this->_kappa > 1e100 || this->_kappa < 1e-100)) {
-        this->_Q *= this->_kappa;
-        this->_kappa = 1.;
-    }
+    // if (unlikely(this->_kappa > 1e100 || this->_kappa < 1e-100)) {
+    //     this->_Q *= this->_kappa;
+    //     this->_kappa = 1.;
+    // }
     return {status, tsq}; // g++-7 is ok
 }
 

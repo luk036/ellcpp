@@ -102,7 +102,7 @@ EdgeDataView
 
 namespace xn {
 
-static auto const __all__ = {"NodeView",
+static const auto __all__ = {"NodeView",
                              "NodeDataView",
                              "EdgeView",
                              "OutEdgeView",
@@ -250,7 +250,7 @@ template <typename nodeview_t> class NodeView {
 //      */
 //     using _Self = NodeDataView;
 
-//     static auto const __slots__ = ("_nodes", "_data", "_default");
+//     static const auto __slots__ = ("_nodes", "_data", "_default");
 
 //     // auto __getstate__( ) {
 //     //     return {"_nodes": this->_nodes,
@@ -276,7 +276,7 @@ template <typename nodeview_t> class NodeView {
 //             return set(it);
 //         } catch (TypeError as err) {
 //             if ("unhashable" : str(err) {
-//                 auto const msg = " : Could be b/c data=true || your values
+//                 const auto msg = " : Could be b/c data=true || your values
 //                 are unhashable"; throw TypeError(str(err) + msg);
 //             }
 //             throw;
@@ -742,7 +742,7 @@ template <typename nodeview_t> class NodeView {
 // // EdgeDataViews
 // class OutEdgeDataView: public object {
 //     /** EdgeDataView for outward edges of DiGraph; See EdgeDataView */
-//     static auto const __slots__ = ("_viewer", "_nbunch", "_data", "_default",
+//     static const auto __slots__ = ("_viewer", "_nbunch", "_data", "_default",
 //                  "_adjdict", "_nodes_nbrs", "_report");
 
 //     auto __getstate__( ) {
@@ -836,7 +836,7 @@ template <typename nodeview_t> class NodeView {
 //     [(0, 1, "biz"), (1, 2, "bar")];
 //     >>> assert((0, 1, "biz"] : G.edges(data="foo", default="biz"));
 //      */
-//     static auto const __slots__ = ();
+//     static const auto __slots__ = ();
 
 //     auto __len__( ) {
 //         return sum(1 for e : *this);
@@ -872,7 +872,7 @@ template <typename nodeview_t> class NodeView {
 
 // class InEdgeDataView(OutEdgeDataView) {
 //     /** An EdgeDataView class for outward edges of DiGraph; See EdgeDataView
-//     */ static auto const __slots__ = ();
+//     */ static const auto __slots__ = ();
 
 //     auto __iter__( ) {
 //         return (this->_report(nbr, n, dd) for n, nbrs : this->_nodes_nbrs();
@@ -892,7 +892,7 @@ template <typename nodeview_t> class NodeView {
 
 // class OutMultiEdgeDataView(OutEdgeDataView) {
 //     /** An EdgeDataView for outward edges of MultiDiGraph; See EdgeDataView
-//     */ static auto const __slots__ = ("keys",);
+//     */ static const auto __slots__ = ("keys",);
 
 //     auto __getstate__( ) {
 //         return {"viewer": this->_viewer,
@@ -982,7 +982,7 @@ template <typename nodeview_t> class NodeView {
 
 // class MultiEdgeDataView(OutMultiEdgeDataView) {
 //     /** An EdgeDataView class for edges of MultiGraph; See EdgeDataView */
-//     static auto const __slots__ = ();
+//     static const auto __slots__ = ();
 
 //     auto __iter__( ) {
 //         seen = {};
@@ -1030,7 +1030,7 @@ template <typename nodeview_t> class NodeView {
 
 // class InMultiEdgeDataView(OutMultiEdgeDataView) {
 //     /** An EdgeDataView for inward edges of MultiDiGraph; See EdgeDataView */
-//     static auto const __slots__ = ();
+//     static const auto __slots__ = ();
 
 //     auto __iter__( ) {
 //         return (this->_report(nbr, n, k, dd) for n, nbrs :
@@ -1064,7 +1064,7 @@ template <typename nodeview_t> class NodeView {
 // /** A EdgeView class for outward edges of a DiGraph */
 // template <typename graph_t> 
 // class OutEdgeView {
-//     // static auto const __slots__ = ("_adjdict", "_graph", "_nodes_nbrs");
+//     // static const auto __slots__ = ("_adjdict", "_graph", "_nodes_nbrs");
 
 //     // auto __getstate__( ) {
 //     //     return {"_graph": this->_graph};
@@ -1122,29 +1122,29 @@ template <typename nodeview_t> class NodeView {
 //         return this->_adjdict[u][v];
 //     }
 
-//     // EdgeDataView methods
-//     auto __call__( nbunch=None, data=false, default=None) {
-//         if (nbunch.empty() && data == false) {
-//             return (*this);
-//         }
-//         return this->dataview( nbunch, data, default);
-//     }
+//     // // EdgeDataView methods
+//     // auto __call__( nbunch=None, data=false, default=None) {
+//     //     if (nbunch.empty() && data == false) {
+//     //         return (*this);
+//     //     }
+//     //     return this->dataview( nbunch, data, default);
+//     // }
 
-//     auto data( data=true, default=None, nbunch=None) {
-//         if (nbunch.empty() && data == false) {
-//             return (*this);
-//         }
-//         return this->dataview( nbunch, data, default);
-//     }
+//     // auto data( data=true, default=None, nbunch=None) {
+//     //     if (nbunch.empty() && data == false) {
+//     //         return (*this);
+//     //     }
+//     //     return this->dataview( nbunch, data, default);
+//     // }
 
-//     // String Methods
-//     auto __str__( ) {
-//         return str(list( ));
-//     }
+//     // // String Methods
+//     // auto __str__( ) {
+//     //     return str(list( ));
+//     // }
 
-//     auto __repr__( ) {
-//         return "{0.__class__.__name__}({1!r})".format( list( ));
-//     }
+//     // auto __repr__( ) {
+//     //     return "{0.__class__.__name__}({1!r})".format( list( ));
+//     // }
 // };
 
 // class EdgeView(OutEdgeView) {
@@ -1212,7 +1212,7 @@ template <typename nodeview_t> class NodeView {
 //     (2, 3, 0);
 //     (2, 3, 1);
 //      */
-//     static auto const __slots__ = ();
+//     static const auto __slots__ = ();
 
 //     dataview = EdgeDataView;
 
@@ -1246,7 +1246,7 @@ template <typename nodeview_t> class NodeView {
 
 // class InEdgeView(OutEdgeView) {
 //     /** A EdgeView class for inward edges of a DiGraph */
-//     static auto const __slots__ = ();
+//     static const auto __slots__ = ();
 
 //     auto __setstate__( state) {
 //         this->_graph = G = state["_graph"];
@@ -1287,7 +1287,7 @@ template <typename nodeview_t> class NodeView {
 
 // class OutMultiEdgeView(OutEdgeView) {
 //     /** A EdgeView class for outward edges of a MultiDiGraph */
-//     static auto const __slots__ = ();
+//     static const auto __slots__ = ();
 
 //     dataview = OutMultiEdgeDataView;
 
@@ -1345,7 +1345,7 @@ template <typename nodeview_t> class NodeView {
 
 // class MultiEdgeView(OutMultiEdgeView) {
 //     /** A EdgeView class for edges of a MultiGraph */
-//     static auto const __slots__ = ();
+//     static const auto __slots__ = ();
 
 //     dataview = MultiEdgeDataView;
 
@@ -1371,7 +1371,7 @@ template <typename nodeview_t> class NodeView {
 
 // class InMultiEdgeView(OutMultiEdgeView) {
 //     /** A EdgeView class for inward edges of a MultiDiGraph */
-//     static auto const __slots__ = ();
+//     static const auto __slots__ = ();
 
 //     auto __setstate__( state) {
 //         this->_graph = G = state["_graph"];

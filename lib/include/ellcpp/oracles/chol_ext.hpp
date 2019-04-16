@@ -18,9 +18,9 @@ class chol_ext {
   private:
 
     bool sqrt_free = true;
-    std::size_t p = 0;
+    std::size_t p;
     std::size_t n;
-    Mat R;
+    Mat T;
 
   public:
 
@@ -30,7 +30,7 @@ class chol_ext {
      * @param n
      */
     explicit chol_ext(std::size_t N)
-        : n{N}, R{xt::zeros<double>({N, N})} {}
+        : n{N}, T{xt::zeros<double>({N, N})} {}
 
     /**
      * @brief
@@ -55,28 +55,22 @@ class chol_ext {
      * See also: factorize()
      */
     template <typename Fn> void factor(Fn getA) {
-        this->p = 0;
-        auto &R = this->R;
-        
-        for (auto i = 0U; i < this->n; ++i) {
+        auto& i = this->p;
+        auto& T = this->T;
+        for (i = 0U; i < this->n; ++i) {
             double d;
-    
             for (auto j = 0U; j <= i; ++j) {
                 d = getA(i, j);
                 for (auto k = 0U; k < j; ++k) {
-                    d -= this->R(k, i) * this->R(j, k);
+                    d -= T(k, i) * T(j, k);
                 }
+                T(i, j) = d;
                 if (i != j) {
-                    this->R(i, j) = d;
-                    this->R(j, i) = d / this->R(j, j);
+                    T(j, i) = d / T(j, j);
                 }
             }
             if (d <= 0.) {
-                this->p = i + 1;
-                this->R(i, i) = -d;
                 break;
-            } else {
-                this->R(i, i) = d;
             }
         }
     }
@@ -89,32 +83,31 @@ class chol_ext {
      *
      * See also: factorize()
      */
-    template <typename Fn> void factor3(Fn getA) {
-        this->sqrt_free = false;
-        this->p = 0;
-        auto &R = this->R;
+    // template <typename Fn> void factor3(Fn getA) {
+    //     this->sqrt_free = false;
+    //     this->p = 0;
 
-        for (auto i = 0U; i < this->n; ++i) {
-            double d;
+    //     for (auto i = 0U; i < this->n; ++i) {
+    //         double d;
     
-            for (auto j = 0U; j <= i; ++j) {
-                d = getA(i, j);
-                for (auto k = 0U; k < j; ++k) {
-                    d -= this->R(k, i) * this->R(k, j);
-                }
-                if (i != j) {
-                    this->R(j, i) = d / this->R(j, j);
-                }
-            }
-            if (d <= 0.) {
-                this->p = i + 1;
-                this->R(i, i) = std::sqrt(-d);
-                break;
-            } else {
-                this->R(i, i) = std::sqrt(d);
-            }
-        }
-    }
+    //         for (auto j = 0U; j <= i; ++j) {
+    //             d = getA(i, j);
+    //             for (auto k = 0U; k < j; ++k) {
+    //                 d -= this->T(k, i) * this->T(k, j);
+    //             }
+    //             if (i != j) {
+    //                 this->T(j, i) = d / this->T(j, j);
+    //             }
+    //         }
+    //         if (d <= 0.) {
+    //             this->p = i + 1;
+    //             this->T(i, i) = std::sqrt(-d);
+    //             break;
+    //         } else {
+    //             this->T(i, i) = std::sqrt(d);
+    //         }
+    //     }
+    // }
 
     /**
      * @brief Is $A$ symmetric positive definite (spd)
@@ -122,7 +115,7 @@ class chol_ext {
      * @return true
      * @return false
      */
-    auto is_spd() const -> bool { return this->p == 0; }
+    auto is_spd() const -> bool { return this->p == this->n; }
 
     /**
      * @brief witness that certifies $A$ is not
@@ -135,21 +128,22 @@ class chol_ext {
             throw std::runtime_error{"Implementation Error."};
         }
         auto &p = this->p;
-        auto v = Vec{xt::zeros<double>({p})};
-        // auto r = this->R(p - 1, p - 1);
+        auto n = p + 1;
+        auto v = Vec{xt::zeros<double>({n})};
+        // auto r = this->T(p - 1, p - 1);
         // auto ep = (r == 0.) ? 0. : 1.;
         // v[p - 1] = (r == 0.) ? 1. : 1. / r;
-        v[p - 1] = 1.;
+        v[p] = 1.;
 
-        for (int i = p - 2; i >= 0; --i) {
+        for (int i = p; i > 0; --i) {
             double s = 0.;
-            for (auto k = i + 1; k < p; ++k) {
-                s += this->R(i, k) * v[k];
+            for (auto k = i; k < n; ++k) {
+                s += this->T(i-1, k) * v[k];
             }
-            v[i] = -s;
+            v[i-1] = -s;
         }
 
-        return std::tuple{std::move(v), this->R(p - 1, p - 1)};
+        return std::tuple{std::move(v), -this->T(p, p)};
     }
 
     /**
@@ -158,31 +152,31 @@ class chol_ext {
      *
      * @return auto
      */
-    auto witness3() const {
-        if (this->sqrt_free) {
-            throw std::runtime_error{"Implementation Error."};
-        }
-        if (this->is_spd()) {
-            throw std::runtime_error{"Implementation Error."};
-        }
-        auto &p = this->p;
-        auto v = Vec{xt::zeros<double>({p})};
-        // auto r = this->R(p - 1, p - 1);
-        // auto ep = (r == 0.) ? 0. : 1.;
-        // v[p - 1] = (r == 0.) ? 1. : 1. / r;
-        v[p - 1] = 1.;
+    // auto witness3() const {
+    //     if (this->sqrt_free) {
+    //         throw std::runtime_error{"Implementation Error."};
+    //     }
+    //     if (this->is_spd()) {
+    //         throw std::runtime_error{"Implementation Error."};
+    //     }
+    //     auto &p = this->p;
+    //     auto v = Vec{xt::zeros<double>({p})};
+    //     // auto r = this->T(p - 1, p - 1);
+    //     // auto ep = (r == 0.) ? 0. : 1.;
+    //     // v[p - 1] = (r == 0.) ? 1. : 1. / r;
+    //     v[p - 1] = 1.;
 
-        for (int i = p - 2; i >= 0; --i) {
-            double s = 0.;
-            for (auto k = i + 1; k < p; ++k) {
-                s += this->R(i, k) * v[k];
-            }
-            v[i] = -s / this->R(i, i);
-        }
+    //     for (int i = p - 2; i >= 0; --i) {
+    //         double s = 0.;
+    //         for (auto k = i + 1; k < p; ++k) {
+    //             s += this->T(i, k) * v[k];
+    //         }
+    //         v[i] = -s / this->T(i, i);
+    //     }
 
-        auto ep = this->R(p - 1, p - 1);
-        return std::tuple{std::move(v), ep * ep};
-    }
+    //     auto ep = this->T(p - 1, p - 1);
+    //     return std::tuple{std::move(v), ep * ep};
+    // }
 
     auto sqrt() -> Mat {
         if (!this->is_spd()) {
@@ -190,16 +184,16 @@ class chol_ext {
         }
 
         if (!this->sqrt_free) {
-            return Mat{this->R};
+            return Mat{this->T};
         }
 
         auto n = this->n;
         auto M = Mat{xt::zeros<double>({n, n})};
 
         for (auto i = 0U; i < n; ++i) {
-            M(i, i) = std::sqrt(this->R(i, i));
+            M(i, i) = std::sqrt(this->T(i, i));
             for (auto j = i+1; j < n; ++j) {
-                M(i, j) = this->R(i, j) * M(i, i); 
+                M(i, j) = this->T(i, j) * M(i, i); 
             }
         }
 
@@ -215,9 +209,10 @@ class chol_ext {
      */
     double sym_quad(const Vec &v, const Vec &A) {
         auto res = 0.;
-        for (auto i = 0U; i < this->p; ++i) {
+        auto n = this->p + 1;
+        for (auto i = 0U; i < n; ++i) {
             auto s = 0.;
-            for (auto j = i + 1; j < this->p; ++j) {
+            for (auto j = i + 1; j < n; ++j) {
                 s += A(i, j) * v(j);
             }
             res += v(i) * (A(i, i) * v(i) + 2 * s);

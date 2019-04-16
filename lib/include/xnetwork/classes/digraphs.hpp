@@ -202,10 +202,11 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
                               adjlist_inner_dict_factory> {
     using _Base = Graph<nodeview_t, nodemap_t,
                         adjlist_inner_dict_factory>;
+    using Node = typename nodeview_t::value_type; // luk
     using graph_attr_dict_factory = typename _Base::graph_attr_dict_factory;
     using adjlist_outer_dict_factory = typename _Base::adjlist_outer_dict_factory;
     using key_type = typename _Base::key_type;
-    using value_type = Value_type<_Base>;
+    using value_type = typename _Base::value_type;
 
   public:
     adjlist_outer_dict_factory& _succ; // successor
@@ -222,10 +223,13 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         >>> G = xn::DiGraphS(v);  // or DiGraph, MultiGraph, MultiDiGraph, etc
 
         >>> r = py::range(100);
-        >>> G = xn::DiGraphS(r);  // or DiGraph, MultiGraph, MultiDiGraph, etc
+        >>> G = xn::DiGraphS(r, r);  // or DiGraph, MultiGraph, MultiDiGraph, etc
     */
     DiGraphS(const nodeview_t &Nodes, const nodemap_t &node_map)
         : _Base{Nodes, node_map}, _succ{_Base::_adj} {}
+
+    DiGraphS(int num_nodes) 
+        : DiGraphS{py::range<int>(num_nodes), py::range<int>(num_nodes)} {}
 
     /// @property
     /** DiGraphS adjacency object holding the neighbors of each node.
@@ -362,15 +366,15 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         neighbors() and successors() are the same.
     */
     auto& successors(const Node &n) {
-        return this->_succ[this->_node_map[u]]; 
+        return this->_succ[this->_node_map[n]]; 
     }
 
-    auto const& successors(const Node &n) const {
-        return this->_succ[this->_node_map[u]]; 
+    const auto& successors(const Node &n) const {
+        return this->_succ[this->_node_map[n]]; 
     }
 
     /// @property
-    /** An OutEdgeView of the DiGraph as G.edges or G.edges().
+    /** An OutEdgeView of the DiGraph as G.edges().
 
         edges(self, nbunch=None, data=False, default=None)
 
@@ -473,6 +477,10 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         return true;
     }
 };
+
+template <typename nodeview_t, typename nodemap_t,
+          typename adjlist_inner_dict_factory> DiGraphS(int ) 
+-> DiGraphS<decltype(py::range<int>(1)), decltype(py::range<int>(1)), py::set<int>>;
 
 } // namespace xn
 
