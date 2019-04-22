@@ -18,9 +18,9 @@ auto lowpass_oracle::operator()(const Arr &x, double Spsq) const
     auto n = x.shape()[0];
     // case 1,
     if (x[0] < 0) {
-        Arr g = xt::zeros<double>({n});
+        auto g = Arr{xt::zeros<double>({n})};
         g[0] = -1.;
-        Arr f{-x[0]};
+        auto f = Arr{-x[0]};
         return {std::move(g), std::move(f), Spsq};
     }
 
@@ -57,8 +57,9 @@ auto lowpass_oracle::operator()(const Arr &x, double Spsq) const
     auto imax = 0U;
     // for (k in chain(range(i_As, N), range(i_As))) {
     for (auto i = 0U, k = this->_i_As; i < N; ++i, ++k) {
-        if (k == N)
+        if (k == N) {
             k = 0; // round robin
+        }
         auto v = dot(xt::view(this->_As, k, xt::all()), x)();
         if (v > Spsq) {
             // f = v - Spsq;
@@ -85,8 +86,9 @@ auto lowpass_oracle::operator()(const Arr &x, double Spsq) const
     // 1. nonnegative-real constraint
     N = this->_Anr.shape()[0];
     for (auto i = 0U, k = this->_i_Anr; i < N; ++i, ++k) {
-        if (k == N)
+        if (k == N) {
             k = 0; // round robin
+        }
         auto v = dot(xt::view(this->_Anr, k, xt::all()), x)();
         if (v < 0.) {
             Arr f{-v};

@@ -27,7 +27,7 @@ using graph_t =
                           boost::no_property,
                           boost::property<boost::edge_id_tag_t, std::size_t>>;
 using Vertex = typename boost::graph_traits<graph_t>::vertex_descriptor;
-using edge_t = typename boost::graph_traits<graph_t>::edge_iterator;
+// using edge_t = typename boost::graph_traits<graph_t>::edge_iterator;
 
 static auto create_test_case1()
 {

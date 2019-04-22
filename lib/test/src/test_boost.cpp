@@ -67,6 +67,7 @@ TEST_CASE("Test Boost", "[test_boost]")
     Graph g(num_vertices);
     xn::grAdaptor<Graph> G(g);
     using Vertex = typename boost::graph_traits<Graph>::vertex_descriptor;
+    // using edge_t = typename boost::graph_traits<Graph>::edge_descriptor;
 
     // add the edges to the graph object
     for (int i = 0; i < num_edges; ++i)

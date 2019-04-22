@@ -21,7 +21,6 @@ auto lmi_oracle::operator()(const Arr &x) -> std::tuple<Arr, double, bool> {
     };
 
     auto g = Arr{xt::zeros<double>({n})};
-
     this->_Q.factor(getA);
     if (this->_Q.is_spd()) {
         return {std::move(g), -1., true};

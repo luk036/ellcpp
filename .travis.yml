@@ -10,7 +10,6 @@ matrix:
           packages:
             - g++-7
             - catch
-            - libboost-graph-dev
       env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
       addons:
@@ -20,7 +19,6 @@ matrix:
           packages:
             - g++-7
             - catch
-            - libboost-graph-dev
       env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Release'
 env:
   global:
@@ -67,6 +65,7 @@ install:
         conda install mkl;
       fi
     - conda install lapack -c conda-forge
+    - conda install libboost -c conda-forge
     # Testing
     - if [[ "$BOUND_CHECKS" == 1 ]]; then
         cmake -DXTENSOR_ENABLE_ASSERT=ON -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_BUILD_TYPE=${BUILD_TYPE}-DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib .;

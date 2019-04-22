@@ -28,15 +28,15 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u,
     using xt::linalg::dot;
 
     auto const n = nx * ny;
-    const double s_end[] = {10., 8.};
+    auto const s_end = Arr{10., 8.};
     auto const sdkern = 0.3;  // width of kernel
     auto const var = 2.;      // standard derivation
     auto const tau = 0.00001; // standard derivation of white noise
     xt::random::seed(5);
 
     // create sites s
-    Arr sx = xt::linspace<double>(0., s_end[0], nx);
-    Arr sy = xt::linspace<double>(0., s_end[1], ny);
+    auto sx = xt::linspace<double>(0., s_end[0], nx);
+    auto sy = xt::linspace<double>(0., s_end[1], ny);
     auto [xx, yy] = xt::meshgrid(sx, sy);
     Arr st = xt::stack(xt::xtuple(xt::flatten(xx), xt::flatten(yy)), 0);
     Arr s = xt::transpose(st);
@@ -45,7 +45,7 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u,
     for (auto i = 0U; i < n; ++i) {
         for (auto j = i; j < n; ++j) {
             Arr d = xt::view(s, j, xt::all()) - xt::view(s, i, xt::all());
-            double g = -sdkern * std::sqrt(dot(d, d)());
+            auto g = -sdkern * std::sqrt(dot(d, d)());
             Sig(i, j) = std::exp(g);
             Sig(j, i) = Sig(i, j);
         }
@@ -77,7 +77,7 @@ Arr construct_distance_matrix(const Arr &s) {
     for (auto i = 0U; i < n; ++i) {
         for (auto j = i + 1; j < n; ++j) {
             Arr h = xt::view(s, j, xt::all()) - xt::view(s, i, xt::all());
-            double d = std::sqrt(xt::linalg::dot(h, h)());
+            auto d = std::sqrt(xt::linalg::dot(h, h)());
             D(i, j) = d;
             D(j, i) = d;
         }
@@ -117,27 +117,24 @@ class lsq_oracle {
      */
     auto operator()(const Arr &x, double t) {
         auto n = x.shape()[0];
-        Arr g = xt::zeros<double>({n});
-
+        auto g = Arr{xt::zeros<double>({n})};
         auto [g0, fj0, feasible0] =
             this->_lmi0(xt::view(x, xt::range(0, n - 1)));
         if (!feasible0) {
             xt::view(g, xt::range(0, n - 1)) = g0;
-            g(n - 1) = 0.;
+            g(n-1) = 0.;
             return std::tuple{std::move(g), fj0, t};
         }
-
-        this->_qmi.update(x(n - 1));
-        auto [g1, fj1, feasible] = this->_qmi(xt::view(x, xt::range(0, n - 1)));
+        this->_qmi.update(x(n-1));
+        auto [g1, fj1, feasible] = this->_qmi(xt::view(x, xt::range(0, n-1)));
         if (!feasible) {
-            xt::view(g, xt::range(0, n - 1)) = g1;
+            xt::view(g, xt::range(0, n-1)) = g1;
             auto [v, ep] = this->_qmi._Q.witness();
-            g(n - 1) = -xt::linalg::dot(v, v)();
+            g(n-1) = -xt::linalg::dot(v, v)();
             return std::tuple{std::move(g), fj1, t};
         }
-
-        g(n - 1) = 1.;
-        auto tc = double(x(n - 1));
+        g(n-1) = 1.;
+        auto tc = x(n-1);
         auto fj = tc - t;
         if (fj > 0) {
             return std::tuple{std::move(g), fj, t};
@@ -157,7 +154,7 @@ class lsq_oracle {
 auto lsq_corr_core2(const Arr &Y, std::size_t m, lsq_oracle &P) {
     auto normY = 100. * xt::linalg::norm(Y);
     auto normY2 = 32. * normY * normY;
-    Arr val = 256. * xt::ones<double>({m + 1});
+    auto val = Arr{256. * xt::ones<double>({m + 1})};
     val(m) = normY2 * normY2;
     Arr x = xt::zeros<double>({m + 1});
     x(0) = 4;

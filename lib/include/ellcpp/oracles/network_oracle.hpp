@@ -49,9 +49,7 @@ class network_oracle {
 
         auto S = negCycleFinder(_G, get_weight);
         auto C = S.find_neg_cycle();
-
-        auto n = x.size();
-        auto g = Arr{xt::zeros<double>({n})};
+        auto g = Arr{xt::zeros<double>({x.size()})};
         auto f = 0.;
 
         if (C.empty()) {

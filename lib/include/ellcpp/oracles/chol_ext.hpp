@@ -55,12 +55,11 @@ class chol_ext {
      * See also: factorize()
      */
     template <typename Fn> void factor(Fn getA) {
-        auto& i = this->p;
         auto& T = this->T;
-        for (i = 0U; i < this->n; ++i) {
-            double d;
+        auto i = 0U;
+        for (; i < this->n; ++i) {
             for (auto j = 0U; j <= i; ++j) {
-                d = getA(i, j);
+                auto d = getA(i, j);
                 for (auto k = 0U; k < j; ++k) {
                     d -= T(k, i) * T(j, k);
                 }
@@ -69,10 +68,11 @@ class chol_ext {
                     T(j, i) = d / T(j, j);
                 }
             }
-            if (d <= 0.) {
+            if (T(i, i) <= 0.) {
                 break;
             }
         }
+        this->p = i;
     }
 
     /**
@@ -136,7 +136,7 @@ class chol_ext {
         v[p] = 1.;
 
         for (int i = p; i > 0; --i) {
-            double s = 0.;
+            auto s = 0.;
             for (auto k = i; k < n; ++k) {
                 s += this->T(i-1, k) * v[k];
             }
