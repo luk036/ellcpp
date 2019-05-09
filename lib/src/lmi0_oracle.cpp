@@ -26,9 +26,9 @@ auto lmi0_oracle::operator()(const Arr &x) -> std::tuple<Arr, double, bool> {
     if (this->_Q.is_spd()) {
         return {std::move(g), -1., true};
     }
-    auto [v, ep] = this->_Q.witness();
+    auto ep = this->_Q.witness();
     for (auto i = 0U; i < n; ++i) {
-        g(i) = -_Q.sym_quad(v, this->_F[i]);
+        g(i) = -_Q.sym_quad(this->_F[i]);
     }
     return {std::move(g), ep, false};
 }

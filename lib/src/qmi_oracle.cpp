@@ -39,12 +39,14 @@ auto qmi_oracle::operator()(const Arr &x) -> std::tuple<Arr, double, bool> {
         return {std::move(g), -1., true};
     }
 
-    auto [v, ep] = this->_Q.witness();
-    auto p = v.size();
-    Arr Fxp = myview(this->_Fx, xt::range(0, p));
+    auto ep = this->_Q.witness();
+    auto stop = this->_Q.p + 1;
+    auto start = this->_Q.start;
+    auto v = xt::view(this->_Q.v, xt::range(start, stop));
+    Arr Fxp = myview(this->_Fx, xt::range(start, stop));
     Arr Av = dot(v, Fxp);
     for (auto k = 0U; k < this->_nx; ++k) {
-        Arr Fkp = myview(this->_F[k], xt::range(0, p));
+        Arr Fkp = myview(this->_F[k], xt::range(start, stop));
         g(k) = -2 * dot(dot(v, Fkp), Av)();
     }
     return {std::move(g), ep, false};

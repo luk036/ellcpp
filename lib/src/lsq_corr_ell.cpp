@@ -129,7 +129,9 @@ class lsq_oracle {
         auto [g1, fj1, feasible] = this->_qmi(xt::view(x, xt::range(0, n-1)));
         if (!feasible) {
             xt::view(g, xt::range(0, n-1)) = g1;
-            auto [v, ep] = this->_qmi._Q.witness();
+            auto &Q = this->_qmi._Q;
+            auto ep = Q.witness();
+            auto v = xt::view(Q.v, xt::range(Q.start, Q.p + 1));
             g(n-1) = -xt::linalg::dot(v, v)();
             return std::tuple{std::move(g), fj1, t};
         }
