@@ -124,7 +124,7 @@ class chol_ext {
      * @param A
      * @return double
      */
-    double sym_quad(const Vec &A) {
+    double sym_quad(const Vec &A) const {
         auto res = 0.;
         auto &v = this->v;
         for (auto i = this->start; i <= this->p; ++i) {
