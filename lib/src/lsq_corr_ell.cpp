@@ -4,11 +4,12 @@
 #include <ellcpp/oracles/lmi0_oracle.hpp>
 #include <ellcpp/oracles/lmi_oracle.hpp>
 #include <ellcpp/oracles/qmi_oracle.hpp>
-#include <iostream>
+// #include <iostream>
+#include <limits>
 #include <tuple>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
-#include <xtensor/xarray.hpp>
+// #include <xtensor/xarray.hpp>
 #include <xtensor/xmath.hpp>
 #include <xtensor/xnorm.hpp>
 #include <xtensor/xrandom.hpp>
@@ -174,7 +175,7 @@ auto lsq_corr_core2(const Arr &Y, std::size_t m, lsq_oracle &P) {
     x(m) = normY2 / 2.;
     auto E = ell(val, x);
     auto [x_best, fb, num_iters, feasible, status] =
-        cutting_plane_dc(P, E, normY2);
+        cutting_plane_dc(P, E, std::numeric_limits<double>::max());
     Arr a = xt::view(x_best, xt::range(0, m));
     return std::tuple{std::move(a), num_iters, feasible};
 }
@@ -289,7 +290,7 @@ auto mle_corr_core(const Arr &Y, std::size_t m, mle_oracle &P) {
     x(0) = 4.;
     auto E = ell(500., x);
     auto [x_best, fb, num_iters, feasible, status] =
-        cutting_plane_dc(P, E, 1e100);
+        cutting_plane_dc(P, E, std::numeric_limits<double>::max());
     return std::tuple{std::move(x_best), num_iters, feasible};
 }
 

@@ -1,8 +1,8 @@
 // -*- coding: utf-8 -*-
 #include <catch.hpp>
-#include <iostream>
+// #include <iostream>
+#include <limits>
 #include <tuple>
-
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 
@@ -35,7 +35,7 @@ TEST_CASE("Example 1", "[example1]") {
     auto x0 = Arr{0., 0.}; // initial x0
     auto E = ell{10., x0};
     auto P = my_oracle;
-    auto ell_info = cutting_plane_dc(P, E, -100.);
+    auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::min());
     CHECK(ell_info.feasible);
     // std::cout << "Example 1 result: " << fb << ", " << niter << "," <<
     // feasible << "," << status << "\n"; std::cout << "Example 1 xbest: " << xb

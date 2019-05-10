@@ -110,6 +110,7 @@ auto run_lowpass(bool use_parallel_cut) {
     options.max_it = 50000;
     E._use_parallel_cut = use_parallel_cut;
     // options.tol = 1e-8;
+
     auto [r, Spsq_new, num_iters, feasible, status] =
         cutting_plane_dc(P, E, Spsq, options);
     // std::cout << "lowpass r: " << r << '\n';
@@ -117,16 +118,6 @@ auto run_lowpass(bool use_parallel_cut) {
     // std::cout << "Min attenuation in the stopband is " << Ustop << " dB.\n";
     return std::tuple{feasible, num_iters};
 }
-
-// auto test_lowpass0(benchmark) {
-//     result = benchmark(run_lowpass, False)
-//     assert result == 13325
-// }
-
-// auto test_lowpass1(benchmark) {
-//     result = benchmark(run_lowpass, True)
-//     assert result == 568
-// }
 
 TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]") {
     auto [feasible, num_iters] = run_lowpass(true);

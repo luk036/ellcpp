@@ -2,14 +2,14 @@
  *  Distributed under the MIT License (See accompanying file /LICENSE )
  */
 #include <catch.hpp>
-#include <tuple>
+// #include <tuple>
 
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lmi_oracle.hpp>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
-#include <xtensor/xarray.hpp>
+// #include <xtensor/xarray.hpp>
 
 // using namespace fun;
 class my_oracle {
@@ -73,7 +73,7 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
     // int niter, feasible, status;
     // Arr xb;
 
-    auto ell_info = cutting_plane_dc(P, E, 100.);
+    auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
     // std::cout << "LMI xbest: " << xb << "\n";
     // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible <<

@@ -6,13 +6,11 @@
 #include <catch.hpp>
 #include <py2cpp/nx2bgl.hpp>
 #include <utility> // for std::pair
-#include <vector>
-// from fractions import Fraction
 #include <algorithm>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/optscaling_oracle.hpp> // import optscaling
-#include <xtensor-blas/xlinalg.hpp>
+// #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
 namespace boost {
@@ -50,27 +48,30 @@ TEST_CASE("Test Optimal Scaling", "[test_optscaling]") {
     using IterMap =
         boost::iterator_property_map<double *, EdgeIndexMap, double, double &>;
 
-    xn::grAdaptor<graph_t> G = create_test_case1();
+    auto G = create_test_case1();
+
     double elem[] = {1.2, 2.3, 3.4, -4.5, 5.6};
     const int num_of_nodes = sizeof(elem) / sizeof(double);
     double cost[num_of_nodes];
     for (auto i = 0; i < num_of_nodes; ++i) {
         cost[i] = std::log(std::abs(elem[i]));
     }
-    EdgeIndexMap edge_id = boost::get(boost::id_tag, G);
-    IterMap cost_pa(cost, edge_id);
+    auto edge_id = boost::get(boost::id_tag, G);
+    auto cost_pa = IterMap{cost, edge_id};
+
     auto get_cost = [&](const xn::grAdaptor<graph_t> &G,
                         auto const &e) -> double {
         return boost::get(cost_pa, e);
     };
-    double cmax = *std::max_element(cost, cost + num_of_nodes);
-    double cmin = *std::min_element(cost, cost + num_of_nodes);
 
-    Arr x0{cmax, cmin};
-    double t = cmax - cmin;
-    ell E(1.5 * t, x0);
-    optscaling_oracle P(G, get_cost, double(0.));
-    auto ell_info = cutting_plane_dc(P, E, 1.001 * t);
+    auto cmax = *std::max_element(cost, cost + num_of_nodes);
+    auto cmin = *std::min_element(cost, cost + num_of_nodes);
+    auto x0 = Arr{cmax, cmin};
+    auto t = cmax - cmin;
+    auto E = ell{1.5 * t, x0};
+    auto P = optscaling_oracle{G, get_cost, double(0.)};
+    auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters <= 27);
 }

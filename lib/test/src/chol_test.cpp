@@ -1,8 +1,6 @@
 #include <catch.hpp>
 #include <ellcpp/oracles/chol_ext.hpp>
-#include <iostream>
-#include <xtensor-blas/xlinalg.hpp>
-#include <xtensor/xarray.hpp>
+// #include <xtensor/xarray.hpp>
 
 using Arr = xt::xarray<double>;
 

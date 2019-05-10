@@ -1,13 +1,13 @@
 // -*- coding: utf-8 -*-
 #include <catch.hpp>
-#include <iostream>
-#include <tuple>
+// #include <iostream>
+// #include <tuple>
 
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <limits>
 #include <xtensor-blas/xlinalg.hpp>
-#include <xtensor/xarray.hpp>
+// #include <xtensor/xarray.hpp>
 #include <xtensor/xview.hpp>
 
 using Arr = xt::xarray<double>;
@@ -95,7 +95,7 @@ TEST_CASE("FIR Filter", "[firfilter]") {
     auto h0 = Arr{xt::zeros<double>({n})}; // initial x0
     auto E = ell(40., h0);
     auto P = my_fir_oracle();
-    auto ell_info = cutting_plane_dc(P, E, 100.);
+    auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
 
     CHECK(ell_info.feasible);
     // std::cout << "optimal value " << fb << "\n";

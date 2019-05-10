@@ -1,7 +1,7 @@
 /* -*- coding: utf-8 -*- */
 #include <catch.hpp>
-#include <iostream>
-#include <tuple>
+// #include <iostream>
+// #include <tuple>
 
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
@@ -16,11 +16,13 @@ auto my_oracle2(const Arr &z) {
     if (fj > 0) {
         return std::tuple{Arr{1., 1.}, fj, false};
     }
+
     // constraint 2: x - y >= 1
     fj = -x + y + 1.;
     if (fj > 0) {
         return std::tuple{Arr{-1., 1.}, fj, false};
     }
+
     return std::tuple{Arr{0., 0.}, 0., true};
 }
 
@@ -29,6 +31,7 @@ TEST_CASE("Example 2", "[example2]") {
     auto E = ell{10., x0};
     auto P = my_oracle2;
     auto ell_info = cutting_plane_feas(P, E);
+
     CHECK(ell_info.feasible);
     // std::cout << "Example 2 result: " << niter << "," << feasible << "," <<
     // status << "\n"; std::cout << "Example 2 xbest: " << xb << "\n";
