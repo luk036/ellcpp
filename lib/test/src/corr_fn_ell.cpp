@@ -11,16 +11,16 @@
 using Arr = xt::xarray<double>;
 
 // extern std::size_t lsq_corr_poly(const Arr &, const Arr &, std::size_t);
-extern std::tuple<size_t, bool> lsq_corr_poly2(const Arr &, const Arr &, std::size_t);
+extern std::tuple<size_t, bool> lsq_corr_poly2(const Arr &, const Arr &,
+                                               std::size_t);
 extern std::tuple<Arr, Arr> create_2d_isotropic(size_t, size_t, size_t);
-extern std::tuple<size_t, bool> mle_corr_poly(const Arr &, const Arr &, std::size_t);
-extern Arr construct_distance_matrix(const Arr &);
+extern std::tuple<size_t, bool> mle_corr_poly(const Arr &, const Arr &,
+                                              std::size_t);
 
 TEST_CASE("check create_2d_isotropic", "[corr_fn]") {
     auto [Y, s] = create_2d_isotropic(5, 4, 3000);
     // CHECK(Y(2,3) == Approx(1.9365965488224368));
     CHECK(s(6, 0) == Approx(2.5));
-    auto D1 = construct_distance_matrix(s);
 }
 
 TEST_CASE("lsq_corr_fn", "[corr_fn]") {

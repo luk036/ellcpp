@@ -30,6 +30,6 @@ TEST_CASE("Example 2", "[example2]") {
     auto P = my_oracle2;
     auto ell_info = cutting_plane_feas(P, E);
     CHECK(ell_info.feasible);
-    // std::cout << "Example 2 result: " << niter << "," << feasible << "," << status << "\n";
-    // std::cout << "Example 2 xbest: " << xb << "\n";
+    // std::cout << "Example 2 result: " << niter << "," << feasible << "," <<
+    // status << "\n"; std::cout << "Example 2 xbest: " << xb << "\n";
 }

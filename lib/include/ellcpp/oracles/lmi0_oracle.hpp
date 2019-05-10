@@ -20,7 +20,7 @@ class lmi0_oracle {
     size_t _n;
 
   public:
-    chol_ext _Q;
+    chol_ext<> _Q;
 
   public:
     /**

@@ -47,7 +47,8 @@ class lowpass_oracle {
      * @param Spsq
      * @return auto
      */
-    auto operator()(const Arr &x, double Spsq) const -> std::tuple<Arr, Arr, double>;
+    auto operator()(const Arr &x, double Spsq) const
+        -> std::tuple<Arr, Arr, double>;
 };
 
 #endif

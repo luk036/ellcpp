@@ -33,7 +33,6 @@ auto profit_oracle::operator()(const Arr &y, double t) const
     return {std::move(g), fj, t};
 }
 
-
 /**
  * @brief
  *
@@ -41,7 +40,8 @@ auto profit_oracle::operator()(const Arr &y, double t) const
  * @param t
  * @return auto
  */
-auto profit_q_oracle::operator()(const Arr &y, double t, int /*unused*/) const -> std::tuple<Arr, double, double, Arr, int> {
+auto profit_q_oracle::operator()(const Arr &y, double t, int /*unused*/) const
+    -> std::tuple<Arr, double, double, Arr, int> {
     auto x = Arr{xt::round(xt::exp(y))};
     if (x[0] == 0.) {
         x[0] = 1.;

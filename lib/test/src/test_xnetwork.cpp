@@ -15,7 +15,8 @@
 //     const int num_nodes = 5;
 //     enum nodes { A, B, C, D, E };
 //     // char name[] = "ABCDE";
-//     static Edge edge_array[] = {Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E),
+//     static Edge edge_array[] = {Edge(A, B), Edge(B, C), Edge(C, D), Edge(D,
+//     E),
 //                                 Edge(E, A)};
 //     int weights[] = {-5, 1, 1, 1, 1};
 //     int num_arcs = sizeof(edge_array) / sizeof(Edge);
@@ -28,7 +29,8 @@
 //     const int num_nodes = 5;
 //     enum nodes { A, B, C, D, E };
 //     // char name[] = "ABCDE";
-//     static Edge edge_array[] = {Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E),
+//     static Edge edge_array[] = {Edge(A, B), Edge(B, C), Edge(C, D), Edge(D,
+//     E),
 //                                 Edge(E, A)};
 //     int weights[] = {2, 1, 1, 1, 1};
 //     int num_arcs = sizeof(edge_array) / sizeof(Edge);
@@ -41,14 +43,15 @@
 //     const int num_nodes = 3;
 //     enum nodes { A, B, C };
 //     // char name[] = "ABCDE";
-//     static Edge edge_array[] = {Edge(A, B), Edge(B, A), Edge(B, C), Edge(C, B),
-//                                 Edge(B, C), Edge(C, B), Edge(C, A), Edge(A, C)};
+//     static Edge edge_array[] = {Edge(A, B), Edge(B, A), Edge(B, C), Edge(C,
+//     B),
+//                                 Edge(B, C), Edge(C, B), Edge(C, A), Edge(A,
+//                                 C)};
 //     int weights[] = {7, 0, 3, 1, 6, 4, 2, 5};
 //     int num_arcs = sizeof(edge_array) / sizeof(Edge);
 //     graph_t g(edge_array, edge_array + num_arcs, weights, num_nodes);
 //     return std::move(g);
 // }
-
 
 // TEST_CASE("Test XNetwork", "[test_xnetwork]") {
 //     auto G = create_test_case1();

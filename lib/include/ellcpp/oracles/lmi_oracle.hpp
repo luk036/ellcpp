@@ -19,7 +19,7 @@ class lmi_oracle {
   private:
     const std::vector<Arr> &_F;
     Arr _F0;
-    chol_ext _Q;
+    chol_ext<> _Q;
 
   public:
     /**
@@ -29,7 +29,7 @@ class lmi_oracle {
      * @param B
      */
     lmi_oracle(const std::vector<Arr> &F, Arr &&B)
-        : _F{F},             //
+        : _F{F},                     //
           _F0{std::forward<Arr>(B)}, //
           _Q{this->_F0.shape()[0]}   //
     {}
@@ -41,8 +41,8 @@ class lmi_oracle {
      * @param B
      */
     lmi_oracle(const std::vector<Arr> &F, const Arr &B)
-        : _F{F},           //
-          _F0{B},          //
+        : _F{F},                   //
+          _F0{B},                  //
           _Q(this->_F0.shape()[0]) //
     {}
 

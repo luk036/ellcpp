@@ -2,12 +2,13 @@
 #define CHOL_EXT_HPP 1
 
 #include <cassert>
-#include <xtensor/xarray.hpp>
 #include <stdexcept>
+#include <xtensor/xarray.hpp>
 
 /**
  * @brief Cholesky factorization
  */
+template <bool Allow_semidefinite = false> //
 class chol_ext {
     // using Mat = bnu::symmetric_matrix<double, bnu::upper>;
     // using UTMat = bnu::triangular_matrix<double, bnu::upper>;
@@ -16,10 +17,8 @@ class chol_ext {
     using Mat = xt::xarray<double>;
 
   public:
-    // bool sqrt_free = true;
-    bool allow_semidefinite = false;
     std::size_t start;
-    std::size_t p;
+    std::size_t stop;
     Vec v;
 
   private:
@@ -27,7 +26,6 @@ class chol_ext {
     Mat T;
 
   public:
-
     /**
      * @brief Construct a new chol ext object
      *
@@ -59,9 +57,10 @@ class chol_ext {
      * See also: factorize()
      */
     template <typename Fn> void factor(Fn getA) {
-        auto& T = this->T;
+        auto &T = this->T;
         auto i = 0U;
         this->start = 0U;
+        this->stop = 0U;
 
         for (; i < this->n; ++i) {
             for (auto j = this->start; j <= i; ++j) {
@@ -74,15 +73,29 @@ class chol_ext {
                     T(j, i) = d / T(j, j);
                 }
             }
-            if (T(i, i) > 0.) {
-                continue;
+            if constexpr (Allow_semidefinite) {
+                if (T(i, i) < 0.) {
+                    this->stop = i + 1;
+                    break;
+                }
+                if (T(i, i) == 0.) {
+                    this->start = i + 1;
+                }
+            } else {
+                if (T(i, i) <= 0.) {
+                    this->stop = i + 1;
+                    break;
+                }
             }
-            if (T(i, i) < 0. || !this->allow_semidefinite) {
-                break;
-            }
-            this->start = i+1;
+            // if (T(i, i) > 0.) {
+            //     continue;
+            // }
+            // if (T(i, i) < 0. || !this->allow_semidefinite) {
+            //     break;
+            // }
+            // this->start = i+1;
         }
-        this->p = i;
+        // this->p = i;
     }
 
     /**
@@ -91,7 +104,7 @@ class chol_ext {
      * @return true
      * @return false
      */
-    auto is_spd() const -> bool { return this->p == this->n; }
+    auto is_spd() const -> bool { return this->stop == 0; }
 
     /**
      * @brief witness that certifies $A$ is not
@@ -103,15 +116,17 @@ class chol_ext {
         if (this->is_spd()) {
             throw std::runtime_error{"Implementation Error."};
         }
-        auto &p = this->p;
+        // auto &p = this->p;
+        auto &stop = this->stop;
+        auto p = stop - 1;
         this->v(p) = 1.;
 
         for (int i = p; i > this->start; --i) {
             auto s = 0.;
             for (auto k = i; k <= p; ++k) {
-                s += this->T(i-1, k) * this->v(k);
+                s += this->T(i - 1, k) * this->v(k);
             }
-            this->v(i-1) = -s;
+            this->v(i - 1) = -s;
         }
 
         return -this->T(p, p);
@@ -127,9 +142,9 @@ class chol_ext {
     double sym_quad(const Vec &A) const {
         auto res = 0.;
         auto &v = this->v;
-        for (auto i = this->start; i <= this->p; ++i) {
+        for (auto i = this->start; i < this->stop; ++i) {
             auto s = 0.;
-            for (auto j = i + 1; j <= this->p; ++j) {
+            for (auto j = i + 1; j < this->stop; ++j) {
                 s += A(i, j) * v(j);
             }
             res += v(i) * (A(i, i) * v(i) + 2 * s);
@@ -151,8 +166,8 @@ class chol_ext {
 
         for (auto i = 0U; i < n; ++i) {
             M(i, i) = std::sqrt(this->T(i, i));
-            for (auto j = i+1; j < n; ++j) {
-                M(i, j) = this->T(i, j) * M(i, i); 
+            for (auto j = i + 1; j < n; ++j) {
+                M(i, j) = this->T(i, j) * M(i, i);
             }
         }
 

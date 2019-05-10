@@ -9,8 +9,8 @@
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lowpass_oracle.hpp>
 #include <limits>
-#include <xtensor/xview.hpp>
 #include <xtensor-blas/xlinalg.hpp>
+#include <xtensor/xview.hpp>
 
 using Arr = xt::xarray<double>;
 // using CArr = xt::xarray<std::complex<double>>;
@@ -92,7 +92,7 @@ static Arr As = xt::view(A, xt::range(ind_s[0], _), xt::all());
 // auto ind_nr = np.setdiff1d(ind_nr, ind_s);
 static auto ind_beg = ind_p[ind_p.size() - 1];
 static auto ind_end = ind_s[0];
-static Arr Anr = xt::view(A, xt::range(ind_beg+1, ind_end), xt::all());
+static Arr Anr = xt::view(A, xt::range(ind_beg + 1, ind_end), xt::all());
 
 static const double Lpsq = Lp * Lp;
 static const double Upsq = Up * Up;
@@ -113,7 +113,7 @@ auto run_lowpass(bool use_parallel_cut) {
     auto [r, Spsq_new, num_iters, feasible, status] =
         cutting_plane_dc(P, E, Spsq, options);
     // std::cout << "lowpass r: " << r << '\n';
-    auto Ustop = 20*std::log10(std::sqrt(Spsq_new));
+    auto Ustop = 20 * std::log10(std::sqrt(Spsq_new));
     // std::cout << "Min attenuation in the stopband is " << Ustop << " dB.\n";
     return std::tuple{feasible, num_iters};
 }

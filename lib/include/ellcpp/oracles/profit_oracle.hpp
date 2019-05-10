@@ -46,7 +46,7 @@ class profit_oracle {
      * @return auto
      */
     auto operator()(const Arr &y, double t) const
-                    -> std::tuple<Arr, double, double>;
+        -> std::tuple<Arr, double, double>;
 };
 
 /**
@@ -130,7 +130,8 @@ class profit_q_oracle {
      * @param t
      * @return auto
      */
-    auto operator()(const Arr &y, double t, int /*unused*/) const -> std::tuple<Arr, double, double, Arr, int>;
+    auto operator()(const Arr &y, double t, int /*unused*/) const
+        -> std::tuple<Arr, double, double, Arr, int>;
 };
 
 #endif

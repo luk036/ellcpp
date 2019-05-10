@@ -3,12 +3,12 @@
 #include <iostream>
 #include <tuple>
 
-#include <xtensor/xview.hpp>
-#include <xtensor/xarray.hpp>
-#include <xtensor-blas/xlinalg.hpp>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <limits>
+#include <xtensor-blas/xlinalg.hpp>
+#include <xtensor/xarray.hpp>
+#include <xtensor/xview.hpp>
 
 using Arr = xt::xarray<double>;
 // using CArr = xt::xarray<std::complex<double>>;
@@ -32,13 +32,12 @@ static auto m = 15 * n;
 static auto D = 8.25; // Delay value.
 // CArr Hdes = xt::exp(D * w); // Desired frequency response.
 
-
 // Optimal Chebyshev filter formulation.
 class my_fir_oracle {
-    // Gaussian filter with linear phase. (Uncomment lines below for this design.)
-    // var = 0.05
-    // Hdes = 1/(xt::sqrt(2*PI*var)) * xt::exp(-xt::square(w-PI/2)/(2*var))
-    // Hdes = xt::multiply(Hdes, xt::exp(-1j*n/2*w))
+    // Gaussian filter with linear phase. (Uncomment lines below for this
+    // design.) var = 0.05 Hdes = 1/(xt::sqrt(2*PI*var)) *
+    // xt::exp(-xt::square(w-PI/2)/(2*var)) Hdes = xt::multiply(Hdes,
+    // xt::exp(-1j*n/2*w))
     Arr w = xt::linspace<double>(0, PI, m);
 
     // A is the matrix used to compute the frequency response
@@ -64,7 +63,8 @@ class my_fir_oracle {
     Arr A_I = -xt::sin(A_theta);
 
   public:
-    auto operator()(const Arr &h, double t) const -> std::tuple<Arr, double, double> {
+    auto operator()(const Arr &h, double t) const
+        -> std::tuple<Arr, double, double> {
         auto fmax = std::numeric_limits<double>::min();
         auto gmax = Arr{xt::zeros<double>({n})};
 

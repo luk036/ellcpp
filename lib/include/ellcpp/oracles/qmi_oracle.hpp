@@ -28,7 +28,7 @@ class qmi_oracle {
     // Arr _A;
 
   public:
-    chol_ext _Q;
+    chol_ext<> _Q;
 
   public:
     /**

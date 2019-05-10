@@ -25,13 +25,13 @@ class my_oracle {
     //           const std::vector<Arr> &F2, Arr &B2, Arr &c)
     //     : lmi1{F1, B1}, lmi2{F2, B2}, c{c} {}
 
-    my_oracle(std::vector<Arr> &&F1, Arr &&B1,
-              std::vector<Arr> &&F2, Arr &&B2, Arr &c)
+    my_oracle(std::vector<Arr> &&F1, Arr &&B1, std::vector<Arr> &&F2, Arr &&B2,
+              Arr &c)
         : lmi1{std::forward<std::vector<Arr>>(F1), std::forward<Arr>(B1)},
           lmi2{std::forward<std::vector<Arr>>(F2), std::forward<Arr>(B2)},
           c{c} {}
 
-    auto operator()(Arr &x, double t)  -> std::tuple<Arr, double, bool> {
+    auto operator()(Arr &x, double t) -> std::tuple<Arr, double, bool> {
         using xt::linalg::dot;
 
         auto f0 = dot(this->c, x)();
@@ -65,7 +65,8 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
                          {{-5., 2., -17.}, {2., -6., 8.}, {-17., 8., 6.}}};
     auto B2 = Arr{{14., 9., 40.}, {9., 91., 10.}, {40., 10., 15.}};
 
-    auto P = my_oracle(std::move(F1), std::move(B1), std::move(F2), std::move(B2), c);
+    auto P = my_oracle(std::move(F1), std::move(B1), std::move(F2),
+                       std::move(B2), c);
     auto E = ell(10., Arr{0., 0., 0.});
 
     // double fb;
@@ -75,7 +76,8 @@ TEST_CASE("LMI test", "[lmi_oracle]") {
     auto ell_info = cutting_plane_dc(P, E, 100.);
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
     // std::cout << "LMI xbest: " << xb << "\n";
-    // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible << ", " << status
+    // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible <<
+    // ", " << status
     //           << "\n";
 
     CHECK(ell_info.feasible);
