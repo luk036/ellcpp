@@ -12,7 +12,7 @@
  *
  */
 class lowpass_oracle {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   private:
     const Arr &_Ap;

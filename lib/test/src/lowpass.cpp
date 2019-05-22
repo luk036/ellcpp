@@ -12,7 +12,7 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xview.hpp>
 
-using Arr = xt::xarray<double>;
+using Arr = xt::xarray<double, xt::layout_type::row_major>;
 // using CArr = xt::xarray<std::complex<double>>;
 // using namespace std::literals::complex_literals;
 

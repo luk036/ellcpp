@@ -8,7 +8,7 @@
 #define likely(x) __builtin_expect(!!(x), 1)
 #define unlikely(x) __builtin_expect(!!(x), 0)
 
-using Arr = xt::xarray<double>;
+using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 /**
  * @brief

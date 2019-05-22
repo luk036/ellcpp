@@ -15,7 +15,7 @@
  *   F(x) = F0 - (F1 * x1 + F2 * x2 + ...)
  */
 class qmi_oracle {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using shape_type = Arr::shape_type;
 
   private:

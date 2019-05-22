@@ -17,7 +17,7 @@ struct Options {
 
 
 struct CInfo {
-    xt::xarray<double> val;
+    xt::xarray<double, xt::layout_type::row_major> val;
     double value = 0.;
     size_t num_iters;
     bool feasible;
@@ -158,7 +158,7 @@ auto cutting_plane_feas(Oracle &evaluate, Space &S,
 template <typename Oracle, typename Space>
 auto cutting_plane_dc(Oracle &evaluate, Space &S, double t,
                       const Options &options = Options()) {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
     bool feasible = false;
     auto x_best = Arr{S.xc()};
@@ -218,7 +218,7 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, double t,
 template <typename Oracle, typename Space>
 auto cutting_plane_q(Oracle &evaluate, Space &S, double t,
                      const Options &options = Options()) {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
     bool feasible = false;
     auto x_best = Arr{S.xc()};

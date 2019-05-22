@@ -11,7 +11,7 @@
  *
  */
 class profit_oracle {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   private:
     double _log_pA;
@@ -54,7 +54,7 @@ class profit_oracle {
  *
  */
 class profit_rb_oracle {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   private:
     Arr _uie;
@@ -105,7 +105,7 @@ class profit_rb_oracle {
  *
  */
 class profit_q_oracle {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   private:
     profit_oracle P;

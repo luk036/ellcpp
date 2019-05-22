@@ -9,7 +9,7 @@
 
 int main() {
   using xt::linalg::dot;
-  using Arr = xt::xarray<double>;
+  using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   auto n = 4u;   // number of points
   auto s_begin = 1U;

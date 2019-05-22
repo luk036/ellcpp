@@ -13,8 +13,8 @@ class chol_ext {
     // using Mat = bnu::symmetric_matrix<double, bnu::upper>;
     // using UTMat = bnu::triangular_matrix<double, bnu::upper>;
     // using Vec = bnu::vector<double>;
-    using Vec = xt::xarray<double>;
-    using Mat = xt::xarray<double>;
+    using Vec = xt::xarray<double, xt::layout_type::row_major>;
+    using Mat = xt::xarray<double, xt::layout_type::row_major>;
 
   public:
     std::size_t start;

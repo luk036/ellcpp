@@ -13,7 +13,7 @@
 
 // using namespace fun;
 class my_oracle {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   private:
     lmi_oracle lmi1;
@@ -52,7 +52,7 @@ class my_oracle {
 };
 
 TEST_CASE("LMI test", "[lmi_oracle]") {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
     auto c = Arr{1., -1., 1.};
     auto F1 = std::vector<Arr>{{{-7., -11.}, {-11., 3.}},

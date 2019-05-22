@@ -19,8 +19,8 @@
 int test1() {
   //namespace bnu = boost::numeric::ublas;
   //using Vec = bnu::vector<double>;
-  //using Mat = xt::xarray<double>;
-  using Vec = xt::xarray<double>;
+  //using Mat = xt::xarray<double, xt::layout_type::row_major>;
+  using Vec = xt::xarray<double, xt::layout_type::row_major>;
  
   double p = 20, A = 40, alpha = 0.1, beta = 0.4;
   double v1 = 10, v2 = 35, k = 30.5;
@@ -63,7 +63,7 @@ int test1() {
 }
 
 int main() {
-  using Arr = xt::xarray<double>;
+  using Arr = xt::xarray<double, xt::layout_type::row_major>;
   using xt::placeholders::_;
   using xt::linalg::dot;
 

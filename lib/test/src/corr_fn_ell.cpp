@@ -2,7 +2,7 @@
 #include <catch.hpp>
 #include <xtensor/xarray.hpp>
 
-using Arr = xt::xarray<double>;
+using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 // extern std::size_t lsq_corr_poly(const Arr &, const Arr &, std::size_t);
 extern std::tuple<size_t, bool> lsq_corr_poly2(const Arr &, const Arr &,

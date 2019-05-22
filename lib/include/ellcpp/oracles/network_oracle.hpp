@@ -21,7 +21,7 @@ class network_oracle {
     Grad_Fn _p;
 
     using edge_t = decltype(*(std::begin(_G.edges())));
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   public:
     /**

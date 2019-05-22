@@ -12,7 +12,7 @@
  */
 class ell {
   public:
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using params_t = std::tuple<double, double, double>;
     using return_t = std::tuple<int, params_t>;
 

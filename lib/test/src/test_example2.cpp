@@ -6,7 +6,7 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 
-using Arr = xt::xarray<double>;
+using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 auto my_oracle2(const Arr &z) {
     auto x = z[0], y = z[1];

@@ -12,7 +12,7 @@
  *    F * x >= 0
  */
 class lmi0_oracle {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using shape_type = Arr::shape_type;
 
   private:

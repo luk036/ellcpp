@@ -2,7 +2,7 @@
 #include <ellcpp/oracles/chol_ext.hpp>
 // #include <xtensor/xarray.hpp>
 
-using Arr = xt::xarray<double>;
+using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 TEST_CASE("Cholesky test 1", "[chol_ext]") {
     auto m1 = Arr{{25., 15., -5.}, {15., 18., 0.}, {-5., 0., 11.}};

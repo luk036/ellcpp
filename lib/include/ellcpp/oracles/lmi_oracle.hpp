@@ -14,7 +14,7 @@
  *    (B - F * x) must be a semidefinte matrix
  */
 class lmi_oracle {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   private:
     const std::vector<Arr> &_F;

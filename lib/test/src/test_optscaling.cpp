@@ -20,7 +20,7 @@ BOOST_INSTALL_PROPERTY(edge, id_tag);
 
 } // namespace boost
 
-using Arr = xt::xarray<double>;
+using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 using graph_t =
     boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS,

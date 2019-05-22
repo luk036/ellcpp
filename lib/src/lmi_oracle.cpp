@@ -1,7 +1,7 @@
 #include <ellcpp/oracles/lmi_oracle.hpp>
 // #include <xtensor-blas/xlinalg.hpp>
 
-using Arr = xt::xarray<double>;
+using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 /**
  * @brief

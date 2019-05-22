@@ -14,7 +14,7 @@
 #include <xtensor/xnorm.hpp>
 #include <xtensor/xrandom.hpp>
 
-using Arr = xt::xarray<double>;
+using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 /**
  * @brief Create a 2d isotropic example
@@ -100,7 +100,7 @@ std::vector<Arr> construct_distance_matrix(const Arr &s, size_t m) {
  *
  */
 class lsq_oracle {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using shape_type = Arr::shape_type;
 
   private:
@@ -202,7 +202,7 @@ std::tuple<size_t, bool> lsq_corr_poly2(const Arr &Y, const Arr &s,
  *
  */
 class mle_oracle {
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using shape_type = Arr::shape_type;
 
   private:

@@ -23,7 +23,7 @@ class optscaling_oracle {
     Graph &_G;
     Fn _get_cost;
 
-    using Arr = xt::xarray<double>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using edge_t = decltype(*(std::begin(_G.edges())));
 
   public:
