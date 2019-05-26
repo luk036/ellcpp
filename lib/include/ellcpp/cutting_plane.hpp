@@ -34,31 +34,30 @@ struct CInfo {
  *
  * @tparam Oracle
  * @tparam Space
- * @param evaluate
+ * @param Omega
  * @param I
  * @param options
  * @return auto
  */
 template <typename Oracle, typename Space>
-auto bsearch(Oracle &evaluate, Space &I, const Options &options = Options()) {
+auto bsearch(Oracle &Omega, Space &I, const Options &options = Options()) {
     // assume monotone
-    bool feasible = false;
     auto &[l, u] = I;
-    auto t = l + (u - l) / 2;
+    auto u_orig = u;
     auto niter = 1U;
     for (; niter <= options.max_it; ++niter) {
-        if (evaluate(t)) { // feasible sol'n obtained
-            feasible = true;
+        auto t = l + (u - l) / 2;
+        if (Omega(t)) { // feasible sol'n obtained
             u = t;
         } else {
             l = t;
         }
         auto tau = (u - l) / 2;
-        t = l + tau;
         if (tau < options.tol) {
             break;
         }
     }
+    auto feasible = (u != u_orig);
     auto ret = CInfo(feasible, niter, 0);
     ret.value = u;
     return std::move(ret);
@@ -99,12 +98,12 @@ class bsearch_adaptor {
 };
 
 /**
- * @brief Cutting-plane method for solving convex feasibility problem
+ * @brief Find a point in a convex set (defined through a cutting-plane oracle).
  *
  * @tparam Oracle
  * @tparam Space
  * @tparam T
- * @param[in] evaluate   perform assessment on x0
+ * @param[in] Omega   perform assessment on x0
  * @param[in] S        search Space containing x*
  * @param[in] max_it   maximum number of iterations
  * @param[in] tol      error tolerance
@@ -114,19 +113,19 @@ class bsearch_adaptor {
  * @return status how is the final cut
  */
 template <typename Oracle, typename Space>
-auto cutting_plane_feas(Oracle &evaluate, Space &S,
+auto cutting_plane_feas(Oracle &Omega, Space &S,
                         const Options &options = Options()) {
     bool feasible = false;
     auto niter = 1U, status = 0U;
 
     for (; niter <= options.max_it; ++niter) {
-        auto [g, h, flag] = evaluate(S.xc());
+        auto [g, h, flag] = Omega(S.xc()); // query the oracle at S.xc()
         if (flag) { // feasible sol'n obtained
             feasible = true;
             break;
         }
         double tsq;
-        std::tie(status, tsq) = S.update(g, h);
+        std::tie(status, tsq) = S.update(g, h); // update S
         if (status != 0) {
             break;
         }
@@ -145,7 +144,7 @@ auto cutting_plane_feas(Oracle &evaluate, Space &S,
  * @tparam Oracle
  * @tparam Space
  * @tparam T
- * @param[in] evaluate   perform assessment on x0
+ * @param[in] Omega    perform assessment on x0
  * @param[in] S        search Space containing x*
  * @param[in] t        best-so-far optimal sol'n
  * @param[in] max_it   maximum number of iterations
@@ -156,7 +155,7 @@ auto cutting_plane_feas(Oracle &evaluate, Space &S,
  * @return status how is the final cut
  */
 template <typename Oracle, typename Space>
-auto cutting_plane_dc(Oracle &evaluate, Space &S, double t,
+auto cutting_plane_dc(Oracle &Omega, Space &S, double t,
                       const Options &options = Options()) {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
@@ -164,7 +163,7 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, double t,
     auto x_best = Arr{S.xc()};
     auto niter = 1U, status = 0U;
     for (; niter <= options.max_it; ++niter) {
-        auto [g, h, t1] = evaluate(S.xc(), t);
+        auto [g, h, t1] = Omega(S.xc(), t);
         if (t != t1) { // best t obtained
             feasible = true;
             t = t1;
@@ -209,14 +208,14 @@ auto cutting_plane_dc(Oracle &evaluate, Space &S, double t,
  * @tparam Oracle
  * @tparam Space
  * @tparam T
- * @param evaluate
+ * @param Omega
  * @param S
  * @param t
  * @param options
  * @return auto
  */
 template <typename Oracle, typename Space>
-auto cutting_plane_q(Oracle &evaluate, Space &S, double t,
+auto cutting_plane_q(Oracle &Omega, Space &S, double t,
                      const Options &options = Options()) {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
@@ -225,7 +224,7 @@ auto cutting_plane_q(Oracle &evaluate, Space &S, double t,
     auto status = 1U;
     auto niter = 1U;
     for (; niter <= options.max_it; ++niter) {
-        auto [g, h, t1, x0, loop] = evaluate(S.xc(), t, (status != 3) ? 0 : 1);
+        auto [g, h, t1, x0, loop] = Omega(S.xc(), t, (status != 3) ? 0 : 1);
         // if (status != 3) {
         //     if (loop == 1) { // discrete sol'n
         //         h += xt::linalg::dot(g, x0 - S.xc())();
