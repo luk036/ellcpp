@@ -76,11 +76,10 @@ class profit_rb_oracle {
      * @param e3
      */
     profit_rb_oracle(double p, double A, double k, const Arr &a, const Arr &v,
-                     double ui, const Arr &e, double e3)
-        : _uie{ui * e},                             //
-          _a{a},                                    //
-          _uie3{ui * e3},                           //
-          _P(p - _uie3, A, k - _uie3, a, v + _uie3) //
+                     const Arr &e, double e3)
+        : _uie{e},                         //
+          _a{a},                           //
+          _P(p - e3, A, k - e3, a, v + e3) //
     {}
 
     /**
@@ -93,7 +92,7 @@ class profit_rb_oracle {
     auto operator()(const Arr &y, double t) {
         auto a_rb = _a;
         for (auto &&i : {0, 1}) {
-            a_rb[i] += _uie[i] * (y[i] > 0 ? -1 : +1);
+            a_rb[i] +=  y[i] > 0 ? -_uie[i] : _uie[i];
         }
         _P._a = a_rb;
         return _P(y, t);

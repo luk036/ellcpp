@@ -1,6 +1,5 @@
 #include "cutting_plane.hpp"
 #include "ell.hpp"
-#include "profit_oracle.hpp"
 #include <xtensor/xarray.hpp>
 #include <xtensor/xrandom.hpp>
 #include <xtensor-blas/xlinalg.hpp>

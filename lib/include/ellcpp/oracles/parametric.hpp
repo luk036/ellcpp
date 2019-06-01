@@ -53,7 +53,7 @@ auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
         r_opt = r_min;
         // update ???
         for (const edge_t &e : C_opt) {
-            auto const &[u, v] = G.end_points(e);
+            auto &&[u, v] = G.end_points(e);
             S._dist[u] = S._dist[v] - get_weight(G, e);
         }
     }

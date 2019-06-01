@@ -45,13 +45,13 @@ class optscaling_oracle {
      */
     auto operator()(const Arr &x, double t) {
         auto constr = [this](Graph &G, const edge_t &e, const Arr &x) {
-            auto const &[u, v] = G.end_points(e);
+            auto &&[u, v] = G.end_points(e);
             auto cost = this->_get_cost(G, e);
             return (u <= v) ? x(0) - cost : cost - x(1);
         };
 
         auto pconstr = [](Graph &G, const edge_t &e, const Arr &) {
-            auto const &[u, v] = G.end_points(e);
+            auto &&[u, v] = G.end_points(e);
             return (u <= v) ? Arr{1., 0.} : Arr{0., -1.};
         };
 

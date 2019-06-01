@@ -29,7 +29,7 @@ TEST_CASE("Profit Test 1", "[profit]") {
         auto e = Vec{0.003, 0.007};
 
         auto E = ell(100., Vec{0., 0.});
-        auto P = profit_rb_oracle(p, A, k, a, v, ui, e, e3);
+        auto P = profit_rb_oracle(p, A, k, a, v, e, e3);
         auto ell_info = cutting_plane_dc(P, E, 0.);
         CHECK(ell_info.num_iters == 42);
     }
