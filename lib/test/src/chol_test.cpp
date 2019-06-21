@@ -19,8 +19,8 @@ TEST_CASE("Cholesky test 2", "[chol_ext]") {
     auto Q2 = chol_ext(m2.shape()[0]);
     Q2.factorize(m2);
     CHECK(!Q2.is_spd());
-    auto ep = Q2.witness();
     CHECK(Q2.stop == 2);
+    // auto ep = Q2.witness();
     // CHECK(ep == 1.);
 }
 

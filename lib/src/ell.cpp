@@ -10,7 +10,7 @@
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-/**
+/*!
  * @brief
  *
  * @param b0
@@ -53,7 +53,7 @@ auto ell::calc_ll_core(double b0, double b1, double tsq) const
     return {0, std::move(params)};
 }
 
-/**
+/*!
  * @brief
  *
  * @param b1
@@ -73,7 +73,7 @@ auto ell::calc_ll_cc(double b1, double b1sq, double tsq) const
     return {0, std::move(params)};
 }
 
-/**
+/*!
  * @brief Deep Cut
  *
  * @param beta
@@ -105,7 +105,7 @@ auto ell::calc_dc(double beta, double tsq) const -> ell::return_t {
     return {0, std::move(ret)};
 }
 
-/**
+/*!
  * @brief Central Cut
  *
  * @param tsq
@@ -120,7 +120,7 @@ auto ell::calc_cc(double tsq) const -> ell::return_t {
     return std::tuple{0, std::move(params)};
 }
 
-/**
+/*!
  * @brief
  *
  * @param g
@@ -151,7 +151,7 @@ ell1d::return_t ell1d::update(double g, double beta) {
     return {0, tsq};
 }
 
-/**
+/*!
  * @brief Update ellipsoid core function using the cut
  *          g' * (x - xc) + beta <= 0
  *

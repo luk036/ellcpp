@@ -3,7 +3,7 @@
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-/**
+/*!
  * @brief
  *
  * @param y
@@ -33,7 +33,7 @@ auto profit_oracle::operator()(const Arr &y, double t) const
     return {std::move(g), fj, t};
 }
 
-/**
+/*!
  * @brief
  *
  * @param y

@@ -7,7 +7,7 @@
 
 // from itertools import chain
 
-/**
+/*!
  * @brief Oracle for lowpass filter design
  *
  */
@@ -26,7 +26,7 @@ class lowpass_oracle {
     mutable unsigned int _count;
 
   public:
-    /**
+    /*!
      * @brief Construct a new lowpass oracle object
      *
      * @param Ap
@@ -40,7 +40,7 @@ class lowpass_oracle {
         : _Ap{Ap}, _As{As}, _Anr{Anr}, _Lpsq{Lpsq}, _Upsq{Upsq}, _i_Anr{0},
           _i_As{0}, _i_Ap{0}, _count{0} {}
 
-    /**
+    /*!
      * @brief
      *
      * @param x

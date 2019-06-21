@@ -10,7 +10,7 @@
 // #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
-/**
+/*!
  * @brief
  *
  * @tparam Graph
@@ -27,7 +27,7 @@ class optscaling_oracle {
     using edge_t = decltype(*(std::begin(_G.edges())));
 
   public:
-    /**
+    /*!
      * @brief Construct a new optscaling oracle object
      *
      * @param G
@@ -36,7 +36,7 @@ class optscaling_oracle {
     explicit optscaling_oracle(Graph &G, Fn get_cost, T && /* dummy */)
         : _G{G}, _get_cost{get_cost} {}
 
-    /**
+    /*!
      * @brief
      *
      * @param x

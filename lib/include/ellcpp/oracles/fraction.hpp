@@ -8,7 +8,7 @@
 
 namespace fun {
 
-/**
+/*!
  * @brief Greatest common divider
  *
  * @tparam _Mn
@@ -20,7 +20,7 @@ template <typename _Mn> constexpr _Mn gcd(_Mn __m, _Mn __n) {
     return __m == 0 ? abs(__n) : __n == 0 ? abs(__m) : gcd(__n, __m % __n);
 }
 
-/**
+/*!
  * @brief Least common multiple
  *
  * @tparam _Mn
@@ -32,7 +32,7 @@ template <typename _Mn> constexpr _Mn lcm(_Mn __m, _Mn __n) {
     return (__m != 0 && __n != 0) ? (abs(__m) / gcd(__m, __n)) * abs(__n) : 0;
 }
 
-/**
+/*!
  * @brief
  *
  * @tparam Z
@@ -44,7 +44,7 @@ template <typename Z> struct Fraction {
     Z _denominator;
 
   public:
-    /**
+    /*!
      * @brief Construct a new Fraction object
      *
      * @param numerator
@@ -57,7 +57,7 @@ template <typename Z> struct Fraction {
         _denominator /= common;
     }
 
-    /**
+    /*!
      * @brief Construct a new Fraction object
      *
      * @param numerator
@@ -65,27 +65,27 @@ template <typename Z> struct Fraction {
     explicit Fraction(const Z &numerator)
         : _numerator{numerator}, _denominator{1} {}
 
-    /**
+    /*!
      * @brief Construct a new Fraction object
      *
      */
     constexpr Fraction() = default;
 
-    /**
+    /*!
      * @brief
      *
      * @return const Z&
      */
     constexpr const Z &numerator() const { return _numerator; }
 
-    /**
+    /*!
      * @brief
      *
      * @return const Z&
      */
     constexpr const Z &denominator() const { return _denominator; }
 
-    /**
+    /*!
      * @brief
      *
      * @return _Self
@@ -94,13 +94,13 @@ template <typename Z> struct Fraction {
         return _Self(std::abs(_numerator), std::abs(_denominator));
     }
 
-    /**
+    /*!
      * @brief
      *
      */
     constexpr void reciprocal() { std::swap(_numerator, _denominator); }
 
-    /**
+    /*!
      * @brief
      *
      * @return _Self
@@ -109,7 +109,7 @@ template <typename Z> struct Fraction {
         return _Self(-_numerator, _denominator);
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param frac
@@ -122,7 +122,7 @@ template <typename Z> struct Fraction {
         return _Self(n, common);
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param frac
@@ -132,7 +132,7 @@ template <typename Z> struct Fraction {
         return *this + (-frac);
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param frac
@@ -144,7 +144,7 @@ template <typename Z> struct Fraction {
         return _Self(n, d);
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param frac
@@ -155,7 +155,7 @@ template <typename Z> struct Fraction {
         return *this * frac;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param i
@@ -166,7 +166,7 @@ template <typename Z> struct Fraction {
         return _Self(n, _denominator);
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param i
@@ -174,7 +174,7 @@ template <typename Z> struct Fraction {
      */
     constexpr _Self operator-(const Z &i) const { return *this + (-i); }
 
-    /**
+    /*!
      * @brief
      *
      * @param i
@@ -185,7 +185,7 @@ template <typename Z> struct Fraction {
         return _Self(n, _denominator);
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param i
@@ -196,7 +196,7 @@ template <typename Z> struct Fraction {
         return _Self(_numerator, d);
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param frac
@@ -206,7 +206,7 @@ template <typename Z> struct Fraction {
         return *this = *this + frac;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param frac
@@ -216,7 +216,7 @@ template <typename Z> struct Fraction {
         return *this = *this - frac;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param frac
@@ -226,7 +226,7 @@ template <typename Z> struct Fraction {
         return *this = *this * frac;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param frac
@@ -236,7 +236,7 @@ template <typename Z> struct Fraction {
         return *this = *this / frac;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param i
@@ -244,7 +244,7 @@ template <typename Z> struct Fraction {
      */
     constexpr _Self operator+=(const Z &i) { return *this = *this + i; }
 
-    /**
+    /*!
      * @brief
      *
      * @param i
@@ -252,7 +252,7 @@ template <typename Z> struct Fraction {
      */
     constexpr _Self operator-=(const Z &i) { return *this = *this - i; }
 
-    /**
+    /*!
      * @brief
      *
      * @param i
@@ -260,7 +260,7 @@ template <typename Z> struct Fraction {
      */
     constexpr _Self operator*=(const Z &i) { return *this = *this * i; }
 
-    /**
+    /*!
      * @brief
      *
      * @param i
@@ -268,7 +268,7 @@ template <typename Z> struct Fraction {
      */
     constexpr _Self operator/=(const Z &i) { return *this = *this / i; }
 
-    /**
+    /*!
      * @brief Three way comparison
      *
      * @tparam U
@@ -279,7 +279,7 @@ template <typename Z> struct Fraction {
         return _numerator * frac._denominator - _denominator * frac._numerator;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @tparam U
@@ -292,7 +292,7 @@ template <typename Z> struct Fraction {
         return this->cmp(frac) == 0;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @tparam U
@@ -305,7 +305,7 @@ template <typename Z> struct Fraction {
         return this->cmp(frac) != 0;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @tparam U
@@ -318,7 +318,7 @@ template <typename Z> struct Fraction {
         return this->cmp(frac) < 0;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @tparam U
@@ -331,7 +331,7 @@ template <typename Z> struct Fraction {
         return this->cmp(frac) > 0;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @tparam U
@@ -344,7 +344,7 @@ template <typename Z> struct Fraction {
         return this->cmp(frac) <= 0;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @tparam U
@@ -357,7 +357,7 @@ template <typename Z> struct Fraction {
         return this->cmp(frac) >= 0;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param c
@@ -367,7 +367,7 @@ template <typename Z> struct Fraction {
         return _numerator - _denominator * c;
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param c
@@ -376,7 +376,7 @@ template <typename Z> struct Fraction {
      */
     constexpr bool operator==(const Z &c) const { return this->cmp(c) == 0; }
 
-    /**
+    /*!
      * @brief
      *
      * @param c
@@ -385,7 +385,7 @@ template <typename Z> struct Fraction {
      */
     constexpr bool operator!=(const Z &c) const { return this->cmp(c) != 0; }
 
-    /**
+    /*!
      * @brief
      *
      * @param c
@@ -394,7 +394,7 @@ template <typename Z> struct Fraction {
      */
     constexpr bool operator<(const Z &c) const { return this->cmp(c) < 0; }
 
-    /**
+    /*!
      * @brief
      *
      * @param c
@@ -403,7 +403,7 @@ template <typename Z> struct Fraction {
      */
     constexpr bool operator>(const Z &c) const { return this->cmp(c) > 0; }
 
-    /**
+    /*!
      * @brief
      *
      * @param c
@@ -412,7 +412,7 @@ template <typename Z> struct Fraction {
      */
     constexpr bool operator<=(const Z &c) const { return this->cmp(c) <= 0; }
 
-    /**
+    /*!
      * @brief
      *
      * @param c
@@ -421,7 +421,7 @@ template <typename Z> struct Fraction {
      */
     constexpr bool operator>=(const Z &c) const { return this->cmp(c) >= 0; }
 
-    /**
+    /*!
      * @brief
      *
      * @return double
@@ -429,7 +429,7 @@ template <typename Z> struct Fraction {
     explicit operator double() { return double(_numerator) / _denominator; }
 };
 
-/**
+/*!
  * @brief
  *
  * @tparam Z
@@ -442,7 +442,7 @@ constexpr Fraction<Z> operator+(const Z &c, const Fraction<Z> &frac) {
     return frac + c;
 }
 
-/**
+/*!
  * @brief
  *
  * @tparam Z
@@ -455,7 +455,7 @@ constexpr Fraction<Z> operator-(const Z &c, const Fraction<Z> &frac) {
     return c + (-frac);
 }
 
-/**
+/*!
  * @brief
  *
  * @tparam Z
@@ -468,7 +468,7 @@ constexpr Fraction<Z> operator*(const Z &c, const Fraction<Z> &frac) {
     return frac * c;
 }
 
-/**
+/*!
  * @brief
  *
  * @tparam Z
@@ -481,7 +481,7 @@ constexpr Fraction<Z> operator+(int c, const Fraction<Z> &frac) {
     return frac + c;
 }
 
-/**
+/*!
  * @brief
  *
  * @tparam Z
@@ -494,7 +494,7 @@ constexpr Fraction<Z> operator-(int c, const Fraction<Z> &frac) {
     return c + (-frac);
 }
 
-/**
+/*!
  * @brief
  *
  * @tparam Z
@@ -507,7 +507,7 @@ constexpr Fraction<Z> operator*(int c, const Fraction<Z> &frac) {
     return frac * c;
 }
 
-/**
+/*!
  * @brief
  *
  * @tparam _Stream

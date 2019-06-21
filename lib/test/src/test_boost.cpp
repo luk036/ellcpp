@@ -20,7 +20,7 @@ template <class grAdaptor> struct exercise_vertex {
     void operator()(const Vertex &v) const {
         // typedef boost::graph_traits<Graph> GraphTraits;
         // typename boost::property_map<Graph, boost::vertex_index_t>::type
-        auto index = boost::get(boost::vertex_index, g);
+        // auto index = boost::get(boost::vertex_index, g);
 
         // std::cout << "out-edges: ";
         // typename GraphTraits::out_edge_iterator out_i, out_end;
@@ -64,7 +64,7 @@ TEST_CASE("Test Boost", "[test_boost]") {
 
     // get the property map for vertex indices
     // typedef property_map<Graph, vertex_index_t>::type IndexMap;
-    auto index = boost::get(boost::vertex_index, G);
+    // auto index = boost::get(boost::vertex_index, G);
 
     // std::cout << "vertices(g) = ";
     // typedef graph_traits<Graph>::vertex_iterator vertex_iter;

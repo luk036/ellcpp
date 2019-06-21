@@ -6,7 +6,7 @@
 // #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
-/**
+/*!
  * @brief
  *
  * @tparam Graph
@@ -24,7 +24,7 @@ class network_oracle {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   public:
-    /**
+    /*!
      * @brief Construct a new network oracle object
      *
      * @param G
@@ -35,7 +35,7 @@ class network_oracle {
         : _G{G}, _f{f}, _p{p} // partial derivative of f w.r.t x
     {}
 
-    /**
+    /*!
      * @brief
      *
      * @param x

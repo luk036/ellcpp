@@ -5,7 +5,7 @@
 #include <tuple>
 #include <xtensor/xarray.hpp>
 
-/**
+/*!
  * @brief Ellipsoid Search Space
  *
  * ell = { x | (x - xc)' * (\kappa Q)^-1 * (x - xc) <= 1 }
@@ -27,7 +27,7 @@ class ell {
     Arr _Q;
 
   public:
-    /**
+    /*!
      * @brief Construct a new ell object
      *
      * @tparam T
@@ -48,35 +48,35 @@ class ell {
         }
     }
 
-    /**
+    /*!
      * @brief Construct a new ell object
      *
      * @param E
      */
     ell(const ell &E) = default;
 
-    /**
+    /*!
      * @brief
      *
      * @return const Arr&
      */
     auto xc() const -> const Arr & { return _xc; }
 
-    /**
+    /*!
      * @brief
      *
      * @return Arr&
      */
     auto xc() -> Arr & { return _xc; }
 
-    /**
+    /*!
      * @brief Set the xc object
      *
      * @param xc
      */
     void set_xc(const Arr &xc) { _xc = xc; }
 
-    /**
+    /*!
      * @brief Update ellipsoid core function using the cut
      *          g' * (x - xc) + beta <= 0
      *
@@ -89,7 +89,7 @@ class ell {
     std::tuple<int, double> update(const Arr &g, const T &beta);
 
   private:
-    /**
+    /*!
      * @brief
      *
      * @param b0
@@ -99,7 +99,7 @@ class ell {
      */
     return_t calc_ll_core(double b0, double b1, double tsq) const;
 
-    /**
+    /*!
      * @brief Parallel Cut, one of them is central
      *
      * @param b1
@@ -109,7 +109,7 @@ class ell {
      */
     return_t calc_ll_cc(double b1, double t1, double tsq) const;
 
-    /**
+    /*!
      * @brief Deep Cut
      *
      * @param b0
@@ -118,7 +118,7 @@ class ell {
      */
     return_t calc_dc(double b0, double tsq) const;
 
-    /**
+    /*!
      * @brief Central Cut
      *
      * @param tsq
@@ -127,7 +127,7 @@ class ell {
     return_t calc_cc(double tsq) const;
 }; // } ell
 
-/**
+/*!
  * @brief Ellipsoid Method for special 1D case
  *
  */
@@ -140,7 +140,7 @@ class ell1d {
     double _xc;
 
   public:
-    /**
+    /*!
      * @brief Construct a new ell1d object
      *
      * @param l
@@ -150,21 +150,21 @@ class ell1d {
         : _r{(u - l) / 2},    //
           _xc{l + _r} {}
 
-    /**
+    /*!
      * @brief Construct a new ell1d object
      *
      * @param E
      */
     ell1d(const ell1d &E) = default;
 
-    /**
+    /*!
      * @brief
      *
      * @return double
      */
     double xc() const { return _xc; }
 
-    /**
+    /*!
      * @brief
      *
      * @param g

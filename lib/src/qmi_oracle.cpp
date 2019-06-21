@@ -5,7 +5,7 @@
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-/**
+/*!
  * @brief
  *
  * @param x

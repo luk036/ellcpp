@@ -7,7 +7,7 @@
 #include <tuple>
 #include <vector>
 
-/**
+/*!
  * @brief maximum parametric problem
  *    max  r
  *    s.t. dist[v] - dist[v] <= d(u,v,r);

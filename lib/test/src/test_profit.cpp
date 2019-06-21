@@ -1,7 +1,6 @@
 /*
  *  Distributed under the MIT License (See accompanying file /LICENSE )
  */
-#define CATCH_CONFIG_MAIN
 #include <catch.hpp>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
@@ -25,7 +24,7 @@ TEST_CASE("Profit Test 1", "[profit]") {
     }
 
     {
-        auto ui = 1., e3 = 1.;
+        auto e3 = 1.;
         auto e = Vec{0.003, 0.007};
 
         auto E = ell(100., Vec{0., 0.});

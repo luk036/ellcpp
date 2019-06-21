@@ -2,13 +2,13 @@
 #ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_NEG_CYCLE_HPP
 #define _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_NEG_CYCLE_HPP 1
 
-/**
+/*!
 Negative cycle detection for (auto weighed graphs.
 **/
 #include <py2cpp/py2cpp.hpp>
 #include <vector>
 
-/**
+/*!
  * @brief negative cycle
  *
  * @tparam Graph
@@ -36,7 +36,7 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
     py::dict<Node, wt_t> _dist;
 
   public:
-    /**
+    /*!
      * @brief Construct a new neg Cycle Finder object
      *
      * @param G
@@ -51,7 +51,7 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
         // _pred = {v: None for v : _G};
     }
 
-    /**
+    /*!
      * @brief Find a cycle on policy graph
      *
      * @return handle -- a start node of the cycle
@@ -85,7 +85,7 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
         return _G.null_vertex();
     }
 
-    /**
+    /*!
      * @brief Perform a updating of dist and pred
      *
      * @return auto
@@ -106,7 +106,7 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
         return changed;
     }
 
-    /** Perform a updating of dist and pred
+    /*! Perform a updating of dist and pred
      *    Arguments:
      *        G {[type]} -- [description];
      *        dist {dictionary} -- [description];
@@ -124,7 +124,7 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
         return std::move(this->neg_cycle_relax());
     }
 
-    /**
+    /*!
      * @brief
      *
      * @return std::vector<edge_t>
@@ -146,7 +146,7 @@ template <typename Graph, typename WeightFn> class negCycleFinder {
         return std::move(std::vector<edge_t>{}); // ???
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param handle

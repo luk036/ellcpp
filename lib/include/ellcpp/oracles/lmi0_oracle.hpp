@@ -5,7 +5,7 @@
 #include "chol_ext.hpp"
 #include <xtensor/xarray.hpp>
 
-/**
+/*!
  * @brief  Oracle for Linear Matrix Inequality
  *
  * Oracle for:
@@ -23,7 +23,7 @@ class lmi0_oracle {
     chol_ext<> _Q;
 
   public:
-    /**
+    /*!
      * @brief Construct a new lmi0 oracle object
      *
      * @param F
@@ -34,7 +34,7 @@ class lmi0_oracle {
           _Q(_n)               //
     {}
 
-    /**
+    /*!
      * @brief
      *
      * @param x

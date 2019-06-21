@@ -12,7 +12,7 @@
 
 namespace xn {
 
-/** Base class for undirected graphs.
+/*! Base class for undirected graphs.
 
     A Graph stores nodes and edges with optional data, or attributes.
 
@@ -237,7 +237,7 @@ class Graph : public object {
     //     return attr;
     // }
 
-    /** Initialize a graph with edges, name, or graph attributes.
+    /*! Initialize a graph with edges, name, or graph attributes.
 
         Parameters
         ----------
@@ -259,7 +259,7 @@ class Graph : public object {
           _adj(num_nodes) {}
 
     /// @property
-    /** Graph adjacency object holding the neighbors of each node.
+    /*! Graph adjacency object holding the neighbors of each node.
 
         This object is a read-only dict-like structure with node keys
         and neighbor-dict values.  The neighbor-dict is keyed by neighbor
@@ -278,7 +278,7 @@ class Graph : public object {
 
     /// @property
     auto get_name() {
-        /** String identifier of the graph.
+        /*! String identifier of the graph.
 
         This graph attribute appears : the attribute dict G.graph
         keyed by the string `"name"`. as well as an attribute (technically
@@ -292,7 +292,7 @@ class Graph : public object {
     // @name.setter
     auto set_name(const char *s) { this->graph["name"] = std::any(s); }
 
-    /** Iterate over the nodes. Use: "for (auto n : G)".
+    /*! Iterate over the nodes. Use: "for (auto n : G)".
      *
     Returns
     -------
@@ -311,7 +311,7 @@ class Graph : public object {
 
     auto end() const { return std::end(this->_node); }
 
-    /** Return true if (n is a node, false otherwise. Use: "n : G".
+    /*! Return true if (n is a node, false otherwise. Use: "n : G".
 
     Examples
     --------
@@ -321,7 +321,7 @@ class Graph : public object {
      */
     bool contains(const Node &n) { return this->_node.contains(n); }
 
-    /** Return a dict of neighbors of node n.  Use: "G[n]".
+    /*! Return a dict of neighbors of node n.  Use: "G[n]".
 
     Parameters
     ----------
@@ -350,7 +350,7 @@ class Graph : public object {
 
     /// @property
     auto nodes() {
-        /** A NodeView of the Graph as G.nodes().
+        /*! A NodeView of the Graph as G.nodes().
 
         Returns
         -------
@@ -426,7 +426,7 @@ class Graph : public object {
         return nodes;
     }
 
-    /** Return the number of nodes : the graph.
+    /*! Return the number of nodes : the graph.
 
     Returns
     -------
@@ -445,7 +445,7 @@ class Graph : public object {
      */
     auto number_of_nodes() const { return std::size(this->_node); }
 
-    /** Return the number of nodes : the graph.
+    /*! Return the number of nodes : the graph.
 
     Returns
     -------
@@ -458,7 +458,7 @@ class Graph : public object {
      */
     auto order() { return std::size(this->_node); }
 
-    /** Return true if (the graph contains the node n.
+    /*! Return true if (the graph contains the node n.
 
     Identical to `n : G`
 
@@ -475,7 +475,7 @@ class Graph : public object {
     auto has_node(const Node &n) { return this->_node.contains(n); }
 
     auto add_edge(const Node &u, const Node &v) {
-        /** Add an edge between u && v.
+        /*! Add an edge between u && v.
 
         The nodes u && v will be automatically added if (they are
         not already : the graph.
@@ -540,7 +540,7 @@ class Graph : public object {
     }
 
     auto has_edge(const Node &u, const Node &v) -> bool {
-        /** Return true if (the edge (u, v) is : the graph.
+        /*! Return true if (the edge (u, v) is : the graph.
 
         This is the same as `v : G[u]` without KeyError exceptions.
 
@@ -581,7 +581,7 @@ class Graph : public object {
     auto degree(const Node &n) { return this->_adj[this->_node_map[n]].size(); }
 
     // /// @property
-    // /** An EdgeView of the Graph as G.edges().
+    // /*! An EdgeView of the Graph as G.edges().
 
     //     edges( nbunch=None, data=false, default=None);
 
@@ -642,7 +642,7 @@ class Graph : public object {
 
     // /// @property
     // auto degree( ) {
-    //     /** A DegreeView for the Graph as G.degree || G.degree().
+    //     /*! A DegreeView for the Graph as G.degree || G.degree().
 
     //     The node degree is the number of edges adjacent to the node.
     //     The weighted node degree is the sum of the edge weights for
@@ -686,7 +686,7 @@ class Graph : public object {
     // }
 
     auto clear() {
-        /** Remove all nodes && edges from the graph.
+        /*! Remove all nodes && edges from the graph.
 
         This also removes the name, && all graph, node, && edge attributes.
 
@@ -706,12 +706,12 @@ class Graph : public object {
     }
 
     auto is_multigraph() {
-        /** Return true if (graph is a multigraph, false otherwise. */
+        /*! Return true if (graph is a multigraph, false otherwise. */
         return false;
     }
 
     auto is_directed() {
-        /** Return true if (graph is directed, false otherwise. */
+        /*! Return true if (graph is directed, false otherwise. */
         return false;
     }
 };

@@ -6,7 +6,7 @@
 #include <tuple>
 #include <xtensor/xarray.hpp>
 
-/**
+/*!
  * @brief Oracle for a profit maximization problem
  *
  */
@@ -22,7 +22,7 @@ class profit_oracle {
     Arr _a;
 
   public:
-    /**
+    /*!
      * @brief Construct a new profit oracle object
      *
      * @param p
@@ -38,7 +38,7 @@ class profit_oracle {
           _a{a}                     //
     {}
 
-    /**
+    /*!
      * @brief
      *
      * @param y
@@ -49,7 +49,7 @@ class profit_oracle {
         -> std::tuple<Arr, double, double>;
 };
 
-/**
+/*!
  * @brief Oracle for a profit maximization problem (robust version)
  *
  */
@@ -63,7 +63,7 @@ class profit_rb_oracle {
     profit_oracle _P;
 
   public:
-    /**
+    /*!
      * @brief Construct a new profit rb oracle object
      *
      * @param p
@@ -82,7 +82,7 @@ class profit_rb_oracle {
           _P(p - e3, A, k - e3, a, v + e3) //
     {}
 
-    /**
+    /*!
      * @brief
      *
      * @param y
@@ -99,7 +99,7 @@ class profit_rb_oracle {
     }
 };
 
-/**
+/*!
  * @brief Oracle for profit maximization problem (discrete version)
  *
  */
@@ -110,7 +110,7 @@ class profit_q_oracle {
     profit_oracle P;
 
   public:
-    /**
+    /*!
      * @brief Construct a new profit q oracle object
      *
      * @param p
@@ -122,7 +122,7 @@ class profit_q_oracle {
     profit_q_oracle(double p, double A, double k, const Arr &a, const Arr &v)
         : P(p, A, k, a, v) {}
 
-    /**
+    /*!
      * @brief
      *
      * @param y

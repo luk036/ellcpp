@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <xtensor/xarray.hpp>
 
-/**
+/*!
  * @brief Cholesky factorization
  */
 template <bool Allow_semidefinite = false> //
@@ -26,15 +26,15 @@ class chol_ext {
     Mat T;
 
   public:
-    /**
+    /*!
      * @brief Construct a new chol ext object
      *
      * @param n
      */
     explicit chol_ext(std::size_t N)
-        : n{N}, v{xt::zeros<double>({N})}, T{xt::zeros<double>({N, N})} {}
+        : v{xt::zeros<double>({N})}, n{N}, T{xt::zeros<double>({N, N})} {}
 
-    /**
+    /*!
      * @brief
      *
      * @param A
@@ -48,7 +48,7 @@ class chol_ext {
         this->factor([&](unsigned i, unsigned j) { return A(i, j); });
     }
 
-    /**
+    /*!
      * @brief Perform Cholesky Factorization (Lazy evaluation)
      *
      * @tparam Fn
@@ -98,7 +98,7 @@ class chol_ext {
         // this->p = i;
     }
 
-    /**
+    /*!
      * @brief Is $A$ symmetric positive definite (spd)
      *
      * @return true
@@ -106,7 +106,7 @@ class chol_ext {
      */
     auto is_spd() const -> bool { return this->stop == 0; }
 
-    /**
+    /*!
      * @brief witness that certifies $A$ is not
      * symmetric positive definite (spd)
      *
@@ -118,10 +118,10 @@ class chol_ext {
         }
         // auto &p = this->p;
         auto &stop = this->stop;
-        auto p = stop - 1;
+        size_t p = stop - 1; // assume stop >= 1
         this->v(p) = 1.;
 
-        for (int i = p; i > this->start; --i) {
+        for (auto i = p; i > this->start; --i) {
             auto s = 0.;
             for (auto k = i; k <= p; ++k) {
                 s += this->T(i - 1, k) * this->v(k);
@@ -132,7 +132,7 @@ class chol_ext {
         return -this->T(p, p);
     }
 
-    /**
+    /*!
      * @brief
      *
      * @param v

@@ -13,7 +13,7 @@
 
 namespace xn {
 
-/** Base class for directed graphs.
+/*! Base class for directed graphs.
 
     A DiGraphS stores nodes and edges with optional data, or attributes.
 
@@ -211,7 +211,7 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
   public:
     adjlist_outer_dict_factory& _succ; // successor
 
-    /** Initialize a graph with edges, name, or graph attributes.
+    /*! Initialize a graph with edges, name, or graph attributes.
 
         Parameters
         ----------
@@ -232,7 +232,7 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         : DiGraphS{py::range<int>(num_nodes), py::range<int>(num_nodes)} {}
 
     /// @property
-    /** DiGraphS adjacency object holding the neighbors of each node.
+    /*! DiGraphS adjacency object holding the neighbors of each node.
 
         This object is a read-only dict-like structure with node keys
         and neighbor-dict values.  The neighbor-dict is keyed by neighbor
@@ -250,7 +250,7 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
     auto adj() const { return AdjacencyView(this->_succ); }
 
     /// @property
-    /** Graph adjacency object holding the successors of each node.
+    /*! Graph adjacency object holding the successors of each node.
 
         This object is a read-only dict-like structure with node keys
         and neighbor-dict values.  The neighbor-dict is keyed by neighbor
@@ -270,7 +270,7 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
     auto succ() const { return AdjacencyView(this->_succ); }
 
     auto add_edge(const Node &u, const Node &v) {
-        /** Add an edge between u && v.
+        /*! Add an edge between u && v.
 
         The nodes u && v will be automatically added if (they are
         not already : the graph.
@@ -334,7 +334,7 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         }
     }
 
-    /** Returns True if node u has successor v.
+    /*! Returns True if node u has successor v.
 
         This is true if graph has the edge u->v.
     */
@@ -342,7 +342,7 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         return this->_node.contains(u) && this->_succ[this->_node_map[u]].contains(v);
     }
 
-    /** Returns an iterator over successor nodes of n.
+    /*! Returns an iterator over successor nodes of n.
 
         A successor of n is a node m such that there exists a directed
         edge from n to m.
@@ -374,7 +374,7 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
     }
 
     /// @property
-    /** An OutEdgeView of the DiGraph as G.edges().
+    /*! An OutEdgeView of the DiGraph as G.edges().
 
         edges(self, nbunch=None, data=False, default=None)
 
@@ -446,7 +446,7 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
     }
 
 
-    /** Remove all nodes && edges from the graph.
+    /*! Remove all nodes && edges from the graph.
 
         This also removes the name, && all graph, node, && edge attributes.
 
@@ -467,12 +467,12 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         this->graph.clear();
     }
 
-    /** Return true if (graph is a multigraph, false otherwise. */
+    /*! Return true if (graph is a multigraph, false otherwise. */
     auto is_multigraph() {
         return false;
     }
 
-    /** Return true if (graph is directed, false otherwise. */
+    /*! Return true if (graph is directed, false otherwise. */
     auto is_directed() {
         return true;
     }

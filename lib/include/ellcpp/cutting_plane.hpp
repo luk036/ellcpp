@@ -6,7 +6,7 @@
 // #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
-/**
+/*!
  * @brief Options
  *
  */
@@ -19,8 +19,8 @@ struct Options {
 struct CInfo {
     xt::xarray<double, xt::layout_type::row_major> val;
     double value = 0.;
-    size_t num_iters;
     bool feasible;
+    size_t num_iters;
     int status;
 
     CInfo(bool feasible, size_t num_iters, int status) :
@@ -29,7 +29,7 @@ struct CInfo {
         status{status} {}
 };
 
-/**
+/*!
  * @brief
  *
  * @tparam Oracle
@@ -63,7 +63,7 @@ auto bsearch(Oracle &Omega, Space &I, const Options &options = Options()) {
     return std::move(ret);
 }
 
-/**
+/*!
  * @brief
  *
  * @tparam Oracle
@@ -97,7 +97,7 @@ class bsearch_adaptor {
     }
 };
 
-/**
+/*!
  * @brief Find a point in a convex set (defined through a cutting-plane oracle).
  *
  * @tparam Oracle
@@ -138,7 +138,7 @@ auto cutting_plane_feas(Oracle &Omega, Space &S,
     // return std::tuple{S.xc(), niter, feasible, status};
 }
 
-/**
+/*!
  * @brief Cutting-plane method for solving convex problem
  *
  * @tparam Oracle
@@ -185,7 +185,7 @@ auto cutting_plane_dc(Oracle &Omega, Space &S, double t,
     return std::move(ret);
 } // END
 
-/**
+/*!
     Cutting-plane method for solving convex discrete optimization problem
     input
              oracle        perform assessment on x0
@@ -202,7 +202,7 @@ auto cutting_plane_dc(Oracle &Omega, Space &S, double t,
 // #include <xtensor-blas/xlinalg.hpp>
 // #include <xtensor/xarray.hpp>
 
-/**
+/*!
  * @brief
  *
  * @tparam Oracle

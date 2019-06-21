@@ -111,7 +111,7 @@ auto run_lowpass(bool use_parallel_cut) {
     auto options = Options();
     options.max_it = 20000;
     options.tol = 1e-8;
-    auto [r, Spsq_new, num_iters, feasible, status] =
+    auto [r, Spsq_new, feasible, num_iters, status] =
         cutting_plane_dc(P, E, Spsq, options);
     return std::tuple<bool, unsigned int>{feasible, num_iters};
 }

@@ -8,7 +8,7 @@
 
 namespace xn {
 
-/**
+/*!
  * @brief 
  * 
  * @tparam Graph 
@@ -16,14 +16,14 @@ namespace xn {
 template <typename Graph>
 class VertexView : public Graph {
   public:
-    /**
+    /*!
      * @brief Construct a new Vertex View object
      * 
      * @param G 
      */
     explicit VertexView(Graph& G) : Graph(G) {}
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -33,7 +33,7 @@ class VertexView : public Graph {
         return v_iter;
     }
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -43,7 +43,7 @@ class VertexView : public Graph {
         return v_end;
     }
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -53,7 +53,7 @@ class VertexView : public Graph {
         return v_iter;
     }
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -64,7 +64,7 @@ class VertexView : public Graph {
     }
 };
 
-/**
+/*!
  * @brief 
  * 
  * @tparam Graph 
@@ -75,14 +75,14 @@ class EdgeView {
     const Graph& _G;
 
   public:
-    /**
+    /*!
      * @brief Construct a new Edge View object
      * 
      * @param G 
      */
     explicit EdgeView(const Graph& G) : _G{G} {}
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -92,7 +92,7 @@ class EdgeView {
         return e_iter;
     }
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -102,7 +102,7 @@ class EdgeView {
         return e_end;
     }
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -112,7 +112,7 @@ class EdgeView {
         return e_iter;
     }
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -123,7 +123,7 @@ class EdgeView {
     }
 };
 
-/**
+/*!
  * @brief 
  * 
  * @tparam Vertex 
@@ -136,7 +136,7 @@ class AtlasView {
     const Graph& _G;
 
   public:
-    /**
+    /*!
      * @brief Construct a new Atlas View object
      * 
      * @param v 
@@ -144,7 +144,7 @@ class AtlasView {
      */
     explicit AtlasView(Vertex v, const Graph& G) : _v{v}, _G{G} {}
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -154,7 +154,7 @@ class AtlasView {
         return e_iter;
     }
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -164,7 +164,7 @@ class AtlasView {
         return e_end;
     }
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -174,7 +174,7 @@ class AtlasView {
         return e_iter;
     }
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
@@ -185,7 +185,7 @@ class AtlasView {
     }
 };
 
-/**
+/*!
  * @brief 
  * 
  * @tparam Graph 
@@ -196,34 +196,34 @@ class grAdaptor : public VertexView<Graph> {
     using Vertex = typename boost::graph_traits<Graph>::vertex_descriptor;
     //using edge_wt_t = decltype( boost::get(boost::edge_weight, std::declval<Graph>()) );
 
-    /**
+    /*!
      * @brief Construct a new gr Adaptor object
      * 
      */
     explicit grAdaptor() = delete;
 
-    /**
+    /*!
      * @brief Construct a new gr Adaptor object
      * 
      * @param G 
      */
     explicit grAdaptor(Graph& G) : VertexView<Graph>(G) {}
 
-    /**
+    /*!
      * @brief 
      * 
      * @return auto 
      */
     auto number_of_edges() const { return boost::num_edges(*this); }
 
-    /**
+    /*!
      * @brief 
      * 
      * @return EdgeView<Graph> 
      */
     EdgeView<Graph> edges() const { return EdgeView<Graph>(*this); }
 
-    /**
+    /*!
      * @brief 
      * 
      * @param v 
@@ -233,7 +233,7 @@ class grAdaptor : public VertexView<Graph> {
         return AtlasView<Vertex, Graph>(v, *this); 
     }
 
-    /**
+    /*!
      * @brief 
      * 
      * @param u 
@@ -244,14 +244,14 @@ class grAdaptor : public VertexView<Graph> {
         return boost::add_edge(u, v, *this);
     }
 
-    /**
+    /*!
      * @brief 
      * 
      * @return Vertex 
      */
     static Vertex null_vertex() { return boost::graph_traits<Graph>::null_vertex(); }
 
-    /**
+    /*!
      * @brief 
      * 
      * @tparam Edge 
@@ -261,7 +261,7 @@ class grAdaptor : public VertexView<Graph> {
     template <typename Edge>
     Vertex source(const Edge& e) const { return boost::source(e, *this); }
 
-    /**
+    /*!
      * @brief 
      * 
      * @tparam Edge 
@@ -271,7 +271,7 @@ class grAdaptor : public VertexView<Graph> {
     template <typename Edge>
     Vertex target(const Edge& e) const { return boost::target(e, *this); }
 
-    /**
+    /*!
      * @brief 
      * 
      * @tparam Edge 

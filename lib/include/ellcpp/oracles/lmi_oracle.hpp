@@ -5,7 +5,7 @@
 #include <vector>
 #include <xtensor/xarray.hpp>
 
-/**
+/*!
  * @brief Oracle for Linear Matrix Inequality
  *
  * Oracle for:
@@ -22,7 +22,7 @@ class lmi_oracle {
     chol_ext<> _Q;
 
   public:
-    /**
+    /*!
      * @brief Construct a new lmi oracle object
      *
      * @param F
@@ -34,7 +34,7 @@ class lmi_oracle {
           _Q{this->_F0.shape()[0]}   //
     {}
 
-    /**
+    /*!
      * @brief Construct a new lmi oracle object
      *
      * @param F
@@ -46,7 +46,7 @@ class lmi_oracle {
           _Q(this->_F0.shape()[0]) //
     {}
 
-    /**
+    /*!
      * @brief
      *
      * @param x

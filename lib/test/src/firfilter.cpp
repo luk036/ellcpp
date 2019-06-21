@@ -20,10 +20,10 @@ static double PI = std::acos(-1);
 // Problem specs.
 // ********************************************************************
 // Number of FIR coefficients (including the zeroth one).
-static auto n = 20;
+static auto n = 20U;
 
 // Rule-of-thumb frequency discretization (Cheney's Approx. Theory book).
-static auto m = 15 * n;
+static auto m = 15U * n;
 
 // ********************************************************************
 // Construct the desired filter.

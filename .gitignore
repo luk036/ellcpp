@@ -3,7 +3,7 @@ build-clang
 build-g++
 build
 tidy
-html
+docs
 .vscode
 
 # Prerequisites

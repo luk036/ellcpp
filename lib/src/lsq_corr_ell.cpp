@@ -16,7 +16,7 @@
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-/**
+/*!
  * @brief Create a 2d isotropic example
  *
  * @param nx
@@ -65,7 +65,7 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u,
     return std::tuple{std::move(Y), std::move(s)};
 }
 
-/**
+/*!
  * @brief
  *
  * @param s
@@ -95,7 +95,7 @@ std::vector<Arr> construct_distance_matrix(const Arr &s, size_t m) {
     return std::move(Sig);
 }
 
-/**
+/*!
  * @brief
  *
  */
@@ -108,7 +108,7 @@ class lsq_oracle {
     lmi0_oracle _lmi0;
 
   public:
-    /**
+    /*!
      * @brief Construct a new lsq oracle object
      *
      * @param F
@@ -118,7 +118,7 @@ class lsq_oracle {
         : _qmi(F, F0), //
           _lmi0(F) {}
 
-    /**
+    /*!
      * @brief
      *
      * @param x
@@ -141,7 +141,7 @@ class lsq_oracle {
         if (!feasible) {
             xt::view(g, xt::range(0, n - 1)) = g1;
             auto &Q = this->_qmi._Q;
-            auto ep = Q.witness();
+            // auto ep = Q.witness();
             auto v = xt::view(Q.v, xt::range(Q.start, Q.stop));
             g(n - 1) = -xt::linalg::dot(v, v)();
             return std::tuple{std::move(g), fj1, t};
@@ -156,7 +156,7 @@ class lsq_oracle {
     }
 };
 
-/**
+/*!
  * @brief
  *
  * @param Y
@@ -174,13 +174,13 @@ auto lsq_corr_core2(const Arr &Y, std::size_t m, lsq_oracle &P) {
     x(0) = 4;
     x(m) = normY2 / 2.;
     auto E = ell(val, x);
-    auto [x_best, fb, num_iters, feasible, status] =
+    auto [x_best, fb, feasible, num_iters, status] =
         cutting_plane_dc(P, E, std::numeric_limits<double>::max());
     Arr a = xt::view(x_best, xt::range(0, m));
     return std::tuple{std::move(a), num_iters, feasible};
 }
 
-/**
+/*!
  * @brief
  *
  * @param Y
@@ -197,7 +197,7 @@ std::tuple<size_t, bool> lsq_corr_poly2(const Arr &Y, const Arr &s,
     return {num_iters, feasible};
 }
 
-/**
+/*!
  * @brief
  *
  */
@@ -212,7 +212,7 @@ class mle_oracle {
     lmi_oracle _lmi;
 
   public:
-    /**
+    /*!
      * @brief Construct a new mle oracle object
      *
      * @param Sig
@@ -224,7 +224,7 @@ class mle_oracle {
           _lmi0(Sig), //
           _lmi(Sig, std::move(2 * Y)) {}
 
-    /**
+    /*!
      * @brief
      *
      * @param x
@@ -277,7 +277,7 @@ class mle_oracle {
     }
 };
 
-/**
+/*!
  * @brief
  *
  * @param Y
@@ -289,12 +289,12 @@ auto mle_corr_core(const Arr &Y, std::size_t m, mle_oracle &P) {
     auto x = Arr{xt::zeros<double>({m})};
     x(0) = 4.;
     auto E = ell(500., x);
-    auto [x_best, fb, num_iters, feasible, status] =
+    auto [x_best, fb, feasible, num_iters, status] =
         cutting_plane_dc(P, E, std::numeric_limits<double>::max());
     return std::tuple{std::move(x_best), num_iters, feasible};
 }
 
-/**
+/*!
  * @brief
  *
  * @param Y
@@ -311,7 +311,7 @@ std::tuple<size_t, bool> mle_corr_poly(const Arr &Y, const Arr &s,
     return {num_iters, feasible};
 }
 
-/**
+/*!
  * @brief
  *
  * @param Y
