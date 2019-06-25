@@ -35,7 +35,7 @@ include(Coverage)
 # You should try to give as much control over the project setup to the user.
 # When modifying compile flags for example, if they are not mandatory, provide an option.
 
-option(BP_USE_DOXYGEN "Add a doxygen target to generate the documentation" ON)
+option(BP_USE_DOXYGEN "Add a doxygen target to generate the documentation" OFF)
 
 # Use your own option for tests, in case people use your library through add_subdirectory
 cmake_dependent_option(BP_BUILD_TESTS
