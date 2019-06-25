@@ -83,6 +83,7 @@ script:
       fi
       make -j2
       ctest -V -j 2
+    fi
 
 after_success:
   - |

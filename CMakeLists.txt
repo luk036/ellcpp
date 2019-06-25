@@ -103,7 +103,7 @@ if(BP_USE_DOXYGEN AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.9)
         set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md)
         doxygen_add_docs(
             doc
-            README.md source
+            README.md lib
             COMMENT "Generate man pages"
         )
     endif()
