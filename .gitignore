@@ -1,7 +1,5 @@
 # build code
-build-clang
-build-g++
-build
+build*/
 tidy
 docs
 .vscode
