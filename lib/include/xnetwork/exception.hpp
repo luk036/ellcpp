@@ -11,7 +11,7 @@
 Exceptions
 **********
 
-Base exceptions && errors for XNetwork.
+Base exceptions and errors for XNetwork.
 */
 
 namespace xn {
@@ -51,8 +51,8 @@ thus the name of the exception.
 
 References
 ----------
-.. [1] Harary, F. && Read, R. "Is the Null Graph a Pointless
-   Concept?"  In Graphs && Combinatorics Conference, George
+.. [1] Harary, F. and Read, R. "Is the Null Graph a Pointless
+   Concept?"  In Graphs and Combinatorics Conference, George
    Washington University.  New York: Springer-Verlag, 1973.
 
  */

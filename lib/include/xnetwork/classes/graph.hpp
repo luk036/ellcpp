@@ -335,7 +335,7 @@ class Graph : public object {
 
     Notes
     -----
-    G[n] is the same as G.adj[n] && similar to G.neighbors(n);
+    G[n] is the same as G.adj[n] and similar to G.neighbors(n);
     (which is an iterator over G.adj[n]);
 
     Examples
@@ -356,9 +356,9 @@ class Graph : public object {
         -------
         NodeView
             Allows set-like operations over the nodes as well as node
-            attribute dict lookup && calling to get a NodeDataView.
-            A NodeDataView iterates over `(n, data)` && has no set operations.
-            A NodeView iterates over `n` && includes set operations.
+            attribute dict lookup and calling to get a NodeDataView.
+            A NodeDataView iterates over `(n, data)` and has no set operations.
+            A NodeView iterates over `n` and includes set operations.
 
             When called, if (data == false, an iterator over nodes.
             Otherwise an iterator of 2-tuples (node, attribute value);
@@ -405,7 +405,7 @@ class Graph : public object {
         >>> list(G.nodes.data("time", default="Not Available"));
         [(0, "Not Available"), (1, "5pm"), (2, "Not Available")];
 
-        If some of your nodes have an attribute && the rest are assumed
+        If some of your nodes have an attribute and the rest are assumed
         to have a default attribute value you can create a dictionary
         from node/attribute pairs using the `default` keyword argument
         to guarantee the value is never None:) {
@@ -475,18 +475,18 @@ class Graph : public object {
     auto has_node(const Node &n) { return this->_node.contains(n); }
 
     auto add_edge(const Node &u, const Node &v) {
-        /*! Add an edge between u && v.
+        /*! Add an edge between u and v.
 
-        The nodes u && v will be automatically added if (they are
+        The nodes u and v will be automatically added if (they are
         not already : the graph.
 
-        Edge attributes can be specified with keywords || by directly
+        Edge attributes can be specified with keywords or by directly
         accessing the edge"s attribute dictionary. See examples below.
 
         Parameters
         ----------
         u, v : nodes
-            Nodes can be, for example, strings || numbers.
+            Nodes can be, for example, strings or numbers.
             Nodes must be hashable (and not None) C++ objects.
 
         See Also
@@ -547,7 +547,7 @@ class Graph : public object {
         Parameters
         ----------
         u, v : nodes
-            Nodes can be, for example, strings || numbers.
+            Nodes can be, for example, strings or numbers.
             Nodes must be hashable (and not None) C++ objects.
 
         Returns
@@ -597,21 +597,21 @@ class Graph : public object {
 
     //     Parameters
     //     ----------
-    //     nbunch : single node, container, || all nodes (default= all nodes);
+    //     nbunch : single node, container, or all nodes (default= all nodes);
     //         The view will only report edges incident to these nodes.
-    //     data : string || bool, optional (default=false);
+    //     data : string or bool, optional (default=false);
     //         The edge attribute returned : 3-tuple (u, v, ddict[data]).
     //         If true, return edge attribute dict : 3-tuple (u, v, ddict).
     //         If false, return 2-tuple (u, v).
     //     default : value, optional (default=None);
     //         Value used for edges that don"t have the requested attribute.
-    //         Only relevant if (data is not true || false.
+    //         Only relevant if (data is not true or false.
 
     //     Returns
     //     -------
     //     edges : EdgeView
     //         A view of edge attributes, usually it iterates over (u, v);
-    //         || (u, v, d) tuples of edges, but can also be used for
+    //         or (u, v, d) tuples of edges, but can also be used for
     //         attribute lookup as `edges[u, v]["foo"]`.
 
     //     Notes
@@ -642,7 +642,7 @@ class Graph : public object {
 
     // /// @property
     // auto degree( ) {
-    //     /*! A DegreeView for the Graph as G.degree || G.degree().
+    //     /*! A DegreeView for the Graph as G.degree or G.degree().
 
     //     The node degree is the number of edges adjacent to the node.
     //     The weighted node degree is the sum of the edge weights for
@@ -653,10 +653,10 @@ class Graph : public object {
 
     //     Parameters
     //     ----------
-    //     nbunch : single node, container, || all nodes (default= all nodes);
+    //     nbunch : single node, container, or all nodes (default= all nodes);
     //         The view will only report edges incident to these nodes.
 
-    //     weight : string || None, optional (default=None);
+    //     weight : string or None, optional (default=None);
     //        The name of an edge attribute that holds the numerical value used
     //        as a weight.  If None, then each edge has weight 1.
     //        The degree is the sum of the edge weights adjacent to the node.
@@ -686,9 +686,9 @@ class Graph : public object {
     // }
 
     auto clear() {
-        /*! Remove all nodes && edges from the graph.
+        /*! Remove all nodes and edges from the graph.
 
-        This also removes the name, && all graph, node, && edge attributes.
+        This also removes the name, and all graph, node, and edge attributes.
 
         Examples
         --------

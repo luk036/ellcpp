@@ -270,18 +270,18 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
     auto succ() const { return AdjacencyView(this->_succ); }
 
     auto add_edge(const Node &u, const Node &v) {
-        /*! Add an edge between u && v.
+        /*! Add an edge between u and v.
 
-        The nodes u && v will be automatically added if (they are
+        The nodes u and v will be automatically added if (they are
         not already : the graph.
 
-        Edge attributes can be specified with keywords || by directly
+        Edge attributes can be specified with keywords or by directly
         accessing the edge"s attribute dictionary. See examples below.
 
         Parameters
         ----------
         u, v : nodes
-            Nodes can be, for example, strings || numbers.
+            Nodes can be, for example, strings or numbers.
             Nodes must be hashable (and not None) C++ objects.
 
         See Also
@@ -446,9 +446,9 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
     }
 
 
-    /*! Remove all nodes && edges from the graph.
+    /*! Remove all nodes and edges from the graph.
 
-        This also removes the name, && all graph, node, && edge attributes.
+        This also removes the name, and all graph, node, and edge attributes.
 
         Examples
         --------

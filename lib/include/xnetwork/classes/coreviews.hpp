@@ -120,7 +120,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     The two dict-of-dicts represent the inner dict of
 //     an Adjacency:  `G.succ[node]` && `G.pred[node]`.
 //     The inner level of dict of both hold attribute key:value
-//     pairs && is read-write. But the outer level is read-only.
+//     pairs and is read-write. But the outer level is read-only.
 
 //     See Also
 //     ========
@@ -187,9 +187,9 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     /*! A read-only union of dict Adjacencies as a Map of Maps of Maps.
 
 //     The two input dict-of-dict-of-dicts represent the union of
-//     `G.succ` && `G.pred`. Return values are UnionAtlas
+//     `G.succ` and `G.pred`. Return values are UnionAtlas
 //     The inner level of dict is read-write. But the
-//     middle && outer levels are read-only.
+//     middle and outer levels are read-only.
 
 //     succ : a dict-of-dict-of-dict {node: nbrdict}
 //     pred : a dict-of-dict-of-dict {node: nbrdict}
@@ -251,7 +251,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     /*! A read-only union of two inner dicts of MultiAdjacencies.
 
 //     The two input dict-of-dict-of-dicts represent the union of
-//     `G.succ[node]` && `G.pred[node]` for MultiDiGraphs.
+//     `G.succ[node]` and `G.pred[node]` for MultiDiGraphs.
 //     Return values are UnionAtlas.
 //     The inner level of dict is read-write. But the outer levels are
 //     read-only.
@@ -286,7 +286,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     /*! A read-only union of two dict MultiAdjacencies.
 
 //     The two input dict-of-dict-of-dict-of-dicts represent the union of
-//     `G.succ` && `G.pred` for MultiDiGraphs. Return values are UnionAdjacency.
+//     `G.succ` and `G.pred` for MultiDiGraphs. Return values are UnionAdjacency.
 //     The inner level of dict is read-write. But the outer levels are
 //     read-only.
 
