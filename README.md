@@ -5,5 +5,6 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/luk036/ellcpp/badge)](https://www.codefactor.io/repository/github/luk036/ellcpp)
 [![BCH compliance](https://bettercodehub.com/edge/badge/luk036/ellcpp?branch=master)](https://bettercodehub.com/)
 [![codecov](https://codecov.io/gh/luk036/ellcpp/branch/master/graph/badge.svg)](https://codecov.io/gh/luk036/ellcpp)
+[![Documentation](https://img.shields.io/badge/Documentation-latest-blue.svg)](https://luk036.github.io/ellcpp)
 
 Ellipsoid Method C++ Code
