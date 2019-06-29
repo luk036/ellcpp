@@ -13,17 +13,18 @@
  * @tparam Fn_Eval
  * @tparam Grad_Fn
  */
-template <typename Graph, typename Fn_Eval, typename Grad_Fn>
-class network_oracle {
-  private:
-    Graph &_G;
+template<typename Graph, typename Fn_Eval, typename Grad_Fn>
+class network_oracle
+{
+private:
+    Graph&  _G;
     Fn_Eval _f;
     Grad_Fn _p;
 
     using edge_t = decltype(*(std::begin(_G.edges())));
-    using Arr = xt::xarray<double, xt::layout_type::row_major>;
+    using Arr    = xt::xarray<double, xt::layout_type::row_major>;
 
-  public:
+public:
     /*!
      * @brief Construct a new network oracle object
      *
@@ -31,9 +32,10 @@ class network_oracle {
      * @param f
      * @param p
      */
-    explicit network_oracle(Graph &G, Fn_Eval &f, Grad_Fn &p)
+    explicit network_oracle(Graph& G, Fn_Eval& f, Grad_Fn& p)
         : _G{G}, _f{f}, _p{p} // partial derivative of f w.r.t x
-    {}
+    {
+    }
 
     /*!
      * @brief
@@ -41,8 +43,9 @@ class network_oracle {
      * @param x
      * @return auto
      */
-    auto operator()(const Arr &x) const {
-        auto get_weight = [this, &x](Graph &G, const edge_t &e) -> double {
+    auto operator()(const Arr& x) const
+    {
+        auto get_weight = [this, &x](Graph& G, const edge_t& e) -> double {
             return this->_f(G, e, x);
         };
 
@@ -51,10 +54,9 @@ class network_oracle {
         auto g = Arr{xt::zeros<double>({x.size()})};
         auto f = 0.;
 
-        if (C.empty()) {
-            return std::tuple{std::move(g), 0., true};
-        }
-        for (auto const &e : C) {
+        if (C.empty()) { return std::tuple{std::move(g), 0., true}; }
+        for (auto const& e : C)
+        {
             f -= _f(_G, e, x);
             g -= _p(_G, e, x);
         }

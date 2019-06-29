@@ -2,10 +2,10 @@
 #ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_PARAMETRIC_HPP
 #define _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_PARAMETRIC_HPP 1
 
-#include "neg_cycle.hpp" // import negCycleFinder
 #include <iostream>
 #include <tuple>
 #include <vector>
+#include "neg_cycle.hpp" // import negCycleFinder
 
 /*!
  * @brief maximum parametric problem
@@ -26,35 +26,36 @@
  *       C_opt -- Most critial cycle
  *       dist -- optimal sol"n
  */
-template <typename Graph, typename T, typename Fn1, typename Fn2>
-auto max_parametric(Graph &G, T r, Fn1 &d, Fn2 &zero_cancel) {
+template<typename Graph, typename T, typename Fn1, typename Fn2>
+auto max_parametric(Graph& G, T r, Fn1& d, Fn2& zero_cancel)
+{
     // std::cout << "r=" << r << '\n';
 
     using edge_t = decltype(*(std::begin(G.edges())));
 
-    auto const get_weight = [d, r](const Graph &G,
-                                   const edge_t &e) -> T { // int???
+    auto const get_weight = [d, r](const Graph&  G,
+                                   const edge_t& e) -> T { // int???
         return d(G, r, e);
     };
 
-    auto S = negCycleFinder(G, get_weight);
-    std::vector<edge_t> C_opt{};
-    T r_opt = r;
+    auto S     = negCycleFinder(G, get_weight);
+    auto C_opt = std::vector<edge_t>{};
+    auto r_opt = r;
 
-    while (true) {
-        auto const &C = S.neg_cycle_relax();
-        const T &r_min = zero_cancel(G, C);
+    while (true)
+    {
+        auto const& C     = S.neg_cycle_relax();
+        auto const& r_min = zero_cancel(G, C);
         // std::cout << "r_min=" << r_min << '\n';
 
-        if (r_min >= r_opt) {
-            break;
-        }
+        if (r_min >= r_opt) { break; }
         C_opt = C;
         r_opt = r_min;
         // update ???
-        for (const edge_t &e : C_opt) {
-            auto &&[u, v] = G.end_points(e);
-            S._dist[u] = S._dist[v] - get_weight(G, e);
+        for (const edge_t& e : C_opt)
+        {
+            auto&& [u, v] = G.end_points(e);
+            S._dist[u]    = S._dist[v] - get_weight(G, e);
         }
     }
 

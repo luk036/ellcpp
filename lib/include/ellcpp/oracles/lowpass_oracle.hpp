@@ -11,21 +11,23 @@
  * @brief Oracle for lowpass filter design
  *
  */
-class lowpass_oracle {
+class lowpass_oracle
+{
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-  private:
-    const Arr &_Ap;
-    const Arr &_As;
-    const Arr &_Anr;
-    double _Lpsq;
-    double _Upsq;
-    mutable unsigned int _i_Anr;
-    mutable unsigned int _i_As;
-    mutable unsigned int _i_Ap;
-    mutable unsigned int _count;
+private:
+    mutable unsigned int _i_Anr{0};
+    mutable unsigned int _i_As{0};
+    mutable unsigned int _i_Ap{0};
+    mutable unsigned int _count{0};
 
-  public:
+    const Arr& _Ap;
+    const Arr& _As;
+    const Arr& _Anr;
+    double     _Lpsq;
+    double     _Upsq;
+
+public:
     /*!
      * @brief Construct a new lowpass oracle object
      *
@@ -35,10 +37,14 @@ class lowpass_oracle {
      * @param Lpsq
      * @param Upsq
      */
-    lowpass_oracle(const Arr &Ap, const Arr &As, const Arr &Anr, double Lpsq,
-                   double Upsq)
-        : _Ap{Ap}, _As{As}, _Anr{Anr}, _Lpsq{Lpsq}, _Upsq{Upsq}, _i_Anr{0},
-          _i_As{0}, _i_Ap{0}, _count{0} {}
+    lowpass_oracle(const Arr& Ap, const Arr& As, const Arr& Anr, double Lpsq, double Upsq)
+        : _Ap{Ap},
+          _As{As},
+          _Anr{Anr},
+          _Lpsq{Lpsq},
+          _Upsq{Upsq}
+    {
+    }
 
     /*!
      * @brief
@@ -47,8 +53,7 @@ class lowpass_oracle {
      * @param Spsq
      * @return auto
      */
-    auto operator()(const Arr &x, double Spsq) const
-        -> std::tuple<Arr, Arr, double>;
+    auto operator()(const Arr& x, double Spsq) const -> std::tuple<Arr, Arr, double>;
 };
 
 #endif

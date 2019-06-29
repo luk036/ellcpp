@@ -10,18 +10,19 @@
  * @brief Oracle for a profit maximization problem
  *
  */
-class profit_oracle {
+class profit_oracle
+{
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-  private:
+private:
     double _log_pA;
     double _log_k;
-    Arr _v;
+    Arr    _v;
 
-  public:
+public:
     Arr _a;
 
-  public:
+public:
     /*!
      * @brief Construct a new profit oracle object
      *
@@ -36,7 +37,8 @@ class profit_oracle {
           _log_k{std::log(k)},      //
           _v{v},                    //
           _a{a}                     //
-    {}
+    {
+    }
 
     /*!
      * @brief
@@ -45,24 +47,25 @@ class profit_oracle {
      * @param t
      * @return auto
      */
-    auto operator()(const Arr &y, double t) const
-        -> std::tuple<Arr, double, double>;
+    auto operator()(const Arr& y, double t) const -> std::tuple<Arr, double, double>;
 };
 
 /*!
  * @brief Oracle for a profit maximization problem (robust version)
  *
  */
-class profit_rb_oracle {
+class profit_rb_oracle
+{
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-  private:
-    Arr _uie;
-    Arr _a;
+private:
+    Arr    _uie;
+    Arr    _a;
     double _uie3;
+
     profit_oracle _P;
 
-  public:
+public:
     /*!
      * @brief Construct a new profit rb oracle object
      *
@@ -75,12 +78,13 @@ class profit_rb_oracle {
      * @param e
      * @param e3
      */
-    profit_rb_oracle(double p, double A, double k, const Arr &a, const Arr &v,
-                     const Arr &e, double e3)
+    profit_rb_oracle(double p, double A, double k, const Arr& a, const Arr& v, const Arr& e,
+                     double e3)
         : _uie{e},                         //
           _a{a},                           //
           _P(p - e3, A, k - e3, a, v + e3) //
-    {}
+    {
+    }
 
     /*!
      * @brief
@@ -89,10 +93,12 @@ class profit_rb_oracle {
      * @param t
      * @return auto
      */
-    auto operator()(const Arr &y, double t) {
+    auto operator()(const Arr& y, double t)
+    {
         auto a_rb = _a;
-        for (auto &&i : {0, 1}) {
-            a_rb[i] +=  y[i] > 0 ? -_uie[i] : _uie[i];
+        for (auto&& i : {0, 1})
+        {
+            a_rb[i] += y[i] > 0 ? -_uie[i] : _uie[i];
         }
         _P._a = a_rb;
         return _P(y, t);
@@ -103,13 +109,14 @@ class profit_rb_oracle {
  * @brief Oracle for profit maximization problem (discrete version)
  *
  */
-class profit_q_oracle {
+class profit_q_oracle
+{
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-  private:
+private:
     profit_oracle P;
 
-  public:
+public:
     /*!
      * @brief Construct a new profit q oracle object
      *
@@ -119,8 +126,7 @@ class profit_q_oracle {
      * @param a
      * @param v
      */
-    profit_q_oracle(double p, double A, double k, const Arr &a, const Arr &v)
-        : P(p, A, k, a, v) {}
+    profit_q_oracle(double p, double A, double k, const Arr& a, const Arr& v) : P(p, A, k, a, v) {}
 
     /*!
      * @brief
@@ -129,7 +135,7 @@ class profit_q_oracle {
      * @param t
      * @return auto
      */
-    auto operator()(const Arr &y, double t, int /*unused*/) const
+    auto operator()(const Arr& y, double t, int /*unused*/) const
         -> std::tuple<Arr, double, double, Arr, int>;
 };
 
