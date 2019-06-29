@@ -34,18 +34,27 @@ class ell {
      * @param val
      * @param x
      */
-    template <typename T>
-    ell(const T &val, const Arr &x)
+    ell(const Arr &val, const Arr &x)
         : _n{x.size()},                         // n
           _c1{double(_n * _n) / (_n * _n - 1)}, //
           _xc{x} {
-        if constexpr (std::is_scalar<T>::value) { // C++17
-            this->_Q = xt::eye(_n);
-            this->_kappa = val;
-        } else {
-            this->_Q = xt::diag(val);
-            this->_kappa = 1.;
-        }
+        this->_Q = xt::diag(val);
+        this->_kappa = 1.;
+    }
+
+    /*!
+     * @brief Construct a new ell object
+     *
+     * @tparam T
+     * @param val
+     * @param x
+     */
+    ell(const double &alpha, const Arr &x)
+        : _n{x.size()},                         // n
+          _c1{double(_n * _n) / (_n * _n - 1)}, //
+          _xc{x} {
+        this->_Q = xt::eye(_n);
+        this->_kappa = alpha;
     }
 
     /*!
