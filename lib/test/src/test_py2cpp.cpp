@@ -14,7 +14,7 @@ TEST_CASE("PY2CPP", "[py2cpp]")
     CHECK(S.contains("test"));
     CHECK(!S.contains("test2"));
     CHECK(py::len(S) == 3);
-    for (auto const& e : S)
+    for (const auto& e : S)
     {
         CHECK(S.contains(e));
     }
@@ -28,7 +28,7 @@ TEST_CASE("PY2CPP", "[py2cpp]")
     {
         CHECK(M.contains(e));
     }
-    for (auto const& e : M)
+    for (const auto& e : M)
     {
         CHECK(M.contains(e));
     }

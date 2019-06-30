@@ -55,7 +55,7 @@ public:
         auto f = 0.;
 
         if (C.empty()) { return std::tuple{std::move(g), 0., true}; }
-        for (auto const& e : C)
+        for (const auto& e : C)
         {
             f -= _f(_G, e, x);
             g -= _p(_G, e, x);

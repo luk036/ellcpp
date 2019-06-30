@@ -97,7 +97,7 @@ public:
     auto relax() -> bool
     {
         auto changed = false;
-        for (auto const& e : _G.edges())
+        for (const auto& e : _G.edges())
         {
             auto wt       = _get_weight(_G, e);
             auto&& [u, v] = _G.end_points(e);

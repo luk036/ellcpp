@@ -28,7 +28,7 @@ struct exercise_vertex
         // std::cout << "out-edges: ";
         // typename GraphTraits::out_edge_iterator out_i, out_end;
         // typename GraphTraits::edge_descriptor e;
-        for (auto const& e : g.neighbors(v))
+        for (const auto& e : g.neighbors(v))
         {
             auto&& [src, targ] = g.end_points(e);
             // std::cout << "(" << index[src] << "," << index[targ] << ") ";
@@ -53,14 +53,14 @@ TEST_CASE("Test Boost", "[test_boost]")
         E,
         N
     };
-    const int num_vertices = N;
+    const auto num_vertices = N;
     // const char *name = "ABCDE";
 
     // writing out the edges in the graph
     using Edge             = std::pair<int, int>;
     Edge      edge_array[] = {Edge(A, B), Edge(A, D), Edge(C, A), Edge(D, C),
                          Edge(C, E), Edge(B, D), Edge(D, E)};
-    const int num_edges    = sizeof(edge_array) / sizeof(edge_array[0]);
+    const auto num_edges    = sizeof(edge_array) / sizeof(edge_array[0]);
 
     // declare a graph object
     Graph                g(num_vertices);
@@ -89,7 +89,7 @@ TEST_CASE("Test Boost", "[test_boost]")
 
     // std::cout << "edges(g) = ";
     // graph_traits<Graph>::edge_iterator ei, ei_end;
-    // for (auto const &e : G.edges())
+    // for (const auto &e : G.edges())
     //     std::cout << "(" << index[boost::source(e, G)] << ","
     //               << index[boost::target(e, G)] << ") ";
     // std::cout << std::endl;

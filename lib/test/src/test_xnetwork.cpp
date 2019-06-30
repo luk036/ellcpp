@@ -12,7 +12,7 @@
 
 // static graph_t create_test_case1() {
 //     using Edge = std::pair<int, int>;
-//     const int num_nodes = 5;
+//     const auto num_nodes = 5;
 //     enum nodes { A, B, C, D, E };
 //     // char name[] = "ABCDE";
 //     static Edge edge_array[] = {Edge(A, B), Edge(B, C), Edge(C, D), Edge(D,
@@ -26,7 +26,7 @@
 
 // static graph_t create_test_case2() {
 //     using Edge = std::pair<int, int>;
-//     const int num_nodes = 5;
+//     const auto num_nodes = 5;
 //     enum nodes { A, B, C, D, E };
 //     // char name[] = "ABCDE";
 //     static Edge edge_array[] = {Edge(A, B), Edge(B, C), Edge(C, D), Edge(D,
@@ -40,7 +40,7 @@
 
 // static graph_t create_test_case_timing() {
 //     using Edge = std::pair<int, int>;
-//     const int num_nodes = 3;
+//     const auto num_nodes = 3;
 //     enum nodes { A, B, C };
 //     // char name[] = "ABCDE";
 //     static Edge edge_array[] = {Edge(A, B), Edge(B, A), Edge(B, C), Edge(C,

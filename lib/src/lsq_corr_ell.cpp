@@ -28,11 +28,11 @@ std::tuple<Arr, Arr> create_2d_isotropic(size_t nx = 10u, size_t ny = 8u,
                                          size_t N = 3000u) {
     using xt::linalg::dot;
 
-    auto const n = nx * ny;
-    auto const s_end = Arr{10., 8.};
-    auto const sdkern = 0.3;  // width of kernel
-    auto const var = 2.;      // standard derivation
-    auto const tau = 0.00001; // standard derivation of white noise
+    const auto n = nx * ny;
+    const auto s_end = Arr{10., 8.};
+    const auto sdkern = 0.3;  // width of kernel
+    const auto var = 2.;      // standard derivation
+    const auto tau = 0.00001; // standard derivation of white noise
     xt::random::seed(5);
 
     // create sites s
@@ -247,7 +247,7 @@ class mle_oracle {
         auto n = x.shape()[0];
         auto m = this->_Y.shape()[0];
 
-        auto const &R = this->_lmi0._Q.sqrt();
+        const auto &R = this->_lmi0._Q.sqrt();
         auto invR = Arr{xt::linalg::inv(R)};
         auto S = Arr{dot(invR, xt::transpose(invR))};
         auto SY = Arr{dot(S, this->_Y)};

@@ -31,7 +31,7 @@ using Vertex = typename boost::graph_traits<graph_t>::vertex_descriptor;
 static auto create_test_case1()
 {
     using Edge          = std::pair<int, int>;
-    const int num_nodes = 5;
+    const auto num_nodes = 5;
     enum nodes
     {
         A,
@@ -51,7 +51,7 @@ static auto create_test_case1()
 static auto create_test_case_timing()
 {
     using Edge          = std::pair<int, int>;
-    const int num_nodes = 3;
+    const auto num_nodes = 3;
     enum nodes
     {
         A,
@@ -80,10 +80,10 @@ TEST_CASE("Test Cycle Ratio", "[test_cycle_ratio]")
     EdgeIndexMap           edge_id = boost::get(boost::id_tag, G);
     IterMap                cost_pa(cost, edge_id), time_pa(time, edge_id);
 
-    auto get_cost = [&](const xn::grAdaptor<graph_t>& G, auto const& e) -> fun::Fraction<int> {
+    auto get_cost = [&](const xn::grAdaptor<graph_t>& G, const auto& e) -> fun::Fraction<int> {
         return boost::get(cost_pa, e);
     };
-    auto get_time = [&](const xn::grAdaptor<graph_t>& G, auto const& e) -> fun::Fraction<int> {
+    auto get_time = [&](const xn::grAdaptor<graph_t>& G, const auto& e) -> fun::Fraction<int> {
         return boost::get(time_pa, e);
     };
 
@@ -108,10 +108,10 @@ TEST_CASE("Test Cycle Ratio of Timing Graph", "[test_cycle_ratio]")
     EdgeIndexMap       edge_id = boost::get(boost::id_tag, G);
     IterMap            cost_pa(cost, edge_id), time_pa(time, edge_id);
 
-    auto get_cost = [&](const xn::grAdaptor<graph_t>& G, auto const& e) -> fun::Fraction<int> {
+    auto get_cost = [&](const xn::grAdaptor<graph_t>& G, const auto& e) -> fun::Fraction<int> {
         return boost::get(cost_pa, e);
     };
-    auto get_time = [&](const xn::grAdaptor<graph_t>& G, auto const& e) -> fun::Fraction<int> {
+    auto get_time = [&](const xn::grAdaptor<graph_t>& G, const auto& e) -> fun::Fraction<int> {
         return boost::get(time_pa, e);
     };
 

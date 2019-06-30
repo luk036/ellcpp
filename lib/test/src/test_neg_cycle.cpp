@@ -24,7 +24,7 @@ using Edge_it = boost::graph_traits<graph_t>::edge_iterator;
 static xn::grAdaptor<graph_t> create_test_case1()
 {
     using Edge          = std::pair<int, int>;
-    const int num_nodes = 5;
+    const auto num_nodes = 5;
     enum nodes
     {
         A,
@@ -44,7 +44,7 @@ static xn::grAdaptor<graph_t> create_test_case1()
 static xn::grAdaptor<graph_t> create_test_case2()
 {
     using Edge          = std::pair<int, int>;
-    const int num_nodes = 5;
+    const auto num_nodes = 5;
     enum nodes
     {
         A,
@@ -65,7 +65,7 @@ static xn::grAdaptor<graph_t> create_test_case2()
 static xn::grAdaptor<graph_t> create_test_case_timing()
 {
     using Edge          = std::pair<int, int>;
-    const int num_nodes = 3;
+    const auto num_nodes = 3;
     enum nodes
     {
         A,
@@ -87,7 +87,7 @@ bool do_case(xn::grAdaptor<graph_t>& G)
     using edge_t = decltype(*(std::begin(G.edges())));
 
     auto get_weight = [](const xn::grAdaptor<graph_t>& G, const edge_t& e) -> int {
-        auto const& weightmap = boost::get(boost::edge_weight, G);
+        const auto& weightmap = boost::get(boost::edge_weight, G);
         return weightmap[e];
     };
 

@@ -35,7 +35,7 @@ using edge_t = boost::graph_traits<graph_t>::edge_iterator;
 static xn::grAdaptor<graph_t> create_test_case1()
 {
     using Edge          = std::pair<int, int>;
-    const int num_nodes = 5;
+    const auto num_nodes = 5;
     enum nodes
     {
         A,
@@ -60,7 +60,7 @@ TEST_CASE("Test Optimal Scaling", "[test_optscaling]")
     auto G = create_test_case1();
 
     double    elem[]       = {1.2, 2.3, 3.4, -4.5, 5.6};
-    const int num_of_nodes = sizeof(elem) / sizeof(double);
+    const auto num_of_nodes = sizeof(elem) / sizeof(double);
     double    cost[num_of_nodes];
     for (auto i = 0; i < num_of_nodes; ++i)
     {
@@ -69,7 +69,7 @@ TEST_CASE("Test Optimal Scaling", "[test_optscaling]")
     auto edge_id = boost::get(boost::id_tag, G);
     auto cost_pa = IterMap{cost, edge_id};
 
-    auto get_cost = [&](const xn::grAdaptor<graph_t>& G, auto const& e) -> double {
+    auto get_cost = [&](const xn::grAdaptor<graph_t>& G, const auto& e) -> double {
         return boost::get(cost_pa, e);
     };
 
