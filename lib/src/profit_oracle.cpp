@@ -16,7 +16,7 @@ auto profit_oracle::operator()(const Arr& y, double t) const -> std::tuple<Arr, 
     if (auto fj = y[0] - this->_log_k; fj > 0.)
     {
         auto g = Arr{1., 0.};
-        return {std::move(g), fj, t};
+        return std::tuple{std::move(g), fj, t};
     }
 
     auto log_Cobb = this->_log_pA + xt::linalg::dot(this->_a, y)();
@@ -32,7 +32,7 @@ auto profit_oracle::operator()(const Arr& y, double t) const -> std::tuple<Arr, 
         fj = 0.;
     }
     auto g = Arr{(this->_v * x) / te - this->_a};
-    return {std::move(g), fj, t};
+    return std::tuple{std::move(g), fj, t};
 }
 
 /*!
@@ -51,5 +51,5 @@ auto profit_q_oracle::operator()(const Arr& y, double t, int /*unused*/) const
     auto yd         = Arr{xt::log(x)};
     auto [g, h, t1] = this->P(yd, t);
     h += xt::linalg::dot(g, yd - y)();
-    return {std::move(g), h, t1, std::move(yd), 1};
+    return std::tuple{std::move(g), h, t1, std::move(yd), 1};
 }

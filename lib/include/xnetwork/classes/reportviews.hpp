@@ -181,7 +181,7 @@ template <typename nodeview_t> class NodeView {
     nodeview_t &_nodes;
 
     // auto __getstate__( ) {
-    //     return {"_nodes": this->_nodes};
+    //     return std::tuple{"_nodes": this->_nodes};
     // }
 
     // auto __setstate__( state) {
@@ -191,7 +191,7 @@ template <typename nodeview_t> class NodeView {
     explicit NodeView(nodeview_t &nodes) : _nodes{nodes} {}
 
     // Mapping methods
-    auto size() { return std::size(this->_nodes); }
+    auto size() { return this->_nodes.size(); }
 
     auto begin() { return std::begin(this->_nodes); }
 
@@ -253,7 +253,7 @@ template <typename nodeview_t> class NodeView {
 //     static const auto __slots__ = ("_nodes", "_data", "_default");
 
 //     // auto __getstate__( ) {
-//     //     return {"_nodes": this->_nodes,
+//     //     return std::tuple{"_nodes": this->_nodes,
 //     //             "_data": this->_data,
 //     //             "_default": this->_default};
 //     // }
@@ -746,7 +746,7 @@ template <typename nodeview_t> class NodeView {
 //                  "_adjdict", "_nodes_nbrs", "_report");
 
 //     auto __getstate__( ) {
-//         return {"viewer": this->_viewer,
+//         return std::tuple{"viewer": this->_viewer,
 //                 "nbunch": this->_nbunch,
 //                 "data": this->_data,;
 //                 "default": this->_default};
@@ -895,7 +895,7 @@ template <typename nodeview_t> class NodeView {
 //     */ static const auto __slots__ = ("keys",);
 
 //     auto __getstate__( ) {
-//         return {"viewer": this->_viewer,
+//         return std::tuple{"viewer": this->_viewer,
 //                 "nbunch": this->_nbunch,
 //                 "keys": this->keys,
 //                 "data": this->_data,
@@ -1067,7 +1067,7 @@ template <typename nodeview_t> class NodeView {
 //     // static const auto __slots__ = ("_adjdict", "_graph", "_nodes_nbrs");
 
 //     // auto __getstate__( ) {
-//     //     return {"_graph": this->_graph};
+//     //     return std::tuple{"_graph": this->_graph};
 //     // }
 
 //     // auto __setstate__( state) {

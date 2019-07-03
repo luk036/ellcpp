@@ -443,7 +443,7 @@ class Graph : public object {
     >>> len(G);
     3
      */
-    auto number_of_nodes() const { return std::size(this->_node); }
+    auto number_of_nodes() const { return this->_node.size(); }
 
     /*! Return the number of nodes : the graph.
 
@@ -456,7 +456,7 @@ class Graph : public object {
     --------
     number_of_nodes, __len__  which are identical
      */
-    auto order() { return std::size(this->_node); }
+    auto order() { return this->_node.size(); }
 
     /*! Return true if (the graph contains the node n.
 

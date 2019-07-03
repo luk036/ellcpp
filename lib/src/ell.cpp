@@ -27,7 +27,7 @@ auto ell::calc_ll_core(double b0, double b1, double tsq) const -> ell::return_t
 
     if (unlikely(b1 < b0))
     {
-        return {1, std::move(params)}; // no sol'n
+        return std::tuple{1, std::move(params)}; // no sol'n
     }
 
     if (b0 == 0.) { return this->calc_ll_cc(b1, b1sq, tsq); }
@@ -36,7 +36,7 @@ auto ell::calc_ll_core(double b0, double b1, double tsq) const -> ell::return_t
     auto b0b1 = b0 * b1;
     if (unlikely(n * b0b1 < -tsq))
     {
-        return {3, std::move(params)}; // no effect
+        return std::tuple{3, std::move(params)}; // no effect
     }
 
     auto t0    = tsq - b0 * b0;
@@ -48,7 +48,7 @@ auto ell::calc_ll_core(double b0, double b1, double tsq) const -> ell::return_t
     auto rho   = sigma * bav;
     auto delta = this->_c1 * ((t0 + t1) / 2 + xi / n) / tsq;
     params     = std::tuple{rho, sigma, delta};
-    return {0, std::move(params)};
+    return std::tuple{0, std::move(params)};
 }
 
 /*!
@@ -68,7 +68,7 @@ auto ell::calc_ll_cc(double b1, double b1sq, double tsq) const -> ell::return_t
     auto rho    = sigma * b1 / 2;
     auto delta  = this->_c1 * (tsq - b1sq / 2 + xi / n) / tsq;
     auto params = ell::params_t{rho, sigma, delta};
-    return {0, std::move(params)};
+    return std::tuple{0, std::move(params)};
 }
 
 /*!
@@ -85,7 +85,7 @@ auto ell::calc_dc(double beta, double tsq) const -> ell::return_t
 
     if (beta > tau)
     {
-        return {1, std::move(params)}; // no sol'n
+        return std::tuple{1, std::move(params)}; // no sol'n
     }
 
     if (beta == 0.) { return this->calc_cc(tsq); }
@@ -94,14 +94,14 @@ auto ell::calc_dc(double beta, double tsq) const -> ell::return_t
     auto gamma = tau + n * beta;
     if (unlikely(gamma < 0))
     {
-        return {3, std::move(params)}; // no effect
+        return std::tuple{3, std::move(params)}; // no effect
     }
 
     auto rho   = gamma / (n + 1);
     auto sigma = 2 * rho / (tau + beta);
     auto delta = this->_c1 * (tsq - beta * beta) / tsq;
     auto ret   = ell::params_t{rho, sigma, delta};
-    return {0, std::move(ret)};
+    return std::tuple{0, std::move(ret)};
 }
 
 /*!
@@ -136,15 +136,15 @@ ell1d::return_t ell1d::update(double g, double beta)
     {
         this->_r /= 2;
         this->_xc += g > 0. ? -this->_r : this->_r;
-        return {0, tsq};
+        return std::tuple{0, tsq};
     }
     if (beta > tau)
     {
-        return {1, tsq}; // no sol'n
+        return std::tuple{1, tsq}; // no sol'n
     }
     if (unlikely(beta < -tau))
     {
-        return {3, tsq}; // no effect
+        return std::tuple{3, tsq}; // no effect
     }
 
     auto bound = this->_xc - beta / g;
@@ -153,7 +153,7 @@ ell1d::return_t ell1d::update(double g, double beta)
 
     this->_r  = (u - l) / 2;
     this->_xc = l + this->_r;
-    return {0, tsq};
+    return std::tuple{0, tsq};
 }
 
 /*!
@@ -190,7 +190,7 @@ std::tuple<int, double> ell::update(const Arr& g, const T& beta)
         }
     }
 
-    if (status != 0) { return {status, tsq}; }
+    if (status != 0) { return std::tuple{status, tsq}; }
     auto& [rho, sigma, delta] = params;
 
     this->_xc -= (rho / omega) * Qg;
@@ -201,7 +201,7 @@ std::tuple<int, double> ell::update(const Arr& g, const T& beta)
     //     this->_Q *= this->_kappa;
     //     this->_kappa = 1.;
     // }
-    return {status, tsq}; // g++-7 is ok
+    return std::tuple{status, tsq}; // g++-7 is ok
 }
 
 // Instantiation

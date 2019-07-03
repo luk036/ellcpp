@@ -22,7 +22,7 @@ auto lowpass_oracle::operator()(const Arr& x, double Spsq) const -> std::tuple<A
         auto g = Arr{xt::zeros<double>({n})};
         g[0]   = -1.;
         auto f = Arr{-x[0]};
-        return {std::move(g), std::move(f), Spsq};
+        return std::tuple{std::move(g), std::move(f), Spsq};
     }
 
     // case 2,
@@ -42,7 +42,7 @@ auto lowpass_oracle::operator()(const Arr& x, double Spsq) const -> std::tuple<A
             Arr g = xt::view(this->_Ap, k, xt::all());
             Arr f{v - this->_Upsq, v - this->_Lpsq};
             this->_i_Ap = k + 1;
-            return {std::move(g), std::move(f), Spsq};
+            return std::tuple{std::move(g), std::move(f), Spsq};
         }
         if (v < this->_Lpsq)
         {
@@ -50,7 +50,7 @@ auto lowpass_oracle::operator()(const Arr& x, double Spsq) const -> std::tuple<A
             Arr g = -xt::view(this->_Ap, k, xt::all());
             Arr f{-v + this->_Lpsq, -v + this->_Upsq};
             this->_i_Ap = k + 1;
-            return {std::move(g), std::move(f), Spsq};
+            return std::tuple{std::move(g), std::move(f), Spsq};
         }
     }
 
@@ -75,7 +75,7 @@ auto lowpass_oracle::operator()(const Arr& x, double Spsq) const -> std::tuple<A
             // f = (v - Spsq, v);
             Arr f{v - Spsq, v};
             this->_i_As = k + 1; // k or k+1
-            return {std::move(g), std::move(f), Spsq};
+            return std::tuple{std::move(g), std::move(f), Spsq};
         }
         if (v < 0)
         {
@@ -83,7 +83,7 @@ auto lowpass_oracle::operator()(const Arr& x, double Spsq) const -> std::tuple<A
             Arr g = -xt::view(this->_As, k, xt::all());
             Arr f{-v, -v + Spsq};
             this->_i_As = k + 1;
-            return {std::move(g), std::move(f), Spsq};
+            return std::tuple{std::move(g), std::move(f), Spsq};
         }
         if (v > fmax)
         {
@@ -107,7 +107,7 @@ auto lowpass_oracle::operator()(const Arr& x, double Spsq) const -> std::tuple<A
             Arr f{-v};
             Arr g        = -xt::view(this->_Anr, k, xt::all());
             this->_i_Anr = k + 1;
-            return {std::move(g), std::move(f), Spsq};
+            return std::tuple{std::move(g), std::move(f), Spsq};
         }
     }
 
@@ -117,5 +117,5 @@ auto lowpass_oracle::operator()(const Arr& x, double Spsq) const -> std::tuple<A
     Arr f{0., fmax}; // ???
     // f = 0
     Arr g = xt::view(this->_As, imax, xt::all());
-    return {std::move(g), std::move(f), Spsq};
+    return std::tuple{std::move(g), std::move(f), Spsq};
 }

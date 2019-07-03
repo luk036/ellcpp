@@ -39,12 +39,12 @@ public:
 
         auto f0  = dot(this->c, x)();
         auto fj1 = f0 - t;
-        if (fj1 > 0) { return {this->c, fj1, t}; }
+        if (fj1 > 0) { return std::tuple{this->c, fj1, t}; }
         auto [g2, fj2, feasible2] = this->lmi1(x);
-        if (!feasible2) { return {std::move(g2), fj2, t}; }
+        if (!feasible2) { return std::tuple{std::move(g2), fj2, t}; }
         auto [g3, fj3, feasible3] = this->lmi2(x);
-        if (!feasible3) { return {std::move(g3), fj3, t}; }
-        return {this->c, 0., f0};
+        if (!feasible3) { return std::tuple{std::move(g3), fj3, t}; }
+        return std::tuple{this->c, 0., f0};
     }
 };
 

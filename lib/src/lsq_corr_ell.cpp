@@ -194,7 +194,7 @@ std::tuple<size_t, bool> lsq_corr_poly2(const Arr &Y, const Arr &s,
     auto P = lsq_oracle(Sig, Y);
     auto [a, num_iters, feasible] = lsq_corr_core2(Y, m, P);
     // std::cout << "lsq_corr_poly2 = " << a << "\n";
-    return {num_iters, feasible};
+    return std::tuple{num_iters, feasible};
 }
 
 /*!
@@ -308,7 +308,7 @@ std::tuple<size_t, bool> mle_corr_poly(const Arr &Y, const Arr &s,
     auto P = mle_oracle(Sig, Y);
     auto [a, num_iters, feasible] = mle_corr_core(Y, m, P);
     // std::cout << "mle_corr_poly = " << a << "\n";
-    return {num_iters, feasible};
+    return std::tuple{num_iters, feasible};
 }
 
 /*!
@@ -332,6 +332,6 @@ std::tuple<size_t, bool> lsq_corr_poly(const Arr &Y, const Arr &s, size_t m) {
 
     // std::cout << niter << ", " << feasible << '\n';
     a = P.x_best();
-    return {bs_info.num_iters, bs_info.feasible};
+    return std::tuple{bs_info.num_iters, bs_info.feasible};
     //  return prob.is_dcp()
 }

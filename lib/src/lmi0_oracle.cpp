@@ -11,7 +11,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  */
 auto lmi0_oracle::operator()(const Arr& x) -> std::tuple<Arr, double, bool>
 {
-    auto n = std::size(x);
+    auto n = x.size();
 
     auto getA = [&, this](unsigned i, unsigned j) -> double {
         auto a = 0.;
@@ -25,11 +25,11 @@ auto lmi0_oracle::operator()(const Arr& x) -> std::tuple<Arr, double, bool>
     auto g = Arr{xt::zeros<double>({n})};
 
     this->_Q.factor(getA);
-    if (this->_Q.is_spd()) { return {std::move(g), -1., true}; }
+    if (this->_Q.is_spd()) { return std::tuple{std::move(g), -1., true}; }
     auto ep = this->_Q.witness();
     for (auto i = 0U; i < n; ++i)
     {
         g(i) = -_Q.sym_quad(this->_F[i]);
     }
-    return {std::move(g), ep, false};
+    return std::tuple{std::move(g), ep, false};
 }

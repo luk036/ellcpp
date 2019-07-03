@@ -42,7 +42,7 @@ template <typename Atlas> class AtlasView {
 
     explicit AtlasView(Atlas &d) : _atlas{d} {}
 
-    auto size() const { return std::size(this->_atlas); }
+    auto size() const { return this->_atlas.size(); }
 
     auto begin() const { return std::begin(this->_atlas); }
 
@@ -53,7 +53,7 @@ template <typename Atlas> class AtlasView {
     }
 
     // auto copy( ) {
-    //     return {n: self[n].copy() for n : this->_atlas};
+    //     return std::tuple{n: self[n].copy() for n : this->_atlas};
     // }
 
     // auto __str__( ) {
@@ -85,7 +85,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
     }
 
     // auto copy( ) {
-    //     return {n: self[n].copy() for n : this->_atlas};
+    //     return std::tuple{n: self[n].copy() for n : this->_atlas};
     // }
 };
 
@@ -110,7 +110,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     }
 
 //     auto copy( ) {
-//         return {n: self[n].copy() for n : this->_atlas};
+//         return std::tuple{n: self[n].copy() for n : this->_atlas};
 //     }
 // };
 
@@ -132,7 +132,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     static const auto __slots__ = {"_succ", "_pred"};
 
 //     auto __getstate__( ) {
-//         return {"_succ": this->_succ, "_pred": this->_pred};
+//         return std::tuple{"_succ": this->_succ, "_pred": this->_pred};
 //     }
 
 //     auto __setstate__( state) {
@@ -146,7 +146,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     }
 
 //     auto size( ) {
-//         return std::size(this->_succ) + std::size(this->_pred);
+//         return this->_succ.size() + this->_pred.size();
 //     }
 
 //     auto __iter__( ) {
@@ -205,7 +205,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     static const auto __slots__ = {"_succ", "_pred"};
 
 //     auto __getstate__( ) {
-//         return {"_succ": this->_succ, "_pred": this->_pred};
+//         return std::tuple{"_succ": this->_succ, "_pred": this->_pred};
 //     }
 
 //     auto __setstate__( state) {
@@ -215,13 +215,13 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 
 //     explicit _Self( succ, pred) {
 //         // keys must be the same for two input dicts
-//         assert(std::size(set(succ.keys()) ^ set(pred.keys())) == 0);
+//         assert(set(succ.keys(.size()) ^ set(pred.keys())) == 0);
 //         this->_succ = succ;
 //         this->_pred = pred;
 //     }
 
 //     auto size( ) {
-//         return std::size(this->_succ);  // length of each dict should be the
+//         return this->_succ.size();  // length of each dict should be the
 //         same
 //     }
 
@@ -234,7 +234,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     }
 
 //     auto copy( ) {
-//         return {n: self[n].copy() for n : this->_succ};
+//         return std::tuple{n: self[n].copy() for n : this->_succ};
 //     }
 
 //     auto __str__( ) {
@@ -279,7 +279,7 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 
 //     auto copy( ) {
 //         nodes = set(this->_succ.keys()) | set(this->_pred.keys());
-//         return {n: self[n].copy() for n : nodes};
+//         return std::tuple{n: self[n].copy() for n : nodes};
 //     }
 
 // class UnionMultiAdjacency(UnionAdjacency) {
@@ -352,10 +352,10 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 
 //     auto copy( ) {
 //         if (hasattr(this->NODE_OK, "nodes") {
-//             return {u: this->_atlas[u] for u : this->NODE_OK.nodes
+//             return std::tuple{u: this->_atlas[u] for u : this->NODE_OK.nodes
 //                     if (u : this->_atlas};
 //         }
-//         return {u: d for u, d : this->_atlas.items();
+//         return std::tuple{u: d for u, d : this->_atlas.items();
 //                 if (this->NODE_OK(u)};
 //     }
 
@@ -400,11 +400,11 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 
 //     auto copy( ) {
 //         if (hasattr(this->NODE_OK, "nodes") {
-//             return {u: {v: d for v, d : this->_atlas[u].items()
+//             return std::tuple{u: {v: d for v, d : this->_atlas[u].items()
 //                         if (this->NODE_OK(v) if (this->EDGE_OK(u, v)}
 //                     for (auto u : this->NODE_OK.nodes if (u : this->_atlas};
 //         }
-//         return {u: {v: d for v, d : nbrs.items() if (this->NODE_OK(v)
+//         return std::tuple{u: {v: d for v, d : nbrs.items() if (this->NODE_OK(v)
 //                     if (this->EDGE_OK(u, v)}
 //                 for (auto u, nbrs : this->_atlas.items()
 //                 if (this->NODE_OK(u)};
@@ -453,11 +453,11 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 
 //     auto copy( ) {
 //         if (hasattr(this->NODE_OK, "nodes") {
-//             return {v: {k: d for k, d : this->_atlas[v].items()
+//             return std::tuple{v: {k: d for k, d : this->_atlas[v].items()
 //                         if (this->EDGE_OK(v, k)}
 //                     for (auto v : this->NODE_OK.nodes if (v : this->_atlas}
 //         }
-//         return {v: {k: d for k, d : nbrs.items() if (this->EDGE_OK(v, k)}
+//         return std::tuple{v: {k: d for k, d : nbrs.items() if (this->EDGE_OK(v, k)}
 //                 for (auto v, nbrs : this->_atlas.items() if
 //                 (this->NODE_OK(v)};
 //     }
@@ -478,13 +478,13 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     auto copy( ) {
 //         if (hasattr(this->NODE_OK, "nodes") {
 //             my_nodes = this->NODE_OK.nodes;
-//             return {u: {v: {k: d for k, d : kd.items()
+//             return std::tuple{u: {v: {k: d for k, d : kd.items()
 //                             if (this->EDGE_OK(u, v, k)}
 //                         for (auto v, kd : this->_atlas[u].items() if (v :
 //                         my_nodes}
 //                     for (auto u : my_nodes if (u : this->_atlas};
 //         }
-//         return {u: {v: {k: d for k, d : kd.items()
+//         return std::tuple{u: {v: {k: d for k, d : kd.items()
 //                         if (this->EDGE_OK(u, v, k)}
 //                     for (auto v, kd : nbrs.items() if (this->NODE_OK(v)}
 //                 for (auto u, nbrs : this->_atlas.items() if
