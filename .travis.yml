@@ -23,6 +23,19 @@ matrix:
     - os: linux
       addons: *gcc7
       env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Coverage'
+    - os: linux
+      addons: &gcc8
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+            - catch
+            - lcov
+      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Debug'
+    - os: linux
+      addons: *gcc8
+      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Release'
 env:
   global:
     - MINCONDA_VERSION="latest"
