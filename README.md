@@ -8,4 +8,3 @@
 [![Documentation](https://img.shields.io/badge/Documentation-latest-blue.svg)](https://luk036.github.io/ellcpp)
 
 Ellipsoid Method C++ Code
-Ellipsoid Method C++ Code

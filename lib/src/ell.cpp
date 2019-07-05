@@ -4,7 +4,7 @@
 #include <xtensor-blas/xlinalg.hpp>
 
 /* linux-2.6.38.8/include/linux/compiler.h */
-#include <stdio.h>
+#include <cstdio>
 #define likely(x) __builtin_expect(!!(x), 1)
 #define unlikely(x) __builtin_expect(!!(x), 0)
 

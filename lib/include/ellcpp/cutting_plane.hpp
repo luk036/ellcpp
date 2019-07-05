@@ -20,10 +20,10 @@ struct CInfo
 {
     xt::xarray<double, xt::layout_type::row_major> val;
 
-    double                                         value = 0.;
-    bool                                           feasible;
-    size_t                                         num_iters;
-    int                                            status;
+    double value = 0.;
+    bool   feasible;
+    size_t num_iters;
+    int    status;
 
     CInfo(bool feasible, size_t num_iters, int status)
         : feasible{feasible}, num_iters{num_iters}, status{status}
@@ -65,7 +65,7 @@ auto bsearch(Oracle& Omega, Space& I, const Options& options = Options())
     auto feasible = (u != u_orig);
     auto ret      = CInfo(feasible, niter, 0);
 
-    ret.value     = u;
+    ret.value = u;
     return std::move(ret);
 }
 

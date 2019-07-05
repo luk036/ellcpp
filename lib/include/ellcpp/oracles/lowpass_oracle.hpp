@@ -38,11 +38,7 @@ public:
      * @param Upsq
      */
     lowpass_oracle(const Arr& Ap, const Arr& As, const Arr& Anr, double Lpsq, double Upsq)
-        : _Ap{Ap},
-          _As{As},
-          _Anr{Anr},
-          _Lpsq{Lpsq},
-          _Upsq{Upsq}
+        : _Ap{Ap}, _As{As}, _Anr{Anr}, _Lpsq{Lpsq}, _Upsq{Upsq}
     {
     }
 
