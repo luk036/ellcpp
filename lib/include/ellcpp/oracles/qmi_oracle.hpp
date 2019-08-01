@@ -1,6 +1,5 @@
 // -*- coding: utf-8 -*-
-#ifndef _HOME_UBUNTU_CUBSTORE_ELLCPP_QMI_ORACLE_HPP
-#define _HOME_UBUNTU_CUBSTORE_ELLCPP_QMI_ORACLE_HPP 1
+#pragma once
 
 #include <cassert>
 #include <vector>
@@ -59,5 +58,3 @@ public:
      */
     auto operator()(const Arr& x) -> std::tuple<Arr, double, bool>;
 };
-
-#endif

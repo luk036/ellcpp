@@ -1,6 +1,5 @@
 // -*- coding: utf-8 -*-
-#ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_MIN_CYCLE_RATIO_HPP
-#define _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_MIN_CYCLE_RATIO_HPP 1
+#pragma once
 
 #include <algorithm>
 #include <py2cpp/py2cpp.hpp>
@@ -73,5 +72,3 @@ auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, T&& /*! dummy */)
     const auto r0 = T(max_cost * G.number_of_edges()) / min_time;
     return max_parametric(G, r0, calc_weight, calc_ratio);
 }
-
-#endif

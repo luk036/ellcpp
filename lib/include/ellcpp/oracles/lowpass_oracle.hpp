@@ -1,6 +1,5 @@
 // -*- coding: utf-8 -*-
-#ifndef _HOME_UBUNTU_CUBSTORE_ELLCPP_LOWPASS_ORACLE_HPP
-#define _HOME_UBUNTU_CUBSTORE_ELLCPP_LOWPASS_ORACLE_HPP 1
+#pragma once
 
 #include <limits>
 #include <xtensor/xarray.hpp>
@@ -51,5 +50,3 @@ public:
      */
     auto operator()(const Arr& x, double Spsq) const -> std::tuple<Arr, Arr, double>;
 };
-
-#endif

@@ -1,5 +1,5 @@
-#ifndef _HOME_UBUNTU_GITHUB_XNETWORK_CLASS_GRAPH_HPP
-#define _HOME_UBUNTU_GITHUB_XNETWORK_CLASS_GRAPH_HPP 1
+// -*- coding: utf-8 -*-
+#pragma once
 
 #include <any>
 #include <cassert>
@@ -722,5 +722,3 @@ template <typename nodeview_t, typename nodemap_t,
 -> Graph<decltype(py::range<int>(1)), decltype(py::range<int>(1)), py::set<int>>;
 
 }; // namespace xn
-
-#endif

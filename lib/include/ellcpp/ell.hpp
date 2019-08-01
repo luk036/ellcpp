@@ -1,5 +1,5 @@
-#ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ELL_HPP
-#define _HOME_UBUNTU_GITHUB_ELLCPP_ELL_HPP 1
+// -*- coding: utf-8 -*-
+#pragma once
 
 #include <cmath>
 #include <tuple>
@@ -188,5 +188,3 @@ public:
      */
     return_t update(double g, double beta);
 }; // } ell1d
-
-#endif

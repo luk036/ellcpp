@@ -1,5 +1,5 @@
-#ifndef _HOME_UBUNTU_GITHUB_ELLCPP_PROFIT_ORACLE_HPP
-#define _HOME_UBUNTU_GITHUB_ELLCPP_PROFIT_ORACLE_HPP 1
+// -*- coding: utf-8 -*-
+#pragma once
 
 //#include <valarray>
 #include <cmath>
@@ -138,5 +138,3 @@ public:
     auto operator()(const Arr& y, double t, int /*unused*/) const
         -> std::tuple<Arr, double, double, Arr, int>;
 };
-
-#endif

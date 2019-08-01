@@ -1,6 +1,5 @@
 // -*- coding: utf-8 -*-
-#ifndef _HOME_UBUNTU_CUBSTORE_ELLCPP_SDP_ORACLE_HPP
-#define _HOME_UBUNTU_CUBSTORE_ELLCPP_SDP_ORACLE_HPP 1
+#pragma once
 
 #include "lmi_oracle.hpp"
 namespace bnu = boost::numeric::ublas;
@@ -30,5 +29,3 @@ private:
     const Vec& _c;
     lmi_oracle _lmi;
 };
-
-#endif

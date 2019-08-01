@@ -1,5 +1,5 @@
-#ifndef _HOME_UBUNTU_GITHUB_XNETWORK_CLASS_COREVIEWS_HPP
-#define _HOME_UBUNTU_GITHUB_XNETWORK_CLASS_COREVIEWS_HPP 1
+// -*- coding: utf-8 -*-
+#pragma once
 
 //    Copyright (C) 2004-2018 by
 //    Wai-Shing Luk <luk036@gmail.com>
@@ -491,5 +491,3 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //                 (this->NODE_OK(u)};
 //     }
 // };
-
-#endif

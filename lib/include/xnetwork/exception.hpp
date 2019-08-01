@@ -1,6 +1,5 @@
 // -*- coding: utf-8 -*-
-#ifndef _HOME_UBUNTU_GITHUB_XNETWORK_EXCEPTION_HPP
-#define _HOME_UBUNTU_GITHUB_XNETWORK_EXCEPTION_HPP 1
+#pragma once
 
 #include <exception>
 #include <initializer_list>
@@ -144,5 +143,3 @@ struct ExceededMaxIterations : XNetworkException {
 //     }
 // };
 }; // namespace xn
-
-#endif

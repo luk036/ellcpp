@@ -1,5 +1,5 @@
-#ifndef _HOME_UBUNTU_CUBSTORE_ELLCPP_LMI0_ORACLE_HPP
-#define _HOME_UBUNTU_CUBSTORE_ELLCPP_LMI0_ORACLE_HPP 1
+// -*- coding: utf-8 -*-
+#pragma once
 
 //#include "mat.hpp"
 #include <xtensor/xarray.hpp>
@@ -44,5 +44,3 @@ public:
      */
     auto operator()(const Arr& x) -> std::tuple<Arr, double, bool>;
 };
-
-#endif

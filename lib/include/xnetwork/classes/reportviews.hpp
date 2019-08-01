@@ -1,6 +1,5 @@
 // -*- coding: utf-8 -*-
-#ifndef _HOME_UBUNTU_GITHUB_XNETWORK_REPORTVIEWS_HPP
-#define _HOME_UBUNTU_GITHUB_XNETWORK_REPORTVIEWS_HPP 1
+#pragma once
 
 //    Copyright (C) 2004-2018 by
 //    Wai-Shing Luk <luk036@gmail.com>
@@ -1421,5 +1420,3 @@ template <typename nodeview_t> class NodeView {
 // };
 
 } // namespace xn
-
-#endif

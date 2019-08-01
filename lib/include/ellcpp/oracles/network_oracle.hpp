@@ -1,9 +1,7 @@
 // -*- coding: utf-8 -*-
-#ifndef _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_NETWORK_ORACLE_HPP
-#define _HOME_UBUNTU_GITHUB_ELLCPP_ORACLES_NETWORK_ORACLE_HPP 1
+#pragma once
 
 #include "neg_cycle.hpp" // import negCycleFinder
-// #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
 /*!
@@ -68,5 +66,3 @@ public:
 // template <typename Graph, typename Fn_Eval, typename Grad_Fn>
 // network_oracle(Graph &G, Fn_Eval &f, Grad_Fn &p)
 //     ->network_oracle<Graph, Fn_Eval, Grad_Fn>;
-
-#endif

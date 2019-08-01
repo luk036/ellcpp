@@ -1,5 +1,5 @@
-#ifndef CHOL_EXT_HPP
-#define CHOL_EXT_HPP 1
+// -*- coding: utf-8 -*-
+#pragma once
 
 #include <stdexcept>
 #include <cassert>
@@ -188,5 +188,3 @@ public:
         return std::move(M);
     }
 };
-
-#endif

@@ -1,9 +1,8 @@
-#ifndef _HOME_UBUNTU_GITHUB_ELLCPP_CUTTING_PLANE_HPP
-#define _HOME_UBUNTU_GITHUB_ELLCPP_CUTTING_PLANE_HPP 1
+// -*- coding: utf-8 -*-
+#pragma once
 
 #include <cmath>
 #include <tuple>
-// #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
 
 /*!
@@ -271,5 +270,3 @@ auto cutting_plane_q(Oracle& Omega, Space& S, double t, const Options& options =
     ret.value = t;
     return std::move(ret);
 } // END
-
-#endif
