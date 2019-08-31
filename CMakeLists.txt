@@ -37,8 +37,6 @@ include(Coverage)
 # You should try to give as much control over the project setup to the user.
 # When modifying compile flags for example, if they are not mandatory, provide an option.
 
-option(BP_USE_DOXYGEN "Add a doxygen target to generate the documentation" ON)
-
 # Use your own option for tests, in case people use your library through add_subdirectory
 cmake_dependent_option(BP_BUILD_TESTS
     "Enable Boilerplate project tests targets" ON # By default we want tests if CTest is enabled
@@ -88,25 +86,8 @@ add_subdirectory (third_party EXCLUDE_FROM_ALL)
 # target_link_libraries ( Test Threads::Threads ${LIBS} -llapack -lblas -lfmt)
 set (LIBRARY_INCLUDE_PATH  ${LIBRARY_INCLUDE_PATH} ${xtensor_INCLUDE_DIRS})
 
+add_subdirectory (doc)
 add_subdirectory (lib)
 add_subdirectory (app)
 
 enable_testing ()
-
-#############
-## Doxygen ##
-#############
-
-if(BP_USE_DOXYGEN AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.9)
-    find_package(Doxygen
-        OPTIONAL_COMPONENTS dot mscgen dia
-    )
-    if(DOXYGEN_FOUND)
-        set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md)
-        doxygen_add_docs(
-            doc
-            README.md lib
-            COMMENT "Generate man pages"
-        )
-    endif()
-endif()
