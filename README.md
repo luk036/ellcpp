@@ -8,3 +8,13 @@
 [![Documentation](https://img.shields.io/badge/Documentation-latest-blue.svg)](https://luk036.github.io/ellcpp)
 
 Ellipsoid Method C++ Code
+
+To build with Ninja:
+
+    mkdir build && cd build
+    cmake -GNinja ..
+    ninja all
+
+To run CTest:
+
+    ninja test

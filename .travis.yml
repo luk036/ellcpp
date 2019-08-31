@@ -86,9 +86,9 @@ install:
   - conda info -a
   # - conda install gtest cmake -c conda-forge
   # Install xtensor and BLAS
+  - conda install xtensor-blas=0.11.1 -c conda-forge
   - conda install xtensor=0.16.4 -c conda-forge
   # - conda install xtensor -c conda-forge
-  - conda install xtensor-blas=0.11.1 -c conda-forge
   - if [[ "$BLAS" == "OpenBLAS" ]]; then
       conda install openblas -c conda-forge;
     elif [[ "$BLAS" == "mkl" ]]; then
