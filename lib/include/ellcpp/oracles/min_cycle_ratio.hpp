@@ -1,10 +1,10 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
+#include "parametric.hpp" // import max_parametric
 #include <algorithm>
 #include <py2cpp/py2cpp.hpp>
 #include <tuple>
-#include "parametric.hpp" // import max_parametric
 
 // #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xarray.hpp>
@@ -30,11 +30,11 @@
  * @param get_time
  * @return auto
  */
-template<typename Graph, typename Fn1, typename Fn2, typename T>
+template <typename Graph, typename Fn1, typename Fn2, typename T>
 auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, T&& /*! dummy */)
 {
     using edge_t = decltype(*std::begin(G.edges()));
-    edge_t e0    = *std::begin(G.edges());
+    edge_t e0 = *std::begin(G.edges());
 
     using cost_T = decltype(get_cost(G, e0));
     using time_T = decltype(get_time(G, e0));
@@ -66,8 +66,10 @@ auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, T&& /*! dummy */)
         cost_T c = get_cost(G, e);
         time_T t = get_time(G, e);
         // std::cout << "mincost: c = " << c << '\n';
-        if (max_cost < c) max_cost = c;
-        if (min_time > t) min_time = t;
+        if (max_cost < c)
+            max_cost = c;
+        if (min_time > t)
+            min_time = t;
     }
     const auto r0 = T(max_cost * G.number_of_edges()) / min_time;
     return max_parametric(G, r0, calc_weight, calc_ratio);

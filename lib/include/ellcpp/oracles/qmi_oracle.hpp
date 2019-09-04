@@ -1,10 +1,10 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
+#include "chol_ext.hpp"
 #include <cassert>
 #include <vector>
 #include <xtensor/xarray.hpp>
-#include "chol_ext.hpp"
 
 /*!
  * @brief Oracle for Quadratic Matrix Inequality
@@ -15,23 +15,23 @@
  */
 class qmi_oracle
 {
-    using Arr        = xt::xarray<double, xt::layout_type::row_major>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using shape_type = Arr::shape_type;
 
-private:
-    double      _t     = 0.;
-    std::size_t _nx    = 0;
+  private:
+    double _t = 0.;
+    std::size_t _nx = 0;
     std::size_t _count = 0;
 
     const std::vector<Arr>& _F;
-    const Arr&              _F0;
-    Arr                     _Fx;
+    const Arr& _F0;
+    Arr _Fx;
     // Arr _A;
 
-public:
+  public:
     chol_ext<> _Q;
 
-public:
+  public:
     /*!
      * @brief Construct a new qmi oracle object
      *
@@ -39,7 +39,10 @@ public:
      * @param F0
      */
     explicit qmi_oracle(const std::vector<Arr>& F, const Arr& F0)
-        : _F{F}, _F0{F0}, _Fx{xt::zeros<double>(F0.shape())}, _Q(F0.shape()[0])
+        : _F {F}
+        , _F0 {F0}
+        , _Fx {xt::zeros<double>(F0.shape())}
+        , _Q(F0.shape()[0])
     {
     }
 
@@ -48,7 +51,10 @@ public:
      *
      * @param t
      */
-    void update(double t) { _t = t; }
+    void update(double t)
+    {
+        _t = t;
+    }
 
     /*!
      * @brief

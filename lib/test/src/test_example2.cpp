@@ -15,20 +15,26 @@ auto my_oracle2(const Arr& z)
 
     // constraint 1: x + y <= 3
     auto fj = x + y - 3.;
-    if (fj > 0) { return std::tuple{Arr{1., 1.}, fj, false}; }
+    if (fj > 0)
+    {
+        return std::tuple {Arr {1., 1.}, fj, false};
+    }
 
     // constraint 2: x - y >= 1
     fj = -x + y + 1.;
-    if (fj > 0) { return std::tuple{Arr{-1., 1.}, fj, false}; }
+    if (fj > 0)
+    {
+        return std::tuple {Arr {-1., 1.}, fj, false};
+    }
 
-    return std::tuple{Arr{0., 0.}, 0., true};
+    return std::tuple {Arr {0., 0.}, 0., true};
 }
 
 TEST_CASE("Example 2", "[example2]")
 {
-    auto x0 = Arr{0., 0.}; // initial x0
-    auto E  = ell{10., x0};
-    auto P  = my_oracle2;
+    auto x0 = Arr {0., 0.}; // initial x0
+    auto E = ell {10., x0};
+    auto P = my_oracle2;
 
     auto ell_info = cutting_plane_feas(P, E);
     CHECK(ell_info.feasible);

@@ -12,22 +12,22 @@
  */
 class ell
 {
-public:
-    using Arr      = xt::xarray<double, xt::layout_type::row_major>;
+  public:
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using params_t = std::tuple<double, double, double>;
     using return_t = std::tuple<int, params_t>;
 
-public:
+  public:
     bool _use_parallel_cut = true;
 
-private:
+  private:
     std::size_t _n;
-    double      _c1;
-    double      _kappa;
-    Arr         _xc;
-    Arr         _Q;
+    double _c1;
+    double _kappa;
+    Arr _xc;
+    Arr _Q;
 
-public:
+  public:
     /*!
      * @brief Construct a new ell object
      *
@@ -36,11 +36,11 @@ public:
      * @param x
      */
     ell(const Arr& val, const Arr& x)
-        : _n{x.size()},                         // n
-          _c1{double(_n * _n) / (_n * _n - 1)}, //
-          _xc{x}
+        : _n {x.size()}
+        , _c1 {double(_n * _n) / (_n * _n - 1)}
+        , _xc {x}
     {
-        this->_Q     = xt::diag(val);
+        this->_Q = xt::diag(val);
         this->_kappa = 1.;
     }
 
@@ -52,11 +52,11 @@ public:
      * @param x
      */
     ell(const double& alpha, const Arr& x)
-        : _n{x.size()},                         // n
-          _c1{double(_n * _n) / (_n * _n - 1)}, //
-          _xc{x}
+        : _n {x.size()}
+        , _c1 {double(_n * _n) / (_n * _n - 1)}
+        , _xc {x}
     {
-        this->_Q     = xt::eye(_n);
+        this->_Q = xt::eye(_n);
         this->_kappa = alpha;
     }
 
@@ -72,21 +72,30 @@ public:
      *
      * @return const Arr&
      */
-    auto xc() const -> const Arr& { return _xc; }
+    auto xc() const -> const Arr&
+    {
+        return _xc;
+    }
 
     /*!
      * @brief
      *
      * @return Arr&
      */
-    auto xc() -> Arr& { return _xc; }
+    auto xc() -> Arr&
+    {
+        return _xc;
+    }
 
     /*!
      * @brief Set the xc object
      *
      * @param xc
      */
-    void set_xc(const Arr& xc) { _xc = xc; }
+    void set_xc(const Arr& xc)
+    {
+        _xc = xc;
+    }
 
     /*!
      * @brief Update ellipsoid core function using the cut
@@ -97,10 +106,10 @@ public:
      * @param beta
      * @return std::tuple<int, double>
      */
-    template<typename T>
+    template <typename T>
     std::tuple<int, double> update(const Arr& g, const T& beta);
 
-private:
+  private:
     /*!
      * @brief
      *
@@ -145,14 +154,14 @@ private:
  */
 class ell1d
 {
-public:
+  public:
     using return_t = std::tuple<int, double>;
 
-private:
+  private:
     double _r;
     double _xc;
 
-public:
+  public:
     /*!
      * @brief Construct a new ell1d object
      *
@@ -160,8 +169,9 @@ public:
      * @param u
      */
     ell1d(double l, double u) //
-        : _r{(u - l) / 2},    //
-          _xc{l + _r}
+        : _r {(u - l) / 2}
+        , //
+        _xc {l + _r}
     {
     }
 
@@ -177,7 +187,10 @@ public:
      *
      * @return double
      */
-    double xc() const { return _xc; }
+    double xc() const
+    {
+        return _xc;
+    }
 
     /*!
      * @brief

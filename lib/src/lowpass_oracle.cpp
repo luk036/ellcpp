@@ -10,7 +10,8 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param Spsq
  * @return auto
  */
-std::tuple<Arr, Arr, double> lowpass_oracle::operator()(const Arr& x, double Spsq) const
+std::tuple<Arr, Arr, double> lowpass_oracle::operator()(
+    const Arr& x, double Spsq) const
 {
     using xt::linalg::dot;
 
@@ -19,10 +20,10 @@ std::tuple<Arr, Arr, double> lowpass_oracle::operator()(const Arr& x, double Sps
     // case 1,
     if (x[0] < 0)
     {
-        auto g = Arr{xt::zeros<double>({n})};
-        g[0]   = -1.;
-        auto f = Arr{-x[0]};
-        return std::tuple{std::move(g), std::move(f), Spsq};
+        auto g = Arr {xt::zeros<double>({n})};
+        g[0] = -1.;
+        auto f = Arr {-x[0]};
+        return std::tuple {std::move(g), std::move(f), Spsq};
     }
 
     // case 2,
@@ -40,17 +41,17 @@ std::tuple<Arr, Arr, double> lowpass_oracle::operator()(const Arr& x, double Sps
         {
             // f = v - Upsq;
             Arr g = xt::view(this->_Ap, k, xt::all());
-            Arr f{v - this->_Upsq, v - this->_Lpsq};
+            Arr f {v - this->_Upsq, v - this->_Lpsq};
             this->_i_Ap = k + 1;
-            return std::tuple{std::move(g), std::move(f), Spsq};
+            return std::tuple {std::move(g), std::move(f), Spsq};
         }
         if (v < this->_Lpsq)
         {
             // f = Lpsq - v;
             Arr g = -xt::view(this->_Ap, k, xt::all());
-            Arr f{-v + this->_Lpsq, -v + this->_Upsq};
+            Arr f {-v + this->_Lpsq, -v + this->_Upsq};
             this->_i_Ap = k + 1;
-            return std::tuple{std::move(g), std::move(f), Spsq};
+            return std::tuple {std::move(g), std::move(f), Spsq};
         }
     }
 
@@ -73,17 +74,17 @@ std::tuple<Arr, Arr, double> lowpass_oracle::operator()(const Arr& x, double Sps
             // f = v - Spsq;
             Arr g = xt::view(this->_As, k, xt::all());
             // f = (v - Spsq, v);
-            Arr f{v - Spsq, v};
+            Arr f {v - Spsq, v};
             this->_i_As = k + 1; // k or k+1
-            return std::tuple{std::move(g), std::move(f), Spsq};
+            return std::tuple {std::move(g), std::move(f), Spsq};
         }
         if (v < 0)
         {
             // f = v - Spsq;
             Arr g = -xt::view(this->_As, k, xt::all());
-            Arr f{-v, -v + Spsq};
+            Arr f {-v, -v + Spsq};
             this->_i_As = k + 1;
-            return std::tuple{std::move(g), std::move(f), Spsq};
+            return std::tuple {std::move(g), std::move(f), Spsq};
         }
         if (v > fmax)
         {
@@ -104,18 +105,18 @@ std::tuple<Arr, Arr, double> lowpass_oracle::operator()(const Arr& x, double Sps
         auto v = dot(xt::view(this->_Anr, k, xt::all()), x)();
         if (v < 0.)
         {
-            Arr f{-v};
-            Arr g        = -xt::view(this->_Anr, k, xt::all());
+            Arr f {-v};
+            Arr g = -xt::view(this->_Anr, k, xt::all());
             this->_i_Anr = k + 1;
-            return std::tuple{std::move(g), std::move(f), Spsq};
+            return std::tuple {std::move(g), std::move(f), Spsq};
         }
     }
 
     // Begin objective function
     // Spsq, imax = w.max(), w.argmax(); // update best so far Spsq
     Spsq = fmax;
-    Arr f{0., fmax}; // ???
+    Arr f {0., fmax}; // ???
     // f = 0
     Arr g = xt::view(this->_As, imax, xt::all());
-    return std::tuple{std::move(g), std::move(f), Spsq};
+    return std::tuple {std::move(g), std::move(f), Spsq};
 }

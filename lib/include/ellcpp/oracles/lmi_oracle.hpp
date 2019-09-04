@@ -1,9 +1,9 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
+#include "chol_ext.hpp"
 #include <vector>
 #include <xtensor/xarray.hpp>
-#include "chol_ext.hpp"
 
 /*!
  * @brief Oracle for Linear Matrix Inequality
@@ -17,12 +17,12 @@ class lmi_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-private:
+  private:
     const std::vector<Arr>& _F;
-    Arr                     _F0;
-    chol_ext<>              _Q;
+    Arr _F0;
+    chol_ext<> _Q;
 
-public:
+  public:
     /*!
      * @brief Construct a new lmi oracle object
      *
@@ -30,9 +30,9 @@ public:
      * @param B
      */
     lmi_oracle(const std::vector<Arr>& F, Arr&& B)
-        : _F{F},                     //
-          _F0{std::forward<Arr>(B)}, //
-          _Q{this->_F0.shape()[0]}   //
+        : _F {F}
+        , _F0 {std::forward<Arr>(B)}
+        , _Q {this->_F0.shape()[0]}
     {
     }
 
@@ -43,9 +43,9 @@ public:
      * @param B
      */
     lmi_oracle(const std::vector<Arr>& F, const Arr& B)
-        : _F{F},                   //
-          _F0{B},                  //
-          _Q(this->_F0.shape()[0]) //
+        : _F {F}
+        , _F0 {B}
+        , _Q(this->_F0.shape()[0])
     {
     }
 

@@ -1,14 +1,14 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include <stdexcept>
 #include <cassert>
+#include <stdexcept>
 #include <xtensor/xarray.hpp>
 
 /*!
  * @brief Cholesky factorization
  */
-template<bool Allow_semidefinite = false> //
+template <bool Allow_semidefinite = false> //
 class chol_ext
 {
     // using Mat = bnu::symmetric_matrix<double, bnu::upper>;
@@ -17,22 +17,25 @@ class chol_ext
     using Vec = xt::xarray<double, xt::layout_type::row_major>;
     using Mat = xt::xarray<double, xt::layout_type::row_major>;
 
-public:
+  public:
     std::size_t start;
     std::size_t stop;
-    Vec         v;
+    Vec v;
 
-private:
+  private:
     std::size_t n;
-    Mat         T;
+    Mat T;
 
-public:
+  public:
     /*!
      * @brief Construct a new chol ext object
      *
      * @param n
      */
-    explicit chol_ext(std::size_t N) : v{xt::zeros<double>({N})}, n{N}, T{xt::zeros<double>({N, N})}
+    explicit chol_ext(std::size_t N)
+        : v {xt::zeros<double>({N})}
+        , n {N}
+        , T {xt::zeros<double>({N, N})}
     {
     }
 
@@ -59,13 +62,13 @@ public:
      *
      * See also: factorize()
      */
-    template<typename Fn>
+    template <typename Fn>
     void factor(Fn getA)
     {
-        auto& T     = this->T;
-        auto  i     = 0U;
+        auto& T = this->T;
+        auto i = 0U;
         this->start = 0U;
-        this->stop  = 0U;
+        this->stop = 0U;
 
         for (; i < this->n; ++i)
         {
@@ -77,7 +80,10 @@ public:
                     d -= T(k, i) * T(j, k);
                 }
                 T(i, j) = d;
-                if (i != j) { T(j, i) = d / T(j, j); }
+                if (i != j)
+                {
+                    T(j, i) = d / T(j, j);
+                }
             }
             if constexpr (Allow_semidefinite)
             {
@@ -86,7 +92,10 @@ public:
                     this->stop = i + 1;
                     break;
                 }
-                if (T(i, i) == 0.) { this->start = i + 1; }
+                if (T(i, i) == 0.)
+                {
+                    this->start = i + 1;
+                }
             }
             else
             {
@@ -113,7 +122,10 @@ public:
      * @return true
      * @return false
      */
-    auto is_spd() const -> bool { return this->stop == 0; }
+    auto is_spd() const -> bool
+    {
+        return this->stop == 0;
+    }
 
     /*!
      * @brief witness that certifies $A$ is not
@@ -123,11 +135,14 @@ public:
      */
     auto witness() -> double
     {
-        if (this->is_spd()) { throw std::runtime_error{"Implementation Error."}; }
+        if (this->is_spd())
+        {
+            throw std::runtime_error {"Implementation Error."};
+        }
         // auto &p = this->p;
-        auto&  stop = this->stop;
-        size_t p    = stop - 1; // assume stop >= 1
-        this->v(p)  = 1.;
+        auto& stop = this->stop;
+        size_t p = stop - 1; // assume stop >= 1
+        this->v(p) = 1.;
 
         for (auto i = p; i > this->start; --i)
         {
@@ -151,8 +166,8 @@ public:
      */
     double sym_quad(const Vec& A) const
     {
-        auto  res = 0.;
-        auto& v   = this->v;
+        auto res = 0.;
+        auto& v = this->v;
         for (auto i = this->start; i < this->stop; ++i)
         {
             auto s = 0.;
@@ -167,12 +182,15 @@ public:
 
     auto sqrt() -> Mat
     {
-        if (!this->is_spd()) { throw std::runtime_error{"Implementation Error."}; }
+        if (!this->is_spd())
+        {
+            throw std::runtime_error {"Implementation Error."};
+        }
 
         // if (!this->sqrt_free) {
         //     return Mat{this->T};
         // }
-        auto M = Mat{xt::zeros<double>({this->n, this->n})};
+        auto M = Mat {xt::zeros<double>({this->n, this->n})};
 
         for (auto i = 0U; i < this->n; ++i)
         {

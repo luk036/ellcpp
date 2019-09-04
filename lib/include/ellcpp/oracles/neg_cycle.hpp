@@ -20,30 +20,32 @@ Negative cycle detection for (auto weighed graphs.
  *  2. BF detect whether there is a negative cycle at the fianl stage.
  *  3. BF restarts the solution (dist[u]) every time.
  */
-template<typename Graph, typename WeightFn>
+template <typename Graph, typename WeightFn>
 class negCycleFinder
 {
-private:
-    Graph&   _G;
+  private:
+    Graph& _G;
     WeightFn _get_weight; // for nonlinear and lazy evaluation
 
-    using Node   = decltype(Graph::null_vertex());
+    using Node = decltype(Graph::null_vertex());
     using edge_t = decltype(*(std::begin(_G.edges())));
-    using wt_t   = decltype(_get_weight(_G, std::declval<edge_t&>()));
+    using wt_t = decltype(_get_weight(_G, std::declval<edge_t&>()));
 
-public:
-    py::dict<Node, Node>   _pred;
+  public:
+    py::dict<Node, Node> _pred;
     py::dict<Node, edge_t> _edge;
-    py::dict<Node, wt_t>   _dist;
+    py::dict<Node, wt_t> _dist;
 
-public:
+  public:
     /*!
      * @brief Construct a new neg Cycle Finder object
      *
      * @param G
      * @param get_weight
      */
-    explicit negCycleFinder(Graph& G, WeightFn& get_weight) : _G{G}, _get_weight{get_weight}
+    explicit negCycleFinder(Graph& G, WeightFn& get_weight)
+        : _G {G}
+        , _get_weight {get_weight}
     {
         for (Node v : _G)
         {
@@ -60,16 +62,22 @@ public:
      */
     Node find_cycle()
     {
-        py::dict<Node, Node> visited{};
+        py::dict<Node, Node> visited {};
 
         for (Node v : _G)
         {
-            if (visited.contains(v)) { continue; }
+            if (visited.contains(v))
+            {
+                continue;
+            }
             auto u = v;
             while (true)
             {
                 visited[u] = v;
-                if (!_pred.contains(u)) { break; }
+                if (!_pred.contains(u))
+                {
+                    break;
+                }
                 u = _pred[u];
                 if (visited.contains(u))
                 {
@@ -98,15 +106,15 @@ public:
         auto changed = false;
         for (const auto& e : _G.edges())
         {
-            auto wt       = _get_weight(_G, e);
+            auto wt = _get_weight(_G, e);
             auto&& [u, v] = _G.end_points(e);
-            auto d        = _dist[u] + wt;
+            auto d = _dist[u] + wt;
             if (_dist[v] > d)
             {
                 _dist[v] = d;
                 _pred[v] = u;
                 _edge[v] = e;
-                changed  = true;
+                changed = true;
             }
         }
         return changed;
@@ -144,12 +152,18 @@ public:
         while (true)
         {
             auto changed = this->relax();
-            if (!changed) { break; }
+            if (!changed)
+            {
+                break;
+            }
             // if (v != _G.null_vertex()) {
             Node v = this->find_cycle();
-            if (v != _G.null_vertex()) { return std::move(this->cycle_list(v)); }
+            if (v != _G.null_vertex())
+            {
+                return std::move(this->cycle_list(v));
+            }
         }
-        return std::move(std::vector<edge_t>{}); // ???
+        return std::move(std::vector<edge_t> {}); // ???
     }
 
     /*!
@@ -160,14 +174,17 @@ public:
      */
     auto cycle_list(Node handle) -> std::vector<edge_t>
     {
-        auto v     = handle;
-        auto cycle = std::vector<edge_t>{}; // ???
+        auto v = handle;
+        auto cycle = std::vector<edge_t> {}; // ???
         while (true)
         {
             auto u = _pred[v];
             cycle.push_back(_edge[v]);
             v = u;
-            if (v == handle) { break; }
+            if (v == handle)
+            {
+                break;
+            }
         }
         return std::move(cycle);
     }

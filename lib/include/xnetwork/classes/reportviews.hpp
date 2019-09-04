@@ -99,30 +99,16 @@ EdgeDataView
 // #include <xnetwork.hpp> // as xn
 #include <initializer_list>
 
-namespace xn {
+namespace xn
+{
 
-static const auto __all__ = {"NodeView",
-                             "NodeDataView",
-                             "EdgeView",
-                             "OutEdgeView",
-                             "InEdgeView",
-                             "EdgeDataView",
-                             "OutEdgeDataView",
-                             "InEdgeDataView",
-                             "MultiEdgeView",
-                             "OutMultiEdgeView",
-                             "InMultiEdgeView",
-                             "MultiEdgeDataView",
-                             "OutMultiEdgeDataView",
-                             "InMultiEdgeDataView",
-                             "DegreeView",
-                             "DiDegreeView",
-                             "InDegreeView",
-                             "OutDegreeView",
-                             "MultiDegreeView",
-                             "DiMultiDegreeView",
-                             "InMultiDegreeView",
-                             "OutMultiDegreeView"};
+static const auto __all__ = {"NodeView", "NodeDataView", "EdgeView",
+    "OutEdgeView", "InEdgeView", "EdgeDataView", "OutEdgeDataView",
+    "InEdgeDataView", "MultiEdgeView", "OutMultiEdgeView", "InMultiEdgeView",
+    "MultiEdgeDataView", "OutMultiEdgeDataView", "InMultiEdgeDataView",
+    "DegreeView", "DiDegreeView", "InDegreeView", "OutDegreeView",
+    "MultiDegreeView", "DiMultiDegreeView", "InMultiDegreeView",
+    "OutMultiDegreeView"};
 
 // NodeViews
 /*! A NodeView class to act as G.nodes for a XNetwork Graph
@@ -172,12 +158,14 @@ true
 false
  */
 // interface: Mapping, Set
-template <typename nodeview_t> class NodeView {
+template <typename nodeview_t>
+class NodeView
+{
   private:
     using _Self = NodeView<nodeview_t>;
     using Node = typename nodeview_t::value_type;
 
-    nodeview_t &_nodes;
+    nodeview_t& _nodes;
 
     // auto __getstate__( ) {
     //     return std::tuple{"_nodes": this->_nodes};
@@ -187,19 +175,37 @@ template <typename nodeview_t> class NodeView {
     //     this->_nodes = state["_nodes"];
     // }
   public:
-    explicit NodeView(nodeview_t &nodes) : _nodes{nodes} {}
+    explicit NodeView(nodeview_t& nodes)
+        : _nodes {nodes}
+    {
+    }
 
     // Mapping methods
-    auto size() { return this->_nodes.size(); }
+    auto size()
+    {
+        return this->_nodes.size();
+    }
 
-    auto begin() { return std::begin(this->_nodes); }
+    auto begin()
+    {
+        return std::begin(this->_nodes);
+    }
 
-    auto end() { return std::end(this->_nodes); }
+    auto end()
+    {
+        return std::end(this->_nodes);
+    }
 
-    auto operator[](const Node &n) { return this->_nodes[n]; }
+    auto operator[](const Node& n)
+    {
+        return this->_nodes[n];
+    }
 
     // Set methods
-    bool contains(const Node &n) { return this->_nodes.contains(n); }
+    bool contains(const Node& n)
+    {
+        return this->_nodes.contains(n);
+    }
 
     // /// @classmethod
     // auto _from_iterable(cls, it) {
@@ -1061,7 +1067,7 @@ template <typename nodeview_t> class NodeView {
 // // EdgeViews    have set operations and no data reported
 // // Interface: Set, Mapping
 // /*! A EdgeView class for outward edges of a DiGraph */
-// template <typename graph_t> 
+// template <typename graph_t>
 // class OutEdgeView {
 //     // static const auto __slots__ = ("_adjdict", "_graph", "_nodes_nbrs");
 

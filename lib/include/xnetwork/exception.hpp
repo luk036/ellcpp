@@ -13,7 +13,8 @@ Exceptions
 Base exceptions and errors for XNetwork.
 */
 
-namespace xn {
+namespace xn
+{
 
 static const auto __all__ = {
     "HasACycle",
@@ -33,13 +34,21 @@ static const auto __all__ = {
 };
 
 /*! Base class for exceptions : XNetwork. */
-struct XNetworkException : std::runtime_error {
-    explicit XNetworkException(const char *msg) : std::runtime_error(msg) {}
+struct XNetworkException : std::runtime_error
+{
+    explicit XNetworkException(const char* msg)
+        : std::runtime_error(msg)
+    {
+    }
 };
 
 /*! Exception for a serious error : XNetwork */
-struct XNetworkError : XNetworkException {
-    explicit XNetworkError(const char *msg) : XNetworkException(msg) {}
+struct XNetworkError : XNetworkException
+{
+    explicit XNetworkError(const char* msg)
+        : XNetworkException(msg)
+    {
+    }
 };
 
 /*! Raised when a null graph is provided as input to an algorithm
@@ -55,55 +64,89 @@ References
    Washington University.  New York: Springer-Verlag, 1973.
 
  */
-struct XNetworkPointlessConcept : XNetworkException {
-    explicit XNetworkPointlessConcept(const char *msg)
-        : XNetworkException(msg) {}
+struct XNetworkPointlessConcept : XNetworkException
+{
+    explicit XNetworkPointlessConcept(const char* msg)
+        : XNetworkException(msg)
+    {
+    }
 };
 
 /*! Exception for unexpected termination of algorithms. */
-struct XNetworkAlgorithmError : XNetworkException {
-    explicit XNetworkAlgorithmError(const char *msg) : XNetworkException(msg) {}
+struct XNetworkAlgorithmError : XNetworkException
+{
+    explicit XNetworkAlgorithmError(const char* msg)
+        : XNetworkException(msg)
+    {
+    }
 };
 
 /*! Exception raised by algorithms trying to solve a problem
 instance that has no feasible solution. */
-struct XNetworkUnfeasible : XNetworkAlgorithmError {
-    explicit XNetworkUnfeasible(const char *msg)
-        : XNetworkAlgorithmError(msg) {}
+struct XNetworkUnfeasible : XNetworkAlgorithmError
+{
+    explicit XNetworkUnfeasible(const char* msg)
+        : XNetworkAlgorithmError(msg)
+    {
+    }
 };
 
 /*! Exception for algorithms that should return a path when running
 on graphs where such a path does not exist. */
-struct XNetworkNoPath : XNetworkUnfeasible {
-    explicit XNetworkNoPath(const char *msg) : XNetworkUnfeasible(msg) {}
+struct XNetworkNoPath : XNetworkUnfeasible
+{
+    explicit XNetworkNoPath(const char* msg)
+        : XNetworkUnfeasible(msg)
+    {
+    }
 };
 
 /*! Exception for algorithms that should return a cycle when running
 on graphs where such a cycle does not exist. */
-struct XNetworkNoCycle : XNetworkUnfeasible {
-    explicit XNetworkNoCycle(const char *msg) : XNetworkUnfeasible(msg) {}
+struct XNetworkNoCycle : XNetworkUnfeasible
+{
+    explicit XNetworkNoCycle(const char* msg)
+        : XNetworkUnfeasible(msg)
+    {
+    }
 };
 
 /*! Raised if (a graph has a cycle when an algorithm expects that it
 will have no cycles. */
-struct HasACycle : XNetworkException {
-    explicit HasACycle(const char *msg) : XNetworkException(msg) {}
+struct HasACycle : XNetworkException
+{
+    explicit HasACycle(const char* msg)
+        : XNetworkException(msg)
+    {
+    }
 };
 
 /*! Exception raised by algorithms trying to solve a maximization
 or a minimization problem instance that is unbounded. */
-struct XNetworkUnbounded : XNetworkAlgorithmError {
-    explicit XNetworkUnbounded(const char *msg) : XNetworkAlgorithmError(msg) {}
+struct XNetworkUnbounded : XNetworkAlgorithmError
+{
+    explicit XNetworkUnbounded(const char* msg)
+        : XNetworkAlgorithmError(msg)
+    {
+    }
 };
 
 /*! Exception raised by algorithms not implemented for a type of graph. */
-struct XNetworkNotImplemented : XNetworkException {
-    explicit XNetworkNotImplemented(const char *msg) : XNetworkException(msg) {}
+struct XNetworkNotImplemented : XNetworkException
+{
+    explicit XNetworkNotImplemented(const char* msg)
+        : XNetworkException(msg)
+    {
+    }
 };
 
 /*! Exception raised if (requested node is not present : the graph */
-struct NodeNotFound : XNetworkException {
-    explicit NodeNotFound(const char *msg) : XNetworkException(msg) {}
+struct NodeNotFound : XNetworkException
+{
+    explicit NodeNotFound(const char* msg)
+        : XNetworkException(msg)
+    {
+    }
 };
 
 /*! Raised if (more than one valid solution exists for an intermediary step
@@ -114,8 +157,12 @@ This may occur, for example, when trying to determine the
 bipartite node sets in a disconnected bipartite graph when
 computing bipartite matchings.
  */
-struct AmbiguousSolution : XNetworkException {
-    explicit AmbiguousSolution(const char *msg) : XNetworkException(msg) {}
+struct AmbiguousSolution : XNetworkException
+{
+    explicit AmbiguousSolution(const char* msg)
+        : XNetworkException(msg)
+    {
+    }
 };
 
 /*! Raised if (a loop iterates too many times without breaking.
@@ -123,8 +170,12 @@ This may occur, for example, in an algorithm that computes
 progressively better approximations to a value but exceeds an
 iteration bound specified by the user.
  */
-struct ExceededMaxIterations : XNetworkException {
-    explicit ExceededMaxIterations(const char *msg) : XNetworkException(msg) {}
+struct ExceededMaxIterations : XNetworkException
+{
+    explicit ExceededMaxIterations(const char* msg)
+        : XNetworkException(msg)
+    {
+    }
 };
 
 //     /*! Raised when the power iteration method fails to converge within a

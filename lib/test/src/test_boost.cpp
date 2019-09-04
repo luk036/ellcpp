@@ -9,13 +9,16 @@
 #include <utility>  // for std::pair
 
 // using namespace boost;
-template<class grAdaptor>
+template <class grAdaptor>
 struct exercise_vertex
 {
     //...
     using Vertex = typename boost::graph_traits<grAdaptor>::vertex_descriptor;
 
-    explicit exercise_vertex(grAdaptor& g_) : g(g_) {}
+    explicit exercise_vertex(grAdaptor& g_)
+        : g(g_)
+    {
+    }
     //...
     grAdaptor& g;
 
@@ -41,7 +44,8 @@ struct exercise_vertex
 TEST_CASE("Test Boost", "[test_boost]")
 {
     // create a typedef for the Graph type
-    using Graph = boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS>;
+    using Graph =
+        boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS>;
 
     // Make convenient labels for the vertices
     enum
@@ -57,13 +61,13 @@ TEST_CASE("Test Boost", "[test_boost]")
     // const char *name = "ABCDE";
 
     // writing out the edges in the graph
-    using Edge             = std::pair<int, int>;
-    Edge      edge_array[] = {Edge(A, B), Edge(A, D), Edge(C, A), Edge(D, C),
-                         Edge(C, E), Edge(B, D), Edge(D, E)};
-    const auto num_edges    = sizeof(edge_array) / sizeof(edge_array[0]);
+    using Edge = std::pair<int, int>;
+    Edge edge_array[] = {Edge(A, B), Edge(A, D), Edge(C, A), Edge(D, C),
+        Edge(C, E), Edge(B, D), Edge(D, E)};
+    const auto num_edges = sizeof(edge_array) / sizeof(edge_array[0]);
 
     // declare a graph object
-    Graph                g(num_vertices);
+    Graph g(num_vertices);
     xn::grAdaptor<Graph> G(g);
     using Vertex = typename boost::graph_traits<Graph>::vertex_descriptor;
     // using edge_t = typename boost::graph_traits<Graph>::edge_descriptor;
@@ -95,5 +99,5 @@ TEST_CASE("Test Boost", "[test_boost]")
     // std::cout << std::endl;
 
     std::for_each(boost::vertices(G).first, boost::vertices(G).second,
-                  exercise_vertex<xn::grAdaptor<Graph>>(G));
+        exercise_vertex<xn::grAdaptor<Graph>>(G));
 }

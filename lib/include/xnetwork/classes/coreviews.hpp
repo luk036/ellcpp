@@ -17,10 +17,18 @@
 // #include <xnetwork.hpp> // as xn
 
 static const auto __all__ = {
-    "AtlasView",           "AdjacencyView",        "MultiAdjacencyView",
-    "UnionAtlas",          "UnionAdjacency",       "UnionMultiInner",
-    "UnionMultiAdjacency", "FilterAtlas",          "FilterAdjacency",
-    "FilterMultiInner",    "FilterMultiAdjacency", "ReadOnlyGraph",
+    "AtlasView",
+    "AdjacencyView",
+    "MultiAdjacencyView",
+    "UnionAtlas",
+    "UnionAdjacency",
+    "UnionMultiInner",
+    "UnionMultiAdjacency",
+    "FilterAtlas",
+    "FilterAdjacency",
+    "FilterMultiInner",
+    "FilterMultiAdjacency",
+    "ReadOnlyGraph",
 };
 
 /*! An AtlasView is a Read-only Mapping of Mappings.
@@ -36,19 +44,35 @@ static const auto __all__ = {
 
     Interface: Mapping
 */
-template <typename Atlas> class AtlasView {
+template <typename Atlas>
+class AtlasView
+{
   public:
-    Atlas &_atlas;
+    Atlas& _atlas;
 
-    explicit AtlasView(Atlas &d) : _atlas{d} {}
+    explicit AtlasView(Atlas& d)
+        : _atlas {d}
+    {
+    }
 
-    auto size() const { return this->_atlas.size(); }
+    auto size() const
+    {
+        return this->_atlas.size();
+    }
 
-    auto begin() const { return std::begin(this->_atlas); }
+    auto begin() const
+    {
+        return std::begin(this->_atlas);
+    }
 
-    auto end() const { return std::end(this->_atlas); }
+    auto end() const
+    {
+        return std::end(this->_atlas);
+    }
 
-    template <typename T> auto operator[](const T &key) const {
+    template <typename T>
+    auto operator[](const T& key) const
+    {
         return this->_atlas[key];
     }
 
@@ -76,11 +100,18 @@ template <typename Atlas> class AtlasView {
     AtlasView - View into dict-of-dict
     MultiAdjacencyView - View into dict-of-dict-of-dict-of-dict
 */
-template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
+template <typename Atlas>
+class AdjacencyView : public AtlasView<Atlas>
+{
   public:
-    explicit AdjacencyView(Atlas &d) : AtlasView<Atlas>{d} {}
+    explicit AdjacencyView(Atlas& d)
+        : AtlasView<Atlas> {d}
+    {
+    }
 
-    template <typename T> auto operator[](const T &name) const {
+    template <typename T>
+    auto operator[](const T& name) const
+    {
         return AtlasView(this->_atlas[name]);
     }
 
@@ -286,9 +317,9 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //     /*! A read-only union of two dict MultiAdjacencies.
 
 //     The two input dict-of-dict-of-dict-of-dicts represent the union of
-//     `G.succ` and `G.pred` for MultiDiGraphs. Return values are UnionAdjacency.
-//     The inner level of dict is read-write. But the outer levels are
-//     read-only.
+//     `G.succ` and `G.pred` for MultiDiGraphs. Return values are
+//     UnionAdjacency. The inner level of dict is read-write. But the outer
+//     levels are read-only.
 
 //     See Also
 //     ========
@@ -404,7 +435,8 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //                         if (this->NODE_OK(v) if (this->EDGE_OK(u, v)}
 //                     for (auto u : this->NODE_OK.nodes if (u : this->_atlas};
 //         }
-//         return std::tuple{u: {v: d for v, d : nbrs.items() if (this->NODE_OK(v)
+//         return std::tuple{u: {v: d for v, d : nbrs.items() if
+//         (this->NODE_OK(v)
 //                     if (this->EDGE_OK(u, v)}
 //                 for (auto u, nbrs : this->_atlas.items()
 //                 if (this->NODE_OK(u)};
@@ -457,7 +489,8 @@ template <typename Atlas> class AdjacencyView : public AtlasView<Atlas> {
 //                         if (this->EDGE_OK(v, k)}
 //                     for (auto v : this->NODE_OK.nodes if (v : this->_atlas}
 //         }
-//         return std::tuple{v: {k: d for k, d : nbrs.items() if (this->EDGE_OK(v, k)}
+//         return std::tuple{v: {k: d for k, d : nbrs.items() if
+//         (this->EDGE_OK(v, k)}
 //                 for (auto v, nbrs : this->_atlas.items() if
 //                 (this->NODE_OK(v)};
 //     }

@@ -53,9 +53,9 @@ class my_fir_oracle
     // Arr Hdes_r = xt::real(Hdes);
     // Arr Hdes_i = xt::imag(Hdes);
     Arr Hdes_theta = D * w;
-    Arr Hdes_r     = xt::cos(Hdes_theta);
-    Arr Hdes_i     = -xt::sin(Hdes_theta);
-    Arr A_theta    = xt::linalg::outer(w, xt::arange(n));
+    Arr Hdes_r = xt::cos(Hdes_theta);
+    Arr Hdes_i = -xt::sin(Hdes_theta);
+    Arr A_theta = xt::linalg::outer(w, xt::arange(n));
 
     // Split A into a real part, and an imaginary part.
     // Arr A_R = xt::real(A);
@@ -63,25 +63,26 @@ class my_fir_oracle
     Arr A_R = xt::cos(A_theta);
     Arr A_I = -xt::sin(A_theta);
 
-public:
-    auto operator()(const Arr& h, double t) const -> std::tuple<Arr, double, double>
+  public:
+    auto operator()(const Arr& h, double t) const
+        -> std::tuple<Arr, double, double>
     {
         auto fmax = std::numeric_limits<double>::min();
-        auto gmax = Arr{xt::zeros<double>({n})};
+        auto gmax = Arr {xt::zeros<double>({n})};
 
         for (auto i = 0U; i < m; ++i)
         {
-            auto a_R = Arr{xt::view(A_R, i, xt::all())};
-            auto a_I = Arr{xt::view(A_I, i, xt::all())};
+            auto a_R = Arr {xt::view(A_R, i, xt::all())};
+            auto a_I = Arr {xt::view(A_I, i, xt::all())};
             auto H_r = Hdes_r[i];
             auto H_i = Hdes_i[i];
             auto t_r = xt::linalg::dot(a_R, h)() - H_r;
             auto t_i = xt::linalg::dot(a_I, h)() - H_i;
-            auto fj  = t_r * t_r + t_i * t_i;
+            auto fj = t_r * t_r + t_i * t_i;
             if (fj >= t)
             {
-                auto g = Arr{2. * (t_r * a_R + t_i * a_I)};
-                return std::tuple{std::move(g), fj - t, t};
+                auto g = Arr {2. * (t_r * a_R + t_i * a_I)};
+                return std::tuple {std::move(g), fj - t, t};
             }
             if (fmax < fj)
             {
@@ -91,15 +92,15 @@ public:
             }
         }
 
-        return std::tuple{std::move(gmax), 0., fmax};
+        return std::tuple {std::move(gmax), 0., fmax};
     }
 };
 
 TEST_CASE("FIR Filter", "[firfilter]")
 {
-    auto h0       = Arr{xt::zeros<double>({n})}; // initial x0
-    auto E        = ell(40., h0);
-    auto P        = my_fir_oracle();
+    auto h0 = Arr {xt::zeros<double>({n})}; // initial x0
+    auto E = ell(40., h0);
+    auto P = my_fir_oracle();
     auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
 
     CHECK(ell_info.feasible);

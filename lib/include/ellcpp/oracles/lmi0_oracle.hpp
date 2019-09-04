@@ -2,8 +2,8 @@
 #pragma once
 
 //#include "mat.hpp"
-#include <xtensor/xarray.hpp>
 #include "chol_ext.hpp"
+#include <xtensor/xarray.hpp>
 
 /*!
  * @brief  Oracle for Linear Matrix Inequality
@@ -13,26 +13,26 @@
  */
 class lmi0_oracle
 {
-    using Arr        = xt::xarray<double, xt::layout_type::row_major>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using shape_type = Arr::shape_type;
 
-private:
+  private:
     const std::vector<Arr>& _F;
-    size_t                  _n;
+    size_t _n;
 
-public:
+  public:
     chol_ext<> _Q;
 
-public:
+  public:
     /*!
      * @brief Construct a new lmi0 oracle object
      *
      * @param F
      */
     explicit lmi0_oracle(const std::vector<Arr>& F)
-        : _F{F},               //
-          _n{F[0].shape()[0]}, //
-          _Q(_n)               //
+        : _F {F}
+        , _n {F[0].shape()[0]}
+        , _Q(_n)
     {
     }
 

@@ -7,11 +7,12 @@
 #include <type_traits>
 #include <vector>
 // #include <xnetwork.hpp> // as xn
-#include <xnetwork/classes/graph.hpp>
 #include <xnetwork/classes/coreviews.hpp> // import AtlasView, AdjacencyView
+#include <xnetwork/classes/graph.hpp>
 #include <xnetwork/classes/reportviews.hpp> // import NodeView, EdgeView, DegreeView
 
-namespace xn {
+namespace xn
+{
 
 /*! Base class for directed graphs.
 
@@ -112,11 +113,12 @@ namespace xn {
 
     **Subclasses (Advanced):**
 
-    The DiGraphS class uses a container-of-container-of-container data structure.
-    The outer dict (node_dict) holds adjacency information keyed by node.
-    The next dict (adjlist_dict) represents the adjacency information and holds
-    edge data keyed by neighbor.  The inner dict (edge_attr_dict) represents
-    the edge data and holds edge attribute values keyed by attribute names.
+    The DiGraphS class uses a container-of-container-of-container data
+    structure. The outer dict (node_dict) holds adjacency information keyed by
+    node. The next dict (adjlist_dict) represents the adjacency information and
+    holds edge data keyed by neighbor.  The inner dict (edge_attr_dict)
+    represents the edge data and holds edge attribute values keyed by attribute
+    names.
 
     Each of these three dicts can be replaced in a subclass by a user defined
     dict-like object. In general, the dict-like features should be
@@ -125,7 +127,7 @@ namespace xn {
     holding the factory for that dict-like structure. The variable names are
     node_dict_factory, node_attr_dict_factory, adjlist_inner_dict_factory,
     adjlist_outer_dict_factory, edge_attr_dict_factory and
-   graph_attr_dict_factory.
+    graph_attr_dict_factory.
 
     node_dict_factory : function, (default: dict)
         Factory function to be used to create the dict containing node
@@ -196,15 +198,15 @@ namespace xn {
     a dictionary-like object.
 */
 template <typename nodeview_t, typename nodemap_t,
-          typename adjlist_inner_dict_factory = 
-                py::dict<Value_type<nodeview_t>, std::any>>
-class DiGraphS : public Graph<nodeview_t, nodemap_t,
-                              adjlist_inner_dict_factory> {
-    using _Base = Graph<nodeview_t, nodemap_t,
-                        adjlist_inner_dict_factory>;
+    typename adjlist_inner_dict_factory =
+        py::dict<Value_type<nodeview_t>, std::any>>
+class DiGraphS : public Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>
+{
+    using _Base = Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>;
     using Node = typename nodeview_t::value_type; // luk
     using graph_attr_dict_factory = typename _Base::graph_attr_dict_factory;
-    using adjlist_outer_dict_factory = typename _Base::adjlist_outer_dict_factory;
+    using adjlist_outer_dict_factory =
+        typename _Base::adjlist_outer_dict_factory;
     using key_type = typename _Base::key_type;
     using value_type = typename _Base::value_type;
 
@@ -223,13 +225,19 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         >>> G = xn::DiGraphS(v);  // or DiGraph, MultiGraph, MultiDiGraph, etc
 
         >>> r = py::range(100);
-        >>> G = xn::DiGraphS(r, r);  // or DiGraph, MultiGraph, MultiDiGraph, etc
+        >>> G = xn::DiGraphS(r, r);  // or DiGraph, MultiGraph, MultiDiGraph,
+       etc
     */
-    DiGraphS(const nodeview_t &Nodes, const nodemap_t &node_map)
-        : _Base{Nodes, node_map}, _succ{_Base::_adj} {}
+    DiGraphS(const nodeview_t& Nodes, const nodemap_t& node_map)
+        : _Base {Nodes, node_map}
+        , _succ {_Base::_adj}
+    {
+    }
 
-    DiGraphS(int num_nodes) 
-        : DiGraphS{py::range<int>(num_nodes), py::range<int>(num_nodes)} {}
+    DiGraphS(int num_nodes)
+        : DiGraphS {py::range<int>(num_nodes), py::range<int>(num_nodes)}
+    {
+    }
 
     /// @property
     /*! DiGraphS adjacency object holding the neighbors of each node.
@@ -247,7 +255,10 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
 
         For directed graphs, `G.adj` holds outgoing (successor) info.
     */
-    auto adj() const { return AdjacencyView(this->_succ); }
+    auto adj() const
+    {
+        return AdjacencyView(this->_succ);
+    }
 
     /// @property
     /*! Graph adjacency object holding the successors of each node.
@@ -267,9 +278,13 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
 
         For directed graphs, `G.adj` is identical to `G.succ`.
     */
-    auto succ() const { return AdjacencyView(this->_succ); }
+    auto succ() const
+    {
+        return AdjacencyView(this->_succ);
+    }
 
-    auto add_edge(const Node &u, const Node &v) {
+    auto add_edge(const Node& u, const Node& v)
+    {
         /*! Add an edge between u and v.
 
         The nodes u and v will be automatically added if (they are
@@ -321,14 +336,16 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         // add the edge
         // datadict = this->_adj[u].get(v, this->edge_attr_dict_factory());
         // datadict.update(attr);
-        if constexpr (std::is_same_v<key_type, value_type>) {
+        if constexpr (std::is_same_v<key_type, value_type>)
+        {
             // set
             this->_succ[this->_node_map[u]].insert(v);
             // this->_prev[this->_node_map[v]].insert(u);
         }
-        else {
+        else
+        {
             using T = typename adjlist_inner_dict_factory::mapped_type;
-            auto data = this->_adj[this->_node_map[u]].get(v, T{});
+            auto data = this->_adj[this->_node_map[u]].get(v, T {});
             this->_succ[this->_node_map[u]][v] = data;
             // this->_prev[this->_node_map[v]][u] = data;
         }
@@ -338,8 +355,10 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
 
         This is true if graph has the edge u->v.
     */
-    auto has_successor(const Node &u, const Node &v) -> bool {
-        return this->_node.contains(u) && this->_succ[this->_node_map[u]].contains(v);
+    auto has_successor(const Node& u, const Node& v) -> bool
+    {
+        return this->_node.contains(u) &&
+            this->_succ[this->_node_map[u]].contains(v);
     }
 
     /*! Returns an iterator over successor nodes of n.
@@ -365,12 +384,14 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         -----
         neighbors() and successors() are the same.
     */
-    auto& successors(const Node &n) {
-        return this->_succ[this->_node_map[n]]; 
+    auto& successors(const Node& n)
+    {
+        return this->_succ[this->_node_map[n]];
     }
 
-    const auto& successors(const Node &n) const {
-        return this->_succ[this->_node_map[n]]; 
+    const auto& successors(const Node& n) const
+    {
+        return this->_succ[this->_node_map[n]];
     }
 
     /// @property
@@ -433,7 +454,8 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         OutEdgeDataView([(0, 1)])
 
     */
-    auto edges() {
+    auto edges()
+    {
         return OutEdgeView(*this);
     }
 
@@ -441,7 +463,8 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
     //     return InEdgeView(*this);
     // }
 
-    auto degree(const Node &n) {
+    auto degree(const Node& n)
+    {
         return this->_succ[this->_node_map[n]].size();
     }
 
@@ -460,7 +483,8 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
         [];
 
     */
-    auto clear() {
+    auto clear()
+    {
         this->_succ.clear();
         // this->_pred.clear()
         // this->_node.clear();
@@ -468,18 +492,22 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t,
     }
 
     /*! Return true if (graph is a multigraph, false otherwise. */
-    auto is_multigraph() {
+    auto is_multigraph()
+    {
         return false;
     }
 
     /*! Return true if (graph is directed, false otherwise. */
-    auto is_directed() {
+    auto is_directed()
+    {
         return true;
     }
 };
 
 template <typename nodeview_t, typename nodemap_t,
-          typename adjlist_inner_dict_factory> DiGraphS(int ) 
--> DiGraphS<decltype(py::range<int>(1)), decltype(py::range<int>(1)), py::set<int>>;
+    typename adjlist_inner_dict_factory>
+DiGraphS(int)
+    ->DiGraphS<decltype(py::range<int>(1)), decltype(py::range<int>(1)),
+        py::set<int>>;
 
 } // namespace xn

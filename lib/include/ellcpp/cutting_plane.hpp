@@ -12,7 +12,7 @@
 struct Options
 {
     unsigned int max_it = 2000;
-    double       tol    = 1e-8;
+    double tol = 1e-8;
 };
 
 struct CInfo
@@ -20,12 +20,14 @@ struct CInfo
     xt::xarray<double, xt::layout_type::row_major> val;
 
     double value = 0.;
-    bool   feasible;
+    bool feasible;
     size_t num_iters;
-    int    status;
+    int status;
 
     CInfo(bool feasible, size_t num_iters, int status)
-        : feasible{feasible}, num_iters{num_iters}, status{status}
+        : feasible {feasible}
+        , num_iters {num_iters}
+        , status {status}
     {
     }
 };
@@ -40,13 +42,13 @@ struct CInfo
  * @param options
  * @return auto
  */
-template<typename Oracle, typename Space>
+template <typename Oracle, typename Space>
 auto bsearch(Oracle& Omega, Space& I, const Options& options = Options())
 {
     // assume monotone
     auto& [l, u] = I;
-    auto u_orig  = u;
-    auto niter   = 1U;
+    auto u_orig = u;
+    auto niter = 1U;
     for (; niter <= options.max_it; ++niter)
     {
         auto t = l + (u - l) / 2;
@@ -59,10 +61,13 @@ auto bsearch(Oracle& Omega, Space& I, const Options& options = Options())
             l = t;
         }
         auto tau = (u - l) / 2;
-        if (tau < options.tol) { break; }
+        if (tau < options.tol)
+        {
+            break;
+        }
     }
     auto feasible = (u != u_orig);
-    auto ret      = CInfo(feasible, niter, 0);
+    auto ret = CInfo(feasible, niter, 0);
 
     ret.value = u;
     return std::move(ret);
@@ -74,23 +79,27 @@ auto bsearch(Oracle& Omega, Space& I, const Options& options = Options())
  * @tparam Oracle
  * @tparam Space
  */
-template<typename Oracle, typename Space> //
+template <typename Oracle, typename Space> //
 class bsearch_adaptor
 {
-private:
+  private:
     Oracle& _P;
-    Space&  _S;
+    Space& _S;
     Options _options;
 
-public:
-    explicit bsearch_adaptor(Oracle& P, Space& S, const Options& options = Options())
-        : _P{P}, //
-          _S{S}, //
-          _options{options}
+  public:
+    explicit bsearch_adaptor(
+        Oracle& P, Space& S, const Options& options = Options())
+        : _P {P}
+        , _S {S}
+        , _options {options}
     {
     }
 
-    auto x_best() const { return _S.xc(); }
+    auto x_best() const
+    {
+        return _S.xc();
+    }
 
     auto operator()(double t)
     {
@@ -121,8 +130,9 @@ public:
  * @return feasible   solution found or not
  * @return status how is the final cut
  */
-template<typename Oracle, typename Space>
-auto cutting_plane_feas(Oracle& Omega, Space& S, const Options& options = Options())
+template <typename Oracle, typename Space>
+auto cutting_plane_feas(
+    Oracle& Omega, Space& S, const Options& options = Options())
 {
     bool feasible = false;
     auto niter = 1U, status = 0U;
@@ -137,7 +147,10 @@ auto cutting_plane_feas(Oracle& Omega, Space& S, const Options& options = Option
         }
         double tsq;
         std::tie(status, tsq) = S.update(g, h); // update S
-        if (status != 0) { break; }
+        if (status != 0)
+        {
+            break;
+        }
         if (tsq < options.tol)
         { // no more
             status = 2;
@@ -164,13 +177,14 @@ auto cutting_plane_feas(Oracle& Omega, Space& S, const Options& options = Option
  * @return feasible   solution found or not
  * @return status how is the final cut
  */
-template<typename Oracle, typename Space>
-auto cutting_plane_dc(Oracle& Omega, Space& S, double t, const Options& options = Options())
+template <typename Oracle, typename Space>
+auto cutting_plane_dc(
+    Oracle& Omega, Space& S, double t, const Options& options = Options())
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
     bool feasible = false;
-    auto x_best   = Arr{S.xc()};
+    auto x_best = Arr {S.xc()};
     auto niter = 1U, status = 0U;
     for (; niter <= options.max_it; ++niter)
     {
@@ -178,20 +192,23 @@ auto cutting_plane_dc(Oracle& Omega, Space& S, double t, const Options& options 
         if (t != t1)
         { // best t obtained
             feasible = true;
-            t        = t1;
-            x_best   = S.xc();
+            t = t1;
+            x_best = S.xc();
         }
         double tsq;
         std::tie(status, tsq) = S.update(g, h);
-        if (status == 1) { break; }
+        if (status == 1)
+        {
+            break;
+        }
         if (tsq < options.tol)
         { // no more
             status = 2;
             break;
         }
     }
-    auto ret  = CInfo(feasible, niter, status);
-    ret.val   = std::move(x_best);
+    auto ret = CInfo(feasible, niter, status);
+    ret.val = std::move(x_best);
     ret.value = t;
     return std::move(ret);
 } // END
@@ -225,15 +242,16 @@ auto cutting_plane_dc(Oracle& Omega, Space& S, double t, const Options& options 
  * @param options
  * @return auto
  */
-template<typename Oracle, typename Space>
-auto cutting_plane_q(Oracle& Omega, Space& S, double t, const Options& options = Options())
+template <typename Oracle, typename Space>
+auto cutting_plane_q(
+    Oracle& Omega, Space& S, double t, const Options& options = Options())
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
     auto feasible = false;
-    auto x_best   = Arr{S.xc()};
-    auto status   = 1U;
-    auto niter    = 1U;
+    auto x_best = Arr {S.xc()};
+    auto status = 1U;
+    auto niter = 1U;
     for (; niter <= options.max_it; ++niter)
     {
         auto [g, h, t1, x0, loop] = Omega(S.xc(), t, (status != 3) ? 0 : 1);
@@ -253,20 +271,23 @@ auto cutting_plane_q(Oracle& Omega, Space& S, double t, const Options& options =
         if (t != t1)
         { // best t obtained
             feasible = true;
-            t        = t1;
-            x_best   = x0;
+            t = t1;
+            x_best = x0;
         }
         double tsq;
         std::tie(status, tsq) = S.update(g, h);
-        if (status == 1) { break; }
+        if (status == 1)
+        {
+            break;
+        }
         if (tsq < options.tol)
         {
             status = 2;
             break;
         }
     }
-    auto ret  = CInfo(feasible, niter, status);
-    ret.val   = std::move(x_best);
+    auto ret = CInfo(feasible, niter, status);
+    ret.val = std::move(x_best);
     ret.value = t;
     return std::move(ret);
 } // END

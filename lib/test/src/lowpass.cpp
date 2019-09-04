@@ -50,9 +50,9 @@ static const auto PI = std::acos(-1);
 // filter specs (for a low-pass filter)
 // *********************************************************************
 // number of FIR coefficients (including zeroth)
-static const auto N            = 48;
-static const auto wpass        = 0.12 * PI; // end of passband
-static const auto wstop        = 0.20 * PI; // start of stopband
+static const auto N = 48;
+static const auto wpass = 0.12 * PI; // end of passband
+static const auto wstop = 0.20 * PI; // start of stopband
 static const auto delta0_wpass = 0.125;
 static const auto delta0_wstop = 0.125;
 // maximum passband ripple in dB (+/- around 0 dB)
@@ -65,22 +65,22 @@ static const auto delta2 = 20 * std::log10(delta0_wstop);
 // *********************************************************************
 // rule-of-thumb discretization (from Cheney's Approximation Theory)
 static const auto m = 15 * N;
-static const auto w = Arr{xt::linspace<double>(0, PI, m)}; // omega
+static const auto w = Arr {xt::linspace<double>(0, PI, m)}; // omega
 
 // A is the matrix used to compute the power spectrum
 // A(w,:) = [1 2*cos(w) 2*cos(2*w) ... 2*cos(N*w)]
 static Arr An = 2 * xt::cos(xt::linalg::outer(w, xt::arange(1, N)));
-static Arr A  = xt::concatenate(xt::xtuple(xt::ones<double>({m, 1}), An), 1);
+static Arr A = xt::concatenate(xt::xtuple(xt::ones<double>({m, 1}), An), 1);
 
 // passband 0 <= w <= w_pass
 static const auto ind_p = xt::where(w <= wpass)[0]; // passband
-static const auto Lp    = std::pow(10, -delta / 20);
-static const auto Up    = std::pow(10, +delta / 20);
-static const auto Ap    = Arr{xt::view(A, xt::range(0, ind_p.size()), xt::all())};
+static const auto Lp = std::pow(10, -delta / 20);
+static const auto Up = std::pow(10, +delta / 20);
+static const auto Ap = Arr {xt::view(A, xt::range(0, ind_p.size()), xt::all())};
 
 // stopband (w_stop <= w)
-static auto       ind_s = xt::where(wstop <= w)[0]; // stopband
-static const auto Sp    = std::pow(10, delta2 / 20);
+static auto ind_s = xt::where(wstop <= w)[0]; // stopband
+static const auto Sp = std::pow(10, delta2 / 20);
 
 using xt::placeholders::_;
 static Arr As = xt::view(A, xt::range(ind_s[0], _), xt::all());
@@ -92,7 +92,7 @@ static Arr As = xt::view(A, xt::range(ind_s[0], _), xt::all());
 // auto ind_nr = np.setdiff1d(ind_nr, ind_s);
 static auto ind_beg = ind_p[ind_p.size() - 1];
 static auto ind_end = ind_s[0];
-static Arr  Anr     = xt::view(A, xt::range(ind_beg + 1, ind_end), xt::all());
+static Arr Anr = xt::view(A, xt::range(ind_beg + 1, ind_end), xt::all());
 
 static const auto Lpsq = Lp * Lp;
 static const auto Upsq = Up * Up;
@@ -103,20 +103,21 @@ static const auto Spsq = Sp * Sp;
 
 auto run_lowpass(bool use_parallel_cut)
 {
-    auto r0      = Arr{xt::zeros<double>({N})}; // initial x0
-    auto E       = ell(40., r0);
-    auto P       = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
+    auto r0 = Arr {xt::zeros<double>({N})}; // initial x0
+    auto E = ell(40., r0);
+    auto P = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
     auto options = Options();
 
-    options.max_it      = 50000;
+    options.max_it = 50000;
     E._use_parallel_cut = use_parallel_cut;
     // options.tol = 1e-8;
 
-    auto [r, Spsq_new, feasible, num_iters, status] = cutting_plane_dc(P, E, Spsq, options);
+    auto [r, Spsq_new, feasible, num_iters, status] =
+        cutting_plane_dc(P, E, Spsq, options);
     // std::cout << "lowpass r: " << r << '\n';
     // auto Ustop = 20 * std::log10(std::sqrt(Spsq_new));
     // std::cout << "Min attenuation in the stopband is " << Ustop << " dB.\n";
-    return std::tuple{feasible, num_iters};
+    return std::tuple {feasible, num_iters};
 }
 
 TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]")

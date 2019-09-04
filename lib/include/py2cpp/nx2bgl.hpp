@@ -14,16 +14,19 @@ namespace xn
  *
  * @tparam Graph
  */
-template<typename Graph>
+template <typename Graph>
 class VertexView : public Graph
 {
-public:
+  public:
     /*!
      * @brief Construct a new Vertex View object
      *
      * @param G
      */
-    explicit VertexView(Graph& G) : Graph(G) {}
+    explicit VertexView(Graph& G)
+        : Graph(G)
+    {
+    }
 
     /*!
      * @brief
@@ -75,19 +78,22 @@ public:
  *
  * @tparam Graph
  */
-template<typename Graph>
+template <typename Graph>
 class EdgeView
 {
-private:
+  private:
     const Graph& _G;
 
-public:
+  public:
     /*!
      * @brief Construct a new Edge View object
      *
      * @param G
      */
-    explicit EdgeView(const Graph& G) : _G{G} {}
+    explicit EdgeView(const Graph& G)
+        : _G {G}
+    {
+    }
 
     /*!
      * @brief
@@ -140,21 +146,25 @@ public:
  * @tparam Vertex
  * @tparam Graph
  */
-template<typename Vertex, typename Graph>
+template <typename Vertex, typename Graph>
 class AtlasView
 {
-private:
-    Vertex       _v;
+  private:
+    Vertex _v;
     const Graph& _G;
 
-public:
+  public:
     /*!
      * @brief Construct a new Atlas View object
      *
      * @param v
      * @param G
      */
-    explicit AtlasView(Vertex v, const Graph& G) : _v{v}, _G{G} {}
+    explicit AtlasView(Vertex v, const Graph& G)
+        : _v {v}
+        , _G {G}
+    {
+    }
 
     /*!
      * @brief
@@ -206,12 +216,13 @@ public:
  *
  * @tparam Graph
  */
-template<typename Graph>
+template <typename Graph>
 class grAdaptor : public VertexView<Graph>
 {
-public:
+  public:
     using Vertex = typename boost::graph_traits<Graph>::vertex_descriptor;
-    // using edge_wt_t = decltype( boost::get(boost::edge_weight, std::declval<Graph>()) );
+    // using edge_wt_t = decltype( boost::get(boost::edge_weight,
+    // std::declval<Graph>()) );
 
     /*!
      * @brief Construct a new gr Adaptor object
@@ -224,21 +235,30 @@ public:
      *
      * @param G
      */
-    explicit grAdaptor(Graph& G) : VertexView<Graph>(G) {}
+    explicit grAdaptor(Graph& G)
+        : VertexView<Graph>(G)
+    {
+    }
 
     /*!
      * @brief
      *
      * @return auto
      */
-    auto number_of_edges() const { return boost::num_edges(*this); }
+    auto number_of_edges() const
+    {
+        return boost::num_edges(*this);
+    }
 
     /*!
      * @brief
      *
      * @return EdgeView<Graph>
      */
-    EdgeView<Graph> edges() const { return EdgeView<Graph>(*this); }
+    EdgeView<Graph> edges() const
+    {
+        return EdgeView<Graph>(*this);
+    }
 
     /*!
      * @brief
@@ -258,14 +278,20 @@ public:
      * @param v
      * @return auto
      */
-    auto add_edge(int u, int v) { return boost::add_edge(u, v, *this); }
+    auto add_edge(int u, int v)
+    {
+        return boost::add_edge(u, v, *this);
+    }
 
     /*!
      * @brief
      *
      * @return Vertex
      */
-    static Vertex null_vertex() { return boost::graph_traits<Graph>::null_vertex(); }
+    static Vertex null_vertex()
+    {
+        return boost::graph_traits<Graph>::null_vertex();
+    }
 
     /*!
      * @brief
@@ -274,7 +300,7 @@ public:
      * @param e
      * @return Vertex
      */
-    template<typename Edge>
+    template <typename Edge>
     Vertex source(const Edge& e) const
     {
         return boost::source(e, *this);
@@ -287,7 +313,7 @@ public:
      * @param e
      * @return Vertex
      */
-    template<typename Edge>
+    template <typename Edge>
     Vertex target(const Edge& e) const
     {
         return boost::target(e, *this);
@@ -300,12 +326,12 @@ public:
      * @param e
      * @return auto
      */
-    template<typename Edge>
+    template <typename Edge>
     auto end_points(const Edge& e) const
     {
         auto s = boost::source(e, *this);
         auto t = boost::target(e, *this);
-        return std::pair{s, t};
+        return std::pair {s, t};
     }
 };
 
