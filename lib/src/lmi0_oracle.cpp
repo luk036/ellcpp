@@ -9,7 +9,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param x
  * @return auto
  */
-auto lmi0_oracle::operator()(const Arr& x) -> std::tuple<Arr, double, bool>
+std::tuple<Arr, double, bool> lmi0_oracle::operator()(const Arr& x)
 {
     auto n = x.size();
 

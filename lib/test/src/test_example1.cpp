@@ -10,7 +10,8 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 auto my_oracle(const Arr& z, double t)
 {
-    auto x = z[0], y = z[1];
+    auto x = z[0];
+    auto y = z[1];
 
     // constraint 1: x + y <= 3
     auto fj = x + y - 3.;

@@ -92,7 +92,7 @@ std::vector<Arr> construct_distance_matrix(const Arr &s, size_t m) {
         D *= D1;
         Sig.push_back(D);
     }
-    return std::move(Sig);
+    return Sig;
 }
 
 /*!
@@ -222,7 +222,7 @@ class mle_oracle {
         : _Y{Y},      //
           _Sig{Sig},  //
           _lmi0(Sig), //
-          _lmi(Sig, std::move(2 * Y)) {}
+          _lmi(Sig, 2 * Y) {}
 
     /*!
      * @brief
@@ -285,7 +285,7 @@ class mle_oracle {
  * @param P
  * @return auto
  */
-auto mle_corr_core(const Arr &Y, std::size_t m, mle_oracle &P) {
+auto mle_corr_core(const Arr& /*Y*/, std::size_t m, mle_oracle &P) {
     auto x = Arr{xt::zeros<double>({m})};
     x(0) = 4.;
     auto E = ell(500., x);

@@ -62,14 +62,14 @@ TEST_CASE("Test Optimal Scaling", "[test_optscaling]")
     double    elem[]       = {1.2, 2.3, 3.4, -4.5, 5.6};
     const auto num_of_nodes = sizeof(elem) / sizeof(double);
     double    cost[num_of_nodes];
-    for (auto i = 0; i < num_of_nodes; ++i)
+    for (size_t i = 0U; i < num_of_nodes; ++i)
     {
         cost[i] = std::log(std::abs(elem[i]));
     }
     auto edge_id = boost::get(boost::id_tag, G);
     auto cost_pa = IterMap{cost, edge_id};
 
-    auto get_cost = [&](const xn::grAdaptor<graph_t>& G, const auto& e) -> double {
+    auto get_cost = [&](const xn::grAdaptor<graph_t>& /*G*/, const auto& e) -> double {
         return boost::get(cost_pa, e);
     };
 

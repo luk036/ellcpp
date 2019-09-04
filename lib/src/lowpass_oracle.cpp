@@ -10,7 +10,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param Spsq
  * @return auto
  */
-auto lowpass_oracle::operator()(const Arr& x, double Spsq) const -> std::tuple<Arr, Arr, double>
+std::tuple<Arr, Arr, double> lowpass_oracle::operator()(const Arr& x, double Spsq) const
 {
     using xt::linalg::dot;
 

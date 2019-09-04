@@ -11,7 +11,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param x
  * @return std::tuple<Arr, double, bool>
  */
-auto qmi_oracle::operator()(const Arr& x) -> std::tuple<Arr, double, bool>
+std::tuple<Arr, double, bool> qmi_oracle::operator()(const Arr& x)
 {
     using xt::linalg::dot;
 

@@ -172,19 +172,17 @@ public:
         // if (!this->sqrt_free) {
         //     return Mat{this->T};
         // }
+        auto M = Mat{xt::zeros<double>({this->n, this->n})};
 
-        auto n = this->n;
-        auto M = Mat{xt::zeros<double>({n, n})};
-
-        for (auto i = 0U; i < n; ++i)
+        for (auto i = 0U; i < this->n; ++i)
         {
             M(i, i) = std::sqrt(this->T(i, i));
-            for (auto j = i + 1; j < n; ++j)
+            for (auto j = i + 1; j < this->n; ++j)
             {
                 M(i, j) = this->T(i, j) * M(i, i);
             }
         }
 
-        return std::move(M);
+        return M;
     }
 };

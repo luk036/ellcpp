@@ -61,7 +61,7 @@ class profit_rb_oracle
 private:
     Arr    _uie;
     Arr    _a;
-    double _uie3;
+    // double _uie3;
 
     profit_oracle _P;
 

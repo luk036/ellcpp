@@ -36,19 +36,19 @@ auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, T&& /*! dummy */)
     using edge_t = decltype(*std::begin(G.edges()));
     edge_t e0    = *std::begin(G.edges());
 
-    using cost_t = decltype(get_cost(G, e0));
-    using time_t = decltype(get_time(G, e0));
+    using cost_T = decltype(get_cost(G, e0));
+    using time_T = decltype(get_time(G, e0));
 
-    cost_t c0 = get_cost(G, e0);
-    time_t t0 = get_time(G, e0);
+    cost_T c0 = get_cost(G, e0);
+    time_T t0 = get_time(G, e0);
 
     auto calc_weight = [&](const Graph&, T r, const auto& e) {
         return get_cost(G, e) - r * get_time(G, e);
     };
 
     auto calc_ratio = [&](const Graph& G, auto& C) {
-        cost_t total_cost = cost_t(0);
-        time_t total_time = time_t(0);
+        cost_T total_cost = cost_T(0);
+        time_T total_time = time_T(0);
         for (const auto& e : C)
             total_cost += get_cost(G, e);
         for (const auto& e : C)
@@ -58,13 +58,13 @@ auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, T&& /*! dummy */)
 
     // auto max_cost = *std::max_element(cost.begin(), cost.end());
     // auto min_time = *std::min_element(time.begin(), time.end());
-    cost_t max_cost = c0;
-    time_t min_time = t0;
+    cost_T max_cost = c0;
+    time_T min_time = t0;
 
     for (const auto& e : G.edges())
     {
-        cost_t c = get_cost(G, e);
-        time_t t = get_time(G, e);
+        cost_T c = get_cost(G, e);
+        time_T t = get_time(G, e);
         // std::cout << "mincost: c = " << c << '\n';
         if (max_cost < c) max_cost = c;
         if (min_time > t) min_time = t;

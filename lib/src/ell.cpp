@@ -18,7 +18,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param tsq
  * @return ell::return_t
  */
-auto ell::calc_ll_core(double b0, double b1, double tsq) const -> ell::return_t
+ell::return_t ell::calc_ll_core(double b0, double b1, double tsq) const
 {
     auto b1sq = b1 * b1;
     if (b1sq > tsq || !this->_use_parallel_cut) { return this->calc_dc(b0, tsq); }
@@ -44,7 +44,7 @@ auto ell::calc_ll_core(double b0, double b1, double tsq) const -> ell::return_t
     auto bav   = (b0 + b1) / 2;
     auto temp  = n * bav * (b1 - b0);
     auto xi    = std::sqrt(t0 * t1 + temp * temp);
-    auto sigma = (n + (tsq - b0b1 - xi) / (2 * bav * bav)) / (n + 1);
+    auto sigma = (n + (tsq - b0b1 - xi) / (2 * bav * bav)) / (n + 1.);
     auto rho   = sigma * bav;
     auto delta = this->_c1 * ((t0 + t1) / 2 + xi / n) / tsq;
     params     = std::tuple{rho, sigma, delta};
@@ -59,12 +59,12 @@ auto ell::calc_ll_core(double b0, double b1, double tsq) const -> ell::return_t
  * @param tsq
  * @return ell::return_t
  */
-auto ell::calc_ll_cc(double b1, double b1sq, double tsq) const -> ell::return_t
+ell::return_t ell::calc_ll_cc(double b1, double b1sq, double tsq) const
 {
     auto n      = this->_n;
     auto temp   = n * b1sq / 2;
     auto xi     = std::sqrt(tsq * (tsq - b1sq) + temp * temp);
-    auto sigma  = (n + 2 * (tsq - xi) / b1sq) / (n + 1);
+    auto sigma  = (n + 2 * (tsq - xi) / b1sq) / (n + 1.);
     auto rho    = sigma * b1 / 2;
     auto delta  = this->_c1 * (tsq - b1sq / 2 + xi / n) / tsq;
     auto params = ell::params_t{rho, sigma, delta};
@@ -78,7 +78,7 @@ auto ell::calc_ll_cc(double b1, double b1sq, double tsq) const -> ell::return_t
  * @param tsq
  * @return ell::return_t
  */
-auto ell::calc_dc(double beta, double tsq) const -> ell::return_t
+ell::return_t ell::calc_dc(double beta, double tsq) const
 {
     auto params = std::tuple{0., 0., 0.};
     auto tau    = std::sqrt(tsq);
@@ -97,7 +97,7 @@ auto ell::calc_dc(double beta, double tsq) const -> ell::return_t
         return std::tuple{3, std::move(params)}; // no effect
     }
 
-    auto rho   = gamma / (n + 1);
+    auto rho   = gamma / (n + 1.);
     auto sigma = 2 * rho / (tau + beta);
     auto delta = this->_c1 * (tsq - beta * beta) / tsq;
     auto ret   = ell::params_t{rho, sigma, delta};
@@ -110,7 +110,7 @@ auto ell::calc_dc(double beta, double tsq) const -> ell::return_t
  * @param tsq
  * @return ell::return_t
  */
-auto ell::calc_cc(double tsq) const -> ell::return_t
+ell::return_t ell::calc_cc(double tsq) const 
 {
     auto np1    = this->_n + 1;
     auto sigma  = 2. / np1;

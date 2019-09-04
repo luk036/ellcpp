@@ -18,7 +18,7 @@ private:
     mutable unsigned int _i_Anr{0};
     mutable unsigned int _i_As{0};
     mutable unsigned int _i_Ap{0};
-    mutable unsigned int _count{0};
+    // mutable unsigned int _count{0};
 
     const Arr& _Ap;
     const Arr& _As;

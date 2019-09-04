@@ -33,7 +33,7 @@ public:
     {
     }
 
-    auto operator()(Arr& x, double t) -> std::tuple<Arr, double, bool>
+    std::tuple<Arr, double, bool> operator()(Arr& x, double t)
     {
         using xt::linalg::dot;
 

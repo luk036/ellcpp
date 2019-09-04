@@ -10,7 +10,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param t
  * @return std::tuple<Arr, double, double>
  */
-auto profit_oracle::operator()(const Arr& y, double t) const -> std::tuple<Arr, double, double>
+std::tuple<Arr, double, double> profit_oracle::operator()(const Arr& y, double t) const
 {
     // auto fj = y[0] - this->_log_k; // constraint
     if (auto fj = y[0] - this->_log_k; fj > 0.)
@@ -42,8 +42,8 @@ auto profit_oracle::operator()(const Arr& y, double t) const -> std::tuple<Arr, 
  * @param t
  * @return auto
  */
-auto profit_q_oracle::operator()(const Arr& y, double t, int /*unused*/) const
-    -> std::tuple<Arr, double, double, Arr, int>
+std::tuple<Arr, double, double, Arr, int>
+profit_q_oracle::operator()(const Arr& y, double t, int /*unused*/) const
 {
     auto x = Arr{xt::round(xt::exp(y))};
     if (x[0] == 0.) { x[0] = 1.; }

@@ -1,5 +1,11 @@
 # Distributed under the MIT License (See accompanying file /LICENSE )
 
+# Adds convenience methods, see cmake/cleanCppExtensions.cmake
+include(cleanCppExtensions)
+
+# Creates options to turn on sanitizers, see cmake/sanitizers.cmake
+include(sanitizers)
+
 # CMake build : library
 
 #configure variables
@@ -28,3 +34,9 @@ set (LIB_NAME ${LIB_NAME} PARENT_SCOPE)
 #test
 enable_testing ()
 add_subdirectory (test)
+
+#------------------------------------------------------------------------------
+# Other MISC targets
+
+# Adds misc targets: format, cppcheck, tidy, see cmake/cleanCppExtensions.cmake
+addMiscTargets()
