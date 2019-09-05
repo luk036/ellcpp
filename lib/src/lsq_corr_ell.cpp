@@ -25,7 +25,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @return std::tuple<Arr, Arr>
  */
 std::tuple<Arr, Arr> create_2d_isotropic(
-    size_t nx = 10u, size_t ny = 8u, size_t N = 3000u)
+    size_t nx = 10U, size_t ny = 8U, size_t N = 3000U)
 {
     using xt::linalg::dot;
 
@@ -57,7 +57,7 @@ std::tuple<Arr, Arr> create_2d_isotropic(
 
     auto A = xt::linalg::cholesky(Sig);
     auto Y = Arr {xt::zeros<double>({n, n})};
-    for (auto k = 0U; k < N; ++k)
+    for (size_t k = 0U; k < N; ++k)
     {
         auto x = var * xt::random::randn<double>({n});
         auto y = dot(A, x) + tau * xt::random::randn<double>({n});
@@ -80,9 +80,9 @@ std::vector<Arr> construct_distance_matrix(const Arr& s, size_t m)
     auto n = s.shape()[0];
     // c = cvx.Variable(m)
     auto D1 = Arr {xt::zeros<double>({n, n})};
-    for (auto i = 0U; i < n; ++i)
+    for (size_t i = 0U; i < n; ++i)
     {
-        for (auto j = i + 1; j < n; ++j)
+        for (size_t j = i + 1; j < n; ++j)
         {
             auto h = xt::view(s, j, xt::all()) - xt::view(s, i, xt::all());
             auto d = std::sqrt(xt::linalg::dot(h, h)());
@@ -95,7 +95,7 @@ std::vector<Arr> construct_distance_matrix(const Arr& s, size_t m)
     auto Sig = std::vector {D};
     Sig.reserve(m);
 
-    for (auto i = 0U; i < m - 1; ++i)
+    for (size_t i = 0U; i < m - 1; ++i)
     {
         D *= D1;
         Sig.push_back(D);
@@ -293,11 +293,11 @@ class mle_oracle
 
         Arr g = xt::zeros<double>({n});
 
-        for (auto i = 0U; i < n; ++i)
+        for (size_t i = 0U; i < n; ++i)
         {
             auto SFsi = dot(S, this->_Sig[i]);
             g(i) = xt::linalg::trace(SFsi)();
-            for (auto k = 0U; k < m; ++k)
+            for (size_t k = 0U; k < m; ++k)
             {
                 g(i) -= dot(
                     xt::view(SFsi, k, xt::all()), xt::view(SY, xt::all(), k))();

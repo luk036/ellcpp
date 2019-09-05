@@ -15,7 +15,7 @@ std::tuple<Arr, double, bool> lmi0_oracle::operator()(const Arr& x)
 
     auto getA = [&, this](unsigned i, unsigned j) -> double {
         auto a = 0.;
-        for (auto k = 0U; k < n; ++k)
+        for (size_t k = 0U; k < n; ++k)
         {
             a += this->_F[k](i, j) * x(k);
         }
@@ -30,7 +30,7 @@ std::tuple<Arr, double, bool> lmi0_oracle::operator()(const Arr& x)
         return std::tuple {std::move(g), -1., true};
     }
     auto ep = this->_Q.witness();
-    for (auto i = 0U; i < n; ++i)
+    for (size_t i = 0U; i < n; ++i)
     {
         g(i) = -_Q.sym_quad(this->_F[i]);
     }

@@ -24,7 +24,7 @@ std::tuple<Arr, double, bool> qmi_oracle::operator()(const Arr& x)
         {
             this->_count = i + 1;
             myview(this->_Fx, i) = myview(this->_F0, i);
-            for (auto k = 0U; k < this->_nx; ++k)
+            for (size_t k = 0U; k < this->_nx; ++k)
             {
                 myview(this->_Fx, i) -= myview(this->_F[k], i) * x(k);
             }
@@ -50,7 +50,7 @@ std::tuple<Arr, double, bool> qmi_oracle::operator()(const Arr& x)
     auto v = xt::view(this->_Q.v, xt::range(start, stop));
     auto Fxp = myview(this->_Fx, xt::range(start, stop));
     auto Av = dot(v, Fxp);
-    for (auto k = 0U; k < this->_nx; ++k)
+    for (size_t k = 0U; k < this->_nx; ++k)
     {
         auto Fkp = myview(this->_F[k], xt::range(start, stop));
         g(k) = -2 * dot(dot(v, Fkp), Av)();
