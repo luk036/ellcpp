@@ -34,12 +34,9 @@ class profit_oracle
      */
     profit_oracle(double p, double A, double k, Arr a, Arr v)
         : _log_pA {std::log(p * A)}
-        , //
-        _log_k {std::log(k)}
-        , //
-        _v {v}
-        ,      //
-        _a {a} //
+        , _log_k {std::log(k)}
+        , _v {v}
+        , _a {a}
     {
     }
 
@@ -100,10 +97,8 @@ class profit_rb_oracle
     auto operator()(const Arr& y, double t)
     {
         auto a_rb = _a;
-        for (auto&& i : {0, 1})
-        {
-            a_rb[i] += y[i] > 0 ? -_uie[i] : _uie[i];
-        }
+        a_rb[0] += y[0] > 0 ? -_uie[0] : _uie[0];
+        a_rb[1] += y[1] > 0 ? -_uie[1] : _uie[1];
         _P._a = a_rb;
         return _P(y, t);
     }

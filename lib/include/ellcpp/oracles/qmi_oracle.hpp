@@ -10,7 +10,9 @@
  * @brief Oracle for Quadratic Matrix Inequality
  *
  *   F(x).T * F(x) <= I*t
+ *
  * where
+ *
  *   F(x) = F0 - (F1 * x1 + F2 * x2 + ...)
  */
 class qmi_oracle

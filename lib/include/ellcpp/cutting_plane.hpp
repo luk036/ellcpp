@@ -15,6 +15,10 @@ struct Options
     double tol = 1e-8;
 };
 
+/**
+ * @brief CInfo
+ * 
+ */
 struct CInfo
 {
     xt::xarray<double, xt::layout_type::row_major> val;
@@ -24,6 +28,13 @@ struct CInfo
     size_t num_iters;
     int status;
 
+    /**
+     * @brief Construct a new CInfo object
+     * 
+     * @param feasible 
+     * @param num_iters 
+     * @param status 
+     */
     CInfo(bool feasible, size_t num_iters, int status)
         : feasible {feasible}
         , num_iters {num_iters}
@@ -88,6 +99,13 @@ class bsearch_adaptor
     Options _options;
 
   public:
+    /**
+     * @brief Construct a new bsearch adaptor object
+     * 
+     * @param P 
+     * @param S 
+     * @param options 
+     */
     explicit bsearch_adaptor(
         Oracle& P, Space& S, const Options& options = Options())
         : _P {P}
@@ -96,11 +114,22 @@ class bsearch_adaptor
     {
     }
 
+    /**
+     * @brief get best x
+     * 
+     * @return auto 
+     */
     auto x_best() const
     {
         return _S.xc();
     }
 
+    /**
+     * @brief 
+     * 
+     * @param t 
+     * @return auto 
+     */
     auto operator()(double t)
     {
         Space S(_S);

@@ -118,7 +118,7 @@ class ell
      * @param tsq
      * @return return_t
      */
-    return_t calc_ll_core(double b0, double b1, double tsq) const;
+    return_t __calc_ll_core(double b0, double b1, double tsq) const;
 
     /*!
      * @brief Parallel Cut, one of them is central
@@ -128,7 +128,7 @@ class ell
      * @param tsq
      * @return return_t
      */
-    return_t calc_ll_cc(double b1, double t1, double tsq) const;
+    return_t __calc_ll_cc(double b1, double t1, double tsq) const;
 
     /*!
      * @brief Deep Cut
@@ -137,7 +137,7 @@ class ell
      * @param tsq
      * @return return_t
      */
-    return_t calc_dc(double b0, double tsq) const;
+    return_t __calc_dc(double b0, double tsq) const;
 
     /*!
      * @brief Central Cut
@@ -145,7 +145,7 @@ class ell
      * @param tsq
      * @return return_t
      */
-    return_t calc_cc(double tsq) const;
+    return_t __calc_cc(double tsq) const;
 }; // } ell
 
 /*!

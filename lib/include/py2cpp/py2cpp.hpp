@@ -93,6 +93,14 @@ constexpr auto enumerate(T&& iterable)
 //     return iterable_wrapper{stop};
 // }
 
+/**
+ * @brief range
+ * 
+ * @tparam T 
+ * @param start 
+ * @param stop 
+ * @return constexpr auto 
+ */
 template <typename T>
 inline constexpr auto range(T start, T stop)
 {
@@ -154,6 +162,13 @@ inline constexpr auto range(T start, T stop)
     return iterable_wrapper {start, stop};
 }
 
+/**
+ * @brief range
+ * 
+ * @tparam T 
+ * @param stop 
+ * @return constexpr auto 
+ */
 template <typename T>
 inline constexpr auto range(T stop)
 {
@@ -290,6 +305,11 @@ set(std::initializer_list<Key>)->set<Key>;
 // template <typename Key>
 // set(std::initializer_list<const char*> ) -> set<std::string>;
 
+/**
+ * @brief key_iterator
+ * 
+ * @tparam Iter 
+ */
 template <typename Iter>
 struct key_iterator : Iter
 {
