@@ -1,5 +1,5 @@
 language: cpp
-dist: trusty
+dist: xenial
 
 cache: # see https://docs.travis-ci.com/user/caching/
   - directories:
@@ -48,11 +48,13 @@ matrix:
     - os: linux
       addons: *clang8
       env: COMPILER=clang CLANG=8 BLAS=OpenBLAS BUILD_TYPE='Release'
+
 env:
   global:
     - MINCONDA_VERSION="latest"
     - MINCONDA_LINUX="Linux-x86_64"
     - MINCONDA_OSX="MacOSX-x86_64"
+
 before_install:
   - |
     # Configure build variables
@@ -66,6 +68,7 @@ before_install:
     elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       export CXX=clang++ CC=clang;
     fi
+
 install:
   - mkdir -p $HOME/.cache
   - touch $HOME/.cache/mydependency.so
@@ -96,6 +99,7 @@ install:
     fi
   - conda install lapack -c conda-forge
   - conda install libboost -c conda-forge
+
 script:
   - |
     if [[ "$BUILD_TYPE" == "Coverage" ]]; then
@@ -106,6 +110,7 @@ script:
       make -j2
       ctest -V -j 2
     fi
+
 after_success:
   - |
     if [[ "$BUILD_TYPE" == "Coverage" ]]; then

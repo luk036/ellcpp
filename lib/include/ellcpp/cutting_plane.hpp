@@ -17,7 +17,7 @@ struct Options
 
 /**
  * @brief CInfo
- * 
+ *
  */
 struct CInfo
 {
@@ -30,10 +30,10 @@ struct CInfo
 
     /**
      * @brief Construct a new CInfo object
-     * 
-     * @param feasible 
-     * @param num_iters 
-     * @param status 
+     *
+     * @param feasible
+     * @param num_iters
+     * @param status
      */
     CInfo(bool feasible, size_t num_iters, int status)
         : feasible {feasible}
@@ -101,10 +101,10 @@ class bsearch_adaptor
   public:
     /**
      * @brief Construct a new bsearch adaptor object
-     * 
-     * @param P 
-     * @param S 
-     * @param options 
+     *
+     * @param P
+     * @param S
+     * @param options
      */
     explicit bsearch_adaptor(
         Oracle& P, Space& S, const Options& options = Options())
@@ -116,8 +116,8 @@ class bsearch_adaptor
 
     /**
      * @brief get best x
-     * 
-     * @return auto 
+     *
+     * @return auto
      */
     auto x_best() const
     {
@@ -125,10 +125,10 @@ class bsearch_adaptor
     }
 
     /**
-     * @brief 
-     * 
-     * @param t 
-     * @return auto 
+     * @brief
+     *
+     * @param t
+     * @return auto
      */
     auto operator()(double t)
     {
