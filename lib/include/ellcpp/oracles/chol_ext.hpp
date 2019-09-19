@@ -1,7 +1,6 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include <cassert>
 #include <stdexcept>
 #include <xtensor/xarray.hpp>
 

@@ -1,3 +1,4 @@
+#include <cassert>
 #include <ellcpp/oracles/qmi_oracle.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 

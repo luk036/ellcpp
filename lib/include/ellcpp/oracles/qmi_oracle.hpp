@@ -2,7 +2,6 @@
 #pragma once
 
 #include "chol_ext.hpp"
-#include <cassert>
 #include <vector>
 #include <xtensor/xarray.hpp>
 
