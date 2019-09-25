@@ -46,8 +46,9 @@ std::tuple<Arr, double, bool> qmi_oracle::operator()(const Arr& x)
     }
 
     auto ep = this->_Q.witness();
-    auto stop = this->_Q.stop;
-    auto start = this->_Q.start;
+    // auto stop = this->_Q.stop;
+    // auto start = this->_Q.start;
+    auto [start, stop] = this->_Q.p;
     auto v = xt::view(this->_Q.v, xt::range(start, stop));
     auto Fxp = myview(this->_Fx, xt::range(start, stop));
     auto Av = dot(v, Fxp);

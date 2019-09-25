@@ -157,7 +157,8 @@ class lsq_oracle
             xt::view(g, xt::range(0, n - 1)) = g1;
             auto& Q = this->_qmi._Q;
             // auto ep = Q.witness();
-            auto v = xt::view(Q.v, xt::range(Q.start, Q.stop));
+            auto [start, stop] = Q.p;
+            auto v = xt::view(Q.v, xt::range(start, stop));
             g(n - 1) = -xt::linalg::dot(v, v)();
             return std::tuple {std::move(g), fj1, t};
         }

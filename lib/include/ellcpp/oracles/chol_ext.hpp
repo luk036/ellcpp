@@ -5,31 +5,34 @@
 #include <xtensor/xarray.hpp>
 
 /*!
- * @brief Cholesky factorization
+ * @brief Cholesky factorization for LMI
+ *
+ *  - LDLT square-root-free version
+ *  - Option allow semidefinite
+ *  - A matrix $A in R^{m x m}$ is positive definite iff v^T A v > 0
+ *      for all v in R^n.
+ *  - O($p^2 n$) per iteration, independent of $m$
  */
 template <bool Allow_semidefinite = false> //
 class chol_ext
 {
-    // using Mat = bnu::symmetric_matrix<double, bnu::upper>;
-    // using UTMat = bnu::triangular_matrix<double, bnu::upper>;
-    // using Vec = bnu::vector<double>;
     using Vec = xt::xarray<double, xt::layout_type::row_major>;
     using Mat = xt::xarray<double, xt::layout_type::row_major>;
+    using Rng = std::pair<std::size_t, std::size_t>;
 
   public:
-    std::size_t start;
-    std::size_t stop;
-    Vec v;
+    Rng p {0, 0};   /**< the rows where the process starts and stops */
+    Vec v;          /**< witness vector */
 
   private:
-    std::size_t n;
-    Mat T;
+    std::size_t n;  /**< dimension */
+    Mat T;          /**< temporary storage */
 
   public:
     /*!
      * @brief Construct a new chol ext object
      *
-     * @param n
+     * @param N dimension
      */
     explicit chol_ext(std::size_t N)
         : v {xt::zeros<double>({N})}
@@ -39,9 +42,9 @@ class chol_ext
     }
 
     /*!
-     * @brief
+     * @brief Perform Cholesky Factorization
      *
-     * @param A
+     * @param A Symmetric Matrix
      *
      * If $A$ is positive definite, then $p$ is zero.
      * If it is not, then $p$ is a positive integer,
@@ -57,7 +60,7 @@ class chol_ext
      * @brief Perform Cholesky Factorization (Lazy evaluation)
      *
      * @tparam Fn
-     * @param getA
+     * @param getA function to access the elements of A
      *
      * See also: factorize()
      */
@@ -65,16 +68,15 @@ class chol_ext
     void factor(Fn getA)
     {
         auto& T = this->T;
-        auto i = 0U;
-        this->start = 0U;
-        this->stop = 0U;
+        this->p = std::pair{0U, 0U};
 
+        auto i = 0U;
         for (; i < this->n; ++i)
         {
-            for (auto j = this->start; j <= i; ++j)
+            for (auto j = this->p.first; j <= i; ++j)
             {
                 auto d = getA(i, j);
-                for (auto k = this->start; k < j; ++k)
+                for (auto k = this->p.first; k < j; ++k)
                 {
                     d -= T(k, i) * T(j, k);
                 }
@@ -88,31 +90,24 @@ class chol_ext
             {
                 if (T(i, i) < 0.)
                 {
-                    this->stop = i + 1;
+                    // this->stop = i + 1;
+                    this->p.second = i + 1;
                     break;
                 }
                 if (T(i, i) == 0.)
                 {
-                    this->start = i + 1;
+                    this->p.first = i + 1;
                 }
             }
-            else
+            else // strict positive definite
             {
                 if (T(i, i) <= 0.)
                 {
-                    this->stop = i + 1;
+                    this->p.second = i + 1;
                     break;
                 }
             }
-            // if (T(i, i) > 0.) {
-            //     continue;
-            // }
-            // if (T(i, i) < 0. || !this->allow_semidefinite) {
-            //     break;
-            // }
-            // this->start = i+1;
         }
-        // this->p = i;
     }
 
     /*!
@@ -123,7 +118,7 @@ class chol_ext
      */
     auto is_spd() const -> bool
     {
-        return this->stop == 0;
+        return this->p.second == 0;
     }
 
     /*!
@@ -138,39 +133,38 @@ class chol_ext
         {
             throw std::runtime_error {"Implementation Error."};
         }
-        // auto &p = this->p;
-        auto& stop = this->stop;
-        size_t p = stop - 1; // assume stop >= 1
-        this->v(p) = 1.;
+        auto [start, n] = this->p;
+        auto m = n - 1; // assume stop >= 0
+        this->v(m) = 1.;
 
-        for (auto i = p; i > this->start; --i)
+        for (auto i = m; i > start; --i)
         {
             auto s = 0.;
-            for (auto k = i; k <= p; ++k)
+            for (auto k = i; k <= m; ++k)
             {
                 s += this->T(i - 1, k) * this->v(k);
             }
             this->v(i - 1) = -s;
         }
-
-        return -this->T(p, p);
+        return -this->T(m, m);
     }
 
     /*!
-     * @brief
+     * @brief Calculate v'*{A}(p,p)*v
      *
      * @param v
      * @param A
      * @return double
      */
-    double sym_quad(const Vec& A) const
+    auto sym_quad(const Vec& A) const -> double
     {
         auto res = 0.;
-        auto& v = this->v;
-        for (auto i = this->start; i < this->stop; ++i)
+        const auto& v = this->v;
+        const auto& [start, stop] = this->p;
+        for (auto i = start; i < stop; ++i)
         {
             auto s = 0.;
-            for (auto j = i + 1; j < this->stop; ++j)
+            for (auto j = i + 1; j < stop; ++j)
             {
                 s += A(i, j) * v(j);
             }
