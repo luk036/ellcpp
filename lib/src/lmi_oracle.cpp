@@ -22,13 +22,13 @@ std::tuple<Arr, double, bool> lmi_oracle::operator()(const Arr& x)
         return a;
     };
 
-    auto g = Arr {xt::zeros<double>({n})};
     this->_Q.factor(getA);
     if (this->_Q.is_spd())
     {
-        return std::tuple {std::move(g), -1., true};
+        return std::tuple {Arr{}, -1., true};
     }
     auto ep = this->_Q.witness();
+    auto g = Arr {xt::zeros<double>({n})};
     for (size_t i = 0U; i < n; ++i)
     {
         g(i) = this->_Q.sym_quad(this->_F[i]);

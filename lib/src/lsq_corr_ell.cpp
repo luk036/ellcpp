@@ -125,8 +125,7 @@ class lsq_oracle
      */
     lsq_oracle(const std::vector<Arr>& F, const Arr& F0)
         : _qmi(F, F0)
-        , //
-        _lmi0(F)
+        , _lmi0(F)
     {
     }
 
@@ -240,12 +239,9 @@ class mle_oracle
      */
     mle_oracle(const std::vector<Arr>& Sig, const Arr& Y)
         : _Y {Y}
-        , //
-        _Sig {Sig}
-        , //
-        _lmi0(Sig)
-        , //
-        _lmi(Sig, 2 * Y)
+        , _Sig {Sig}
+        , _lmi0(Sig)
+        , _lmi(Sig, 2 * Y)
     {
     }
 

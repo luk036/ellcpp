@@ -39,10 +39,9 @@ std::tuple<Arr, double, bool> qmi_oracle::operator()(const Arr& x)
     };
 
     this->_Q.factor(getA);
-    auto g = Arr {xt::zeros<double>({this->_nx})};
     if (this->_Q.is_spd())
     {
-        return std::tuple {std::move(g), -1., true};
+        return std::tuple {Arr{}, -1., true};
     }
 
     auto ep = this->_Q.witness();
@@ -52,6 +51,7 @@ std::tuple<Arr, double, bool> qmi_oracle::operator()(const Arr& x)
     auto v = xt::view(this->_Q.v, xt::range(start, stop));
     auto Fxp = myview(this->_Fx, xt::range(start, stop));
     auto Av = dot(v, Fxp);
+    auto g = Arr {xt::zeros<double>({this->_nx})};
     for (size_t k = 0U; k < this->_nx; ++k)
     {
         auto Fkp = myview(this->_F[k], xt::range(start, stop));

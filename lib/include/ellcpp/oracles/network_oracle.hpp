@@ -51,13 +51,13 @@ class network_oracle
 
         auto S = negCycleFinder(_G, get_weight);
         auto C = S.find_neg_cycle();
-        auto g = Arr {xt::zeros<double>({x.size()})};
-        auto f = 0.;
-
         if (C.empty())
         {
-            return std::tuple {std::move(g), 0., true};
+            return std::tuple {Arr{}, 0., true};
         }
+
+        auto g = Arr {xt::zeros<double>({x.size()})};
+        auto f = 0.;
         for (const auto& e : C)
         {
             f -= _f(_G, e, x);

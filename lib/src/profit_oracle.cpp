@@ -16,8 +16,7 @@ std::tuple<Arr, double, double> profit_oracle::operator()(
     auto fj1 = y[0] - this->_log_k; // constraint
     if (fj1 > 0.)
     {
-        auto g = Arr {1., 0.};
-        return std::tuple {std::move(g), fj1, t};
+        return std::tuple {Arr {1., 0.}, fj1, t};
     }
 
     auto log_Cobb = this->_log_pA + xt::linalg::dot(this->_a, y)();
