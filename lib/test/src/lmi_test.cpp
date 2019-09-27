@@ -42,19 +42,19 @@ class my_oracle
         auto fj1 = f0 - t;
         if (fj1 > 0)
         {
-            return std::tuple {this->c, fj1, t};
+            return {this->c, fj1, t};
         }
-        auto [g2, fj2, feasible2] = this->lmi1(x);
-        if (!feasible2)
+        auto [g2, fj2] = this->lmi1(x);
+        if (g2.shape()[0] > 1 || g2(0) != 0.)
         {
-            return std::tuple {std::move(g2), fj2, t};
+            return {std::move(g2), fj2, t};
         }
-        auto [g3, fj3, feasible3] = this->lmi2(x);
-        if (!feasible3)
+        auto [g3, fj3] = this->lmi2(x);
+        if (g3.shape()[0] > 1 || g3(0) != 0.)
         {
-            return std::tuple {std::move(g3), fj3, t};
+            return {std::move(g3), fj3, t};
         }
-        return std::tuple {this->c, 0., f0};
+        return {this->c, 0., f0};
     }
 };
 

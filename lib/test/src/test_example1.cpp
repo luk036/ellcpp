@@ -8,7 +8,7 @@
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-auto my_oracle(const Arr& z, double t)
+std::tuple<Arr, double, double> my_oracle(const Arr& z, double t)
 {
     auto x = z[0];
     auto y = z[1];
@@ -17,14 +17,14 @@ auto my_oracle(const Arr& z, double t)
     auto fj = x + y - 3.;
     if (fj > 0.)
     {
-        return std::tuple {Arr {1., 1.}, fj, t};
+        return {Arr {1., 1.}, fj, t};
     }
 
     // constraint 2: x - y >= 1
     fj = -x + y + 1.;
     if (fj > 0.)
     {
-        return std::tuple {Arr {-1., 1.}, fj, t};
+        return {Arr {-1., 1.}, fj, t};
     }
 
     // objective: maximize x + y
@@ -35,7 +35,7 @@ auto my_oracle(const Arr& z, double t)
         fj = 0.;
         t = f0;
     }
-    return std::tuple {Arr {-1., -1.}, fj, t};
+    return {Arr {-1., -1.}, fj, t};
 }
 
 TEST_CASE("Example 1", "[example1]")

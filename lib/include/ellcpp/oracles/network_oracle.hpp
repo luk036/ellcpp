@@ -43,7 +43,7 @@ class network_oracle
      * @param x
      * @return auto
      */
-    auto operator()(const Arr& x) const
+    auto operator()(const Arr& x) const -> std::tuple<Arr, double>
     {
         auto get_weight = [this, &x](Graph& G, const edge_t& e) -> double {
             return this->_f(G, e, x);
@@ -53,7 +53,7 @@ class network_oracle
         auto C = S.find_neg_cycle();
         if (C.empty())
         {
-            return std::tuple {Arr{}, 0., true};
+            return {Arr{0.}, -1.};
         }
 
         auto g = Arr {xt::zeros<double>({x.size()})};
@@ -63,7 +63,7 @@ class network_oracle
             f -= _f(_G, e, x);
             g -= _p(_G, e, x);
         }
-        return std::tuple {std::move(g), f, false};
+        return {std::move(g), f};
     }
 };
 

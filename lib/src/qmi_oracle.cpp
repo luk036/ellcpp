@@ -12,7 +12,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param x
  * @return std::tuple<Arr, double, bool>
  */
-std::tuple<Arr, double, bool> qmi_oracle::operator()(const Arr& x)
+std::tuple<Arr, double> qmi_oracle::operator()(const Arr& x)
 {
     using xt::linalg::dot;
 
@@ -41,7 +41,7 @@ std::tuple<Arr, double, bool> qmi_oracle::operator()(const Arr& x)
     this->_Q.factor(getA);
     if (this->_Q.is_spd())
     {
-        return std::tuple {Arr{}, -1., true};
+        return {Arr{0.}, -1.};
     }
 
     auto ep = this->_Q.witness();
@@ -57,5 +57,5 @@ std::tuple<Arr, double, bool> qmi_oracle::operator()(const Arr& x)
         auto Fkp = myview(this->_F[k], xt::range(start, stop));
         g(k) = -2 * dot(dot(v, Fkp), Av)();
     }
-    return std::tuple {std::move(g), ep, false};
+    return {std::move(g), ep};
 }

@@ -1,7 +1,6 @@
 #include "cutting_plane.hpp"
 #include "ell.hpp"
 #include "profit_oracle.hpp"
-#include "lmi_oracle.hpp"
 #include "chol_ext.hpp"
 //#include <boost/numeric/ublas/symmetric.hpp>
 #include <xtensor/xarray.hpp>
