@@ -41,7 +41,7 @@ class optscaling_oracle
      * @param t
      * @return auto
      */
-    auto operator()(const Arr& x, double t) -> std::tuple<Arr, double, double>
+    auto operator()(const Arr& x, double t)
     {
         auto constr = [this](Graph& G, const edge_t& e, const Arr& x) {
             auto&& [u, v] = G.end_points(e);
@@ -58,7 +58,7 @@ class optscaling_oracle
         auto [g, f] = P(x);
         if (g.shape()[0] > 1 || g(0) != 0)
         {
-            return {std::move(g), f, t};
+            return std::tuple{std::move(g), f, t};
         }
         auto s = x(0) - x(1);
         auto fj = s - t;
@@ -67,6 +67,6 @@ class optscaling_oracle
             t = s;
             fj = 0.;
         }
-        return {Arr {1., -1.}, fj, t};
+        return std::tuple{Arr {1., -1.}, fj, t};
     }
 };
