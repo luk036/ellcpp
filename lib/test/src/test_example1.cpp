@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 // #include <iostream>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>

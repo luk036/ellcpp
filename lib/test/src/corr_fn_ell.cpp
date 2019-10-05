@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <xtensor/xarray.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;

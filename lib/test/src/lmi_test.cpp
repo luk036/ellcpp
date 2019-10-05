@@ -1,7 +1,7 @@
 /*
  *  Distributed under the MIT License (See accompanying file /LICENSE )
  */
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 // #include <tuple>
 
 #include <ellcpp/cutting_plane.hpp>

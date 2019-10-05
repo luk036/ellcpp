@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <utility> // for std::pair
 
 // auto get_weight(const graph_t &G, const Edge_it &e) {

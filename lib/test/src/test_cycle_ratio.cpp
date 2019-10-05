@@ -3,7 +3,7 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
 #include <boost/property_map/property_map.hpp>
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <ellcpp/oracles/fraction.hpp>        // import Fraction
 #include <ellcpp/oracles/min_cycle_ratio.hpp> // import min_cycle_ratio, set_default
 #include <py2cpp/nx2bgl.hpp>

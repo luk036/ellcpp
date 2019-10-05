@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <ellcpp/oracles/min_cycle_ratio.hpp>
 #include <ellcpp/oracles/neg_cycle.hpp> // import negCycleFinder
 #include <py2cpp/nx2bgl.hpp>

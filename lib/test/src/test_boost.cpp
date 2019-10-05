@@ -1,4 +1,4 @@
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <py2cpp/nx2bgl.hpp>
 
 #include <algorithm> // for std::for_each

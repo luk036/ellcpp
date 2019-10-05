@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 #include <any>
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <iostream>
 #include <string>
 
