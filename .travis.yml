@@ -15,13 +15,13 @@ matrix:
           packages:
             - g++-7
             - lcov
-      env: COMPILER=gcc GCC=7 BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
       addons: *gcc7
-      env: COMPILER=gcc GCC=7 BUILD_TYPE='Release'
+      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Release'
     - os: linux
       addons: *gcc7
-      env: COMPILER=gcc GCC=7 BUILD_TYPE='Coverage'
+      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Coverage'
     - os: linux
       addons: &gcc8
         apt:
@@ -30,10 +30,10 @@ matrix:
           packages:
             - g++-8
             - lcov
-      env: COMPILER=gcc GCC=8 BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
       addons: *gcc8
-      env: COMPILER=gcc GCC=8 BUILD_TYPE='Release'
+      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Release'
     - os: linux
       addons: &clang8
         apt:
@@ -87,15 +87,15 @@ install:
   - conda info -a
   # - conda install gtest cmake -c conda-forge
   # Install xtensor and BLAS
-  # - conda install xtensor-blas=0.11.1 -c conda-forge
-  # - conda install xtensor=0.16.4 -c conda-forge
-  # - conda install xtensor -c conda-forge
-  # - if [[ "$BLAS" == "OpenBLAS" ]]; then
-  #     conda install openblas -c conda-forge;
-  #   elif [[ "$BLAS" == "mkl" ]]; then
-  #     conda install mkl;
-  #   fi
-  # - conda install lapack -c conda-forge
+  - conda install xtensor-blas=0.11.1 -c conda-forge
+  - conda install xtensor=0.16.4 -c conda-forge
+  - conda install xtensor -c conda-forge
+  - if [[ "$BLAS" == "OpenBLAS" ]]; then
+      conda install openblas -c conda-forge;
+    elif [[ "$BLAS" == "mkl" ]]; then
+      conda install mkl;
+    fi
+  - conda install lapack -c conda-forge
   - conda install libboost -c conda-forge
 
 script:
