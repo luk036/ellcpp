@@ -97,6 +97,7 @@ install:
     fi
   - conda install lapack -c conda-forge
   - conda install libboost -c conda-forge
+  - conda install catch2 -c conda-forge
 
 script:
   - |
