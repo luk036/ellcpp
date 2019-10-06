@@ -1,6 +1,9 @@
-find_package(Threads REQUIRED)
+# find_package(Threads REQUIRED)
 
 #~~~~~~~~~~~~~~~~
+
+# message(STATUS "Test: ${LIBRARY_INCLUDE_PATH} ")
+include_directories (${LIBRARY_INCLUDE_PATH} ${TEST_THIRD_PARTY_INCLUDE_PATH} ${xtensor_INCLUDE_DIRS})
 
 file(GLOB_RECURSE ALL_BENCH_CPP *.cpp)
 
@@ -15,12 +18,12 @@ foreach(ONE_BENCH_CPP ${ALL_BENCH_CPP})
    set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME ${ONE_BENCH_EXEC}) 
    target_link_libraries(${TARGET_NAME} 
 
-# If required, you can add your project library here
+   # If required, you can add your project library here
 # ...
-
-	 benchmark
-     ${CMAKE_THREAD_LIBS_INIT})
+    ${LIB_NAME} Threads::Threads ${LIBS}
+    benchmark
+   )
 
    # If you want to run benchmarks with the "make test" command, uncomment me
-   add_test(${TARGET_NAME} ${ONE_BENCH_EXEC})
+   # add_test(${TARGET_NAME} ${ONE_BENCH_EXEC})
 endforeach()

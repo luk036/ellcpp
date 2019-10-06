@@ -19,8 +19,9 @@ set (FMT_INCLUDE_PATH "${FMT_MODULE_PATH}/include")
 # benchmark
 
 #configure directories
-set (BENCHMARK_MODULE_PATH "${THIRD_PARTY_MODULE_PATH}/benchmark")
-set (BENCHMARK_INCLUDE_PATH "${BENCHMARK_MODULE_PATH}/include")
+# set (BENCHMARK_MODULE_PATH "${THIRD_PARTY_MODULE_PATH}/benchmark")
+# set (BENCHMARK_INCLUDE_PATH "${BENCHMARK_MODULE_PATH}/include")
+# set (LIBS ${LIBS} ${BENCHMARK_MODULE_PATH}/build/src/libbenchmark.a)
 
 # -------------------------------------------------------------------------
 
