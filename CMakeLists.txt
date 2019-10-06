@@ -34,16 +34,6 @@ include(Coverage)
 #
 include(ConfigSafeGuards)
 
-# If you want to self-test benchmark lib too, turn me ON
-#
-set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Enable benchmark self-testing?")
-
-# Fix dependency download
-# https://github.com/google/benchmark/issues/564
-#
-set(BENCHMARK_DOWNLOAD_DEPENDENCIES ON CACHE BOOL "Download dependencies?")
-include(ConfigGBench)
-
 ###############
 ##  OPTIONS  ##
 ###############

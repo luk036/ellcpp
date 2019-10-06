@@ -25,5 +25,5 @@ foreach(ONE_BENCH_CPP ${ALL_BENCH_CPP})
    )
 
    # If you want to run benchmarks with the "make test" command, uncomment me
-   # add_test(${TARGET_NAME} ${ONE_BENCH_EXEC})
+   add_test(${TARGET_NAME} ${ONE_BENCH_EXEC})
 endforeach()

@@ -34,7 +34,23 @@ set (LIB_NAME ${LIB_NAME} PARENT_SCOPE)
 #test
 enable_testing ()
 add_subdirectory (test)
-add_subdirectory (bench)
+
+string(TOLOWER "${CMAKE_BUILD_TYPE}" cmake_build_type_tolower)
+if(    NOT cmake_build_type_tolower STREQUAL "coverage"
+       AND cmake_build_type_tolower STREQUAL "release")
+    # If you want to self-test benchmark lib too, turn me ON
+    #
+    set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Enable benchmark self-testing?")
+    
+    # Fix dependency download
+    # https://github.com/google/benchmark/issues/564
+    #
+    set(BENCHMARK_DOWNLOAD_DEPENDENCIES ON CACHE BOOL "Download dependencies?")
+    include(ConfigGBench)
+
+    add_subdirectory (bench)
+endif()
+
 
 #------------------------------------------------------------------------------
 # Other MISC targets
