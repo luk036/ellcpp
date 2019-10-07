@@ -58,7 +58,7 @@ class optscaling_oracle
         auto [g, f] = P(x);
         if (g.shape()[0] > 1 || g(0) != 0)
         {
-            return std::tuple{std::move(g), f, t};
+            return std::tuple {std::move(g), f, t};
         }
         auto s = x(0) - x(1);
         auto fj = s - t;
@@ -67,6 +67,6 @@ class optscaling_oracle
             t = s;
             fj = 0.;
         }
-        return std::tuple{Arr {1., -1.}, fj, t};
+        return std::tuple {Arr {1., -1.}, fj, t};
     }
 };

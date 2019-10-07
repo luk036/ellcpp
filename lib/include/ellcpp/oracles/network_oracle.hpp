@@ -53,7 +53,7 @@ class network_oracle
         auto C = S.find_neg_cycle();
         if (C.empty())
         {
-            return std::tuple{Arr{0.}, -1.};
+            return std::tuple {Arr {0.}, -1.};
         }
 
         auto g = Arr {xt::zeros<double>({x.size()})};
@@ -63,7 +63,7 @@ class network_oracle
             f -= _f(_G, e, x);
             g -= _p(_G, e, x);
         }
-        return std::tuple{std::move(g), f};
+        return std::tuple {std::move(g), f};
     }
 };
 

@@ -82,7 +82,7 @@ class my_fir_oracle
             if (fj >= t)
             {
                 auto g = Arr {2. * (t_r * a_R + t_i * a_I)};
-                return std::tuple{std::move(g), fj - t, t};
+                return std::tuple {std::move(g), fj - t, t};
             }
             if (fmax < fj)
             {
@@ -92,7 +92,7 @@ class my_fir_oracle
             }
         }
 
-        return std::tuple{std::move(gmax), 0., fmax};
+        return std::tuple {std::move(gmax), 0., fmax};
     }
 };
 

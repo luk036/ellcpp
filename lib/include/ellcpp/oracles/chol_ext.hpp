@@ -21,12 +21,12 @@ class chol_ext
     using Rng = std::pair<std::size_t, std::size_t>;
 
   public:
-    Rng p {0, 0};   /**< the rows where the process starts and stops */
-    Vec v;          /**< witness vector */
+    Rng p {0, 0}; /**< the rows where the process starts and stops */
+    Vec v;        /**< witness vector */
 
   private:
-    std::size_t n;  /**< dimension */
-    Mat T;          /**< temporary storage */
+    std::size_t n; /**< dimension */
+    Mat T;         /**< temporary storage */
 
   public:
     /*!
@@ -68,7 +68,7 @@ class chol_ext
     void factor(Fn getA)
     {
         auto& T = this->T;
-        this->p = std::pair{0U, 0U};
+        this->p = std::pair {0U, 0U};
 
         auto i = 0U;
         for (; i < this->n; ++i)
