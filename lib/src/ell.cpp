@@ -210,10 +210,10 @@ std::tuple<int, double> ell::update(const Arr& g, const T& beta)
     this->_Q -= (sigma / omega) * xt::linalg::outer(Qg, Qg);
     this->_kappa *= delta;
 
-    // if (unlikely(this->_kappa > 1e100 || this->_kappa < 1e-100)) {
-    //     this->_Q *= this->_kappa;
-    //     this->_kappa = 1.;
-    // }
+    if (this->_no_defer_trick) {
+        this->_Q *= this->_kappa;
+        this->_kappa = 1.;
+    }
     return std::tuple {status, tsq}; // g++-7 is ok
 }
 

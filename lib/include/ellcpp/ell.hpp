@@ -19,6 +19,7 @@ class ell
 
   public:
     bool _use_parallel_cut = true;
+    bool _no_defer_trick = false;
 
   private:
     std::size_t _n;
