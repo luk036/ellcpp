@@ -221,6 +221,9 @@ class grAdaptor : public VertexView<Graph>
 {
   public:
     using Vertex = typename boost::graph_traits<Graph>::vertex_descriptor;
+    using node_t = Vertex;
+    using edge_t = typename boost::graph_traits<Graph>::edge_descriptor;
+
     // using edge_wt_t = decltype( boost::get(boost::edge_weight,
     // std::declval<Graph>()) );
 

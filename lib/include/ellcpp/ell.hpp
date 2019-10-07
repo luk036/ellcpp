@@ -38,10 +38,10 @@ class ell
     ell(const Arr& val, const Arr& x)
         : _n {x.size()}
         , _c1 {double(_n * _n) / (_n * _n - 1)}
+        , _kappa {1}
         , _xc {x}
+        , _Q {xt::diag(val)}
     {
-        this->_Q = xt::diag(val);
-        this->_kappa = 1.;
     }
 
     /*!
@@ -54,10 +54,10 @@ class ell
     ell(const double& alpha, const Arr& x)
         : _n {x.size()}
         , _c1 {double(_n * _n) / (_n * _n - 1)}
+        , _kappa {alpha}
         , _xc {x}
+        , _Q {xt::eye(_n)}
     {
-        this->_Q = xt::eye(_n);
-        this->_kappa = alpha;
     }
 
     /*!
