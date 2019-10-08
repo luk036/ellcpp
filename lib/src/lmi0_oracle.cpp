@@ -25,7 +25,7 @@ std::tuple<Arr, double> lmi0_oracle::operator()(const Arr& x)
     this->_Q.factor(getA);
     if (this->_Q.is_spd())
     {
-        return std::tuple {Arr {0.}, -1.};
+        return {Arr {0.}, -1.};
     }
     auto ep = this->_Q.witness();
     auto g = Arr {xt::zeros<double>({n})};
@@ -33,5 +33,5 @@ std::tuple<Arr, double> lmi0_oracle::operator()(const Arr& x)
     {
         g(i) = -_Q.sym_quad(this->_F[i]);
     }
-    return std::tuple {std::move(g), ep};
+    return {std::move(g), ep};
 }

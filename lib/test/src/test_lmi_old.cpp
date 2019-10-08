@@ -22,10 +22,10 @@ class my_oracle
     Arr c;
 
   public:
-    my_oracle(std::vector<Arr>&& F1, Arr&& B1, std::vector<Arr>&& F2, Arr&& B2,
+    my_oracle(const std::vector<Arr>& F1, Arr B1, const std::vector<Arr>& F2, Arr B2,
         Arr& c)
-        : lmi1 {std::forward<std::vector<Arr>>(F1), std::forward<Arr>(B1)}
-        , lmi2 {std::forward<std::vector<Arr>>(F2), std::forward<Arr>(B2)}
+        : lmi1 {F1, B1}
+        , lmi2 {F2, B2}
         , c {c}
     {
     }
@@ -38,19 +38,19 @@ class my_oracle
         auto fj1 = f0 - t;
         if (fj1 > 0)
         {
-            return std::tuple {this->c, fj1, t};
+            return {this->c, fj1, t};
         }
         auto [g2, fj2] = this->lmi1(x);
         if (g2.shape()[0] > 1 || g2(0) != 0.)
         {
-            return std::tuple {std::move(g2), fj2, t};
+            return {std::move(g2), fj2, t};
         }
         auto [g3, fj3] = this->lmi2(x);
         if (g3.shape()[0] > 1 || g3(0) != 0.)
         {
-            return std::tuple {std::move(g3), fj3, t};
+            return {std::move(g3), fj3, t};
         }
-        return std::tuple {this->c, 0., f0};
+        return {this->c, 0., f0};
     }
 };
 
