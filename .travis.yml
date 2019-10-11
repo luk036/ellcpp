@@ -34,7 +34,6 @@ matrix:
             - lcov
       env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
-      dist: trusty
       addons: *gcc8
       env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Release'
     - os: linux
@@ -48,7 +47,6 @@ matrix:
             - lcov
       env: COMPILER=clang CLANG=8 BUILD_TYPE='Debug'
     - os: linux
-      dist: xenial
       addons: *clang8
       env: COMPILER=clang CLANG=8 BUILD_TYPE='Release'
 
@@ -107,7 +105,10 @@ install:
 script:
   - |
     if [[ "$BUILD_TYPE" == "Coverage" ]]; then
-      ctest -S cmake/CI.CTestScript.cmake --output-on-failure -VV -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCTEST_SITE=Travis -DCTEST_BUILD_NAME="${TRAVIS_OS_NAME}-$BUILD_TYPE"
+      mkdir build && cd build;
+      cmake -DENABLE_COVERAGE=1 -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib ..;
+      make -j2
+      ctest -VV --output-on-failure
     else
       mkdir build && cd build;
       cmake -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib ..;
@@ -118,7 +119,11 @@ script:
 after_success:
   - |
     if [[ "$BUILD_TYPE" == "Coverage" ]]; then
-      bash <(curl -s https://codecov.io/bash) -X gcov || echo "Codecov did not collect coverage reports"
+      lcov --directory . --capture --output-file coverage.info # capture coverage info
+      lcov --remove coverage.info '/usr/*' $CONDA_PREFIX'/*' --output-file coverage.info # filter out system
+      lcov --list coverage.info #debug info
+      # Uploading report to CodeCov
+      bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
     fi
 
 notifications:
