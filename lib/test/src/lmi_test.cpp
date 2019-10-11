@@ -2,8 +2,7 @@
  *  Distributed under the MIT License (See accompanying file /LICENSE )
  */
 #include <catch2/catch.hpp>
-// #include <tuple>
-
+#include <fmt/format.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lmi_oracle.hpp>
@@ -81,7 +80,7 @@ TEST_CASE("LMI test", "[lmi_oracle]")
     // Arr xb;
 
     auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
-    // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
+    fmt::print("{:f} {} {} \n", ell_info.value, ell_info.num_iters, ell_info.feasible);
     // std::cout << "LMI xbest: " << xb << "\n";
     // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible <<
     // ", " << status

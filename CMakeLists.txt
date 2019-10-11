@@ -64,6 +64,8 @@ endif()
 
 set (THREADS_PREFER_PTHREAD_FLAG ON)
 find_package (Threads REQUIRED)
+find_package (fmt REQUIRED)
+
 find_package (xtensor-blas REQUIRED)
 if (xtensor-blas_FOUND)
     message(STATUS "Found xtensor-blas: ${xtensor-blas_INCLUDE_DIRS}")
@@ -88,11 +90,7 @@ endif (Boost_FOUND)
 # add_definitions ( -std=c++1z -g)
 add_subdirectory (third_party EXCLUDE_FROM_ALL)
 
-# add_executable (Main profit_main.cpp)
-# add_executable (Test exp1d.cpp)
-# target_link_libraries ( Main Threads::Threads ${LIBS} -llapack -lblas -lfmt)
-# target_link_libraries ( Test Threads::Threads ${LIBS} -llapack -lblas -lfmt)
-set (LIBRARY_INCLUDE_PATH  ${LIBRARY_INCLUDE_PATH} ${xtensor_INCLUDE_DIRS})
+set (LIBRARY_INCLUDE_PATH ${LIBRARY_INCLUDE_PATH} ${xtensor_INCLUDE_DIRS})
 
 add_subdirectory (doc)
 add_subdirectory (lib)
