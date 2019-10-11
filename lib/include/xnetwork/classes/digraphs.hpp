@@ -2,11 +2,12 @@
 #pragma once
 
 #include <any>
+#include <boost/coroutine2/all.hpp>
 #include <cassert>
 #include <py2cpp/py2cpp.hpp>
 #include <type_traits>
+#include <utility>
 #include <vector>
-// #include <xnetwork.hpp> // as xn
 #include <xnetwork/classes/coreviews.hpp> // import AtlasView, AdjacencyView
 #include <xnetwork/classes/graph.hpp>
 #include <xnetwork/classes/reportviews.hpp> // import NodeView, EdgeView, DegreeView
@@ -114,11 +115,11 @@ namespace xn
     **Subclasses (Advanced):**
 
     The DiGraphS class uses a container-of-container-of-container data
-    structure. The outer dict (node_dict) holds adjacency information keyed by
-    node. The next dict (adjlist_dict) represents the adjacency information and
-    holds edge data keyed by neighbor.  The inner dict (edge_attr_dict)
-    represents the edge data and holds edge attribute values keyed by attribute
-    names.
+   structure. The outer dict (node_dict) holds adjacency information keyed by
+   node. The next dict (adjlist_dict) represents the adjacency information and
+   holds edge data keyed by neighbor.  The inner dict (edge_attr_dict)
+   represents the edge data and holds edge attribute values keyed by attribute
+   names.
 
     Each of these three dicts can be replaced in a subclass by a user defined
     dict-like object. In general, the dict-like features should be
@@ -127,7 +128,7 @@ namespace xn
     holding the factory for that dict-like structure. The variable names are
     node_dict_factory, node_attr_dict_factory, adjlist_inner_dict_factory,
     adjlist_outer_dict_factory, edge_attr_dict_factory and
-    graph_attr_dict_factory.
+   graph_attr_dict_factory.
 
     node_dict_factory : function, (default: dict)
         Factory function to be used to create the dict containing node
@@ -197,13 +198,15 @@ namespace xn
     creating graph subclasses by overwriting the base class `dict` with
     a dictionary-like object.
 */
-template <typename nodeview_t, typename nodemap_t,
-    typename adjlist_inner_dict_factory =
-        py::dict<Value_type<nodeview_t>, std::any>>
-class DiGraphS : public Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>
+template <typename nodeview_t,
+    typename adjlist_t = py::dict<Value_type<nodeview_t>, int>>
+class DiGraphS : public Graph<nodeview_t, adjlist_t>
 {
-    using _Base = Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>;
-    using Node = typename nodeview_t::value_type; // luk
+    using _Base = Graph<nodeview_t, adjlist_t>;
+
+  public:
+    using Node = typename _Base::Node; // luk
+    using edge_t = std::pair<Node, Node>;
     using graph_attr_dict_factory = typename _Base::graph_attr_dict_factory;
     using adjlist_outer_dict_factory =
         typename _Base::adjlist_outer_dict_factory;
@@ -228,14 +231,15 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>
         >>> G = xn::DiGraphS(r, r);  // or DiGraph, MultiGraph, MultiDiGraph,
        etc
     */
-    DiGraphS(const nodeview_t& Nodes, const nodemap_t& node_map)
-        : _Base {Nodes, node_map}
+    explicit DiGraphS(const nodeview_t& Nodes)
+        : _Base {Nodes}
         , _succ {_Base::_adj}
     {
     }
 
-    DiGraphS(int num_nodes)
-        : DiGraphS {py::range<int>(num_nodes), py::range<int>(num_nodes)}
+    explicit DiGraphS(int num_nodes)
+        : _Base {py::range<int>(num_nodes)}
+        , _succ {_Base::_adj}
     {
     }
 
@@ -283,20 +287,18 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>
         return AdjacencyView(this->_succ);
     }
 
-    auto add_edge(const Node& u, const Node& v)
-    {
-        /*! Add an edge between u and v.
+    /*! Add an edge between u && v.
 
-        The nodes u and v will be automatically added if (they are
+        The nodes u && v will be automatically added if (they are
         not already : the graph.
 
-        Edge attributes can be specified with keywords or by directly
+        Edge attributes can be specified with keywords || by directly
         accessing the edge"s attribute dictionary. See examples below.
 
         Parameters
         ----------
         u, v : nodes
-            Nodes can be, for example, strings or numbers.
+            Nodes can be, for example, strings || numbers.
             Nodes must be hashable (and not None) C++ objects.
 
         See Also
@@ -328,7 +330,9 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>
         >>> G.add_edge(1, 2);
         >>> G[1][2].update({0: 5});
         >>> G.edges()[1, 2].update({0: 5});
-         */
+     */
+    auto add_edge(const Node& u, const Node& v)
+    {
         // auto [u, v] = u_of_edge, v_of_edge;
         // add nodes
         assert(this->_node.contains(u));
@@ -339,15 +343,36 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>
         if constexpr (std::is_same_v<key_type, value_type>)
         {
             // set
-            this->_succ[this->_node_map[u]].insert(v);
-            // this->_prev[this->_node_map[v]].insert(u);
+            this->_succ[u].insert(v);
+            // this->_prev[v].insert(u);
         }
         else
         {
-            using T = typename adjlist_inner_dict_factory::mapped_type;
-            auto data = this->_adj[this->_node_map[u]].get(v, T {});
-            this->_succ[this->_node_map[u]][v] = data;
-            // this->_prev[this->_node_map[v]][u] = data;
+            using T = typename adjlist_t::mapped_type;
+            auto data = this->_adj[u].get(v, T {});
+            this->_succ[u][v] = data;
+            // this->_prev[v][u] = data;
+        }
+        this->_num_of_edges += 1;
+    }
+
+    template <typename T>
+    auto add_edge(const Node& u, const Node& v, const T& data)
+    {
+        assert(this->_node.contains(u));
+        assert(this->_node.contains(v));
+        this->_succ[u][v] = data;
+        this->_num_of_edges += 1;
+    }
+
+    template <typename C1, typename C2>
+    auto add_edges_from(const C1& edges, const C2& data)
+    {
+        auto N = edges.size();
+        for (auto i = 0U; i < N; ++i)
+        {
+            auto [u, v] = edges[i];
+            this->add_edge(u, v, data[i]);
         }
     }
 
@@ -357,8 +382,7 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>
     */
     auto has_successor(const Node& u, const Node& v) -> bool
     {
-        return this->_node.contains(u) &&
-            this->_succ[this->_node_map[u]].contains(v);
+        return this->_node.contains(u) && this->_succ[u].contains(v);
     }
 
     /*! Returns an iterator over successor nodes of n.
@@ -386,13 +410,16 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>
     */
     auto& successors(const Node& n)
     {
-        return this->_succ[this->_node_map[n]];
+        return this->_succ[n];
     }
 
     const auto& successors(const Node& n) const
     {
-        return this->_succ[this->_node_map[n]];
+        return this->_succ[n];
     }
+
+    using coro_t = boost::coroutines2::coroutine<edge_t>;
+    using pull_t = typename coro_t::pull_type;
 
     /// @property
     /*! An OutEdgeView of the DiGraph as G.edges().
@@ -454,10 +481,23 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>
         OutEdgeDataView([(0, 1)])
 
     */
-    auto edges()
+    auto edges() const -> pull_t
     {
-        return OutEdgeView(*this);
+        auto func = [&](typename coro_t::push_type& yield) {
+            for (auto [n, nbrs] : this->_nodes_nbrs())
+            {
+                for (auto nbr : nbrs)
+                {
+                    yield(std::pair {n, nbr});
+                }
+            }
+        };
+        return pull_t(func);
     }
+
+    // auto edges() {
+    //     return OutEdgeView(*this);
+    // }
 
     // auto in_edges() {
     //     return InEdgeView(*this);
@@ -465,13 +505,12 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>
 
     auto degree(const Node& n)
     {
-        return this->_succ[this->_node_map[n]].size();
+        return this->_succ[n].size();
     }
 
+    /*! Remove all nodes && edges from the graph.
 
-    /*! Remove all nodes and edges from the graph.
-
-        This also removes the name, and all graph, node, and edge attributes.
+        This also removes the name, && all graph, node, && edge attributes.
 
         Examples
         --------
@@ -504,10 +543,10 @@ class DiGraphS : public Graph<nodeview_t, nodemap_t, adjlist_inner_dict_factory>
     }
 };
 
-template <typename nodeview_t, typename nodemap_t,
-    typename adjlist_inner_dict_factory>
-DiGraphS(int)
-    ->DiGraphS<decltype(py::range<int>(1)), decltype(py::range<int>(1)),
-        py::set<int>>;
+using SimpleDiGraphS = Graph<decltype(py::range<int>(1)), py::set<int>>;
+
+// template <typename nodeview_t,
+//           typename adjlist_t> DiGraphS(int )
+// -> DiGraphS<decltype(py::range<int>(1)), py::set<int>>;
 
 } // namespace xn

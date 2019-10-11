@@ -12,16 +12,17 @@
  * @tparam Grad_Fn
  */
 template <typename Graph, typename Fn_Eval, typename Grad_Fn>
-class network_oracle
+class network3_oracle
 {
-    using Arr = xt::xarray<double, xt::layout_type::row_major>;
-    using edge_t = typename Graph::edge_t;
-
   private:
+    double _t {0.};
+
     Graph& _G;
     Fn_Eval _f;
     Grad_Fn _p;
 
+    using edge_t = typename Graph::edge_t;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   public:
     /*!
@@ -31,11 +32,16 @@ class network_oracle
      * @param f
      * @param p
      */
-    network_oracle(Graph& G, Fn_Eval& f, Grad_Fn& p)
+    explicit network3_oracle(Graph& G, Fn_Eval& f, Grad_Fn& p)
         : _G {G}
         , _f {f}
         , _p {p} // partial derivative of f w.r.t x
     {
+    }
+
+    auto update(double t) -> void
+    {
+        this->_t = t;
     }
 
     /*!
@@ -47,10 +53,10 @@ class network_oracle
     auto operator()(const Arr& x) const
     {
         auto get_weight = [this, &x](Graph& G, const edge_t& e) -> double {
-            return this->_f(G, e, x);
+            return this->_f(G, e, x, this->_t);
         };
 
-        auto S = negCycleFinder(this->_G, get_weight);
+        auto S = negCycleFinder(_G, get_weight);
         auto C = S.find_neg_cycle();
         if (C.empty())
         {
@@ -61,8 +67,8 @@ class network_oracle
         auto f = 0.;
         for (const auto& e : C)
         {
-            f -= this->_f(this->_G, e, x);
-            g -= this->_p(this->_G, e, x);
+            f -= this->_f(this->_G, e, x, this->_t);
+            g -= this->_p(this->_G, e, x, this->_t);
         }
         return std::tuple {std::move(g), f};
     }
@@ -70,5 +76,5 @@ class network_oracle
 
 // Template guided deduction
 // template <typename Graph, typename Fn_Eval, typename Grad_Fn>
-// network_oracle(Graph &G, Fn_Eval &f, Grad_Fn &p)
-//     ->network_oracle<Graph, Fn_Eval, Grad_Fn>;
+// network3_oracle(Graph &G, Fn_Eval &f, Grad_Fn &p)
+//     ->network3_oracle<Graph, Fn_Eval, Grad_Fn>;
