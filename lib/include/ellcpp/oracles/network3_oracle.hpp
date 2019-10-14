@@ -1,25 +1,28 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include "neg_cycle.hpp" // import negCycleFinder
+#include <netoptim/neg_cycle.hpp> // import negCycleFinder
 #include <xtensor/xarray.hpp>
 
 /*!
  * @brief
  *
  * @tparam Graph
+ * @tparam Container
  * @tparam Fn_Eval
  * @tparam Grad_Fn
  */
-template <typename Graph, typename Fn_Eval, typename Grad_Fn>
+template <typename Graph, typename Container, typename Fn_Eval, typename Grad_Fn>
 class network3_oracle
 {
   private:
     double _t {0.};
 
-    Graph& _G;
+    const Graph& _G;
+    Container& _dist;
     Fn_Eval _f;
     Grad_Fn _p;
+    negCycleFinder<Graph> _S;
 
     using edge_t = typename Graph::edge_t;
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
@@ -32,10 +35,12 @@ class network3_oracle
      * @param f
      * @param p
      */
-    explicit network3_oracle(Graph& G, Fn_Eval& f, Grad_Fn& p)
+    explicit network3_oracle(const Graph& G, Container& dist, Fn_Eval& f, Grad_Fn& p)
         : _G {G}
+        , _dist {dist}
         , _f {f}
         , _p {p} // partial derivative of f w.r.t x
+        , _S(G)
     {
     }
 
@@ -50,14 +55,14 @@ class network3_oracle
      * @param x
      * @return auto
      */
-    auto operator()(const Arr& x) const
+    auto operator()(const Arr& x)
     {
-        auto get_weight = [this, &x](Graph& G, const edge_t& e) -> double {
+        auto get_weight = [this, &x](const Graph& G, const edge_t& e) -> double {
             return this->_f(G, e, x, this->_t);
         };
 
-        auto S = negCycleFinder(_G, get_weight);
-        auto C = S.find_neg_cycle();
+        // auto S = negCycleFinder(this->_G);
+        auto C = this->_S.find_neg_cycle(this->_dist, get_weight);
         if (C.empty())
         {
             return std::tuple {Arr {0.}, -1.};

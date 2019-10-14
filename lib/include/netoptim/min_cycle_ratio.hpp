@@ -18,10 +18,11 @@
  * @param get_time
  * @return auto
  */
-template <typename Graph, typename Fn1, typename Fn2, typename T>
-auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, T&& /*! dummy */)
+template <typename Graph, typename Fn1, typename Fn2, typename Container>
+auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, Container& dist)
 {
     using edge_t = typename Graph::edge_t;
+    using T = typename Container::value_type;
 
     edge_t e0;
     for (auto e : G.edges())
@@ -62,5 +63,5 @@ auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, T&& /*! dummy */)
     auto calc_weight = [&](const Graph&, T r, const auto& e) {
         return get_cost(G, e) - r * get_time(G, e);
     };
-    return max_parametric(G, r0, calc_weight, calc_ratio);
+    return max_parametric(G, r0, calc_weight, calc_ratio, dist);
 }

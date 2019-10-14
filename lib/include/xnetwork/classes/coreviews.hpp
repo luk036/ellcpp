@@ -73,7 +73,7 @@ class AtlasView
     template <typename T>
     auto operator[](const T& key) const
     {
-        return this->_atlas[key];
+        return this->_atlas.at(key);
     }
 
     // auto copy( ) {

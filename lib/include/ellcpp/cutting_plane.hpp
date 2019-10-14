@@ -81,7 +81,7 @@ auto bsearch(Oracle& Omega, Space& I, const Options& options = Options())
     auto ret = CInfo(feasible, niter, 0);
 
     ret.value = u;
-    return std::move(ret);
+    return ret;
 }
 
 /*!
@@ -239,7 +239,7 @@ auto cutting_plane_dc(
     auto ret = CInfo(feasible, niter, status);
     ret.val = std::move(x_best);
     ret.value = t;
-    return std::move(ret);
+    return ret;
 } // END
 
 /*!
@@ -318,5 +318,5 @@ auto cutting_plane_q(
     auto ret = CInfo(feasible, niter, status);
     ret.val = std::move(x_best);
     ret.value = t;
-    return std::move(ret);
+    return ret;
 } // END

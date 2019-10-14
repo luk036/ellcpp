@@ -317,7 +317,7 @@ class Graph : public object
         return py::enumerate(this->_adj);
     }
 
-    Node null_vertex()
+    Node null_vertex() const
     {
         return *(this->_node.end());
     }

@@ -26,23 +26,30 @@
  *       C_opt -- Most critial cycle
  *       dist -- optimal sol"n
  */
-template <typename Graph, typename T, typename Fn1, typename Fn2>
-auto max_parametric(Graph& G, T r, Fn1& d, Fn2& zero_cancel)
+template <typename Graph, typename T, typename Fn1, typename Fn2,
+    typename Container>
+auto max_parametric(
+    Graph& G, T r_opt, Fn1& d, Fn2& zero_cancel, Container& dist)
 {
     using edge_t = typename Graph::edge_t;
 
-    auto get_weight = [d, r](const Graph& G,
+    auto get_weight = [&](const Graph& G,
                           const edge_t& e) -> T { // int???
-        return d(G, r, e);
+        return d(G, r_opt, e);
     };
 
-    auto S = negCycleFinder(G, get_weight);
+    auto S = negCycleFinder(G);
     auto C_opt = std::vector<edge_t> {};
-    auto r_opt = r;
+    // auto r_opt = r;
 
     while (true)
     {
-        const auto& C_min = S.neg_cycle_relax();
+        const auto& C_min = S.find_neg_cycle(dist, get_weight);
+        if (C_min.empty())
+        {
+            break;
+        }
+
         const auto& r_min = zero_cancel(G, C_min);
 
         if (r_min >= r_opt)
@@ -55,7 +62,7 @@ auto max_parametric(Graph& G, T r, Fn1& d, Fn2& zero_cancel)
         for (const auto& e : C_opt)
         {
             auto [u, v] = G.end_points(e);
-            S._dist[u] = S._dist[v] - get_weight(G, e);
+            dist[u] = dist[v] - get_weight(G, e);
         }
     }
 

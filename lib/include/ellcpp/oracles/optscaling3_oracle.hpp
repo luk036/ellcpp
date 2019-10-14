@@ -11,12 +11,13 @@
  * @tparam Fn
  * @tparam T
  */
-template <typename Graph, typename Fn, typename T> //
+template <typename Graph, typename Container, typename Fn> //
 class optscaling3_oracle
 {
   private:
     double _t {0.}
-    Graph& _G;
+    const Graph& _G;
+    Container& _dist;
     Fn _get_cost;
 
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
@@ -29,8 +30,9 @@ class optscaling3_oracle
      * @param G
      * @param get_cost
      */
-    explicit optscaling3_oracle(Graph& G, Fn get_cost, T&& /* dummy */)
+    explicit optscaling3_oracle(const Graph& G, Container& dist, Fn get_cost)
         : _G {G}
+        , _dist {dist}
         , _get_cost {get_cost}
     {
     }
@@ -47,20 +49,20 @@ class optscaling3_oracle
      * @param t
      * @return auto
      */
-    auto operator()(const Arr& x, double t)
+    auto operator()(const Arr& x, double t) const
     {
-        auto constr = [this](Graph& G, const edge_t& e, const Arr& x) {
+        auto constr = [this](const Graph& G, const edge_t& e, const Arr& x) {
             auto&& [u, v] = G.end_points(e);
             auto cost = this->_get_cost(G, e);
             return (u <= v) ? x(0) - cost : cost - x(1);
         };
 
-        auto pconstr = [](Graph& G, const edge_t& e, const Arr&) {
+        auto pconstr = [](const Graph& G, const edge_t& e, const Arr&) {
             auto&& [u, v] = G.end_points(e);
             return (u <= v) ? Arr {1., 0.} : Arr {0., -1.};
         };
 
-        auto P = network3_oracle(_G, constr, pconstr);
+        auto P = network3_oracle(this->_G, this->dist, constr, pconstr);
         auto [g, f] = P(x);
         if (g.shape()[0] > 1 || g(0) != 0)
         {

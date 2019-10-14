@@ -82,10 +82,11 @@ if (OpenBLAS_FOUND)
     message(STATUS "Found OpenBLAS: ${OpenBLAS_INCLUDE_DIRS}")
     set(LIBS ${LIBS} ${OpenBLAS_LIBRARIES})
 endif (OpenBLAS_FOUND)
-find_package (Boost REQUIRED)
+
+find_package (Boost REQUIRED COMPONENTS context coroutine)
 if (Boost_FOUND)
     message(STATUS "Found boost: ${Boost_INCLUDE_DIRS}")
-    # set(LIBS ${LIBS} ${Boost_LIBRARIES})
+    set(LIBS ${LIBS} ${Boost_LIBRARIES})
 endif (Boost_FOUND)
 
 # add_definitions ( -std=c++1z -g)

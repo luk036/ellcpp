@@ -4,7 +4,7 @@
 #include <boost/graph/properties.hpp>
 #include <boost/property_map/property_map.hpp>
 #include <catch2/catch.hpp>
-#include <ellcpp/oracles/min_cycle_ratio.hpp> // import min_cycle_ratio, set_default
+#include <netoptim/min_cycle_ratio.hpp> // import min_cycle_ratio, set_default
 #include <py2cpp/fractions.hpp>         // import Fraction
 #include <py2cpp/nx2bgl.hpp>
 #include <utility> // for std::pair
@@ -65,7 +65,7 @@ static auto create_test_case_timing()
     std::size_t indices[] = {0, 1, 2, 3, 4, 5, 6, 7};
     int num_arcs = sizeof(edge_array) / sizeof(Edge);
 
-    static auto g = graph_t(edge_array, edge_array + num_arcs, indices, num_nodes);
+    static graph_t g(edge_array, edge_array + num_arcs, indices, num_nodes);
     return xn::grAdaptor<graph_t>(g);
 }
 
@@ -87,7 +87,8 @@ TEST_CASE("Test Cycle Ratio (boost)", "[test_cycle_ratio_boost]")
         return 1;
     };
 
-    auto [r, c] = min_cycle_ratio(G, get_cost, get_time, fun::Fraction<int> {});
+    auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
+    auto [r, c] = min_cycle_ratio(G, get_cost, get_time, dist);
     CHECK(!c.empty());
     CHECK(c.size() == 5);
     CHECK(r == fun::Fraction<int>(9, 5));
@@ -115,10 +116,11 @@ TEST_CASE(
     auto get_time = [&](const xn::grAdaptor<graph_t>& /*G*/, const auto &
                         /*e*/) -> int { return 1; };
 
-    auto [r, c] = min_cycle_ratio(G, get_cost, get_time, fun::Fraction<int> {});
+    auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
+    auto [r, c] = min_cycle_ratio(G, get_cost, get_time, dist);
     CHECK(!c.empty());
-    CHECK(r == fun::Fraction<int>(3, 2));
-    CHECK(c.size() == 2);
+    CHECK(r == fun::Fraction<int>(1, 1));
+    CHECK(c.size() == 3);
     // print(r);
     // print(c);
     // print(dist.items());

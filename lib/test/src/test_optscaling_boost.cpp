@@ -83,7 +83,9 @@ TEST_CASE("Test Optimal Scaling", "[test_optscaling]")
     auto x0 = Arr {*max, *min};
     auto t = *max - *min;
     auto E = ell {1.5 * t, x0};
-    auto P = optscaling_oracle {G, get_cost, double(0.)};
+    auto dist = std::vector(G.number_of_nodes(), 0.);
+
+    auto P = optscaling_oracle {G, dist, get_cost};
     auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
 
     CHECK(ell_info.feasible);
