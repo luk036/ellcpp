@@ -27,7 +27,7 @@ class my_oracle
     {
     }
 
-    std::tuple<Arr, double, bool> operator()(Arr& x, double t)
+    std::tuple<Arr, double, bool> operator()(const Arr& x, double t)
     {
         using xt::linalg::dot;
 
