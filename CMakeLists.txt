@@ -77,11 +77,26 @@ if (xtensor_FOUND)
     message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}")
     set(LIBS ${LIBS} ${xtensor_LIBRARIES})
 endif (xtensor_FOUND)
+
+set(OpenBLAS_USE_STATIC_LIBS TRUE)
 find_package (OpenBLAS REQUIRED)
 if (OpenBLAS_FOUND)
-    message(STATUS "Found OpenBLAS: ${OpenBLAS_INCLUDE_DIRS}")
+    message(STATUS "Found OpenBLAS: ${OpenBLAS_LIBRARIES}")
+    # set(LIBS ${LIBS} ${CMAKE_PREFIX_PATH}/lib/libopenblas.so.0) # can't find .so ???
     set(LIBS ${LIBS} ${OpenBLAS_LIBRARIES})
 endif (OpenBLAS_FOUND)
+
+find_package(LAPACK REQUIRED)
+if (LAPACK_FOUND)
+    message(STATUS "Found LAPACK: ${LAPACK_LIBRARIES}")
+    set(LIBS ${LIBS} ${LAPACK_LIBRARIES})
+endif (LAPACK_FOUND)
+
+find_package(BLAS REQUIRED)
+if (BLAS_FOUND)
+    message(STATUS "Found BLAS: ${BLAS_LIBRARIES}")
+    set(LIBS ${LIBS} ${BLAS_LIBRARIES})
+endif (BLAS_FOUND)
 
 find_package (Boost REQUIRED COMPONENTS context coroutine)
 if (Boost_FOUND)

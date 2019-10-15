@@ -2,8 +2,8 @@
 #pragma once
 
 #include "network3_oracle.hpp"
-#include <xtensor/xarray.hpp>
 #include <cassert>
+#include <xtensor/xarray.hpp>
 
 /*!
  * @brief
@@ -17,9 +17,10 @@ class optscaling_oracle3
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using edge_t = typename Graph::edge_t;
-    // using constr_fn = std::function<double(const Graph&, const edge_t, const Arr&)>;
-    // using pconstr_fn = std::function<Arr(const Graph&, const edge_t, const Arr&)>;
-    // using NWO = network_oracle<Graph, Container, constr_fn, pconstr_fn>;
+    // using constr_fn = std::function<double(const Graph&, const edge_t, const
+    // Arr&)>; using pconstr_fn = std::function<Arr(const Graph&, const edge_t,
+    // const Arr&)>; using NWO = network_oracle<Graph, Container, constr_fn,
+    // pconstr_fn>;
 
   public:
     struct constr3
@@ -31,7 +32,8 @@ class optscaling_oracle3
         {
         }
 
-        auto operator()(const Graph& G, const edge_t& e, const Arr& x, double t) const -> double
+        auto operator()(const Graph& G, const edge_t& e, const Arr& x,
+            double t) const -> double
         {
             auto [u, v] = G.end_points(e);
             auto cost = this->_get_cost(G, e);
@@ -42,7 +44,8 @@ class optscaling_oracle3
 
     struct pconstr3
     {
-        auto operator()(const Graph& G, const edge_t& e, const Arr& /* x */, double /* t */) const -> Arr
+        auto operator()(const Graph& G, const edge_t& e, const Arr& /* x */,
+            double /* t */) const -> Arr
         {
             auto [u, v] = G.end_points(e);
             assert(u != v);
@@ -64,7 +67,7 @@ class optscaling_oracle3
      * @param get_cost
      */
     optscaling_oracle3(const Graph& G, Container& dist, Fn get_cost)
-        : _network3(G, dist, constr3{get_cost}, pconstr3{})
+        : _network3(G, dist, constr3 {get_cost}, pconstr3 {})
     {
     }
 

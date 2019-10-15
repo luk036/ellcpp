@@ -210,7 +210,8 @@ std::tuple<int, double> ell::update(const Arr& g, const T& beta)
     this->_Q -= (sigma / omega) * xt::linalg::outer(Qg, Qg);
     this->_kappa *= delta;
 
-    if (this->_no_defer_trick) {
+    if (this->_no_defer_trick)
+    {
         this->_Q *= this->_kappa;
         this->_kappa = 1.;
     }

@@ -22,15 +22,15 @@ class my_oracle
     Arr c;
 
   public:
-    my_oracle(const std::vector<Arr>& F1, Arr B1, const std::vector<Arr>& F2, Arr B2,
-        Arr& c)
+    my_oracle(const std::vector<Arr>& F1, Arr B1, const std::vector<Arr>& F2,
+        Arr B2, Arr& c)
         : lmi1 {F1, B1}
         , lmi2 {F2, B2}
         , c {c}
     {
     }
 
-    std::tuple<Arr, double, bool> operator()(Arr& x, double t)
+    std::tuple<Arr, double, bool> operator()(const Arr& x, double t)
     {
         using xt::linalg::dot;
 
@@ -76,7 +76,8 @@ TEST_CASE("LMI (old) test", "[lmi_old_oracle]")
     // int niter, feasible, status;
     // Arr xb;
 
-    auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+    auto [_, ell_info] =
+        cutting_plane_dc(P, E, std::numeric_limits<double>::max());
     // fmt::print("{:f} {} {} {} \n", fb, niter, feasible, status);
     // std::cout << "LMI xbest: " << xb << "\n";
     // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible <<

@@ -20,7 +20,7 @@ TEST_CASE("Profit Test 1", "[profit]")
     {
         auto E = ell(100., Vec {0., 0.});
         auto P = profit_oracle(p, A, k, a, v);
-        auto ell_info = cutting_plane_dc(P, E, 0.);
+        auto [_, ell_info] = cutting_plane_dc(P, E, 0.);
         CHECK(ell_info.num_iters == 37);
     }
 
@@ -29,14 +29,14 @@ TEST_CASE("Profit Test 1", "[profit]")
         auto e = Vec {0.003, 0.007};
         auto E = ell(100., Vec {0., 0.});
         auto P = profit_rb_oracle(p, A, k, a, v, e, e3);
-        auto ell_info = cutting_plane_dc(P, E, 0.);
+        auto [_, ell_info] = cutting_plane_dc(P, E, 0.);
         CHECK(ell_info.num_iters == 42);
     }
 
     {
         auto E = ell(100., Vec {2, 0.});
         auto P = profit_q_oracle(p, A, k, a, v);
-        auto ell_info = cutting_plane_q(P, E, 0.);
+        auto [_, ell_info] = cutting_plane_q(P, E, 0.);
         CHECK(ell_info.num_iters == 28);
     }
 }

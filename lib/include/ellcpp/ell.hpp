@@ -69,24 +69,24 @@ class ell
     ell(const ell& E) = default;
 
     /*!
-     * @brief
+     * @brief copy the whole array anyway
      *
      * @return const Arr&
      */
-    auto xc() const -> const Arr&
+    auto xc() const -> Arr
     {
         return _xc;
     }
 
-    /*!
-     * @brief
-     *
-     * @return Arr&
-     */
-    auto xc() -> Arr&
-    {
-        return _xc;
-    }
+    // /*!
+    //  * @brief
+    //  *
+    //  * @return Arr&
+    //  */
+    // auto xc() -> Arr&
+    // {
+    //     return _xc;
+    // }
 
     /*!
      * @brief Set the xc object
@@ -187,19 +187,19 @@ class ell1d
      *
      * @return double
      */
-    const double& xc() const
+    auto xc() const -> double
     {
         return _xc;
     }
 
     /*!
-     * @brief
+     * @brief Set the xc object
      *
-     * @return double
+     * @param xc
      */
-    double& xc()
+    void set_xc(double xc)
     {
-        return _xc;
+        _xc = xc;
     }
 
     /*!

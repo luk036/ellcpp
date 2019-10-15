@@ -140,7 +140,8 @@ class lsq_oracle
     {
         auto n = x.shape()[0];
         auto g = Arr {xt::zeros<double>({n})};
-        auto [cut_exist0, g0, fj0] = this->_lmi0(xt::view(x, xt::range(0, n - 1)));
+        auto [cut_exist0, g0, fj0] =
+            this->_lmi0(xt::view(x, xt::range(0, n - 1)));
         if (cut_exist0)
         {
             xt::view(g, xt::range(0, n - 1)) = g0;
@@ -149,7 +150,8 @@ class lsq_oracle
         }
         this->_qmi.update(x(n - 1));
 
-        auto [cut_exist1, g1, fj1] = this->_qmi(xt::view(x, xt::range(0, n - 1)));
+        auto [cut_exist1, g1, fj1] =
+            this->_qmi(xt::view(x, xt::range(0, n - 1)));
         if (cut_exist1)
         {
             xt::view(g, xt::range(0, n - 1)) = g1;
@@ -190,10 +192,10 @@ auto lsq_corr_core2(const Arr& Y, std::size_t m, lsq_oracle& P)
     x(0) = 4;
     x(m) = normY2 / 2.;
     auto E = ell(val, x);
-    auto [x_best, fb, feasible, num_iters, status] =
+    auto [x_best, ell_info] =
         cutting_plane_dc(P, E, std::numeric_limits<double>::max());
     Arr a = xt::view(x_best, xt::range(0, m));
-    return std::tuple {std::move(a), num_iters, feasible};
+    return std::tuple {std::move(a), ell_info.num_iters, ell_info.feasible};
 }
 
 /*!
@@ -316,9 +318,10 @@ auto mle_corr_core(const Arr& /*Y*/, std::size_t m, mle_oracle& P)
     auto x = Arr {xt::zeros<double>({m})};
     x(0) = 4.;
     auto E = ell(500., x);
-    auto [x_best, fb, feasible, num_iters, status] =
+    auto [x_best, ell_info] =
         cutting_plane_dc(P, E, std::numeric_limits<double>::max());
-    return std::tuple {std::move(x_best), num_iters, feasible};
+    return std::tuple {
+        std::move(x_best), ell_info.num_iters, ell_info.feasible};
 }
 
 /*!

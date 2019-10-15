@@ -34,7 +34,7 @@ int main() {
   auto x0 = Arr{0., 0.}; // initial x0
   auto E = ell(10., x0);
   auto P = my_oracle;
-  auto ell_info = cutting_plane_dc(P, E, -100.);
+  auto [_, ell_info] = cutting_plane_dc(P, E, -100.);
   std::cout << ell_info.num_iters << "," << ell_info.feasible << "," << ell_info.status << "\n";
   std::cout << ell_info.val << "\n";
 }

@@ -44,7 +44,8 @@ TEST_CASE("Example 1", "[example1]")
     auto E = ell {10., x0};
     auto P = my_oracle;
 
-    auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::min());
+    auto [_, ell_info] =
+        cutting_plane_dc(P, E, std::numeric_limits<double>::min());
     CHECK(ell_info.feasible);
     // std::cout << "Example 1 result: " << fb << ", " << niter << "," <<
     // feasible << "," << status << "\n"; std::cout << "Example 1 xbest: " << xb

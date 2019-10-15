@@ -12,7 +12,8 @@
  * @tparam Fn_Eval
  * @tparam Grad_Fn
  */
-template <typename Graph, typename Container, typename Fn_Eval, typename Grad_Fn>
+template <typename Graph, typename Container, typename Fn_Eval,
+    typename Grad_Fn>
 class network3_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
@@ -34,7 +35,8 @@ class network3_oracle
      * @param f
      * @param p
      */
-    network3_oracle(const Graph& G, Container& dist, const Fn_Eval& f, const Grad_Fn& p)
+    network3_oracle(
+        const Graph& G, Container& dist, const Fn_Eval& f, const Grad_Fn& p)
         : _G {G}
         , _dist {dist}
         , _f {f}
@@ -56,7 +58,8 @@ class network3_oracle
      */
     auto operator()(const Arr& x)
     {
-        auto get_weight = [this, &x](const Graph& G, const edge_t& e) -> double {
+        auto get_weight = [this, &x](
+                              const Graph& G, const edge_t& e) -> double {
             return this->_f(G, e, x, this->_t);
         };
 

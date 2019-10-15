@@ -3,7 +3,7 @@
 
 #include <cmath>
 #include <tuple>
-#include <xtensor/xarray.hpp>
+// #include <xtensor/xarray.hpp>
 
 /*!
  * @brief Options
@@ -21,8 +21,6 @@ struct Options
  */
 struct CInfo
 {
-    xt::xarray<double, xt::layout_type::row_major> val;
-
     double value = 0.;
     bool feasible;
     size_t num_iters;
@@ -137,7 +135,7 @@ class bsearch_adaptor
         auto ret_info = cutting_plane_feas(_P, S, _options);
         if (ret_info.feasible)
         {
-            _S.xc() = S.xc();
+            _S.set_xc(S.xc());
             return true;
         }
         return false;
@@ -210,10 +208,8 @@ template <typename Oracle, typename Space>
 auto cutting_plane_dc(
     Oracle& Omega, Space& S, double t, const Options& options = Options())
 {
-    using Arr = xt::xarray<double, xt::layout_type::row_major>;
-
     bool feasible = false;
-    auto x_best = Arr {S.xc()};
+    auto x_best = S.xc();
     auto niter = 1U, status = 0U;
     for (; niter <= options.max_it; ++niter)
     {
@@ -237,9 +233,9 @@ auto cutting_plane_dc(
         }
     }
     auto ret = CInfo(feasible, niter, status);
-    ret.val = std::move(x_best);
+    // ret.val = std::move(x_best);
     ret.value = t;
-    return ret;
+    return std::tuple {std::move(x_best), std::move(ret)};
 } // END
 
 /*!
@@ -275,10 +271,8 @@ template <typename Oracle, typename Space>
 auto cutting_plane_q(
     Oracle& Omega, Space& S, double t, const Options& options = Options())
 {
-    using Arr = xt::xarray<double, xt::layout_type::row_major>;
-
     auto feasible = false;
-    auto x_best = Arr {S.xc()};
+    auto x_best = S.xc();
     auto status = 1U;
     auto niter = 1U;
     for (; niter <= options.max_it; ++niter)
@@ -316,7 +310,7 @@ auto cutting_plane_q(
         }
     }
     auto ret = CInfo(feasible, niter, status);
-    ret.val = std::move(x_best);
+    // ret.val = std::move(x_best);
     ret.value = t;
-    return ret;
+    return std::tuple {std::move(x_best), std::move(ret)};
 } // END

@@ -1,8 +1,8 @@
 #include "benchmark/benchmark.h"
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
-#include <ellcpp/oracles/lmi_oracle.hpp>
 #include <ellcpp/oracles/lmi_old_oracle.hpp>
+#include <ellcpp/oracles/lmi_oracle.hpp>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 // #include <xtensor/xarray.hpp>
@@ -19,8 +19,8 @@ class my_oracle
     Arr c;
 
   public:
-    my_oracle(const std::vector<Arr>& F1, Arr B1, const std::vector<Arr>& F2, Arr B2,
-        Arr& c)
+    my_oracle(const std::vector<Arr>& F1, Arr B1, const std::vector<Arr>& F2,
+        Arr B2, Arr& c)
         : lmi1 {F1, B1}
         , lmi2 {F2, B2}
         , c {c}
@@ -69,7 +69,8 @@ static void BM_LMI_Lazy(benchmark::State& state)
     {
         auto P = my_oracle<lmi_oracle>(F1, B1, F2, B2, c);
         auto E = ell(10., Arr {0., 0., 0.});
-        auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+        auto [_, ell_info] =
+            cutting_plane_dc(P, E, std::numeric_limits<double>::max());
     }
 }
 
@@ -97,7 +98,8 @@ static void BM_LMI_old(benchmark::State& state)
     {
         auto P = my_oracle<lmi_old_oracle>(F1, B1, F2, B2, c);
         auto E = ell(10., Arr {0., 0., 0.});
-        auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+        auto [_, ell_info] =
+            cutting_plane_dc(P, E, std::numeric_limits<double>::max());
     }
 }
 BENCHMARK(BM_LMI_old);
@@ -121,7 +123,8 @@ static void BM_LMI_No_Trick(benchmark::State& state)
         auto P = my_oracle<lmi_oracle>(F1, B1, F2, B2, c);
         auto E = ell(10., Arr {0., 0., 0.});
         E._no_defer_trick = true;
-        auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+        auto [_, ell_info] =
+            cutting_plane_dc(P, E, std::numeric_limits<double>::max());
     }
 }
 

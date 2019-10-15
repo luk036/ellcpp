@@ -2,10 +2,10 @@
  *  Distributed under the MIT License (See accompanying file /LICENSE )
  */
 #include <catch2/catch.hpp>
-#include <fmt/format.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lmi_oracle.hpp>
+#include <fmt/format.h>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 // #include <xtensor/xarray.hpp>
@@ -33,7 +33,7 @@ class my_oracle
     {
     }
 
-    std::tuple<Arr, double, bool> operator()(Arr& x, double t)
+    std::tuple<Arr, double, bool> operator()(const Arr& x, double t)
     {
         using xt::linalg::dot;
 
@@ -79,8 +79,10 @@ TEST_CASE("LMI test", "[lmi_oracle]")
     // int niter, feasible, status;
     // Arr xb;
 
-    auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
-    fmt::print("{:f} {} {} \n", ell_info.value, ell_info.num_iters, ell_info.feasible);
+    auto [_, ell_info] =
+        cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+    fmt::print(
+        "{:f} {} {} \n", ell_info.value, ell_info.num_iters, ell_info.feasible);
     // std::cout << "LMI xbest: " << xb << "\n";
     // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible <<
     // ", " << status

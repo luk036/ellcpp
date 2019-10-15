@@ -7,8 +7,8 @@
 #include <catch2/catch.hpp>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
-#include <ellcpp/oracles/optscaling_oracle.hpp> // import optscaling
 #include <ellcpp/oracles/optscaling3_oracle.hpp> // import optscaling
+#include <ellcpp/oracles/optscaling_oracle.hpp>  // import optscaling
 #include <py2cpp/nx2bgl.hpp>
 #include <utility> // for std::pair
 // #include <xtensor-blas/xlinalg.hpp>
@@ -51,7 +51,8 @@ static xn::grAdaptor<graph_t> create_test_case1()
         Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E), Edge(E, A)};
     std::size_t indices[] = {0, 1, 2, 3, 4};
     auto num_arcs = sizeof(edge_array) / sizeof(Edge);
-    static auto g = graph_t(edge_array, edge_array + num_arcs, indices, num_nodes);
+    static auto g =
+        graph_t(edge_array, edge_array + num_arcs, indices, num_nodes);
     return xn::grAdaptor<graph_t>(g);
 }
 
@@ -87,7 +88,8 @@ TEST_CASE("Test Optimal Scaling (two varaibles)", "[test_optscaling]")
     auto dist = std::vector(G.number_of_nodes(), 0.);
 
     auto P = optscaling_oracle {G, dist, get_cost};
-    auto ell_info = cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+    auto [_, ell_info] =
+        cutting_plane_dc(P, E, std::numeric_limits<double>::max());
 
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters <= 27);
