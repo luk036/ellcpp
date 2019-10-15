@@ -15,17 +15,16 @@
 template <typename Graph, typename Container, typename Fn_Eval, typename Grad_Fn>
 class network3_oracle
 {
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
+    using edge_t = typename Graph::edge_t;
+
   private:
     double _t {0.};
-
     const Graph& _G;
     Container& _dist;
     Fn_Eval _f;
     Grad_Fn _p;
     negCycleFinder<Graph> _S;
-
-    using edge_t = typename Graph::edge_t;
-    using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   public:
     /*!
@@ -35,7 +34,7 @@ class network3_oracle
      * @param f
      * @param p
      */
-    explicit network3_oracle(const Graph& G, Container& dist, Fn_Eval& f, Grad_Fn& p)
+    network3_oracle(const Graph& G, Container& dist, const Fn_Eval& f, const Grad_Fn& p)
         : _G {G}
         , _dist {dist}
         , _f {f}

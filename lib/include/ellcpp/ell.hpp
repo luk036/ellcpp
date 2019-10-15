@@ -171,8 +171,7 @@ class ell1d
      */
     ell1d(double l, double u) //
         : _r {(u - l) / 2}
-        , //
-        _xc {l + _r}
+        , _xc {l + _r}
     {
     }
 
@@ -188,7 +187,17 @@ class ell1d
      *
      * @return double
      */
-    double xc() const
+    const double& xc() const
+    {
+        return _xc;
+    }
+
+    /*!
+     * @brief
+     *
+     * @return double
+     */
+    double& xc()
     {
         return _xc;
     }

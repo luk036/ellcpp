@@ -33,7 +33,7 @@ class network_oracle
      * @param f
      * @param p
      */
-    network_oracle(const Graph& G, Container& dist, Fn_Eval& f, Grad_Fn& p)
+    network_oracle(const Graph& G, Container& dist, const Fn_Eval& f, const Grad_Fn& p)
         : _G {G}
         , _dist {dist}
         , _f {f}
