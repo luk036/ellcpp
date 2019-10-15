@@ -9,7 +9,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param x
  * @return std::tuple<Arr, double, bool>
  */
-std::tuple<Arr, double> lmi_oracle::operator()(const Arr& x)
+std::tuple<bool, Arr, double> lmi_oracle::operator()(const Arr& x)
 {
     auto n = x.size();
 
@@ -25,7 +25,7 @@ std::tuple<Arr, double> lmi_oracle::operator()(const Arr& x)
     this->_Q.factor(getA);
     if (this->_Q.is_spd())
     {
-        return std::tuple {Arr {0.}, -1.};
+        return {false, Arr {0.}, -1.};
     }
     auto ep = this->_Q.witness();
     auto g = Arr {xt::zeros<double>({n})};
@@ -33,5 +33,5 @@ std::tuple<Arr, double> lmi_oracle::operator()(const Arr& x)
     {
         g(i) = this->_Q.sym_quad(this->_F[i]);
     }
-    return std::tuple {std::move(g), ep};
+    return {true, std::move(g), ep};
 }

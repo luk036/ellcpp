@@ -58,7 +58,7 @@ class network_oracle
         auto C = this->_S.find_neg_cycle(this->_dist, get_weight);
         if (C.empty())
         {
-            return std::tuple {Arr {0.}, -1.};
+            return std::tuple {false, Arr {0.}, -1.};
         }
 
         auto g = Arr {xt::zeros<double>({x.size()})};
@@ -68,7 +68,7 @@ class network_oracle
             f -= this->_f(this->_G, e, x);
             g -= this->_p(this->_G, e, x);
         }
-        return std::tuple {std::move(g), f};
+        return std::tuple {true, std::move(g), f};
     }
 };
 

@@ -168,8 +168,8 @@ auto cutting_plane_feas(
 
     for (; niter <= options.max_it; ++niter)
     {
-        auto [g, h] = Omega(S.xc()); // query the oracle at S.xc()
-        if (g.shape()[0] <= 1 && g(0) == 0.)
+        auto [cut_exist, g, h] = Omega(S.xc()); // query the oracle at S.xc()
+        if (!cut_exist)
         { // feasible sol'n obtained
             feasible = true;
             break;

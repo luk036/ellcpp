@@ -55,5 +55,5 @@ class lmi_oracle
      * @param x
      * @return auto
      */
-    auto operator()(const Arr& x) -> std::tuple<Arr, double>;
+    auto operator()(const Arr& x) -> std::tuple<bool, Arr, double>;
 };

@@ -88,8 +88,8 @@ class optscaling_oracle
         // };
 
         // auto network = network_oracle(this->_G, this->_dist, constr{this->_get_cost}, pconstr{});
-        auto [g, f] = this->_network(x);
-        if (g.shape()[0] > 1 || g(0) != 0)
+        auto [cut_exist, g, f] = this->_network(x);
+        if (cut_exist)
         {
             return std::tuple {std::move(g), f, t};
         }

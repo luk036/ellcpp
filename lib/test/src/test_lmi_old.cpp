@@ -40,13 +40,13 @@ class my_oracle
         {
             return {this->c, fj1, t};
         }
-        auto [g2, fj2] = this->lmi1(x);
-        if (g2.shape()[0] > 1 || g2(0) != 0.)
+        auto [cut_exist2, g2, fj2] = this->lmi1(x);
+        if (cut_exist2)
         {
             return {std::move(g2), fj2, t};
         }
-        auto [g3, fj3] = this->lmi2(x);
-        if (g3.shape()[0] > 1 || g3(0) != 0.)
+        auto [cut_exist3, g3, fj3] = this->lmi2(x);
+        if (cut_exist3)
         {
             return {std::move(g3), fj3, t};
         }

@@ -140,8 +140,8 @@ class lsq_oracle
     {
         auto n = x.shape()[0];
         auto g = Arr {xt::zeros<double>({n})};
-        auto [g0, fj0] = this->_lmi0(xt::view(x, xt::range(0, n - 1)));
-        if (g0.shape()[0] > 1 || g0(0) != 0)
+        auto [cut_exist0, g0, fj0] = this->_lmi0(xt::view(x, xt::range(0, n - 1)));
+        if (cut_exist0)
         {
             xt::view(g, xt::range(0, n - 1)) = g0;
             g(n - 1) = 0.;
@@ -149,8 +149,8 @@ class lsq_oracle
         }
         this->_qmi.update(x(n - 1));
 
-        auto [g1, fj1] = this->_qmi(xt::view(x, xt::range(0, n - 1)));
-        if (g1.shape()[0] > 1 || g1(0) != 0)
+        auto [cut_exist1, g1, fj1] = this->_qmi(xt::view(x, xt::range(0, n - 1)));
+        if (cut_exist1)
         {
             xt::view(g, xt::range(0, n - 1)) = g1;
             auto& Q = this->_qmi._Q;
@@ -255,14 +255,14 @@ class mle_oracle
     {
         using xt::linalg::dot;
 
-        auto [g1, fj1] = this->_lmi(x);
-        if (g1.shape()[0] > 1 || g1(0) != 0) // not feasible
+        auto [cut_exist1, g1, fj1] = this->_lmi(x);
+        if (cut_exist1) // not feasible
         {
             return {std::move(g1), fj1, t};
         }
 
-        auto [g0, fj0] = this->_lmi0(x);
-        if (g0.shape()[0] > 1 || g0(0) != 0)
+        auto [cut_exist0, g0, fj0] = this->_lmi0(x);
+        if (cut_exist0)
         {
             return {std::move(g0), fj0, t};
         }

@@ -183,7 +183,7 @@ std::tuple<int, double> ell::update(const Arr& g, const T& beta)
     auto status = 0;
     auto params = std::tuple {0., 0., 0.};
 
-    if constexpr (std::is_scalar<T>::value)
+    if constexpr (std::is_scalar_v<T>)
     { // C++17
         std::tie(status, params) = this->__calc_dc(beta, tsq);
     }
