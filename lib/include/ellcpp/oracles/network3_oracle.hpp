@@ -2,7 +2,8 @@
 #pragma once
 
 #include <netoptim/neg_cycle.hpp> // import negCycleFinder
-#include <xtensor/xarray.hpp>
+// #include <xtensor/xarray.hpp>
+#include <ellcpp/utility.hpp>
 
 /*!
  * @brief
@@ -16,7 +17,7 @@ template <typename Graph, typename Container, typename Fn_Eval,
     typename Grad_Fn>
 class network3_oracle
 {
-    using Arr = xt::xarray<double, xt::layout_type::row_major>;
+    // using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using edge_t = typename Graph::edge_t;
 
   private:
@@ -56,7 +57,8 @@ class network3_oracle
      * @param x
      * @return auto
      */
-    auto operator()(const Arr& x)
+    template <typename T>
+    auto operator()(const T& x)
     {
         auto get_weight = [this, &x](
                               const Graph& G, const edge_t& e) -> double {
@@ -67,10 +69,10 @@ class network3_oracle
         auto C = this->_S.find_neg_cycle(this->_dist, get_weight);
         if (C.empty())
         {
-            return std::tuple {false, Arr {0.}, -1.};
+            return std::tuple {false, T {0.}, -1.};
         }
 
-        auto g = Arr {xt::zeros<double>({x.size()})};
+        auto g = zeros(x);
         auto f = 0.;
         for (const auto& e : C)
         {

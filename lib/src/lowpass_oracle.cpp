@@ -1,5 +1,6 @@
 #include <ellcpp/oracles/lowpass_oracle.hpp>
 #include <xtensor-blas/xlinalg.hpp>
+#include <ellcpp/utility.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
@@ -16,11 +17,10 @@ std::tuple<Arr, Arr, double> lowpass_oracle::operator()(
     using xt::linalg::dot;
 
     // 1. nonnegative-real constraint
-    auto n = x.shape()[0];
     // case 1,
     if (x[0] < 0)
     {
-        auto g = Arr {xt::zeros<double>({n})};
+        auto g = zeros(x);
         g[0] = -1.;
         auto f = Arr {-x[0]};
         return {std::move(g), std::move(f), Spsq};

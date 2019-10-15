@@ -1,4 +1,5 @@
 #include <ellcpp/oracles/lmi_oracle.hpp>
+#include <ellcpp/utility.hpp>
 // #include <xtensor-blas/xlinalg.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
@@ -28,7 +29,7 @@ std::tuple<bool, Arr, double> lmi_oracle::operator()(const Arr& x)
         return {false, Arr {0.}, -1.};
     }
     auto ep = this->_Q.witness();
-    auto g = Arr {xt::zeros<double>({n})};
+    auto g = zeros(x);
     for (size_t i = 0U; i < n; ++i)
     {
         g(i) = this->_Q.sym_quad(this->_F[i]);

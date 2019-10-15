@@ -95,43 +95,43 @@ TEST_CASE("Test Optimal Scaling (two varaibles)", "[test_optscaling]")
     CHECK(ell_info.num_iters <= 27);
 }
 
-// TEST_CASE("Test Optimal Scaling (binary search)", "[test_optscaling]")
-// {
-//     using EdgeIndexMap =
-//         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;
-//     using IterMap =
-//         boost::iterator_property_map<double*, EdgeIndexMap, double, double&>;
+TEST_CASE("Test Optimal Scaling (binary search)", "[test_optscaling]")
+{
+    using EdgeIndexMap =
+        typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;
+    using IterMap =
+        boost::iterator_property_map<double*, EdgeIndexMap, double, double&>;
 
-//     auto G = create_test_case1();
+    auto G = create_test_case1();
 
-//     double elem[] = {1.2, 2.3, 3.4, -4.5, 5.6};
-//     const auto num_of_nodes = sizeof(elem) / sizeof(double);
-//     double cost[num_of_nodes];
-//     for (size_t i = 0U; i < num_of_nodes; ++i)
-//     {
-//         cost[i] = std::log(std::abs(elem[i]));
-//     }
-//     auto edge_id = boost::get(boost::id_tag, G);
-//     auto cost_pa = IterMap {cost, edge_id};
+    double elem[] = {1.2, 2.3, 3.4, -4.5, 5.6};
+    const auto num_of_nodes = sizeof(elem) / sizeof(double);
+    double cost[num_of_nodes];
+    for (size_t i = 0U; i < num_of_nodes; ++i)
+    {
+        cost[i] = std::log(std::abs(elem[i]));
+    }
+    auto edge_id = boost::get(boost::id_tag, G);
+    auto cost_pa = IterMap {cost, edge_id};
 
-//     auto get_cost = [&](const xn::grAdaptor<graph_t>& /*G*/,
-//                         const auto& e) -> double {
-//         return boost::get(cost_pa, e);
-//     };
+    auto get_cost = [&](const xn::grAdaptor<graph_t>& /*G*/,
+                        const auto& e) -> double {
+        return boost::get(cost_pa, e);
+    };
 
-//     auto [cmin, cmax] = std::minmax_element(cost, cost + num_of_nodes);
-//     // auto cmin = *std::min_element(cost, cost + num_of_nodes);
-//     auto x0 = Arr {*cmax, *cmin};
+    auto [cmin, cmax] = std::minmax_element(cost, cost + num_of_nodes);
+    // auto cmin = *std::min_element(cost, cost + num_of_nodes);
+    // auto x0 = Arr {*cmax, *cmin};
 
-//     auto t = *cmax - *cmin;
-//     auto Iv = ell1d(*cmin, *cmax);
-//     auto dist = std::vector(G.number_of_nodes(), 0.);
+    auto t = *cmax - *cmin;
+    auto Iv = ell1d(*cmin, *cmax);
+    auto dist = std::vector(G.number_of_nodes(), 0.);
 
-//     auto Q = optscaling_oracle3 {G, dist, get_cost};
-//     auto P = bsearch_adaptor(Q, Iv);
-//     auto bound = std::tuple {0., 1.001 * t};
-//     auto bs_info = bsearch(P, bound);
+    auto Q = optscaling_oracle3 {G, dist, get_cost};
+    auto P = bsearch_adaptor(Q, Iv);
+    auto bound = std::tuple {0., 1.001 * t};
+    auto bs_info = bsearch(P, bound);
 
-//     CHECK(bs_info.feasible);
-//     CHECK(bs_info.num_iters <= 27);
-// }
+    CHECK(bs_info.feasible);
+    CHECK(bs_info.num_iters <= 27);
+}

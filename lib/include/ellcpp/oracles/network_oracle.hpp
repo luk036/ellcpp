@@ -3,6 +3,7 @@
 
 #include <netoptim/neg_cycle.hpp> // import negCycleFinder
 // #include <xtensor/xarray.hpp>
+#include <ellcpp/utility.hpp>
 
 /*!
  * @brief
@@ -65,8 +66,7 @@ class network_oracle
             return std::tuple {false, T {0.}, -1.};
         }
 
-        auto g = T {xt::zeros<double>({x.size()})};
-
+        auto g = zeros(x);
         auto f = 0.;
         for (const auto& e : C)
         {

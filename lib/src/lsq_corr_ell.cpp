@@ -4,6 +4,7 @@
 #include <ellcpp/oracles/lmi0_oracle.hpp>
 #include <ellcpp/oracles/lmi_oracle.hpp>
 #include <ellcpp/oracles/qmi_oracle.hpp>
+#include <ellcpp/utility.hpp>
 // #include <iostream>
 #include <limits>
 #include <tuple>
@@ -139,7 +140,7 @@ class lsq_oracle
     std::tuple<Arr, double, double> operator()(const Arr& x, double t)
     {
         auto n = x.shape()[0];
-        auto g = Arr {xt::zeros<double>({n})};
+        auto g = zeros(x);
         auto [cut_exist0, g0, fj0] =
             this->_lmi0(xt::view(x, xt::range(0, n - 1)));
         if (cut_exist0)

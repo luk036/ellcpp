@@ -3,7 +3,7 @@
 
 #include "network3_oracle.hpp"
 #include <cassert>
-#include <xtensor/xarray.hpp>
+// #include <xtensor/xarray.hpp>
 
 /*!
  * @brief
@@ -15,7 +15,7 @@
 template <typename Graph, typename Container, typename Fn> //
 class optscaling_oracle3
 {
-    using Arr = xt::xarray<double, xt::layout_type::row_major>;
+    // using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using edge_t = typename Graph::edge_t;
     // using constr_fn = std::function<double(const Graph&, const edge_t, const
     // Arr&)>; using pconstr_fn = std::function<Arr(const Graph&, const edge_t,
@@ -32,24 +32,24 @@ class optscaling_oracle3
         {
         }
 
-        auto operator()(const Graph& G, const edge_t& e, const Arr& x,
+        auto operator()(const Graph& G, const edge_t& e, const double& x,
             double t) const -> double
         {
             auto [u, v] = G.end_points(e);
             auto cost = this->_get_cost(G, e);
             assert(u != v);
-            return (u < v) ? x(0) + t - cost : cost - x(1);
+            return (u < v) ? x + t - cost : cost - x;
         }
     };
 
     struct pconstr3
     {
-        auto operator()(const Graph& G, const edge_t& e, const Arr& /* x */,
-            double /* t */) const -> Arr
+        auto operator()(const Graph& G, const edge_t& e, const double& /* x */,
+            double /* t */) const -> double
         {
             auto [u, v] = G.end_points(e);
             assert(u != v);
-            return (u < v) ? Arr {1.} : Arr {-1.};
+            return (u < v) ? 1. : -1.;
         }
     };
 
@@ -83,7 +83,7 @@ class optscaling_oracle3
      * @param t
      * @return auto
      */
-    auto operator()(const Arr& x)
+    auto operator()(const double& x)
     {
         return this->_network3(x);
     }
