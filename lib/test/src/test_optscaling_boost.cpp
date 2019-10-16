@@ -7,6 +7,7 @@
 #include <catch2/catch.hpp>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
+#include <ellcpp/ell1d.hpp>
 #include <ellcpp/oracles/optscaling3_oracle.hpp> // import optscaling
 #include <ellcpp/oracles/optscaling_oracle.hpp>  // import optscaling
 #include <py2cpp/nx2bgl.hpp>

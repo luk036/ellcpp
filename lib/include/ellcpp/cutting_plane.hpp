@@ -119,7 +119,7 @@ class bsearch_adaptor
      */
     auto x_best() const
     {
-        return _S.xc();
+        return this->_S.xc();
     }
 
     /**
@@ -130,12 +130,12 @@ class bsearch_adaptor
      */
     auto operator()(double t)
     {
-        Space S(_S);
-        _P.update(t);
-        auto ret_info = cutting_plane_feas(_P, S, _options);
+        Space S(this->_S);
+        this->_P.update(t);
+        auto ret_info = cutting_plane_feas(this->_P, S, this->_options);
         if (ret_info.feasible)
         {
-            _S.set_xc(S.xc());
+            this->_S.set_xc(S.xc());
             return true;
         }
         return false;
@@ -161,7 +161,7 @@ template <typename Oracle, typename Space>
 auto cutting_plane_feas(
     Oracle& Omega, Space& S, const Options& options = Options())
 {
-    bool feasible = false;
+    auto feasible = false;
     auto niter = 1U, status = 0U;
 
     for (; niter <= options.max_it; ++niter)
@@ -208,7 +208,7 @@ template <typename Oracle, typename Space>
 auto cutting_plane_dc(
     Oracle& Omega, Space& S, double t, const Options& options = Options())
 {
-    bool feasible = false;
+    auto feasible = false;
     auto x_best = S.xc();
     auto niter = 1U, status = 0U;
     for (; niter <= options.max_it; ++niter)

@@ -10,21 +10,20 @@
  * @brief maximum parametric problem
  *
  *    max  r
- *    s.t. dist[v] - dist[v] <= d(u, v, r);
+ *    s.t. dist[v] - dist[u] <= d(u, v, r)
  *         for all (u, v) : G
- *
- * @tparam Graph
- * @tparam T
- * @tparam Fn1
- * @tparam Fn2
+ * 
+ * @tparam Graph 
+ * @tparam T 
+ * @tparam Fn1 
+ * @tparam Fn2 
+ * @tparam Container 
  * @param G directed graph
- * @param r parameter to be maximized, initially a large number
+ * @param[inout] r_opt parameter to be maximized, initially a large number
  * @param d monotone decreasing function w.r.t. r
- * @param zero_cancel
- * @return:
- *       r_opt -- optimal value
- *       C_opt -- Most critial cycle
- *       dist -- optimal sol"n
+ * @param zero_cancel 
+ * @param[inout] dist 
+ * @return optimal r and the critical cycle
  */
 template <typename Graph, typename T, typename Fn1, typename Fn2,
     typename Container>
@@ -39,8 +38,7 @@ auto max_parametric(
     };
 
     auto S = negCycleFinder(G);
-    auto C_opt = std::vector<edge_t> {};
-    // auto r_opt = r;
+    auto C_opt = std::vector<edge_t> {}; // should initial outside
 
     while (true)
     {
@@ -51,13 +49,14 @@ auto max_parametric(
         }
 
         const auto& r_min = zero_cancel(G, C_min);
-
         if (r_min >= r_opt)
         {
             break;
         }
+
         C_opt = C_min;
         r_opt = r_min;
+        
         // update ???
         for (const auto& e : C_opt)
         {

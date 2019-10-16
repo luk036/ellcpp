@@ -130,42 +130,6 @@ ell::return_t ell::__calc_cc(double tsq) const
 }
 
 /*!
- * @brief
- *
- * @param g
- * @param beta
- * @return ell1d::return_t
- */
-ell1d::return_t ell1d::update(double g, double beta)
-{
-    auto tau = std::abs(this->_r * g);
-    auto tsq = tau * tau;
-
-    if (beta == 0.)
-    {
-        this->_r /= 2;
-        this->_xc += g > 0. ? -this->_r : this->_r;
-        return {0, tsq};
-    }
-    if (beta > tau)
-    {
-        return {1, tsq}; // no sol'n
-    }
-    if (unlikely(beta < -tau))
-    {
-        return {3, tsq}; // no effect
-    }
-
-    auto bound = this->_xc - beta / g;
-    auto u = g > 0. ? bound : this->_xc + this->_r;
-    auto l = g > 0. ? this->_xc - this->_r : bound;
-
-    this->_r = (u - l) / 2;
-    this->_xc = l + this->_r;
-    return {0, tsq};
-}
-
-/*!
  * @brief Update ellipsoid core function using the cut
  *          g' * (x - xc) + beta <= 0
  *

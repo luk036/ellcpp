@@ -7,16 +7,21 @@
 #include <py2cpp/py2cpp.hpp>
 
 /*!
- * @brief
+ * @brief minimum cost-to-time cycle ratio problem
  *
- * @tparam Graph directed graph
- * @tparam Fn1
- * @tparam Fn2
- * @tparam T
- * @param G
- * @param get_cost
- * @param get_time
- * @return auto
+ *    max  r
+ *    s.t. dist[v] - dist[u] <= cost(u, v) - r * time(u, v)
+ *         for all (u, v) : G
+ * 
+ * @tparam Graph 
+ * @tparam Fn1 
+ * @tparam Fn2 
+ * @tparam Container 
+ * @param G 
+ * @param get_cost 
+ * @param get_time 
+ * @param dist 
+ * @return auto 
  */
 template <typename Graph, typename Fn1, typename Fn2, typename Container>
 auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, Container& dist)
@@ -30,6 +35,10 @@ auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, Container& dist)
         e0 = e; // get the first edge (better idea???)
         break;
     }
+
+    auto& edges = G.edges();
+    auto max_c = *std::max_element(edges.begin(), edges.end(),
+                    [](const edge_t& e) { return get_cost(G, e); });
 
     // auto max_cost = *std::max_element(cost.begin(), cost.end());
     // auto min_time = *std::min_element(time.begin(), time.end());
