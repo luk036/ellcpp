@@ -12,6 +12,7 @@ template <typename Oracle>
 class my_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
+    using Cut = std::tuple<Arr, double>;
 
   private:
     Oracle lmi1;
@@ -27,7 +28,7 @@ class my_oracle
     {
     }
 
-    std::tuple<Arr, double, double> operator()(const Arr& x, double t)
+    std::tuple<Cut, double> operator()(const Arr& x, double t)
     {
         using xt::linalg::dot;
 
@@ -35,19 +36,17 @@ class my_oracle
         auto fj1 = f0 - t;
         if (fj1 > 0)
         {
-            return {this->c, fj1, t};
+            return {{this->c, fj1}, t};
         }
         if (auto cut2 = this->lmi1(x))
         {
-            auto [g2, fj2] = *cut2;
-            return {std::move(g2), fj2, t};
+            return {*cut2, t};
         }
         if (auto cut3 = this->lmi2(x))
         {
-            auto [g3, fj3] = *cut3;
-            return {std::move(g3), fj3, t};
+            return {*cut3, t};
         }
-        return {this->c, 0., f0};
+        return {{this->c, 0.}, f0};
     }
 };
 

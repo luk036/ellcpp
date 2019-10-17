@@ -24,7 +24,7 @@ TEST_CASE("PY2CPP", "[py2cpp]")
     CHECK(M.contains(8));
     CHECK(!M.contains(10));
     CHECK(py::len(M) == 3);
-    for (auto&& [e, _] : M.items())
+    for (auto [e, _] : M.items())
     {
         CHECK(M.contains(e));
     }

@@ -13,6 +13,7 @@
 class lowpass_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
+    using ParallelCut = std::tuple<Arr, Arr>;
 
   private:
     mutable unsigned int _i_Anr {0};
@@ -54,5 +55,5 @@ class lowpass_oracle
      * @return auto
      */
     auto operator()(const Arr& x, double Spsq) const
-        -> std::tuple<Arr, Arr, double>;
+        -> std::tuple<ParallelCut, double>;
 };

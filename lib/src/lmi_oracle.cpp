@@ -5,10 +5,10 @@
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 /*!
- * @brief 
- * 
- * @param x 
- * @return std::optional<std::tuple<Arr, double>> 
+ * @brief
+ *
+ * @param x
+ * @return std::optional<std::tuple<Arr, double>>
  */
 std::optional<std::tuple<Arr, double>> lmi_oracle::operator()(const Arr& x)
 {

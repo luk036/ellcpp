@@ -51,10 +51,10 @@ class lmi_old_oracle
     }
 
     /*!
-     * @brief 
-     * 
-     * @param x 
-     * @return std::optional<std::tuple<Arr, double>> 
+     * @brief
+     *
+     * @param x
+     * @return std::optional<std::tuple<Arr, double>>
      */
     auto operator()(const Arr& x) -> std::optional<std::tuple<Arr, double>>;
 };

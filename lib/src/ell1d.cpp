@@ -14,8 +14,10 @@
  * @param beta
  * @return ell1d::return_t
  */
-ell1d::return_t ell1d::update(double g, double beta)
+ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
 {
+    const auto& [g, beta] = cut;
+
     auto tau = std::abs(this->_r * g);
     auto tsq = tau * tau;
 

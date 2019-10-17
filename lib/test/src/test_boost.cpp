@@ -33,7 +33,7 @@ struct exercise_vertex
         // typename GraphTraits::edge_descriptor e;
         for (const auto& e : g.neighbors(v))
         {
-            auto&& [src, targ] = g.end_points(e);
+            // auto [src, targ] = g.end_points(e);
             // std::cout << "(" << index[src] << "," << index[targ] << ") ";
         }
         // std::cout << std::endl;

@@ -13,6 +13,7 @@
 class profit_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
+    using Cut = std::tuple<Arr, double>;
 
   private:
     double _log_pA;
@@ -47,8 +48,7 @@ class profit_oracle
      * @param t
      * @return auto
      */
-    auto operator()(const Arr& y, double t) const
-        -> std::tuple<Arr, double, double>;
+    auto operator()(const Arr& y, double t) const -> std::tuple<Cut, double>;
 };
 
 /*!
@@ -111,6 +111,7 @@ class profit_rb_oracle
 class profit_q_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
+    using Cut = std::tuple<Arr, double>;
 
   private:
     profit_oracle P;
@@ -138,5 +139,5 @@ class profit_q_oracle
      * @return auto
      */
     auto operator()(const Arr& y, double t, int /*unused*/) const
-        -> std::tuple<Arr, double, double, Arr, int>;
+        -> std::tuple<Cut, double, Arr, int>;
 };

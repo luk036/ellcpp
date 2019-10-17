@@ -108,7 +108,7 @@ class ell
      * @return std::tuple<int, double>
      */
     template <typename T>
-    std::tuple<int, double> update(const Arr& g, const T& beta);
+    std::tuple<int, double> update(const std::tuple<Arr, T>& cut);
 
   private:
     /*!

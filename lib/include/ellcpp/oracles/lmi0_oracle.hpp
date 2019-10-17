@@ -41,7 +41,7 @@ class lmi0_oracle
      * @brief
      *
      * @param x
-     * @return std::optional<std::tuple<Arr, double>> 
+     * @return std::optional<std::tuple<Arr, double>>
      */
     auto operator()(const Arr& x) -> std::optional<std::tuple<Arr, double>>;
 };

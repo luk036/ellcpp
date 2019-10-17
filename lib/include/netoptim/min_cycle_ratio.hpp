@@ -12,16 +12,16 @@
  *    max  r
  *    s.t. dist[v] - dist[u] <= cost(u, v) - r * time(u, v)
  *         for all (u, v) : G
- * 
- * @tparam Graph 
- * @tparam Fn1 
- * @tparam Fn2 
- * @tparam Container 
- * @param G 
- * @param get_cost 
- * @param get_time 
- * @param dist 
- * @return auto 
+ *
+ * @tparam Graph
+ * @tparam Fn1
+ * @tparam Fn2
+ * @tparam Container
+ * @param G
+ * @param get_cost
+ * @param get_time
+ * @param dist
+ * @return auto
  */
 template <typename Graph, typename Fn1, typename Fn2, typename Container>
 auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, Container& dist)

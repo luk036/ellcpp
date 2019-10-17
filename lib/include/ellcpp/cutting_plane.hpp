@@ -173,8 +173,7 @@ auto cutting_plane_feas(
             break;
         }
         double tsq;
-        auto [g, h] = *cut;
-        std::tie(status, tsq) = S.update(g, h); // update S
+        std::tie(status, tsq) = S.update(*cut); // update S
         if (status != 0)
         {
             break;
@@ -216,7 +215,7 @@ auto cutting_plane_dc(
 
     for (; niter <= options.max_it; ++niter)
     {
-        auto [g, h, t1] = Omega(S.xc(), t);
+        auto [cut, t1] = Omega(S.xc(), t);
         if (t != t1)
         { // best t obtained
             feasible = true;
@@ -224,7 +223,7 @@ auto cutting_plane_dc(
             x_best = S.xc();
         }
         double tsq;
-        std::tie(status, tsq) = S.update(g, h);
+        std::tie(status, tsq) = S.update(cut);
         if (status == 1)
         {
             break;
@@ -280,7 +279,7 @@ auto cutting_plane_q(
     auto niter = 1U;
     for (; niter <= options.max_it; ++niter)
     {
-        auto [g, h, t1, x0, loop] = Omega(S.xc(), t, (status != 3) ? 0 : 1);
+        auto [cut, t1, x0, loop] = Omega(S.xc(), t, (status != 3) ? 0 : 1);
         // if (status != 3) {
         //     if (loop == 1) { // discrete sol'n
         //         h += xt::linalg::dot(g, x0 - S.xc())();
@@ -301,7 +300,7 @@ auto cutting_plane_q(
             x_best = x0;
         }
         double tsq;
-        std::tie(status, tsq) = S.update(g, h);
+        std::tie(status, tsq) = S.update(cut);
         if (status == 1)
         {
             break;

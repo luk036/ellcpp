@@ -112,6 +112,7 @@ class lsq_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using shape_type = Arr::shape_type;
+    using Cut = std::tuple<Arr, double>;
 
   private:
     qmi_oracle _qmi;
@@ -137,7 +138,7 @@ class lsq_oracle
      * @param t
      * @return auto
      */
-    std::tuple<Arr, double, double> operator()(const Arr& x, double t)
+    std::tuple<Cut, double> operator()(const Arr& x, double t)
     {
         auto n = x.size();
         auto g = zeros(x);
@@ -146,7 +147,7 @@ class lsq_oracle
             auto [g0, fj0] = *cut0;
             xt::view(g, xt::range(0, n - 1)) = g0;
             g(n - 1) = 0.;
-            return {std::move(g), fj0, t};
+            return {{std::move(g), fj0}, t};
         }
         this->_qmi.update(x(n - 1));
 
@@ -159,16 +160,16 @@ class lsq_oracle
             auto [start, stop] = Q.p;
             auto v = xt::view(Q.v, xt::range(start, stop));
             g(n - 1) = -xt::linalg::dot(v, v)();
-            return {std::move(g), fj1, t};
+            return {{std::move(g), fj1}, t};
         }
         g(n - 1) = 1.;
 
         auto fj = x(n - 1) - t;
         if (fj > 0)
         {
-            return {std::move(g), fj, t};
+            return {{std::move(g), fj}, t};
         }
-        return {std::move(g), 0., x(n - 1)};
+        return {{std::move(g), 0.}, x(n - 1)};
     }
 };
 
@@ -223,6 +224,7 @@ class mle_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using shape_type = Arr::shape_type;
+    using Cut = std::tuple<Arr, double>;
 
   private:
     const Arr& _Y;
@@ -252,20 +254,18 @@ class mle_oracle
      * @param t
      * @return auto
      */
-    std::tuple<Arr, double, double> operator()(const Arr& x, double t)
+    std::tuple<Cut, double> operator()(const Arr& x, double t)
     {
         using xt::linalg::dot;
 
         if (auto cut1 = this->_lmi(x))
         {
-            auto [g1, fj1] = *cut1;
-            return {std::move(g1), fj1, t};
+            return {*cut1, t};
         }
 
         if (auto cut0 = this->_lmi0(x))
         {
-            auto [g0, fj0] = *cut0;
-            return {std::move(g0), fj0, t};
+            return {*cut0, t};
         }
 
         auto n = x.shape()[0];
@@ -288,7 +288,7 @@ class mle_oracle
             f = 0.;
         }
 
-        Arr g = xt::zeros<double>({n});
+        auto g = zeros(x);
 
         for (size_t i = 0U; i < n; ++i)
         {
@@ -300,7 +300,7 @@ class mle_oracle
                     xt::view(SFsi, k, xt::all()), xt::view(SY, xt::all(), k))();
             }
         }
-        return {std::move(g), f, t};
+        return {{std::move(g), f}, t};
     }
 };
 

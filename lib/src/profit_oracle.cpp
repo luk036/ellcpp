@@ -2,21 +2,21 @@
 #include <xtensor-blas/xlinalg.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
+using Cut = std::tuple<Arr, double>;
 
 /*!
  * @brief
  *
  * @param y
  * @param t
- * @return std::tuple<Arr, double, double>
+ * @return std::tuple<Cut, double>
  */
-std::tuple<Arr, double, double> profit_oracle::operator()(
-    const Arr& y, double t) const
+std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
 {
     auto fj1 = y[0] - this->_log_k; // constraint
     if (fj1 > 0.)
     {
-        return {Arr {1., 0.}, fj1, t};
+        return {{Arr {1., 0.}, fj1}, t};
     }
 
     auto log_Cobb = this->_log_pA + xt::linalg::dot(this->_a, y)();
@@ -32,7 +32,7 @@ std::tuple<Arr, double, double> profit_oracle::operator()(
         fj = 0.;
     }
     auto g = Arr {(this->_v * x) / te - this->_a};
-    return {std::move(g), fj, t};
+    return {{std::move(g), fj}, t};
 }
 
 /*!
@@ -42,7 +42,7 @@ std::tuple<Arr, double, double> profit_oracle::operator()(
  * @param t
  * @return auto
  */
-std::tuple<Arr, double, double, Arr, int> profit_q_oracle::operator()(
+std::tuple<Cut, double, Arr, int> profit_q_oracle::operator()(
     const Arr& y, double t, int /*unused*/) const
 {
     auto x = Arr {xt::round(xt::exp(y))};
@@ -55,7 +55,8 @@ std::tuple<Arr, double, double, Arr, int> profit_q_oracle::operator()(
         x[1] = 1.;
     }
     auto yd = Arr {xt::log(x)};
-    auto [g, h, t1] = this->P(yd, t);
+    auto [cut, t1] = this->P(yd, t);
+    auto& [g, h] = cut;
     h += xt::linalg::dot(g, yd - y)();
-    return {std::move(g), h, t1, std::move(yd), 1};
+    return {std::move(cut), t1, std::move(yd), 1};
 }

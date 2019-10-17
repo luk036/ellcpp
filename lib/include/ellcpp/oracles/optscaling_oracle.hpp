@@ -18,6 +18,8 @@ class optscaling_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using edge_t = typename Graph::edge_t;
+    using Cut = std::tuple<Arr, double>;
+
     // using constr_fn = std::function<double(const Graph&, const edge_t, const
     // Arr&)>; using pconstr_fn = std::function<Arr(const Graph&, const edge_t,
     // const Arr&)>; using NWO = network_oracle<Graph, Container, constr_fn,
@@ -77,7 +79,7 @@ class optscaling_oracle
      * @param t
      * @return auto
      */
-    auto operator()(const Arr& x, double t)
+    auto operator()(const Arr& x, double t) -> std::tuple<Cut, double>
     {
         // auto constr = [this](const Graph& G, const edge_t& e, const Arr& x) {
         //     auto [u, v] = G.end_points(e);
@@ -95,7 +97,7 @@ class optscaling_oracle
         if (auto cut = this->_network(x))
         {
             auto [g, f] = *cut;
-            return std::tuple {std::move(g), f, t};
+            return {{std::move(g), f}, t};
         }
         auto s = x(0) - x(1);
         auto fj = s - t;
@@ -104,6 +106,6 @@ class optscaling_oracle
             t = s;
             fj = 0.;
         }
-        return std::tuple {Arr {1., -1.}, fj, t};
+        return {{Arr {1., -1.}, fj}, t};
     }
 };

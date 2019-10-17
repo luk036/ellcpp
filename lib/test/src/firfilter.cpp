@@ -35,6 +35,8 @@ static auto D = 8.25; // Delay value.
 // Optimal Chebyshev filter formulation.
 class my_fir_oracle
 {
+    using Cut = std::tuple<Arr, double>;
+
     // Gaussian filter with linear phase. (Uncomment lines below for this
     // design.) var = 0.05 Hdes = 1/(xt::sqrt(2*PI*var)) *
     // xt::exp(-xt::square(w-PI/2)/(2*var)) Hdes = xt::multiply(Hdes,
@@ -64,8 +66,7 @@ class my_fir_oracle
     Arr A_I = -xt::sin(A_theta);
 
   public:
-    auto operator()(const Arr& h, double t) const
-        -> std::tuple<Arr, double, double>
+    auto operator()(const Arr& h, double t) const -> std::tuple<Cut, double>
     {
         auto fmax = std::numeric_limits<double>::min();
         auto gmax = Arr {xt::zeros<double>({n})};
@@ -82,7 +83,7 @@ class my_fir_oracle
             if (fj >= t)
             {
                 auto g = Arr {2. * (t_r * a_R + t_i * a_I)};
-                return {std::move(g), fj - t, t};
+                return {{std::move(g), fj - t}, t};
             }
             if (fmax < fj)
             {
@@ -92,7 +93,7 @@ class my_fir_oracle
             }
         }
 
-        return {std::move(gmax), 0., fmax};
+        return {{std::move(gmax), 0.}, fmax};
     }
 };
 

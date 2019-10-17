@@ -46,12 +46,12 @@ class negCycleFinder
   public:
     /*!
      * @brief find negative cycle
-     * 
-     * @tparam Container 
-     * @tparam WeightFn 
-     * @param dist 
-     * @param get_weight 
-     * @return std::vector<edge_t> 
+     *
+     * @tparam Container
+     * @tparam WeightFn
+     * @param dist
+     * @param get_weight
+     * @return std::vector<edge_t>
      */
     template <typename Container, typename WeightFn>
     auto find_neg_cycle(Container& dist, const WeightFn& get_weight)
@@ -80,7 +80,7 @@ class negCycleFinder
   private:
     /*!
      * @brief Find a cycle on policy graph
-     * 
+     *
      * @return node_t a start node of the cycle
      */
     auto __find_cycle() -> node_t
@@ -121,13 +121,13 @@ class negCycleFinder
 
     /*!
      * @brief Perform one relaxation
-     * 
-     * @tparam Container 
-     * @tparam WeightFn 
-     * @param dist 
-     * @param get_weight 
-     * @return true 
-     * @return false 
+     *
+     * @tparam Container
+     * @tparam WeightFn
+     * @param dist
+     * @param get_weight
+     * @return true
+     * @return false
      */
     template <typename Container, typename WeightFn>
     auto __relax(Container& dist, const WeightFn& get_weight) -> bool
@@ -152,9 +152,9 @@ class negCycleFinder
 
     /*!
      * @brief generate a cycle list
-     * 
-     * @param handle 
-     * @return std::vector<edge_t> 
+     *
+     * @param handle
+     * @return std::vector<edge_t>
      */
     auto __cycle_list(node_t handle) -> std::vector<edge_t>
     {
@@ -175,14 +175,14 @@ class negCycleFinder
 
     /*!
      * @brief check if it is really a negative cycle
-     * 
-     * @tparam Container 
-     * @tparam WeightFn 
-     * @param handle 
-     * @param dist 
-     * @param get_weight 
-     * @return true 
-     * @return false 
+     *
+     * @tparam Container
+     * @tparam WeightFn
+     * @param handle
+     * @param dist
+     * @param get_weight
+     * @return true
+     * @return false
      */
     template <typename Container, typename WeightFn>
     auto __is_negative(const node_t& handle, Container& dist,

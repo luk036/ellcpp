@@ -64,5 +64,5 @@ class ell1d
      * @param beta
      * @return return_t
      */
-    return_t update(double g, double beta);
+    return_t update(const std::tuple<double, double>& cut);
 }; // } ell1d

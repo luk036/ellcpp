@@ -139,8 +139,10 @@ ell::return_t ell::__calc_cc(double tsq) const
  * @return std::tuple<int, double>
  */
 template <typename T>
-std::tuple<int, double> ell::update(const Arr& g, const T& beta)
+std::tuple<int, double> ell::update(const std::tuple<Arr, T>& cut)
 {
+    const auto& [g, beta] = cut;
+
     auto Qg = Arr {xt::linalg::dot(_Q, g)};
     auto omega = xt::linalg::dot(g, Qg)();
     auto tsq = this->_kappa * omega;
@@ -183,5 +185,6 @@ std::tuple<int, double> ell::update(const Arr& g, const T& beta)
 }
 
 // Instantiation
-template std::tuple<int, double> ell::update(const Arr& g, const double& beta);
-template std::tuple<int, double> ell::update(const Arr& g, const Arr& beta);
+template std::tuple<int, double> ell::update(
+    const std::tuple<Arr, double>& cut);
+template std::tuple<int, double> ell::update(const std::tuple<Arr, Arr>& cut);
