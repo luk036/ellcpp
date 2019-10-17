@@ -36,9 +36,9 @@ auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, Container& dist)
         break;
     }
 
-    auto& edges = G.edges();
-    auto max_c = *std::max_element(edges.begin(), edges.end(),
-                    [](const edge_t& e) { return get_cost(G, e); });
+    // auto& edges = G.edges();
+    // auto max_c = *std::max_element(edges.begin(), edges.end(),
+    //                 [](const edge_t& e) { return get_cost(G, e); });
 
     // auto max_cost = *std::max_element(cost.begin(), cost.end());
     // auto min_time = *std::min_element(time.begin(), time.end());

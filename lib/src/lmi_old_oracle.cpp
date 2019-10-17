@@ -6,12 +6,12 @@
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 /*!
- * @brief
- *
- * @param x
- * @return std::tuple<Arr, double, bool>
+ * @brief 
+ * 
+ * @param x 
+ * @return std::optional<std::tuple<Arr, double>> 
  */
-std::tuple<bool, Arr, double> lmi_old_oracle::operator()(const Arr& x)
+std::optional<std::tuple<Arr, double>> lmi_old_oracle::operator()(const Arr& x)
 {
     auto n = x.size();
 
@@ -24,7 +24,7 @@ std::tuple<bool, Arr, double> lmi_old_oracle::operator()(const Arr& x)
     this->_Q.factorize(A);
     if (this->_Q.is_spd())
     {
-        return {false, Arr {0.}, -1.};
+        return {};
     }
     auto ep = this->_Q.witness();
     auto g = zeros(x);
@@ -32,5 +32,5 @@ std::tuple<bool, Arr, double> lmi_old_oracle::operator()(const Arr& x)
     {
         g(i) = this->_Q.sym_quad(this->_F[i]);
     }
-    return {true, std::move(g), ep};
+    return {{std::move(g), ep}};
 }

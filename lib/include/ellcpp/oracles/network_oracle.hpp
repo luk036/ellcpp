@@ -1,9 +1,10 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include <netoptim/neg_cycle.hpp> // import negCycleFinder
-// #include <xtensor/xarray.hpp>
 #include <ellcpp/utility.hpp>
+#include <netoptim/neg_cycle.hpp> // import negCycleFinder
+#include <optional>
+// #include <xtensor/xarray.hpp>
 
 /*!
  * @brief
@@ -52,7 +53,7 @@ class network_oracle
      * @return auto
      */
     template <typename T>
-    auto operator()(const T& x)
+    auto operator()(const T& x) -> std::optional<std::tuple<T, double>>
     {
         auto get_weight = [this, &x](
                               const Graph& G, const edge_t& e) -> double {
@@ -63,7 +64,7 @@ class network_oracle
         auto C = this->_S.find_neg_cycle(this->_dist, get_weight);
         if (C.empty())
         {
-            return std::tuple {false, T {0.}, -1.};
+            return {};
         }
 
         auto g = zeros(x);
@@ -73,7 +74,7 @@ class network_oracle
             f -= this->_f(this->_G, e, x);
             g -= this->_p(this->_G, e, x);
         }
-        return std::tuple {true, std::move(g), f};
+        return {{std::move(g), f}};
     }
 };
 

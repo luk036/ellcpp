@@ -2,6 +2,7 @@
 #pragma once
 
 #include "chol_ext.hpp"
+#include <optional>
 #include <vector>
 #include <xtensor/xarray.hpp>
 
@@ -61,7 +62,7 @@ class qmi_oracle
      * @brief
      *
      * @param x
-     * @return auto
+     * @return std::optional<std::tuple<Arr, double>> 
      */
-    auto operator()(const Arr& x) -> std::tuple<bool, Arr, double>;
+    auto operator()(const Arr& x) -> std::optional<std::tuple<Arr, double>>;
 };

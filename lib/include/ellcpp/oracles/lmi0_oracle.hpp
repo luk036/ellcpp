@@ -3,6 +3,7 @@
 
 //#include "mat.hpp"
 #include "chol_ext.hpp"
+#include <optional>
 #include <xtensor/xarray.hpp>
 
 /*!
@@ -40,7 +41,7 @@ class lmi0_oracle
      * @brief
      *
      * @param x
-     * @return auto
+     * @return std::optional<std::tuple<Arr, double>> 
      */
-    auto operator()(const Arr& x) -> std::tuple<bool, Arr, double>;
+    auto operator()(const Arr& x) -> std::optional<std::tuple<Arr, double>>;
 };

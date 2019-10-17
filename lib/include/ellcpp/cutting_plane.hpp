@@ -166,13 +166,14 @@ auto cutting_plane_feas(
 
     for (; niter <= options.max_it; ++niter)
     {
-        auto [cut_exist, g, h] = Omega(S.xc()); // query the oracle at S.xc()
-        if (!cut_exist)
+        auto cut = Omega(S.xc()); // query the oracle at S.xc()
+        if (!cut)
         { // feasible sol'n obtained
             feasible = true;
             break;
         }
         double tsq;
+        auto [g, h] = *cut;
         std::tie(status, tsq) = S.update(g, h); // update S
         if (status != 0)
         {
@@ -210,7 +211,9 @@ auto cutting_plane_dc(
 {
     auto feasible = false;
     auto x_best = S.xc();
-    auto niter = 1U, status = 0U;
+    auto niter = 1U;
+    auto status = 0U;
+
     for (; niter <= options.max_it; ++niter)
     {
         auto [g, h, t1] = Omega(S.xc(), t);

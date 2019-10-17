@@ -139,22 +139,20 @@ class lsq_oracle
      */
     std::tuple<Arr, double, double> operator()(const Arr& x, double t)
     {
-        auto n = x.shape()[0];
+        auto n = x.size();
         auto g = zeros(x);
-        auto [cut_exist0, g0, fj0] =
-            this->_lmi0(xt::view(x, xt::range(0, n - 1)));
-        if (cut_exist0)
+        if (auto cut0 = this->_lmi0(xt::view(x, xt::range(0, n - 1))))
         {
+            auto [g0, fj0] = *cut0;
             xt::view(g, xt::range(0, n - 1)) = g0;
             g(n - 1) = 0.;
             return {std::move(g), fj0, t};
         }
         this->_qmi.update(x(n - 1));
 
-        auto [cut_exist1, g1, fj1] =
-            this->_qmi(xt::view(x, xt::range(0, n - 1)));
-        if (cut_exist1)
+        if (auto cut1 = this->_qmi(xt::view(x, xt::range(0, n - 1))))
         {
+            auto [g1, fj1] = *cut1;
             xt::view(g, xt::range(0, n - 1)) = g1;
             auto& Q = this->_qmi._Q;
             // auto ep = Q.witness();
@@ -258,15 +256,15 @@ class mle_oracle
     {
         using xt::linalg::dot;
 
-        auto [cut_exist1, g1, fj1] = this->_lmi(x);
-        if (cut_exist1) // not feasible
+        if (auto cut1 = this->_lmi(x))
         {
+            auto [g1, fj1] = *cut1;
             return {std::move(g1), fj1, t};
         }
 
-        auto [cut_exist0, g0, fj0] = this->_lmi0(x);
-        if (cut_exist0)
+        if (auto cut0 = this->_lmi0(x))
         {
+            auto [g0, fj0] = *cut0;
             return {std::move(g0), fj0, t};
         }
 

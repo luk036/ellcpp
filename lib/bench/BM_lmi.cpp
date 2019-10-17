@@ -27,7 +27,7 @@ class my_oracle
     {
     }
 
-    std::tuple<Arr, double, bool> operator()(const Arr& x, double t)
+    std::tuple<Arr, double, double> operator()(const Arr& x, double t)
     {
         using xt::linalg::dot;
 
@@ -37,14 +37,14 @@ class my_oracle
         {
             return {this->c, fj1, t};
         }
-        auto [cut_exist2, g2, fj2] = this->lmi1(x);
-        if (cut_exist2)
+        if (auto cut2 = this->lmi1(x))
         {
+            auto [g2, fj2] = *cut2;
             return {std::move(g2), fj2, t};
         }
-        auto [cut_exist3, g3, fj3] = this->lmi2(x);
-        if (cut_exist3)
+        if (auto cut3 = this->lmi2(x))
         {
+            auto [g3, fj3] = *cut3;
             return {std::move(g3), fj3, t};
         }
         return {this->c, 0., f0};
