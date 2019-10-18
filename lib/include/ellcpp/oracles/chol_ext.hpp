@@ -1,6 +1,7 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
+#include <ellcpp/utility.hpp>
 #include <stdexcept>
 #include <xtensor/xarray.hpp>
 
@@ -16,17 +17,18 @@
 template <bool Allow_semidefinite = false> //
 class chol_ext
 {
-    using Vec = xt::xarray<double, xt::layout_type::row_major>;
-    using Mat = xt::xarray<double, xt::layout_type::row_major>;
-    using Rng = std::pair<std::size_t, std::size_t>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
+    using Vec = Arr;
+    using Mat = Arr;
+    using Rng = std::pair<size_t, size_t>;
 
   public:
     Rng p {0, 0}; /**< the rows where the process starts and stops */
     Vec v;        /**< witness vector */
 
   private:
-    std::size_t n; /**< dimension */
-    Mat T;         /**< temporary storage */
+    size_t n; /**< dimension */
+    Mat T;    /**< temporary storage */
 
   public:
     /*!
@@ -34,10 +36,10 @@ class chol_ext
      *
      * @param N dimension
      */
-    explicit chol_ext(std::size_t N)
-        : v {xt::zeros<double>({N})}
+    explicit chol_ext(size_t N)
+        : v {zeros({N})}
         , n {N}
-        , T {xt::zeros<double>({N, N})}
+        , T {zeros({N, N})}
     {
     }
 
@@ -183,7 +185,7 @@ class chol_ext
         // if (!this->sqrt_free) {
         //     return Mat{this->T};
         // }
-        auto M = Mat {xt::zeros<double>({this->n, this->n})};
+        auto M = zeros({this->n, this->n});
 
         for (auto i = 0U; i < this->n; ++i)
         {

@@ -2,8 +2,7 @@
 #pragma once
 
 #include "network_oracle.hpp"
-#include <functional>
-#include <memory>
+#include <cassert>
 #include <xtensor/xarray.hpp>
 
 /*!
@@ -40,7 +39,8 @@ class optscaling_oracle
         {
             auto [u, v] = G.end_points(e);
             auto cost = this->_get_cost(G, e);
-            return (u <= v) ? x(0) - cost : cost - x(1);
+            assert(u != v);
+            return (u < v) ? x(0) - cost : cost - x(1);
         }
     };
 
@@ -50,7 +50,8 @@ class optscaling_oracle
             -> Arr
         {
             auto [u, v] = G.end_points(e);
-            return (u <= v) ? Arr {1., 0.} : Arr {0., -1.};
+            assert(u != v);
+            return (u < v) ? Arr {1., 0.} : Arr {0., -1.};
         }
     };
 

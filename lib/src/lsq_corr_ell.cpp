@@ -16,6 +16,25 @@
 #include <xtensor/xrandom.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
+/**
+ * @brief Create a 2d sites object
+ *
+ * @param nx
+ * @param ny
+ * @return Arr
+ */
+Arr create_2d_sites(size_t nx = 10U, size_t ny = 8U)
+{
+    // const auto n = nx * ny;
+    const auto s_end = Arr {10., 8.};
+    const auto sx = xt::linspace<double>(0., s_end[0], nx);
+    const auto sy = xt::linspace<double>(0., s_end[1], ny);
+    const auto [xx, yy] = xt::meshgrid(sx, sy);
+    const auto st =
+        Arr {xt::stack(xt::xtuple(xt::flatten(xx), xt::flatten(yy)), 0)};
+    return xt::transpose(st);
+}
+
 
 /*!
  * @brief Create a 2d isotropic example
@@ -25,26 +44,17 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param N
  * @return std::tuple<Arr, Arr>
  */
-std::tuple<Arr, Arr> create_2d_isotropic(
-    size_t nx = 10U, size_t ny = 8U, size_t N = 3000U)
+Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 {
     using xt::linalg::dot;
 
-    const auto n = nx * ny;
-    const auto s_end = Arr {10., 8.};
+    const auto n = s.shape()[0];
     const auto sdkern = 0.3;  // width of kernel
     const auto var = 2.;      // standard derivation
     const auto tau = 0.00001; // standard derivation of white noise
     xt::random::seed(5);
 
-    // create sites s
-    auto sx = xt::linspace<double>(0., s_end[0], nx);
-    auto sy = xt::linspace<double>(0., s_end[1], ny);
-    auto [xx, yy] = xt::meshgrid(sx, sy);
-    auto st = Arr {xt::stack(xt::xtuple(xt::flatten(xx), xt::flatten(yy)), 0)};
-    auto s = xt::transpose(st);
-
-    auto Sig = Arr {xt::zeros<double>({n, n})};
+    auto Sig = zeros({n, n});
     for (auto i = 0U; i < n; ++i)
     {
         for (auto j = i; j < n; ++j)
@@ -57,7 +67,7 @@ std::tuple<Arr, Arr> create_2d_isotropic(
     }
 
     auto A = xt::linalg::cholesky(Sig);
-    auto Y = Arr {xt::zeros<double>({n, n})};
+    auto Y = zeros({n, n});
     for (size_t k = 0U; k < N; ++k)
     {
         auto x = var * xt::random::randn<double>({n});
@@ -67,7 +77,7 @@ std::tuple<Arr, Arr> create_2d_isotropic(
     }
     Y /= N;
 
-    return {std::move(Y), std::move(s)};
+    return Y;
 }
 
 /*!
@@ -80,7 +90,7 @@ std::vector<Arr> construct_distance_matrix(const Arr& s, size_t m)
 {
     auto n = s.shape()[0];
     // c = cvx.Variable(m)
-    auto D1 = Arr {xt::zeros<double>({n, n})};
+    auto D1 = zeros({n, n});
     for (size_t i = 0U; i < n; ++i)
     {
         for (size_t j = i + 1; j < n; ++j)
@@ -181,14 +191,14 @@ class lsq_oracle
  * @param P
  * @return auto
  */
-auto lsq_corr_core2(const Arr& Y, std::size_t m, lsq_oracle& P)
+auto lsq_corr_core2(const Arr& Y, size_t m, lsq_oracle& P)
 {
     auto normY = 100. * xt::linalg::norm(Y);
     auto normY2 = 32. * normY * normY;
     auto val = Arr {256. * xt::ones<double>({m + 1})};
 
     val(m) = normY2 * normY2;
-    Arr x = xt::zeros<double>({m + 1});
+    auto x = zeros({m + 1});
     x(0) = 4;
     x(m) = normY2 / 2.;
     auto E = ell(val, x);
@@ -206,8 +216,7 @@ auto lsq_corr_core2(const Arr& Y, std::size_t m, lsq_oracle& P)
  * @param m
  * @return std::tuple<size_t, bool>
  */
-std::tuple<size_t, bool> lsq_corr_poly2(
-    const Arr& Y, const Arr& s, std::size_t m)
+std::tuple<size_t, bool> lsq_corr_poly2(const Arr& Y, const Arr& s, size_t m)
 {
     auto Sig = construct_distance_matrix(s, m);
     auto P = lsq_oracle(Sig, Y);
@@ -312,9 +321,9 @@ class mle_oracle
  * @param P
  * @return auto
  */
-auto mle_corr_core(const Arr& /*Y*/, std::size_t m, mle_oracle& P)
+auto mle_corr_core(const Arr& /*Y*/, size_t m, mle_oracle& P)
 {
-    auto x = Arr {xt::zeros<double>({m})};
+    auto x = zeros({m});
     x(0) = 4.;
     auto E = ell(500., x);
     auto [x_best, ell_info] =
@@ -331,8 +340,7 @@ auto mle_corr_core(const Arr& /*Y*/, std::size_t m, mle_oracle& P)
  * @param m
  * @return std::tuple<size_t, bool>
  */
-std::tuple<size_t, bool> mle_corr_poly(
-    const Arr& Y, const Arr& s, std::size_t m)
+std::tuple<size_t, bool> mle_corr_poly(const Arr& Y, const Arr& s, size_t m)
 {
     auto Sig = construct_distance_matrix(s, m);
     auto P = mle_oracle(Sig, Y);
@@ -353,7 +361,7 @@ std::tuple<size_t, bool> lsq_corr_poly(const Arr& Y, const Arr& s, size_t m)
 {
     auto Sig = construct_distance_matrix(s, m);
     // P = mtx_norm_oracle(Sig, Y, a)
-    auto a = Arr {xt::zeros<double>({m})};
+    auto a = zeros({m});
     auto Q = qmi_oracle(Sig, Y);
     auto E = ell(10., a);
     auto P = bsearch_adaptor(Q, E);

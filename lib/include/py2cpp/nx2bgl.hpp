@@ -160,7 +160,7 @@ class AtlasView
      * @param v
      * @param G
      */
-    explicit AtlasView(Vertex v, const Graph& G)
+    AtlasView(Vertex v, const Graph& G)
         : _v {v}
         , _G {G}
     {
@@ -231,7 +231,7 @@ class grAdaptor : public VertexView<Graph>
      * @brief Construct a new gr Adaptor object
      *
      */
-    explicit grAdaptor() = delete;
+    grAdaptor() = delete;
 
     /*!
      * @brief Construct a new gr Adaptor object

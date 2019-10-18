@@ -5,6 +5,7 @@
 
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
+#include <ellcpp/utility.hpp>
 #include <limits>
 #include <xtensor-blas/xlinalg.hpp>
 // #include <xtensor/xarray.hpp>
@@ -69,7 +70,7 @@ class my_fir_oracle
     auto operator()(const Arr& h, double t) const -> std::tuple<Cut, double>
     {
         auto fmax = std::numeric_limits<double>::min();
-        auto gmax = Arr {xt::zeros<double>({n})};
+        auto gmax = zeros({n});
 
         for (auto i = 0U; i < m; ++i)
         {
@@ -99,7 +100,7 @@ class my_fir_oracle
 
 TEST_CASE("FIR Filter", "[firfilter]")
 {
-    auto h0 = Arr {xt::zeros<double>({n})}; // initial x0
+    auto h0 = zeros({n}); // initial x0
     auto E = ell(40., h0);
     auto P = my_fir_oracle();
     auto [_, ell_info] =

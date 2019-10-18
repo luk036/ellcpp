@@ -104,8 +104,7 @@ class bsearch_adaptor
      * @param S
      * @param options
      */
-    explicit bsearch_adaptor(
-        Oracle& P, Space& S, const Options& options = Options())
+    bsearch_adaptor(Oracle& P, Space& S, const Options& options = Options())
         : _P {P}
         , _S {S}
         , _options {options}

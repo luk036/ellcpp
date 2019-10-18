@@ -32,7 +32,7 @@ int main() {
   }
 
   Arr A = xt::linalg::cholesky(Sig);
-  Arr Ys = xt::zeros<double>({n, N});
+  Arr Ys = zeros({n, N});
 
   Arr ym = xt::random::randn<double>({n});
   for (auto k = 0U; k < N; ++k) {

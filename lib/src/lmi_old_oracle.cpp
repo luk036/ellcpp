@@ -4,14 +4,15 @@
 // #include <xtensor-blas/xlinalg.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
+using Cut = std::tuple<Arr, double>;
 
 /*!
  * @brief
  *
  * @param x
- * @return std::optional<std::tuple<Arr, double>>
+ * @return std::optional<Cut>
  */
-std::optional<std::tuple<Arr, double>> lmi_old_oracle::operator()(const Arr& x)
+std::optional<Cut> lmi_old_oracle::operator()(const Arr& x)
 {
     auto n = x.size();
 

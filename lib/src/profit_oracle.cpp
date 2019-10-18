@@ -13,10 +13,11 @@ using Cut = std::tuple<Arr, double>;
  */
 std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
 {
-    auto fj1 = y[0] - this->_log_k; // constraint
-    if (fj1 > 0.)
+    // y0 <= log k
+    const auto f1 = y[0] - this->_log_k;
+    if (f1 > 0.)
     {
-        return {{Arr {1., 0.}, fj1}, t};
+        return {{Arr {1., 0.}, f1}, t};
     }
 
     auto log_Cobb = this->_log_pA + xt::linalg::dot(this->_a, y)();
@@ -48,7 +49,7 @@ std::tuple<Cut, double, Arr, int> profit_q_oracle::operator()(
     auto x = Arr {xt::round(xt::exp(y))};
     if (x[0] == 0.)
     {
-        x[0] = 1.;
+        x[0] = 1.;  // nearest integer than 0
     }
     if (x[1] == 0.)
     {

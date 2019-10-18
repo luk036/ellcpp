@@ -15,7 +15,7 @@
 class lmi0_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
-    using shape_type = Arr::shape_type;
+    using Cut = std::tuple<Arr, double>;
 
   private:
     const std::vector<Arr>& _F;
@@ -41,7 +41,7 @@ class lmi0_oracle
      * @brief
      *
      * @param x
-     * @return std::optional<std::tuple<Arr, double>>
+     * @return std::optional<Cut>
      */
-    auto operator()(const Arr& x) -> std::optional<std::tuple<Arr, double>>;
+    auto operator()(const Arr& x) -> std::optional<Cut>;
 };

@@ -30,7 +30,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 using graph_t =
     boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS,
-        boost::no_property, boost::property<boost::edge_id_tag_t, std::size_t>>;
+        boost::no_property, boost::property<boost::edge_id_tag_t, size_t>>;
 using Vertex = typename boost::graph_traits<graph_t>::vertex_descriptor;
 using edge_t = typename boost::graph_traits<graph_t>::edge_iterator;
 
@@ -50,7 +50,7 @@ static xn::grAdaptor<graph_t> create_test_case1()
     // char name[] = "ABCDE";
     Edge edge_array[] = {
         Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E), Edge(E, A)};
-    std::size_t indices[] = {0, 1, 2, 3, 4};
+    size_t indices[] = {0, 1, 2, 3, 4};
     auto num_arcs = sizeof(edge_array) / sizeof(Edge);
     static auto g =
         graph_t(edge_array, edge_array + num_arcs, indices, num_nodes);

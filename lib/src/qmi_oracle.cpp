@@ -2,35 +2,37 @@
 #include <ellcpp/oracles/qmi_oracle.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 
-#define myview(X, idx) xt::view(X, idx, xt::all())
+#define ROW(X, idx) xt::view(X, idx, xt::all())
+#define COLUMN(X, idx) xt::view(X, xt::all(), idx)
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
+using Cut = std::tuple<Arr, double>;
 
 /*!
  * @brief
  *
  * @param x
- * @return std::optional<std::tuple<Arr, double>>
+ * @return std::optional<Cut>
  */
-std::optional<std::tuple<Arr, double>> qmi_oracle::operator()(const Arr& x)
+std::optional<Cut> qmi_oracle::operator()(const Arr& x)
 {
     using xt::linalg::dot;
 
     this->_count = 0;
     this->_nx = x.shape()[0];
 
-    auto getA = [&, this](std::size_t i, std::size_t j) -> double { // ???
+    auto getA = [&, this](size_t i, size_t j) -> double { // ???
         assert(i >= j);
         if (this->_count < i + 1)
         {
             this->_count = i + 1;
-            myview(this->_Fx, i) = myview(this->_F0, i);
+            ROW(this->_Fx, i) = COLUMN(this->_F0, i);
             for (size_t k = 0U; k < this->_nx; ++k)
             {
-                myview(this->_Fx, i) -= myview(this->_F[k], i) * x(k);
+                ROW(this->_Fx, i) -= COLUMN(this->_F[k], i) * x(k);
             }
         }
-        auto a = -dot(myview(this->_Fx, i), myview(this->_Fx, j))();
+        auto a = -dot(ROW(this->_Fx, i), ROW(this->_Fx, j))();
         if (i == j)
         {
             a += this->_t;
@@ -44,17 +46,15 @@ std::optional<std::tuple<Arr, double>> qmi_oracle::operator()(const Arr& x)
         return {};
     }
 
-    auto ep = this->_Q.witness();
-    // auto stop = this->_Q.stop;
-    // auto start = this->_Q.start;
-    auto [start, stop] = this->_Q.p;
-    auto v = xt::view(this->_Q.v, xt::range(start, stop));
-    auto Fxp = myview(this->_Fx, xt::range(start, stop));
-    auto Av = dot(v, Fxp);
-    auto g = Arr {xt::zeros<double>({this->_nx})};
+    const auto ep = this->_Q.witness();
+    const auto [start, stop] = this->_Q.p;
+    const auto v = xt::view(this->_Q.v, xt::range(start, stop));
+    const auto Fxp = ROW(this->_Fx, xt::range(start, stop));
+    const auto Av = dot(v, Fxp);
+    auto g = zeros({this->_nx});
     for (size_t k = 0U; k < this->_nx; ++k)
     {
-        auto Fkp = myview(this->_F[k], xt::range(start, stop));
+        const auto Fkp = ROW(this->_F[k], xt::range(start, stop));
         g(k) = -2 * dot(dot(v, Fkp), Av)();
     }
     return {{std::move(g), ep}};

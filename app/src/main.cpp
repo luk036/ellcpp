@@ -9,6 +9,7 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lowpass_oracle.hpp>
+#include <ellcpp/utility.hpp>
 #include <limits>
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xview.hpp>
@@ -104,7 +105,7 @@ static const auto Spsq = Sp * Sp;
 
 auto run_lowpass(bool use_parallel_cut)
 {
-    Arr r0 = xt::zeros<double>({N}); // initial x0
+    auto r0 = zeros({N}); // initial x0
     // r0[0] = 0;
     auto E       = ell(4., r0);
     auto P       = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);

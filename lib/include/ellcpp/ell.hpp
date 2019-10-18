@@ -14,15 +14,19 @@ class ell
 {
   public:
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
-    using params_t = std::tuple<double, double, double>;
-    using return_t = std::tuple<int, params_t>;
+    // using params_t = std::tuple<double, double, double>;
+    // using return_t = std::tuple<int, params_t>;
 
   public:
     bool _use_parallel_cut = true;
     bool _no_defer_trick = false;
 
   private:
-    std::size_t _n;
+    double _rho = 0.;
+    double _sigma = 0.;
+    double _delta = 0.;
+
+    size_t _n;
     double _c1;
     double _kappa;
     Arr _xc;
@@ -117,9 +121,9 @@ class ell
      * @param b0
      * @param b1
      * @param tsq
-     * @return return_t
+     * @return int
      */
-    return_t __calc_ll_core(double b0, double b1, double tsq) const;
+    auto __calc_ll_core(double b0, double b1, double tsq) -> int;
 
     /*!
      * @brief Parallel Cut, one of them is central
@@ -127,24 +131,24 @@ class ell
      * @param b1
      * @param t1
      * @param tsq
-     * @return return_t
+     * @return void
      */
-    return_t __calc_ll_cc(double b1, double t1, double tsq) const;
+    auto __calc_ll_cc(double b1, double t1, double tsq) -> void;
 
     /*!
      * @brief Deep Cut
      *
      * @param b0
      * @param tsq
-     * @return return_t
+     * @return int
      */
-    return_t __calc_dc(double b0, double tsq) const;
+    auto __calc_dc(double b0, double tsq) -> int;
 
     /*!
      * @brief Central Cut
      *
      * @param tsq
-     * @return return_t
+     * @return void
      */
-    return_t __calc_cc(double tsq) const;
+    auto __calc_cc(double tsq) -> void;
 }; // } ell

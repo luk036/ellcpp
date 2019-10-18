@@ -18,13 +18,15 @@
 class qmi_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
-    using shape_type = Arr::shape_type;
+    using Cut = std::tuple<Arr, double>;
 
   private:
     double _t = 0.;
-    std::size_t _nx = 0;
-    std::size_t _count = 0;
+    size_t _nx = 0;
+    size_t _count = 0;
 
+    size_t _n;
+    size_t _m;
     const std::vector<Arr>& _F;
     const Arr& _F0;
     Arr _Fx;
@@ -40,11 +42,13 @@ class qmi_oracle
      * @param F
      * @param F0
      */
-    explicit qmi_oracle(const std::vector<Arr>& F, const Arr& F0)
-        : _F {F}
+    qmi_oracle(const std::vector<Arr>& F, const Arr& F0)
+        : _n {F0.shape()[0]}
+        , _m {F0.shape()[1]}
+        , _F {F}
         , _F0 {F0}
-        , _Fx {xt::zeros<double>(F0.shape())}
-        , _Q(F0.shape()[0])
+        , _Fx {zeros({_m, _n})} // transposed
+        , _Q(_m)                // take column
     {
     }
 
@@ -62,7 +66,7 @@ class qmi_oracle
      * @brief
      *
      * @param x
-     * @return std::optional<std::tuple<Arr, double>>
+     * @return std::optional<Cut>
      */
-    auto operator()(const Arr& x) -> std::optional<std::tuple<Arr, double>>;
+    auto operator()(const Arr& x) -> std::optional<Cut>;
 };
