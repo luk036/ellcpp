@@ -40,10 +40,26 @@ class ell
      * @param val
      * @param x
      */
+    ell(const Arr& val, Arr&& x)
+        : _n {x.size()}
+        , _c1 {double(_n * _n) / (_n * _n - 1)}
+        , _kappa {1.}
+        , _xc {std::forward<Arr>(x)}
+        , _Q {xt::diag(val)}
+    {
+    }
+
+    /*!
+     * @brief Construct a new ell object
+     *
+     * @tparam T
+     * @param val
+     * @param x
+     */
     ell(const Arr& val, const Arr& x)
         : _n {x.size()}
         , _c1 {double(_n * _n) / (_n * _n - 1)}
-        , _kappa {1}
+        , _kappa {1.}
         , _xc {x}
         , _Q {xt::diag(val)}
     {
@@ -64,6 +80,23 @@ class ell
         , _Q {xt::eye(_n)}
     {
     }
+
+    /*!
+     * @brief Construct a new ell object
+     *
+     * @tparam T
+     * @param val
+     * @param x
+     */
+    ell(const double& alpha, Arr&& x)
+        : _n {x.size()}
+        , _c1 {double(_n * _n) / (_n * _n - 1)}
+        , _kappa {alpha}
+        , _xc {std::forward<Arr>(x)}
+        , _Q {xt::eye(_n)}
+    {
+    }
+
 
     /*!
      * @brief Construct a new ell object
@@ -123,7 +156,7 @@ class ell
      * @param tsq
      * @return int
      */
-    auto __calc_ll_core(double b0, double b1, double tsq) -> int;
+    auto __calc_ll_core(const double& b0, const double& b1, const double& tsq) -> int;
 
     /*!
      * @brief Parallel Cut, one of them is central
@@ -133,7 +166,7 @@ class ell
      * @param tsq
      * @return void
      */
-    auto __calc_ll_cc(double b1, double t1, double tsq) -> void;
+    auto __calc_ll_cc(const double& b1, const double& t1, const double& tsq) -> void;
 
     /*!
      * @brief Deep Cut
@@ -142,7 +175,7 @@ class ell
      * @param tsq
      * @return int
      */
-    auto __calc_dc(double b0, double tsq) -> int;
+    auto __calc_dc(const double& b0, const double& tsq) -> int;
 
     /*!
      * @brief Central Cut
@@ -150,5 +183,5 @@ class ell
      * @param tsq
      * @return void
      */
-    auto __calc_cc(double tsq) -> void;
+    auto __calc_cc(const double& tsq) -> void;
 }; // } ell

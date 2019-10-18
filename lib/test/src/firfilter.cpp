@@ -1,19 +1,13 @@
 // -*- coding: utf-8 -*-
 #include <catch2/catch.hpp>
-// #include <iostream>
-// #include <tuple>
-
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/utility.hpp>
 #include <limits>
 #include <xtensor-blas/xlinalg.hpp>
-// #include <xtensor/xarray.hpp>
 #include <xtensor/xview.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
-// using CArr = xt::xarray<std::complex<double>>;
-// using namespace std::literals::complex_literals;
 
 static double PI = std::acos(-1);
 
@@ -100,23 +94,9 @@ class my_fir_oracle
 
 TEST_CASE("FIR Filter", "[firfilter]")
 {
-    auto h0 = zeros({n}); // initial x0
-    auto E = ell(40., h0);
+    auto E = ell(40., zeros({n}));
     auto P = my_fir_oracle();
     auto [_, ell_info] =
         cutting_plane_dc(P, E, std::numeric_limits<double>::max());
-
     CHECK(ell_info.feasible);
-    // std::cout << "optimal value " << fb << "\n";
-    // std::cout << "optimal sol'n " << hb << "\n";
-
-    // fmt = '{ {f} {} {} {}'
-    // print(prob1.optim_var)
-    // print(fmt.format(prob1.optim_vale, prob1.solver_stats.num_iters))
-
-    // print 'Problem status:', feasible
-    // if feasible != 1:
-    //    raise Exception('ELL Error')
-
-    // hv = xt::asmatrix(prob1.optim_var).T
 }

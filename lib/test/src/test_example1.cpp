@@ -41,8 +41,7 @@ std::tuple<Cut, double> my_oracle(const Arr& z, double t)
 
 TEST_CASE("Example 1", "[example1]")
 {
-    auto x0 = Arr {0., 0.}; // initial x0
-    auto E = ell {10., x0};
+    auto E = ell {10., Arr {0., 0.}};
     auto P = my_oracle;
 
     auto [_, ell_info] =

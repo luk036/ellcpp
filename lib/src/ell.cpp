@@ -1,6 +1,5 @@
 #include <cmath>
 #include <ellcpp/ell.hpp>
-// #include <tuple>
 #include <xtensor-blas/xlinalg.hpp>
 
 /* linux-2.6.38.8/include/linux/compiler.h */
@@ -18,9 +17,9 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param tsq
  * @return int
  */
-int ell::__calc_ll_core(double b0, double b1, double tsq)
+int ell::__calc_ll_core(const double& b0, const double& b1, const double& tsq)
 {
-    auto b1sq = b1 * b1;
+    const auto b1sq = b1 * b1;
     if (b1sq > tsq || !this->_use_parallel_cut)
     {
         return this->__calc_dc(b0, tsq);
@@ -37,21 +36,20 @@ int ell::__calc_ll_core(double b0, double b1, double tsq)
         return 0;
     }
 
-    auto n = this->_n;
-    auto b0b1 = b0 * b1;
-    if (unlikely(n * b0b1 < -tsq))
+    const auto b0b1 = b0 * b1;
+    if (unlikely(this->_n * b0b1 < -tsq))
     {
         return 3; // no effect
     }
 
-    auto t0 = tsq - b0 * b0;
-    auto t1 = tsq - b1sq;
-    auto bav = (b0 + b1) / 2;
-    auto temp = n * bav * (b1 - b0);
-    auto xi = std::sqrt(t0 * t1 + temp * temp);
-    this->_sigma = (n + (tsq - b0b1 - xi) / (2 * bav * bav)) / (n + 1.);
+    const auto t0 = tsq - b0 * b0;
+    const auto t1 = tsq - b1sq;
+    const auto bav = (b0 + b1) / 2;
+    const auto temp = this->_n * bav * (b1 - b0);
+    const auto xi = std::sqrt(t0 * t1 + temp * temp);
+    this->_sigma = (this->_n + (tsq - b0b1 - xi) / (2 * bav * bav)) / (this->_n + 1.);
     this->_rho = this->_sigma * bav;
-    this->_delta = this->_c1 * ((t0 + t1) / 2 + xi / n) / tsq;
+    this->_delta = this->_c1 * ((t0 + t1) / 2 + xi / this->_n) / tsq;
     return 0;
 }
 
@@ -63,14 +61,13 @@ int ell::__calc_ll_core(double b0, double b1, double tsq)
  * @param tsq
  * @return void
  */
-void ell::__calc_ll_cc(double b1, double b1sq, double tsq)
+void ell::__calc_ll_cc(const double& b1, const double& b1sq, const double& tsq)
 {
-    auto n = this->_n;
-    auto temp = n * b1sq / 2;
-    auto xi = std::sqrt(tsq * (tsq - b1sq) + temp * temp);
-    this->_sigma = (n + 2 * (tsq - xi) / b1sq) / (n + 1.);
+    const auto temp = this->_n * b1sq / 2;
+    const auto xi = std::sqrt(tsq * (tsq - b1sq) + temp * temp);
+    this->_sigma = (this->_n + 2 * (tsq - xi) / b1sq) / (this->_n + 1.);
     this->_rho = this->_sigma * b1 / 2;
-    this->_delta = this->_c1 * (tsq - b1sq / 2 + xi / n) / tsq;
+    this->_delta = this->_c1 * (tsq - b1sq / 2 + xi / this->_n) / tsq;
 }
 
 /*!
@@ -80,9 +77,9 @@ void ell::__calc_ll_cc(double b1, double b1sq, double tsq)
  * @param tsq
  * @return int
  */
-int ell::__calc_dc(double beta, double tsq)
+int ell::__calc_dc(const double& beta, const double& tsq)
 {
-    auto tau = std::sqrt(tsq);
+    const auto tau = std::sqrt(tsq);
 
     if (beta > tau)
     {
@@ -95,14 +92,13 @@ int ell::__calc_dc(double beta, double tsq)
         return 0;
     }
 
-    auto n = this->_n;
-    auto gamma = tau + n * beta;
+    const auto gamma = tau + this->_n * beta;
     if (unlikely(gamma < 0))
     {
         return 3; // no effect
     }
 
-    this->_rho = gamma / (n + 1.);
+    this->_rho = gamma / (this->_n + 1.);
     this->_sigma = 2 * this->_rho / (tau + beta);
     this->_delta = this->_c1 * (tsq - beta * beta) / tsq;
     return 0;
@@ -114,9 +110,9 @@ int ell::__calc_dc(double beta, double tsq)
  * @param tsq
  * @return int
  */
-void ell::__calc_cc(double tsq)
+void ell::__calc_cc(const double& tsq)
 {
-    auto np1 = this->_n + 1;
+    const auto np1 = this->_n + 1;
     this->_sigma = 2. / np1;
     this->_rho = std::sqrt(tsq) / np1;
     this->_delta = this->_c1;
@@ -136,9 +132,9 @@ std::tuple<int, double> ell::update(const std::tuple<Arr, T>& cut)
 {
     const auto& [g, beta] = cut;
 
-    auto Qg = Arr {xt::linalg::dot(_Q, g)};
-    auto omega = xt::linalg::dot(g, Qg)();
-    auto tsq = this->_kappa * omega;
+    const auto Qg = Arr {xt::linalg::dot(_Q, g)};
+    const auto omega = xt::linalg::dot(g, Qg)();
+    const auto tsq = this->_kappa * omega;
     auto status = 0;
 
     if constexpr (std::is_scalar_v<T>)

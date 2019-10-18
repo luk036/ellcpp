@@ -18,8 +18,8 @@ ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
 {
     const auto& [g, beta] = cut;
 
-    auto tau = std::abs(this->_r * g);
-    auto tsq = tau * tau;
+    const auto tau = std::abs(this->_r * g);
+    const auto tsq = tau * tau;
 
     if (beta == 0.)
     {
@@ -36,9 +36,9 @@ ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
         return {3, tsq}; // no effect
     }
 
-    auto bound = this->_xc - beta / g;
-    auto u = g > 0. ? bound : this->_xc + this->_r;
-    auto l = g > 0. ? this->_xc - this->_r : bound;
+    const auto bound = this->_xc - beta / g;
+    const auto u = g > 0. ? bound : this->_xc + this->_r;
+    const auto l = g > 0. ? this->_xc - this->_r : bound;
 
     this->_r = (u - l) / 2;
     this->_xc = l + this->_r;

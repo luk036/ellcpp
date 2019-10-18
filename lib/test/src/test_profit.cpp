@@ -13,11 +13,11 @@ TEST_CASE("Profit Test 1", "[profit]")
 {
     using Vec = xt::xarray<double, xt::layout_type::row_major>;
 
-    auto p = 20.;
-    auto A = 40.;
-    auto k = 30.5;
-    auto a = Vec {0.1, 0.4};
-    auto v = Vec {10., 35.};
+    const auto p = 20.;
+    const auto A = 40.;
+    const auto k = 30.5;
+    const auto a = Vec {0.1, 0.4};
+    const auto v = Vec {10., 35.};
 
     {
         auto E = ell(100., Vec {0., 0.});

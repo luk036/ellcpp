@@ -24,7 +24,7 @@ class ell1d
      * @param l
      * @param u
      */
-    ell1d(double l, double u) //
+    ell1d(const double& l, const double& u) //
         : _r {(u - l) / 2}
         , _xc {l + _r}
     {
@@ -52,7 +52,7 @@ class ell1d
      *
      * @param xc
      */
-    void set_xc(double xc)
+    void set_xc(const double& xc)
     {
         _xc = xc;
     }

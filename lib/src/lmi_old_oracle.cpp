@@ -14,7 +14,7 @@ using Cut = std::tuple<Arr, double>;
  */
 std::optional<Cut> lmi_old_oracle::operator()(const Arr& x)
 {
-    auto n = x.size();
+    const auto n = x.size();
 
     auto A = Arr {this->_F0};
     for (size_t k = 0U; k < n; ++k)
@@ -27,7 +27,7 @@ std::optional<Cut> lmi_old_oracle::operator()(const Arr& x)
     {
         return {};
     }
-    auto ep = this->_Q.witness();
+    const auto ep = this->_Q.witness();
     auto g = zeros(x);
     for (size_t i = 0U; i < n; ++i)
     {

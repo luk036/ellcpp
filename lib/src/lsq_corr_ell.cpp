@@ -154,30 +154,30 @@ class lsq_oracle
         auto g = zeros(x);
         if (auto cut0 = this->_lmi0(xt::view(x, xt::range(0, n - 1))))
         {
-            auto [g0, fj0] = *cut0;
+            auto [g0, f0] = *cut0;
             xt::view(g, xt::range(0, n - 1)) = g0;
             g(n - 1) = 0.;
-            return {{std::move(g), fj0}, t};
+            return {{std::move(g), f0}, t};
         }
         this->_qmi.update(x(n - 1));
 
         if (auto cut1 = this->_qmi(xt::view(x, xt::range(0, n - 1))))
         {
-            auto [g1, fj1] = *cut1;
+            auto [g1, f1] = *cut1;
             xt::view(g, xt::range(0, n - 1)) = g1;
             auto& Q = this->_qmi._Q;
             // auto ep = Q.witness();
             auto [start, stop] = Q.p;
             auto v = xt::view(Q.v, xt::range(start, stop));
             g(n - 1) = -xt::linalg::dot(v, v)();
-            return {{std::move(g), fj1}, t};
+            return {{std::move(g), f1}, t};
         }
         g(n - 1) = 1.;
 
-        auto fj = x(n - 1) - t;
-        if (fj > 0)
+        auto f0 = x(n - 1) - t;
+        if (f0 > 0)
         {
-            return {{std::move(g), fj}, t};
+            return {{std::move(g), f0}, t};
         }
         return {{std::move(g), 0.}, x(n - 1)};
     }
