@@ -25,6 +25,7 @@ class ell
     double _rho = 0.;
     double _sigma = 0.;
     double _delta = 0.;
+    double _tsq = 0.;
 
     size_t _n;
     double _c1;
@@ -115,16 +116,6 @@ class ell
         return _xc;
     }
 
-    // /*!
-    //  * @brief
-    //  *
-    //  * @return Arr&
-    //  */
-    // auto xc() -> Arr&
-    // {
-    //     return _xc;
-    // }
-
     /*!
      * @brief Set the xc object
      *
@@ -153,35 +144,32 @@ class ell
      *
      * @param b0
      * @param b1
-     * @param tsq
      * @return int
      */
-    auto __calc_ll_core(const double& b0, const double& b1, const double& tsq) -> int;
+    auto __calc_ll_core(const double& b0, const double& b1) -> int;
 
     /*!
      * @brief Parallel Cut, one of them is central
      *
      * @param b1
      * @param t1
-     * @param tsq
      * @return void
      */
-    auto __calc_ll_cc(const double& b1, const double& t1, const double& tsq) -> void;
+    auto __calc_ll_cc(const double& b1, const double& t1) -> void;
 
     /*!
      * @brief Deep Cut
      *
      * @param b0
-     * @param tsq
      * @return int
      */
-    auto __calc_dc(const double& b0, const double& tsq) -> int;
+    auto __calc_dc(const double& b0) -> int;
 
     /*!
      * @brief Central Cut
      *
-     * @param tsq
+     * @param tau
      * @return void
      */
-    auto __calc_cc(const double& tsq) -> void;
+    auto __calc_cc(const double& tau) -> void;
 }; // } ell

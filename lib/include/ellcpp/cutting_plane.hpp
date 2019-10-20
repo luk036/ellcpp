@@ -52,11 +52,11 @@ struct CInfo
  * @return auto
  */
 template <typename Oracle, typename Space>
-auto bsearch(Oracle& Omega, Space& I, const Options& options = Options())
+auto bsearch(Oracle& Omega, const Space& I, const Options& options = Options())
 {
     // assume monotone
-    auto& [l, u] = I;
-    auto u_orig = u;
+    auto [l, u] = I;
+    const auto u_orig = u;
     auto niter = 1U;
     for (; niter <= options.max_it; ++niter)
     {
@@ -75,9 +75,7 @@ auto bsearch(Oracle& Omega, Space& I, const Options& options = Options())
             break;
         }
     }
-    auto feasible = (u != u_orig);
-    auto ret = CInfo(feasible, niter, 0);
-
+    auto ret = CInfo(u != u_orig, niter, 0);
     ret.value = u;
     return ret;
 }
@@ -207,7 +205,7 @@ template <typename Oracle, typename Space>
 auto cutting_plane_dc(
     Oracle& Omega, Space& S, double t, const Options& options = Options())
 {
-    auto feasible = false;
+    const auto t_orig = t;
     auto x_best = S.xc();
     auto niter = 1U;
     auto status = 0U;
@@ -217,7 +215,7 @@ auto cutting_plane_dc(
         auto [cut, t1] = Omega(S.xc(), t);
         if (t != t1)
         { // best t obtained
-            feasible = true;
+            // feasible = true;
             t = t1;
             x_best = S.xc();
         }
@@ -233,7 +231,7 @@ auto cutting_plane_dc(
             break;
         }
     }
-    auto ret = CInfo(feasible, niter, status);
+    auto ret = CInfo(t != t_orig, niter, status);
     // ret.val = std::move(x_best);
     ret.value = t;
     return std::tuple {std::move(x_best), std::move(ret)};
@@ -272,10 +270,11 @@ template <typename Oracle, typename Space>
 auto cutting_plane_q(
     Oracle& Omega, Space& S, double t, const Options& options = Options())
 {
-    auto feasible = false;
+    const auto t_orig = t;
     auto x_best = S.xc();
     auto status = 1U;
     auto niter = 1U;
+
     for (; niter <= options.max_it; ++niter)
     {
         auto [cut, t1, x0, loop] = Omega(S.xc(), t, (status != 3) ? 0 : 1);
@@ -294,7 +293,7 @@ auto cutting_plane_q(
         }
         if (t != t1)
         { // best t obtained
-            feasible = true;
+            // feasible = true;
             t = t1;
             x_best = x0;
         }
@@ -310,7 +309,7 @@ auto cutting_plane_q(
             break;
         }
     }
-    auto ret = CInfo(feasible, niter, status);
+    auto ret = CInfo(t != t_orig, niter, status);
     // ret.val = std::move(x_best);
     ret.value = t;
     return std::tuple {std::move(x_best), std::move(ret)};

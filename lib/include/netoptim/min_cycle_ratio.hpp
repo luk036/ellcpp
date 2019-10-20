@@ -46,8 +46,8 @@ auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, Container& dist)
     auto min_time = get_time(G, e0);
     for (auto e : G.edges())
     {
-        auto c = get_cost(G, e);
-        auto t = get_time(G, e);
+        const auto c = get_cost(G, e);
+        const auto t = get_time(G, e);
         if (max_cost < c)
             max_cost = c;
         if (min_time > t)

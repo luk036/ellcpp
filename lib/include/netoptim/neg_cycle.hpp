@@ -49,7 +49,7 @@ class negCycleFinder
      *
      * @tparam Container
      * @tparam WeightFn
-     * @param dist
+     * @param[inout] dist
      * @param get_weight
      * @return std::vector<edge_t>
      */
@@ -60,14 +60,9 @@ class negCycleFinder
         this->_pred.clear();
         this->_edge.clear();
 
-        while (true)
+        while (this->__relax(dist, get_weight))
         {
-            auto changed = this->__relax(dist, get_weight);
-            if (!changed)
-            {
-                break;
-            }
-            auto v = this->__find_cycle();
+            const auto v = this->__find_cycle();
             if (v != this->_G.null_vertex())
             {
                 assert(this->__is_negative(v, dist, get_weight));
@@ -87,7 +82,7 @@ class negCycleFinder
     {
         auto visited = py::dict<node_t, node_t> {};
 
-        for (auto v : this->_G)
+        for (const auto& v : this->_G)
         {
             if (visited.contains(v))
             {
@@ -135,15 +130,15 @@ class negCycleFinder
         auto changed = false;
         for (auto e : this->_G.edges())
         {
-            auto [u, v] = this->_G.end_points(e);
-
-            auto wt = get_weight(this->_G, e);
-            auto d = dist[u] + wt;
+            const auto [u, v] = this->_G.end_points(e);
+            const auto wt = get_weight(this->_G, e);
+            const auto d = dist[u] + wt;
+            
             if (dist[v] > d)
             {
-                dist[v] = d;
                 this->_pred[v] = u;
                 this->_edge[v] = e; // ???
+                dist[v] = d;
                 changed = true;
             }
         }
@@ -156,13 +151,13 @@ class negCycleFinder
      * @param handle
      * @return std::vector<edge_t>
      */
-    auto __cycle_list(node_t handle) -> std::vector<edge_t>
+    auto __cycle_list(const node_t& handle) -> std::vector<edge_t>
     {
         auto v = handle;
         auto cycle = std::vector<edge_t> {}; // ???
         while (true)
         {
-            auto u = this->_pred[v];
+            const auto& u = this->_pred[v];
             cycle.push_back(this->_edge[v]); // ???
             v = u;
             if (v == handle)
@@ -189,21 +184,19 @@ class negCycleFinder
         const WeightFn& get_weight) -> bool
     {
         auto v = handle;
-        while (true)
+        // while (true)
+        do
         {
-            auto u = this->_pred[v];
-            auto e = this->_edge[v];
-            auto wt = get_weight(this->_G, e); // ???
+            const auto u = this->_pred[v];
+            const auto e = this->_edge[v];
+            const auto wt = get_weight(this->_G, e); // ???
             if (dist[v] > dist[u] + wt)
             {
                 return true;
             }
             v = u;
-            if (v == handle)
-            {
-                break;
-            }
         }
+        while (v != handle);
         return false;
     }
 };
