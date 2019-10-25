@@ -11,21 +11,17 @@
  *
  * @tparam Graph
  * @tparam Container
- * @tparam Fn_Eval
- * @tparam Grad_Fn
+ * @tparam Fn
  */
-template <typename Graph, typename Container, typename Fn_Eval,
-    typename Grad_Fn>
+template <typename Graph, typename Container, typename Fn>
 class network_oracle
 {
-    // using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using edge_t = typename Graph::edge_t;
-
+    
   private:
     const Graph& _G;
     Container& _dist;
-    Fn_Eval _f;
-    Grad_Fn _p;
+    Fn _h;
     negCycleFinder<Graph> _S;
 
   public:
@@ -36,14 +32,17 @@ class network_oracle
      * @param f
      * @param p
      */
-    network_oracle(
-        const Graph& G, Container& dist, const Fn_Eval& f, const Grad_Fn& p)
+    network_oracle(const Graph& G, Container& dist, const Fn& h)
         : _G {G}
         , _dist {dist}
-        , _f {f}
-        , _p {p} // partial derivative of f w.r.t x
+        , _h {h}
         , _S(G)
     {
+    }
+
+    auto update(const double& t)
+    {
+        this->_h.update(t);
     }
 
     /*!
@@ -57,7 +56,7 @@ class network_oracle
     {
         auto get_weight = [this, &x](
                               const Graph& G, const edge_t& e) -> double {
-            return this->_f(G, e, x);
+            return this->_h.eval(G, e, x);
         };
 
         // auto S = negCycleFinder(this->_G);
@@ -71,8 +70,8 @@ class network_oracle
         auto f = 0.;
         for (const auto& e : C)
         {
-            f -= this->_f(this->_G, e, x);
-            g -= this->_p(this->_G, e, x);
+            f -= this->_h.eval(this->_G, e, x);
+            g -= this->_h.grad(this->_G, e, x);
         }
         return {{std::move(g), f}};
     }

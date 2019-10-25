@@ -5,12 +5,12 @@
 #include <cassert>
 #include <xtensor/xarray.hpp>
 
-/*!
- * @brief
- *
- * @tparam Graph
- * @tparam Fn
- * @tparam T
+/**
+ * @brief 
+ * 
+ * @tparam Graph 
+ * @tparam Container 
+ * @tparam Fn 
  */
 template <typename Graph, typename Container, typename Fn> //
 class optscaling_oracle
@@ -25,16 +25,16 @@ class optscaling_oracle
     // pconstr_fn>;
 
   public:
-    struct constr
+    struct Ratio
     {
         Fn _get_cost;
 
-        explicit constr(Fn get_cost)
+        explicit Ratio(Fn get_cost)
             : _get_cost {get_cost}
         {
         }
 
-        auto operator()(const Graph& G, const edge_t& e, const Arr& x) const
+        auto eval(const Graph& G, const edge_t& e, const Arr& x) const
             -> double
         {
             auto [u, v] = G.end_points(e);
@@ -42,11 +42,8 @@ class optscaling_oracle
             assert(u != v);
             return (u < v) ? x(0) - cost : cost - x(1);
         }
-    };
 
-    struct pconstr
-    {
-        auto operator()(const Graph& G, const edge_t& e, const Arr& x) const
+        auto grad(const Graph& G, const edge_t& e, const Arr& x) const
             -> Arr
         {
             auto [u, v] = G.end_points(e);
@@ -56,10 +53,7 @@ class optscaling_oracle
     };
 
   private:
-    // const Graph& _G;
-    // Container& _dist;
-    // Fn _get_cost;
-    network_oracle<Graph, Container, constr, pconstr> _network;
+    network_oracle<Graph, Container, Ratio> _network;
 
   public:
     /*!
@@ -69,7 +63,7 @@ class optscaling_oracle
      * @param get_cost
      */
     optscaling_oracle(const Graph& G, Container& dist, Fn get_cost)
-        : _network(G, dist, constr {get_cost}, pconstr {})
+        : _network(G, dist, Ratio {get_cost})
     {
     }
 
@@ -82,23 +76,9 @@ class optscaling_oracle
      */
     auto operator()(const Arr& x, double t) -> std::tuple<Cut, double>
     {
-        // auto constr = [this](const Graph& G, const edge_t& e, const Arr& x) {
-        //     auto [u, v] = G.end_points(e);
-        //     auto cost = this->_get_cost(G, e);
-        //     return (u <= v) ? x(0) - cost : cost - x(1);
-        // };
-
-        // auto pconstr = [](const Graph& G, const edge_t& e, const Arr&) {
-        //     auto [u, v] = G.end_points(e);
-        //     return (u <= v) ? Arr {1., 0.} : Arr {0., -1.};
-        // };
-
-        // auto network = network_oracle(this->_G, this->_dist,
-        // constr{this->_get_cost}, pconstr{});
         if (auto cut = this->_network(x))
         {
-            auto [g, f] = *cut;
-            return {{std::move(g), f}, t};
+            return {*cut, t};
         }
         auto s = x(0) - x(1);
         auto fj = s - t;

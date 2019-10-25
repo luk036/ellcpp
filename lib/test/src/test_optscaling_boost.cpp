@@ -127,7 +127,7 @@ TEST_CASE("Test Optimal Scaling (binary search)", "[test_optscaling]")
     auto Iv = ell1d(*cmin, *cmax);
     auto dist = std::vector(G.number_of_nodes(), 0.);
 
-    auto Q = optscaling_oracle3 {G, dist, get_cost};
+    auto Q = optscaling3_oracle {G, dist, get_cost};
     auto P = bsearch_adaptor{Q, Iv};
     auto bs_info = bsearch(P, std::tuple {0., 1.001 * (*cmax - *cmin)});
 

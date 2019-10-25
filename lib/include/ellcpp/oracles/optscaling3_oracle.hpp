@@ -1,79 +1,86 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include "network3_oracle.hpp"
+#include "network_oracle.hpp"
 #include <cassert>
 // #include <xtensor/xarray.hpp>
 
-/*!
- * @brief
- *
- * @tparam Graph
- * @tparam Fn
- * @tparam T
+/**
+ * @brief 
+ * 
+ * @tparam Graph 
+ * @tparam Container 
+ * @tparam Fn 
  */
 template <typename Graph, typename Container, typename Fn> //
-class optscaling_oracle3
+class optscaling3_oracle
 {
-    // using Arr = xt::xarray<double, xt::layout_type::row_major>;
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using edge_t = typename Graph::edge_t;
+    using Cut = std::tuple<Arr, double>;
+
     // using constr_fn = std::function<double(const Graph&, const edge_t, const
     // Arr&)>; using pconstr_fn = std::function<Arr(const Graph&, const edge_t,
     // const Arr&)>; using NWO = network_oracle<Graph, Container, constr_fn,
     // pconstr_fn>;
 
   public:
-    struct constr3
+    struct Ratio
     {
         Fn _get_cost;
+        double _t;
 
-        explicit constr3(Fn get_cost)
+        explicit Ratio(Fn get_cost)
             : _get_cost {get_cost}
         {
         }
 
-        auto operator()(const Graph& G, const edge_t& e, const double& x,
-            double t) const -> double
+        auto update(const double& t) -> void
+        {
+            this->_t = t;
+        }
+
+        auto eval(const Graph& G, const edge_t& e, const double& x) const
+            -> double
         {
             auto [u, v] = G.end_points(e);
             auto cost = this->_get_cost(G, e);
             assert(u != v);
-            return (u < v) ? x + t - cost : cost - x;
+            return (u < v) ? x + this->_t - cost : cost - x;
         }
-    };
 
-    struct pconstr3
-    {
-        auto operator()(const Graph& G, const edge_t& e, const double& /* x */,
-            double /* t */) const -> double
+        auto grad(const Graph& G, const edge_t& e, const double& x) const
+            -> double
         {
             auto [u, v] = G.end_points(e);
             assert(u != v);
-            return (u < v) ? 1. : -1.;
+            return (u < v) ? 1 : -1;
         }
     };
 
   private:
-    // const Graph& _G;
-    // Container& _dist;
-    // Fn _get_cost;
-    network3_oracle<Graph, Container, constr3, pconstr3> _network3;
+    network_oracle<Graph, Container, Ratio> _network;
 
   public:
     /*!
-     * @brief Construct a new optscaling oracle object
+     * @brief Construct a new optscaling3 oracle object
      *
      * @param G
      * @param get_cost
      */
-    optscaling_oracle3(const Graph& G, Container& dist, Fn get_cost)
-        : _network3(G, dist, constr3 {get_cost}, pconstr3 {})
+    optscaling3_oracle(const Graph& G, Container& dist, Fn get_cost)
+        : _network(G, dist, Ratio {get_cost})
     {
     }
 
-    auto update(double t) -> void
+    /*!
+     * @brief 
+     * 
+     * @param t 
+     */
+    auto update(const double& t) -> void
     {
-        this->_network3.update(t);
+        this->_network.update(t);
     }
 
     /*!
@@ -85,6 +92,6 @@ class optscaling_oracle3
      */
     auto operator()(const double& x)
     {
-        return this->_network3(x);
+        return this->_network(x);
     }
 };
