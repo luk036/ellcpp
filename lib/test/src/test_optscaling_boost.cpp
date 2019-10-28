@@ -57,7 +57,7 @@ static xn::grAdaptor<graph_t> create_test_case1()
     return xn::grAdaptor<graph_t>(g);
 }
 
-TEST_CASE("Test Optimal Scaling (two varaibles)", "[test_optscaling]")
+TEST_CASE("Test Optimal Scaling (two varaibles, boost)", "[test_optscaling_boost]")
 {
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;
@@ -96,7 +96,7 @@ TEST_CASE("Test Optimal Scaling (two varaibles)", "[test_optscaling]")
     CHECK(ell_info.num_iters <= 27);
 }
 
-TEST_CASE("Test Optimal Scaling (binary search)", "[test_optscaling]")
+TEST_CASE("Test Optimal Scaling (binary search, boost)", "[test_optscaling_boost]")
 {
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;

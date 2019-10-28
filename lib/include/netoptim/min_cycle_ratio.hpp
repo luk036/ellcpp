@@ -23,37 +23,37 @@
  * @param dist
  * @return auto
  */
-template <typename Graph, typename Fn1, typename Fn2, typename Container>
-auto min_cycle_ratio(Graph& G, Fn1 get_cost, Fn2 get_time, Container& dist)
+template <typename Graph, typename T, typename Fn1, typename Fn2, typename Container>
+auto min_cycle_ratio(Graph& G, T r0, Fn1 get_cost, Fn2 get_time, Container& dist)
 {
     using edge_t = typename Graph::edge_t;
-    using T = typename Container::value_type;
+    // using T = typename Container::value_type;
 
     edge_t e0;
-    for (auto e : G.edges())
-    {
-        e0 = e; // get the first edge (better idea???)
-        break;
-    }
+    // for (auto e : G.edges())
+    // {
+    //     e0 = e; // get the first edge (better idea???)
+    //     break;
+    // }
 
-    // auto& edges = G.edges();
-    // auto max_c = *std::max_element(edges.begin(), edges.end(),
-    //                 [](const edge_t& e) { return get_cost(G, e); });
+    // // auto& edges = G.edges();
+    // // auto max_c = *std::max_element(edges.begin(), edges.end(),
+    // //                 [](const edge_t& e) { return get_cost(G, e); });
 
-    // auto max_cost = *std::max_element(cost.begin(), cost.end());
-    // auto min_time = *std::min_element(time.begin(), time.end());
-    auto max_cost = get_cost(G, e0);
-    auto min_time = get_time(G, e0);
-    for (auto e : G.edges())
-    {
-        const auto c = get_cost(G, e);
-        const auto t = get_time(G, e);
-        if (max_cost < c)
-            max_cost = c;
-        if (min_time > t)
-            min_time = t;
-    }
-    auto r0 = T(max_cost * G.number_of_edges()) / min_time;
+    // // auto max_cost = *std::max_element(cost.begin(), cost.end());
+    // // auto min_time = *std::min_element(time.begin(), time.end());
+    // auto max_cost = get_cost(G, e0);
+    // auto min_time = get_time(G, e0);
+    // for (auto e : G.edges())
+    // {
+    //     const auto c = get_cost(G, e);
+    //     const auto t = get_time(G, e);
+    //     if (max_cost < c)
+    //         max_cost = c;
+    //     if (min_time > t)
+    //         min_time = t;
+    // }
+    // auto r0 = T(max_cost * G.number_of_edges()) / min_time;
 
     using cost_T = decltype(get_cost(G, e0));
     using time_T = decltype(get_time(G, e0));

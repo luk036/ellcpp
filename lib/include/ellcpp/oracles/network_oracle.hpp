@@ -4,7 +4,6 @@
 #include <ellcpp/utility.hpp>
 #include <netoptim/neg_cycle.hpp> // import negCycleFinder
 #include <optional>
-// #include <xtensor/xarray.hpp>
 
 /*!
  * @brief
@@ -59,7 +58,6 @@ class network_oracle
             return this->_h.eval(G, e, x);
         };
 
-        // auto S = negCycleFinder(this->_G);
         auto C = this->_S.find_neg_cycle(this->_dist, get_weight);
         if (C.empty())
         {
@@ -76,8 +74,3 @@ class network_oracle
         return {{std::move(g), f}};
     }
 };
-
-// Template guided deduction
-// template <typename Graph, typename Fn_Eval, typename Grad_Fn>
-// network_oracle(Graph &G, Fn_Eval &f, Grad_Fn &p)
-//     ->network_oracle<Graph, Fn_Eval, Grad_Fn>;

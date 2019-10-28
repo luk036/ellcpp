@@ -88,7 +88,7 @@ TEST_CASE("Test Cycle Ratio (boost)", "[test_cycle_ratio_boost]")
     };
 
     auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
-    auto [r, c] = min_cycle_ratio(G, get_cost, get_time, dist);
+    auto [r, c] = min_cycle_ratio(G, fun::Fraction<int>(5), get_cost, get_time, dist);
     CHECK(!c.empty());
     CHECK(c.size() == 5);
     CHECK(r == fun::Fraction<int>(9, 5));
@@ -117,7 +117,7 @@ TEST_CASE(
                         /*e*/) -> int { return 1; };
 
     auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
-    auto [r, c] = min_cycle_ratio(G, get_cost, get_time, dist);
+    auto [r, c] = min_cycle_ratio(G, fun::Fraction<int>(7), get_cost, get_time, dist);
     CHECK(!c.empty());
     CHECK(r == fun::Fraction<int>(1, 1));
     CHECK(c.size() == 3);

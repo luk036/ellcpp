@@ -6,7 +6,7 @@
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 // #include <xtensor/xarray.hpp>
-
+ 
 // using namespace fun;
 template <typename Oracle>
 class my_oracle
@@ -129,3 +129,12 @@ static void BM_LMI_No_Trick(benchmark::State& state)
 BENCHMARK(BM_LMI_No_Trick);
 
 BENCHMARK_MAIN();
+
+/*
+----------------------------------------------------------
+Benchmark                Time             CPU   Iterations
+----------------------------------------------------------
+BM_LMI_Lazy         131235 ns       131245 ns         4447
+BM_LMI_old          196694 ns       196708 ns         3548
+BM_LMI_No_Trick     129743 ns       129750 ns         5357
+*/

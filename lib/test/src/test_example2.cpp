@@ -17,14 +17,14 @@ auto my_oracle2(const Arr& z) -> std::optional<Cut>
 
     // constraint 1: x + y <= 3
     auto fj = x + y - 3.;
-    if (fj > 0)
+    if (fj > 0.)
     {
         return {{Arr {1., 1.}, fj}};
     }
 
     // constraint 2: x - y >= 1
     fj = -x + y + 1.;
-    if (fj > 0)
+    if (fj > 0.)
     {
         return {{Arr {-1., 1.}, fj}};
     }
