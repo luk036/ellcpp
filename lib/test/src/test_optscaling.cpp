@@ -4,7 +4,6 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/ell1d.hpp>
-#include <ellcpp/oracles/optscaling3_oracle.hpp> // import optscaling
 #include <ellcpp/oracles/optscaling_oracle.hpp>  // import optscaling
 #include <xnetwork/classes/digraphs.hpp>
 #include <utility> // for std::pair
@@ -65,35 +64,4 @@ TEST_CASE("Test Optimal Scaling (two varaibles)", "[test_optscaling]")
 
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters <= 27);
-}
-
-TEST_CASE("Test Optimal Scaling (binary search)", "[test_optscaling]")
-{
-    auto G = create_test_case1();
-
-    const auto elem = std::array {1.2, 2.3, 3.4, -4.5, 5.6};
-    const auto num_of_nodes = sizeof(elem) / sizeof(double);
-    double cost[num_of_nodes];
-    for (size_t i = 0U; i < num_of_nodes; ++i)
-    {
-        cost[i] = std::log(std::abs(elem[i]));
-    }
-
-    auto get_cost = [&](const auto& G, const auto& e) -> int {
-        auto [u, v] = G.end_points(e);
-        return cost[G[u][v]];
-    };
-
-
-    auto [cmin, cmax] = std::minmax_element(cost, cost + num_of_nodes);
-
-    auto Iv = ell1d(*cmin, *cmax);
-    auto dist = std::vector(G.number_of_nodes(), 0.);
-
-    auto Q = optscaling3_oracle {G, dist, get_cost};
-    auto P = bsearch_adaptor{Q, Iv};
-    auto bs_info = bsearch(P, std::tuple {0., 1.001 * (*cmax - *cmin)});
-
-    CHECK(bs_info.feasible);
-    CHECK(bs_info.num_iters <= 27);
 }

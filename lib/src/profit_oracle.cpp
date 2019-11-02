@@ -37,11 +37,9 @@ std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
 }
 
 /*!
- * @brief
- *
- * @param y
- * @param t
- * @return auto
+ * @param y 
+ * @param t 
+ * @return std::tuple<Cut, double, Arr, int> 
  */
 std::tuple<Cut, double, Arr, int> profit_q_oracle::operator()(
     const Arr& y, double t, int /*unused*/) const

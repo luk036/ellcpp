@@ -16,7 +16,8 @@
 #include <xtensor/xrandom.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
-/**
+
+/*!
  * @brief Create a 2d sites object
  *
  * @param nx
@@ -35,14 +36,12 @@ Arr create_2d_sites(size_t nx = 10U, size_t ny = 8U)
     return xt::transpose(st);
 }
 
-
 /*!
- * @brief Create a 2d isotropic example
- *
- * @param nx
- * @param ny
- * @param N
- * @return std::tuple<Arr, Arr>
+ * @brief Create a 2d isotropic object
+ * 
+ * @param s 
+ * @param N 
+ * @return Arr 
  */
 Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 {
@@ -81,10 +80,11 @@ Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 }
 
 /*!
- * @brief
- *
- * @param s
- * @return Arr
+ * @brief 
+ * 
+ * @param s 
+ * @param m 
+ * @return std::vector<Arr> 
  */
 std::vector<Arr> construct_distance_matrix(const Arr& s, size_t m)
 {
