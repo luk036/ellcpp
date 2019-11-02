@@ -6,7 +6,14 @@
 #include <xtensor/xarray.hpp>
 
 /**
- * @brief 
+ * @brief Oracle for Optimal Matrix Scaling
+ *
+ *    This example is taken from[Orlin and Rothblum, 1985]
+ *
+ *        min     π/ψ
+ *        s.t.    ψ ≤ u[i] * |aij| * u[j]^{-1} ≤ π,
+ *                ∀ aij != 0,
+ *                π, ψ, u, positive
  * 
  * @tparam Graph 
  * @tparam Container 
@@ -19,21 +26,29 @@ class optscaling_oracle
     using edge_t = typename Graph::edge_t;
     using Cut = std::tuple<Arr, double>;
 
-    // using constr_fn = std::function<double(const Graph&, const edge_t, const
-    // Arr&)>; using pconstr_fn = std::function<Arr(const Graph&, const edge_t,
-    // const Arr&)>; using NWO = network_oracle<Graph, Container, constr_fn,
-    // pconstr_fn>;
-
   public:
     struct Ratio
     {
         Fn _get_cost;
 
+        /*!
+         * @brief Construct a new Ratio object
+         * 
+         * @param get_cost 
+         */
         explicit Ratio(Fn get_cost)
             : _get_cost {get_cost}
         {
         }
 
+        /*!
+         * @brief 
+         * 
+         * @param G 
+         * @param e 
+         * @param x (π, ψ) in log scale
+         * @return double 
+         */
         auto eval(const Graph& G, const edge_t& e, const Arr& x) const
             -> double
         {
@@ -43,6 +58,14 @@ class optscaling_oracle
             return (u < v) ? x(0) - cost : cost - x(1);
         }
 
+        /*!
+         * @brief 
+         * 
+         * @param G 
+         * @param e 
+         * @param x (π, ψ) in log scale
+         * @return Arr 
+         */
         auto grad(const Graph& G, const edge_t& e, const Arr& x) const
             -> Arr
         {
@@ -56,23 +79,26 @@ class optscaling_oracle
     network_oracle<Graph, Container, Ratio> _network;
 
   public:
-    /*!
+    /**
      * @brief Construct a new optscaling oracle object
-     *
-     * @param G
-     * @param get_cost
+     * 
+     * @param G 
+     * @param u 
+     * @param get_cost 
      */
-    optscaling_oracle(const Graph& G, Container& dist, Fn get_cost)
-        : _network(G, dist, Ratio {get_cost})
+    optscaling_oracle(const Graph& G, Container& u, Fn get_cost)
+        : _network(G, u, Ratio {get_cost})
     {
     }
 
     /*!
-     * @brief
+     * @brief Make object callable for cutting_plane_dc()
+     * 
+     * @param x (π, ψ) in log scale
+     * @param t the best-so-far optimal value
+     * @return std::tuple<Cut, double> 
      *
-     * @param x
-     * @param t
-     * @return auto
+     * @see cutting_plane_dc
      */
     auto operator()(const Arr& x, double t) -> std::tuple<Cut, double>
     {

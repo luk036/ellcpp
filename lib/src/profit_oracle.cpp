@@ -20,9 +20,9 @@ std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
         return {{Arr {1., 0.}, f1}, t};
     }
 
-    auto log_Cobb = this->_log_pA + xt::linalg::dot(this->_a, y)();
-    auto x = Arr {xt::exp(y)};
-    auto vx = xt::linalg::dot(this->_v, x)();
+    const auto log_Cobb = this->_log_pA + xt::linalg::dot(this->_a, y)();
+    const auto x = Arr {xt::exp(y)};
+    const auto vx = xt::linalg::dot(this->_v, x)();
     auto te = t + vx;
 
     auto fj = std::log(te) - log_Cobb;

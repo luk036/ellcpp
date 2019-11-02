@@ -6,7 +6,11 @@
 #include <optional>
 
 /*!
- * @brief
+ * @brief Oracle for Parametric Network Problem:
+ *
+ *        find    x, u
+ *        s.t.    u[j] - u[i] ≤ h(e, x)
+ *                ∀ e(i, j) ∈ E
  *
  * @tparam Graph
  * @tparam Container
@@ -19,7 +23,7 @@ class network_oracle
     
   private:
     const Graph& _G;
-    Container& _dist;
+    Container& _u;
     Fn _h;
     negCycleFinder<Graph> _S;
 
@@ -27,25 +31,31 @@ class network_oracle
     /*!
      * @brief Construct a new network oracle object
      *
-     * @param G
-     * @param f
-     * @param p
+     * @param G a directed graph (V, E)
+     * @param u list or dictionary
+     * @param h function evaluation and gradient
      */
-    network_oracle(const Graph& G, Container& dist, const Fn& h)
+    network_oracle(const Graph& G, Container& u, const Fn& h)
         : _G {G}
-        , _dist {dist}
+        , _u {u}
         , _h {h}
         , _S(G)
     {
     }
 
+    /*!
+     * @brief 
+     * 
+     * @param t the best-so-far optimal value
+     * @return auto 
+     */
     auto update(const double& t)
     {
         this->_h.update(t);
     }
 
     /*!
-     * @brief
+     * @brief Make object callable for cutting_plane_fea()
      *
      * @param x
      * @return auto
@@ -58,7 +68,7 @@ class network_oracle
             return this->_h.eval(G, e, x);
         };
 
-        auto C = this->_S.find_neg_cycle(this->_dist, get_weight);
+        auto C = this->_S.find_neg_cycle(this->_u, get_weight);
         if (C.empty())
         {
             return {};
