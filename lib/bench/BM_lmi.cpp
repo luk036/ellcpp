@@ -5,9 +5,12 @@
 #include <ellcpp/oracles/lmi_oracle.hpp>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
-// #include <xtensor/xarray.hpp>
- 
-// using namespace fun;
+
+/*! 
+ * @brief 
+ * 
+ * @tparam Oracle 
+ */
 template <typename Oracle>
 class my_oracle
 {
@@ -20,6 +23,15 @@ class my_oracle
     Arr c;
 
   public:
+    /*! 
+     * @brief Construct a new my oracle object
+     * 
+     * @param F1 
+     * @param B1 
+     * @param F2 
+     * @param B2 
+     * @param c 
+     */
     my_oracle(const std::vector<Arr>& F1, const Arr& B1, const std::vector<Arr>& F2,
         const Arr& B2, const Arr& c)
         : lmi1 {F1, B1}
@@ -28,6 +40,13 @@ class my_oracle
     {
     }
 
+    /*! 
+     * @brief 
+     * 
+     * @param x 
+     * @param t 
+     * @return std::tuple<Cut, double> 
+     */
     std::tuple<Cut, double> operator()(const Arr& x, double t)
     {
         const auto f0 = xt::linalg::dot(this->c, x)();
@@ -48,6 +67,11 @@ class my_oracle
     }
 };
 
+/*! 
+ * @brief 
+ * 
+ * @param state 
+ */
 static void BM_LMI_Lazy(benchmark::State& state)
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
@@ -76,7 +100,11 @@ BENCHMARK(BM_LMI_Lazy);
 
 //~~~~~~~~~~~~~~~~
 
-// Define another benchmark
+/*! 
+ * @brief Define another benchmark
+ * 
+ * @param state 
+ */
 static void BM_LMI_old(benchmark::State& state)
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
@@ -101,6 +129,11 @@ static void BM_LMI_old(benchmark::State& state)
 }
 BENCHMARK(BM_LMI_old);
 
+/*! 
+ * @brief 
+ * 
+ * @param state 
+ */
 static void BM_LMI_No_Trick(benchmark::State& state)
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;

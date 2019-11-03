@@ -8,7 +8,7 @@
 /*!
  * @brief Ellipsoid Search Space
  *
- * ell = { x | (x - xc)' * (\kappa Q)^-1 * (x - xc) <= 1 }
+ *   ell = {x | (x − xc)' Q^−1 (x − xc) ​≤ κ}
  */
 class ell
 {
@@ -127,12 +127,10 @@ class ell
     }
 
     /*!
-     * @brief Update ellipsoid core function using the cut
-     *          g' * (x - xc) + beta <= 0
+     * @brief Update ellipsoid core function using the cut(s)
      *
      * @tparam T
-     * @param g
-     * @param beta
+     * @param cut cutting-plane
      * @return std::tuple<int, double>
      */
     template <typename T>
@@ -140,7 +138,10 @@ class ell
 
   private:
     /*!
-     * @brief
+     * @brief Calculate new ellipsoid under Parallel Cut
+     *
+     *    g' (x − xc​) + β0 ​≤ 0
+     *    g' (x − xc​) + β1 ​≥ 0
      *
      * @param b0
      * @param b1
@@ -149,7 +150,10 @@ class ell
     auto __calc_ll_core(const double& b0, const double& b1) -> int;
 
     /*!
-     * @brief Parallel Cut, one of them is central
+     * @brief Calculate new ellipsoid under Parallel Cut, one of them is central
+     *
+     *    g' (x − xc​) ​≤ 0
+     *    g' (x − xc​) + β1 ​≥ 0
      *
      * @param b1
      * @param t1
@@ -158,7 +162,9 @@ class ell
     auto __calc_ll_cc(const double& b1, const double& t1) -> void;
 
     /*!
-     * @brief Deep Cut
+     * @brief Calculate new ellipsoid under Deep Cut
+     *
+     *    g' (x − xc​) + β0 ​≤ 0
      *
      * @param b0
      * @return int
@@ -166,7 +172,9 @@ class ell
     auto __calc_dc(const double& b0) -> int;
 
     /*!
-     * @brief Central Cut
+     * @brief Calculate new ellipsoid under Central Cut
+     *
+     *    g' (x − xc​) ≤ 0
      *
      * @param tau
      * @return void

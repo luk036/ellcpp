@@ -10,7 +10,7 @@
  *
  *  - LDLT square-root-free version
  *  - Option allow semidefinite
- *  - A matrix $A in R^{m x m}$ is positive definite iff v^T A v > 0
+ *  - A matrix $A in R^{m x m}$ is positive definite iff v' A v > 0
  *      for all v in R^n.
  *  - O($p^2 n$) per iteration, independent of $m$
  */
@@ -50,7 +50,7 @@ class chol_ext
      *
      * If $A$ is positive definite, then $p$ is zero.
      * If it is not, then $p$ is a positive integer,
-     * such that $v = R^{-1} e_p$ is a certificate vector
+     * such that $v = R^−1 e_p$ is a certificate vector
      * to make $v'*A[:p,:p]*v < 0$
      */
     void factorize(const Mat& A)

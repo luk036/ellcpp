@@ -9,10 +9,8 @@
 /*!
  * @brief Oracle for Linear Matrix Inequality
  *
- * Oracle for:
- *    F * x <= B
- * or
- *    (B - F * x) must be a semidefinte matrix
+ *   find  x
+ *   s.t.​  (B - F*x) ⪰ 0
  */
 class lmi_oracle
 {

@@ -8,9 +8,11 @@
 #include <fmt/format.h>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
-// #include <xtensor/xarray.hpp>
 
-// using namespace fun;
+/*! 
+ * @brief my_oracle
+ * 
+ */
 class my_oracle
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
@@ -23,10 +25,15 @@ class my_oracle
     Arr c;
 
   public:
-    // my_oracle(const M_t &F1, Arr &B1,
-    //           const M_t &F2, Arr &B2, Arr &c)
-    //     : lmi1{F1, B1}, lmi2{F2, B2}, c{c} {}
-
+    /*! 
+     * @brief Construct a new my oracle object
+     * 
+     * @param F1 
+     * @param B1 
+     * @param F2 
+     * @param B2 
+     * @param c 
+     */
     my_oracle(M_t&& F1, Arr&& B1, M_t&& F2, Arr&& B2, const Arr& c)
         : lmi1 {std::forward<M_t>(F1), std::forward<Arr>(B1)}
         , lmi2 {std::forward<M_t>(F2), std::forward<Arr>(B2)}
@@ -34,6 +41,13 @@ class my_oracle
     {
     }
 
+    /*! 
+     * @brief 
+     * 
+     * @param x 
+     * @param t 
+     * @return std::tuple<Cut, double> 
+     */
     std::tuple<Cut, double> operator()(const Arr& x, double t)
     {
         const auto f0 = xt::linalg::dot(this->c, x)();

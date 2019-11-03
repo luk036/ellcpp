@@ -9,6 +9,13 @@
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 using Cut = std::tuple<Arr, double>;
 
+/*! 
+ * @brief 
+ * 
+ * @param z 
+ * @param t 
+ * @return std::tuple<Cut, double> 
+ */
 std::tuple<Cut, double> my_oracle(const Arr& z, double t)
 {
     auto x = z[0];

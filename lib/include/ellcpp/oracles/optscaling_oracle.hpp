@@ -5,13 +5,13 @@
 #include <cassert>
 #include <xtensor/xarray.hpp>
 
-/**
+/*! 
  * @brief Oracle for Optimal Matrix Scaling
  *
- *    This example is taken from[Orlin and Rothblum, 1985]
+ *    This example is taken from [Orlin and Rothblum, 1985]
  *
  *        min     π/ψ
- *        s.t.    ψ ≤ u[i] * |aij| * u[j]^{-1} ≤ π,
+ *        s.t.    ψ ≤ u[i] * |aij| * u[j]^−1 ≤ π,
  *                ∀ aij != 0,
  *                π, ψ, u, positive
  * 
@@ -79,7 +79,7 @@ class optscaling_oracle
     network_oracle<Graph, Container, Ratio> _network;
 
   public:
-    /**
+    /*! 
      * @brief Construct a new optscaling oracle object
      * 
      * @param G 

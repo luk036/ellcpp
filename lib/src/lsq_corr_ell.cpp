@@ -117,6 +117,14 @@ std::vector<Arr> construct_distance_matrix(const Arr& s, size_t m)
 /*!
  * @brief
  *
+ *    min   ‖ Σ(p) − Y ‖
+ *    s.t.  Σ(p) ⪰ 0
+ *
+ *    where
+ *
+ *        ρ(h) = p1 Ψ1(h) + ··· + pn Ψ1(h)
+ *
+ *        {Fk}i,j = Ψk(‖sj − si‖^2)
  */
 class lsq_oracle
 {
@@ -145,7 +153,7 @@ class lsq_oracle
      * @brief
      *
      * @param x
-     * @param t
+     * @param t the best-so-far optimal value
      * @return auto
      */
     std::tuple<Cut, double> operator()(const Arr& x, double t)
@@ -260,7 +268,7 @@ class mle_oracle
      * @brief
      *
      * @param x
-     * @param t
+     * @param t the best-so-far optimal value
      * @return auto
      */
     std::tuple<Cut, double> operator()(const Arr& x, double t)

@@ -10,6 +10,12 @@
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 using Cut = std::tuple<Arr, double>;
 
+/*! 
+ * @brief 
+ * 
+ * @param z 
+ * @return std::optional<Cut> 
+ */
 auto my_oracle2(const Arr& z) -> std::optional<Cut>
 {
     auto x = z[0];

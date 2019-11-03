@@ -9,8 +9,8 @@
 /*!
  * @brief  Oracle for Linear Matrix Inequality
  *
- * Oracle for:
- *    F * x >= 0
+ *   find  x
+ *   s.t.​  F*x ⪰ 0
  */
 class lmi0_oracle
 {

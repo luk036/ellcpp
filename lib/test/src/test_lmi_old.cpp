@@ -24,7 +24,7 @@ class my_oracle
     Arr c;
 
   public:
-    /**
+    /*! 
      * @brief Construct a new my oracle object
      * 
      * @param F1 
@@ -41,11 +41,11 @@ class my_oracle
     {
     }
 
-    /**
+    /*! 
      * @brief 
      * 
      * @param x 
-     * @param t 
+     * @param t the best-so-far optimal value
      * @return std::tuple<Cut, double> 
      */
     std::tuple<Cut, double> operator()(const Arr& x, double t)

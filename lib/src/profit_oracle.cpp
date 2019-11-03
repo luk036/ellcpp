@@ -8,7 +8,7 @@ using Cut = std::tuple<Arr, double>;
  * @brief
  *
  * @param y
- * @param t
+ * @param t the best-so-far optimal value
  * @return std::tuple<Cut, double>
  */
 std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
@@ -38,7 +38,7 @@ std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
 
 /*!
  * @param y 
- * @param t 
+ * @param t the best-so-far optimal value
  * @return std::tuple<Cut, double, Arr, int> 
  */
 std::tuple<Cut, double, Arr, int> profit_q_oracle::operator()(

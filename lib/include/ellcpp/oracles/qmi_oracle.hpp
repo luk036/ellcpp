@@ -9,7 +9,8 @@
 /*!
  * @brief Oracle for Quadratic Matrix Inequality
  *
- *   F(x).T * F(x) <= I*t
+ *   find  x
+ *   s.t.​  t*I - F(x)' F(x) ⪰ 0
  *
  * where
  *
@@ -30,7 +31,6 @@ class qmi_oracle
     const std::vector<Arr>& _F;
     const Arr& _F0;
     Arr _Fx;
-    // Arr _A;
 
   public:
     chol_ext<> _Q;
@@ -55,7 +55,7 @@ class qmi_oracle
     /*!
      * @brief Update t
      *
-     * @param t
+     * @param t the best-so-far optimal value
      */
     void update(double t)
     {

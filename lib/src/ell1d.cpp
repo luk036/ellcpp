@@ -7,12 +7,11 @@
 #define likely(x) __builtin_expect(!!(x), 1)
 #define unlikely(x) __builtin_expect(!!(x), 0)
 
-/*!
- * @brief
- *
- * @param g
- * @param beta
- * @return ell1d::return_t
+/*! 
+ * @brief 
+ * 
+ * @param cut 
+ * @return ell1d::return_t 
  */
 ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
 {

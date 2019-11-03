@@ -32,7 +32,11 @@ using graph_t =
 using Vertex = typename boost::graph_traits<graph_t>::vertex_descriptor;
 using edge_t = typename boost::graph_traits<graph_t>::edge_iterator;
 
-
+/*! 
+ * @brief Create a test case1 object
+ * 
+ * @return xn::grAdaptor<graph_t> 
+ */
 static xn::grAdaptor<graph_t> create_test_case1()
 {
     using Edge = std::pair<int, int>;

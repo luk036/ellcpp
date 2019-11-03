@@ -55,7 +55,7 @@ class network_oracle
     }
 
     /*!
-     * @brief Make object callable for cutting_plane_fea()
+     * @brief Make object callable for cutting_plane_feas()
      *
      * @param x
      * @return auto

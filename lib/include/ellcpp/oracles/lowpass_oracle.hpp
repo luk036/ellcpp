@@ -7,8 +7,11 @@
 // from itertools import chain
 
 /*!
- * @brief Oracle for lowpass filter design
+ * @brief Oracle for FIR lowpass filter design
  *
+ *    min   γ
+ *    s.t.  L^2(ω) ≤ R(ω) ≤ U^2(ω), ∀ ω ∈ [0, π] 
+ *          R(ω) > 0, ∀ ω ∈ [0, π]
  */
 class lowpass_oracle
 {
