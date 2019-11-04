@@ -122,7 +122,7 @@ std::vector<Arr> construct_distance_matrix(const Arr& s, size_t m)
  *
  *    where
  *
- *        ρ(h) = p1 Ψ1(h) + ··· + pn Ψ1(h)
+ *        ρ(h) = p1 Ψ1(h) + ··· + pn Ψn(h)
  *
  *        {Fk}i,j = Ψk(‖sj − si‖^2)
  */

@@ -32,8 +32,7 @@ auto max_parametric(
 {
     using edge_t = typename Graph::edge_t;
 
-    auto get_weight = [&](const Graph& G,
-                          const edge_t& e) -> T { // int???
+    auto get_weight = [&](const edge_t& e) -> T { // int???
         return d(G, r_opt, e);
     };
 
@@ -61,7 +60,7 @@ auto max_parametric(
         for (const auto& e : C_opt)
         {
             auto [u, v] = G.end_points(e);
-            dist[u] = dist[v] - get_weight(G, e);
+            dist[u] = dist[v] - get_weight(e);
         }
     }
 
