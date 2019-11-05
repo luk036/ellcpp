@@ -6,6 +6,8 @@
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lmi_oracle.hpp>
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_sinks.h>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 
@@ -99,6 +101,11 @@ TEST_CASE("LMI test", "[lmi_oracle]")
     // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible <<
     // ", " << status
     //           << "\n";
+    
+    // create color multi threaded logger
+    auto console = spdlog::stdout_color_mt("console");    
+    auto err_logger = spdlog::stderr_color_mt("stderr");    
+    spdlog::get("console")->info("loggers can be retrieved from a global registry using the spdlog::get(logger_name)");
 
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters == 115);
