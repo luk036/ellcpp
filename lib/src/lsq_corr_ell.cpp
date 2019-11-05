@@ -22,7 +22,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  *
  * @param nx
  * @param ny
- * @return Arr
+ * @return Arr location of sites
  */
 Arr create_2d_sites(size_t nx = 10U, size_t ny = 8U)
 {
@@ -39,9 +39,9 @@ Arr create_2d_sites(size_t nx = 10U, size_t ny = 8U)
 /*!
  * @brief Create a 2d isotropic object
  * 
- * @param s 
+ * @param s location of sites
  * @param N 
- * @return Arr 
+ * @return Arr Biased covariance matrix 
  */
 Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 {
@@ -80,7 +80,7 @@ Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 }
 
 /*!
- * @brief 
+ * @brief Construct a distance matrix object
  * 
  * @param s 
  * @param m 
@@ -89,7 +89,6 @@ Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 std::vector<Arr> construct_distance_matrix(const Arr& s, size_t m)
 {
     auto n = s.shape()[0];
-    // c = cvx.Variable(m)
     auto D1 = zeros({n, n});
     for (size_t i = 0U; i < n; ++i)
     {
