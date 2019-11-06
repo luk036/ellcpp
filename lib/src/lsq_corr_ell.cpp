@@ -82,11 +82,10 @@ Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 /*!
  * @brief Construct a distance matrix object
  * 
- * @param s 
- * @param m 
+ * @param s location of sites
  * @return std::vector<Arr> 
  */
-std::vector<Arr> construct_distance_matrix(const Arr& s, size_t m)
+Arr construct_distance_matrix(const Arr& s)
 {
     auto n = s.shape()[0];
     auto D1 = zeros({n, n});
@@ -100,7 +99,20 @@ std::vector<Arr> construct_distance_matrix(const Arr& s, size_t m)
             D1(j, i) = d;
         }
     }
+    return D1;
+}
 
+/*!
+ * @brief Construct distance matrix for polynomial
+ * 
+ * @param s location of sites
+ * @param m degree of polynomial
+ * @return std::vector<Arr> 
+ */
+std::vector<Arr> construct_poly_matrix(const Arr& s, size_t m)
+{
+    auto n = s.shape()[0];
+    auto D1 = construct_distance_matrix(s);
     auto D = Arr {xt::ones<double>({n, n})};
     auto Sig = std::vector {D};
     Sig.reserve(m);
@@ -225,7 +237,7 @@ auto lsq_corr_core2(const Arr& Y, size_t m, lsq_oracle& P)
  */
 std::tuple<size_t, bool> lsq_corr_poly2(const Arr& Y, const Arr& s, size_t m)
 {
-    auto Sig = construct_distance_matrix(s, m);
+    auto Sig = construct_poly_matrix(s, m);
     auto P = lsq_oracle(Sig, Y);
     auto [a, num_iters, feasible] = lsq_corr_core2(Y, m, P);
     // std::cout << "lsq_corr_poly2 = " << a << "\n";
@@ -349,7 +361,7 @@ auto mle_corr_core(const Arr& /*Y*/, size_t m, mle_oracle& P)
  */
 std::tuple<size_t, bool> mle_corr_poly(const Arr& Y, const Arr& s, size_t m)
 {
-    auto Sig = construct_distance_matrix(s, m);
+    auto Sig = construct_poly_matrix(s, m);
     auto P = mle_oracle(Sig, Y);
     auto [a, num_iters, feasible] = mle_corr_core(Y, m, P);
     // std::cout << "mle_corr_poly = " << a << "\n";
@@ -366,7 +378,7 @@ std::tuple<size_t, bool> mle_corr_poly(const Arr& Y, const Arr& s, size_t m)
  */
 std::tuple<size_t, bool> lsq_corr_poly(const Arr& Y, const Arr& s, size_t m)
 {
-    auto Sig = construct_distance_matrix(s, m);
+    auto Sig = construct_poly_matrix(s, m);
     // P = mtx_norm_oracle(Sig, Y, a)
     auto a = zeros({m});
     auto Q = qmi_oracle(Sig, Y);

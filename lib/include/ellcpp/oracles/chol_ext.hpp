@@ -8,7 +8,7 @@
 /*!
  * @brief Cholesky factorization for LMI
  *
- *  - LDLT square-root-free version
+ *  - LDL^T square-root-free version
  *  - Option allow semidefinite
  *  - A matrix $A in R^{m x m}$ is positive definite iff v' A v > 0
  *      for all v in R^n.
