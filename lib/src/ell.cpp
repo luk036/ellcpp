@@ -2,11 +2,6 @@
 #include <ellcpp/ell.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 
-/* linux-2.6.38.8/include/linux/compiler.h */
-#include <cstdio>
-#define likely(x) __builtin_expect(!!(x), 1)
-#define unlikely(x) __builtin_expect(!!(x), 0)
-
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 /*!
@@ -24,7 +19,8 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
         return this->__calc_dc(b0);
     }
 
-    if (unlikely(b1 < b0))
+    [[unlikely]]
+    if (b1 < b0)
     {
         return 1; // no sol'n
     }
@@ -36,7 +32,8 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
     }
 
     const auto b0b1 = b0 * b1;
-    if (unlikely(this->_n * b0b1 < -this->_tsq))
+    [[unlikely]]
+    if (this->_n * b0b1 < -this->_tsq)
     {
         return 3; // no effect
     }
@@ -90,7 +87,8 @@ int ell::__calc_dc(const double& beta)
     }
 
     const auto gamma = tau + this->_n * beta;
-    if (unlikely(gamma < 0))
+    [[unlikely]]
+    if (gamma < 0)
     {
         return 3; // no effect
     }
@@ -140,7 +138,8 @@ std::tuple<int, double> ell::update(const std::tuple<Arr, T>& cut)
     }
     else
     { // parallel cut
-        if (unlikely(beta.shape()[0] < 2))
+        [[unlikely]]
+        if (beta.shape()[0] < 2)
         {
             status = this->__calc_dc(beta[0]);
         }

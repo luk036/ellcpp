@@ -2,11 +2,6 @@
 #include <ellcpp/ell1d.hpp>
 // #include <tuple>
 
-/* linux-2.6.38.8/include/linux/compiler.h */
-#include <cstdio>
-#define likely(x) __builtin_expect(!!(x), 1)
-#define unlikely(x) __builtin_expect(!!(x), 0)
-
 /*! 
  * @brief 
  * 
@@ -30,7 +25,8 @@ ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
     {
         return {1, tsq}; // no sol'n
     }
-    if (unlikely(beta < -tau))
+    [[unlikely]]
+    if (beta < -tau)
     {
         return {3, tsq}; // no effect
     }
