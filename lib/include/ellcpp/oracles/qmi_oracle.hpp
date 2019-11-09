@@ -3,8 +3,8 @@
 
 #include "chol_ext.hpp"
 #include <optional>
-#include <vector>
 #include <xtensor/xarray.hpp>
+#include <gsl/span>
 
 /*!
  * @brief Oracle for Quadratic Matrix Inequality
@@ -28,7 +28,7 @@ class qmi_oracle
 
     size_t _n;
     size_t _m;
-    const std::vector<Arr>& _F;
+    gsl::span<const Arr> _F;
     const Arr& _F0;
     Arr _Fx;
 
@@ -42,7 +42,7 @@ class qmi_oracle
      * @param F
      * @param F0
      */
-    qmi_oracle(const std::vector<Arr>& F, const Arr& F0)
+    qmi_oracle(gsl::span<const Arr> F, const Arr& F0)
         : _n {F0.shape()[0]}
         , _m {F0.shape()[1]}
         , _F {F}

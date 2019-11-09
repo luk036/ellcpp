@@ -5,6 +5,7 @@
 #include "chol_ext.hpp"
 #include <optional>
 #include <xtensor/xarray.hpp>
+#include <gsl/span>
 
 /*!
  * @brief  Oracle for Linear Matrix Inequality
@@ -18,7 +19,7 @@ class lmi0_oracle
     using Cut = std::tuple<Arr, double>;
 
   private:
-    const std::vector<Arr>& _F;
+    gsl::span<const Arr> _F;
     size_t _n;
 
   public:
@@ -30,7 +31,7 @@ class lmi0_oracle
      *
      * @param F
      */
-    explicit lmi0_oracle(const std::vector<Arr>& F)
+    explicit lmi0_oracle(gsl::span<const Arr> F)
         : _F {F}
         , _n {F[0].shape()[0]}
         , _Q(_n)

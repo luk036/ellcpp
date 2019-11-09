@@ -36,9 +36,10 @@ class my_oracle
      * @param B2 
      * @param c 
      */
-    my_oracle(M_t&& F1, Arr&& B1, M_t&& F2, Arr&& B2, const Arr& c)
-        : lmi1 {std::forward<M_t>(F1), std::forward<Arr>(B1)}
-        , lmi2 {std::forward<M_t>(F2), std::forward<Arr>(B2)}
+    my_oracle(const std::vector<Arr>& F1, const Arr& B1, const std::vector<Arr>& F2,
+        const Arr& B2, const Arr& c)
+        : lmi1 {F1, B1}
+        , lmi2 {F2, B2}
         , c {c}
     {
     }
