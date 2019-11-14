@@ -1,8 +1,5 @@
 /* -*- coding: utf-8 -*- */
 #include <catch2/catch.hpp>
-// #include <iostream>
-// #include <tuple>
-
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <optional>
@@ -42,9 +39,6 @@ TEST_CASE("Example 2", "[example2]")
 {
     auto E = ell {10., Arr {0., 0.}};
     auto P = my_oracle2;
-
     auto ell_info = cutting_plane_feas(P, E);
     CHECK(ell_info.feasible);
-    // std::cout << "Example 2 result: " << niter << "," << feasible << "," <<
-    // status << "\n"; std::cout << "Example 2 xbest: " << xb << "\n";
 }

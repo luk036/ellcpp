@@ -28,18 +28,19 @@
 template <typename Graph, typename T, typename Fn1, typename Fn2,
     typename Container>
 auto max_parametric(
-    Graph& G, T r_opt, Fn1& d, Fn2& zero_cancel, Container& dist)
+    Graph& G, T r_opt, Fn1& d, Fn2& zero_cancel, Container& dist, size_t max_iter=1000)
 {
     using edge_t = typename Graph::edge_t;
 
     auto get_weight = [&](const edge_t& e) -> T { // int???
-        return d(G, r_opt, e);
+        return d(r_opt, e);
     };
 
     auto S = negCycleFinder(G);
     auto C_opt = std::vector<edge_t> {}; // should initial outside
 
-    while (true)
+    auto niter = 0U;
+    for (; niter < max_iter; ++niter)
     {
         const auto& C_min = S.find_neg_cycle(dist, get_weight);
         if (C_min.empty())
@@ -47,7 +48,7 @@ auto max_parametric(
             break;
         }
 
-        const auto& r_min = zero_cancel(G, C_min);
+        const auto& r_min = zero_cancel(C_min);
         if (r_min >= r_opt)
         {
             break;
