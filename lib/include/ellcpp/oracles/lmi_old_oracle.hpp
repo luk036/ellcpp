@@ -2,9 +2,9 @@
 #pragma once
 
 #include "chol_ext.hpp"
+#include <gsl/span>
 #include <optional>
 #include <xtensor/xarray.hpp>
-#include <gsl/span>
 
 /*!
  * @brief Oracle for Linear Matrix Inequality

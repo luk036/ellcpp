@@ -5,7 +5,7 @@
 #include <cassert>
 #include <xtensor/xarray.hpp>
 
-/*! 
+/*!
  * @brief Oracle for Optimal Matrix Scaling
  *
  *    This example is taken from [Orlin and Rothblum, 1985]
@@ -14,10 +14,10 @@
  *        s.t.    ψ ≤ u[i] * |aij| * u[j]^−1 ≤ π,
  *                ∀ aij != 0,
  *                π, ψ, u, positive
- * 
- * @tparam Graph 
- * @tparam Container 
- * @tparam Fn 
+ *
+ * @tparam Graph
+ * @tparam Container
+ * @tparam Fn
  */
 template <typename Graph, typename Container, typename Fn> //
 class optscaling_oracle
@@ -29,47 +29,47 @@ class optscaling_oracle
   public:
     struct Ratio
     {
+        const Graph& _G;
         Fn _get_cost;
 
         /*!
          * @brief Construct a new Ratio object
-         * 
-         * @param get_cost 
+         *
+         * @param get_cost
          */
-        explicit Ratio(Fn get_cost)
-            : _get_cost {get_cost}
+        explicit Ratio(const Graph& G, Fn get_cost)
+            : _G {G}
+            , _get_cost {get_cost}
         {
         }
 
         /*!
-         * @brief 
-         * 
-         * @param G 
-         * @param e 
+         * @brief
+         *
+         * @param G
+         * @param e
          * @param x (π, ψ) in log scale
-         * @return double 
+         * @return double
          */
-        auto eval(const Graph& G, const edge_t& e, const Arr& x) const
-            -> double
+        auto eval(const edge_t& e, const Arr& x) const -> double
         {
-            auto [u, v] = G.end_points(e);
-            auto cost = this->_get_cost(G, e);
+            auto [u, v] = this->_G.end_points(e);
+            auto cost = this->_get_cost(e);
             assert(u != v);
             return (u < v) ? x(0) - cost : cost - x(1);
         }
 
         /*!
-         * @brief 
-         * 
-         * @param G 
-         * @param e 
+         * @brief
+         *
+         * @param G
+         * @param e
          * @param x (π, ψ) in log scale
-         * @return Arr 
+         * @return Arr
          */
-        auto grad(const Graph& G, const edge_t& e, const Arr& x) const
-            -> Arr
+        auto grad(const edge_t& e, const Arr& x) const -> Arr
         {
-            auto [u, v] = G.end_points(e);
+            auto [u, v] = this->_G.end_points(e);
             assert(u != v);
             return (u < v) ? Arr {1., 0.} : Arr {0., -1.};
         }
@@ -79,24 +79,24 @@ class optscaling_oracle
     network_oracle<Graph, Container, Ratio> _network;
 
   public:
-    /*! 
+    /*!
      * @brief Construct a new optscaling oracle object
-     * 
-     * @param G 
-     * @param u 
-     * @param get_cost 
+     *
+     * @param G
+     * @param u
+     * @param get_cost
      */
     optscaling_oracle(const Graph& G, Container& u, Fn get_cost)
-        : _network(G, u, Ratio {get_cost})
+        : _network(G, u, Ratio {G, get_cost})
     {
     }
 
     /*!
      * @brief Make object callable for cutting_plane_dc()
-     * 
+     *
      * @param x (π, ψ) in log scale
      * @param t the best-so-far optimal value
-     * @return std::tuple<Cut, double> 
+     * @return std::tuple<Cut, double>
      *
      * @see cutting_plane_dc
      */

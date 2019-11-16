@@ -38,10 +38,10 @@ Arr create_2d_sites(size_t nx = 10U, size_t ny = 8U)
 
 /*!
  * @brief Create a 2d isotropic object
- * 
+ *
  * @param s location of sites
- * @param N 
- * @return Arr Biased covariance matrix 
+ * @param N
+ * @return Arr Biased covariance matrix
  */
 Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 {
@@ -81,9 +81,9 @@ Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 
 /*!
  * @brief Construct a distance matrix object
- * 
+ *
  * @param s location of sites
- * @return std::vector<Arr> 
+ * @return std::vector<Arr>
  */
 Arr construct_distance_matrix(const Arr& s)
 {
@@ -104,10 +104,10 @@ Arr construct_distance_matrix(const Arr& s)
 
 /*!
  * @brief Construct distance matrix for polynomial
- * 
+ *
  * @param s location of sites
  * @param m degree of polynomial
- * @return std::vector<Arr> 
+ * @return std::vector<Arr>
  */
 std::vector<Arr> construct_poly_matrix(const Arr& s, size_t m)
 {

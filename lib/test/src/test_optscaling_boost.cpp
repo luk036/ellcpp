@@ -8,7 +8,7 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/ell1d.hpp>
-#include <ellcpp/oracles/optscaling_oracle.hpp>  // import optscaling
+#include <ellcpp/oracles/optscaling_oracle.hpp> // import optscaling
 #include <py2cpp/nx2bgl.hpp>
 #include <utility> // for std::pair
 #include <xtensor/xarray.hpp>
@@ -32,10 +32,10 @@ using graph_t =
 using Vertex = typename boost::graph_traits<graph_t>::vertex_descriptor;
 using edge_t = typename boost::graph_traits<graph_t>::edge_iterator;
 
-/*! 
+/*!
  * @brief Create a test case1 object
- * 
- * @return xn::grAdaptor<graph_t> 
+ *
+ * @return xn::grAdaptor<graph_t>
  */
 static xn::grAdaptor<graph_t> create_test_case1()
 {
@@ -59,7 +59,8 @@ static xn::grAdaptor<graph_t> create_test_case1()
     return xn::grAdaptor<graph_t>(g);
 }
 
-TEST_CASE("Test Optimal Scaling (two varaibles, boost)", "[test_optscaling_boost]")
+TEST_CASE(
+    "Test Optimal Scaling (two varaibles, boost)", "[test_optscaling_boost]")
 {
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;
@@ -70,6 +71,7 @@ TEST_CASE("Test Optimal Scaling (two varaibles, boost)", "[test_optscaling_boost
 
     double elem[] = {1.2, 2.3, 3.4, -4.5, 5.6};
     const auto num_of_nodes = sizeof(elem) / sizeof(double);
+
     double cost[num_of_nodes];
     for (size_t i = 0U; i < num_of_nodes; ++i)
     {
@@ -78,12 +80,11 @@ TEST_CASE("Test Optimal Scaling (two varaibles, boost)", "[test_optscaling_boost
     auto edge_id = boost::get(boost::id_tag, G);
     auto cost_pa = IterMap {cost, edge_id};
 
-    auto get_cost = [&](const xn::grAdaptor<graph_t>& /*G*/,
-                        const auto& e) -> double {
+    auto get_cost = [&](const auto& e) -> double {
         return boost::get(cost_pa, e);
     };
 
-    auto [cmin, cmax] = std::minmax_element(cost, cost + num_of_nodes);
+    auto [cmin, cmax] = std::minmax_element(std::begin(cost), std::end(cost));
     // auto cmin = *std::min_element(cost, cost + num_of_nodes);
     auto x0 = Arr {*cmax, *cmin};
     auto t = *cmax - *cmin;
@@ -97,4 +98,3 @@ TEST_CASE("Test Optimal Scaling (two varaibles, boost)", "[test_optscaling_boost
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters <= 27);
 }
-

@@ -15,7 +15,7 @@ struct Options
     double tol = 1e-8;
 };
 
-/*! 
+/*!
  * @brief CInfo
  *
  */
@@ -26,7 +26,7 @@ struct CInfo
     size_t num_iters;
     int status;
 
-    /*! 
+    /*!
      * @brief Construct a new CInfo object
      *
      * @param feasible
@@ -95,7 +95,7 @@ class bsearch_adaptor
     Options _options;
 
   public:
-    /*! 
+    /*!
      * @brief Construct a new bsearch adaptor object
      *
      * @param P
@@ -109,7 +109,7 @@ class bsearch_adaptor
     {
     }
 
-    /*! 
+    /*!
      * @brief get best x
      *
      * @return auto
@@ -119,7 +119,7 @@ class bsearch_adaptor
         return this->_S.xc();
     }
 
-    /*! 
+    /*!
      * @brief
      *
      * @param t the best-so-far optimal value

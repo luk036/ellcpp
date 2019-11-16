@@ -19,8 +19,7 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
         return this->__calc_dc(b0);
     }
 
-    [[unlikely]]
-    if (b1 < b0)
+    [[unlikely]] if (b1 < b0)
     {
         return 1; // no sol'n
     }
@@ -32,8 +31,7 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
     }
 
     const auto b0b1 = b0 * b1;
-    [[unlikely]]
-    if (this->_n * b0b1 < -this->_tsq)
+    [[unlikely]] if (this->_n * b0b1 < -this->_tsq)
     {
         return 3; // no effect
     }
@@ -43,7 +41,8 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
     const auto bav = (b0 + b1) / 2;
     const auto temp = this->_n * bav * (b1 - b0);
     const auto xi = std::sqrt(t0 * t1 + temp * temp);
-    this->_sigma = (this->_n + (this->_tsq - b0b1 - xi) / (2 * bav * bav)) / (this->_n + 1.);
+    this->_sigma = (this->_n + (this->_tsq - b0b1 - xi) / (2 * bav * bav)) /
+        (this->_n + 1.);
     this->_rho = this->_sigma * bav;
     this->_delta = this->_c1 * ((t0 + t1) / 2 + xi / this->_n) / this->_tsq;
     return 0;
@@ -62,7 +61,8 @@ void ell::__calc_ll_cc(const double& b1, const double& b1sq)
     const auto xi = std::sqrt(this->_tsq * (this->_tsq - b1sq) + temp * temp);
     this->_sigma = (this->_n + 2 * (this->_tsq - xi) / b1sq) / (this->_n + 1.);
     this->_rho = this->_sigma * b1 / 2;
-    this->_delta = this->_c1 * (this->_tsq - b1sq / 2 + xi / this->_n) / this->_tsq;
+    this->_delta =
+        this->_c1 * (this->_tsq - b1sq / 2 + xi / this->_n) / this->_tsq;
 }
 
 /*!
@@ -87,8 +87,7 @@ int ell::__calc_dc(const double& beta)
     }
 
     const auto gamma = tau + this->_n * beta;
-    [[unlikely]]
-    if (gamma < 0)
+    [[unlikely]] if (gamma < 0)
     {
         return 3; // no effect
     }
@@ -138,8 +137,7 @@ std::tuple<int, double> ell::update(const std::tuple<Arr, T>& cut)
     }
     else
     { // parallel cut
-        [[unlikely]]
-        if (beta.shape()[0] < 2)
+        [[unlikely]] if (beta.shape()[0] < 2)
         {
             status = this->__calc_dc(beta[0]);
         }

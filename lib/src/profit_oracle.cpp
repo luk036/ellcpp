@@ -37,9 +37,9 @@ std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
 }
 
 /*!
- * @param y 
+ * @param y
  * @param t the best-so-far optimal value
- * @return std::tuple<Cut, double, Arr, int> 
+ * @return std::tuple<Cut, double, Arr, int>
  */
 std::tuple<Cut, double, Arr, int> profit_q_oracle::operator()(
     const Arr& y, double t, int /*unused*/) const
@@ -47,7 +47,7 @@ std::tuple<Cut, double, Arr, int> profit_q_oracle::operator()(
     auto x = Arr {xt::round(xt::exp(y))};
     if (x[0] == 0.)
     {
-        x[0] = 1.;  // nearest integer than 0
+        x[0] = 1.; // nearest integer than 0
     }
     if (x[1] == 0.)
     {

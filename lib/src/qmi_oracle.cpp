@@ -2,8 +2,8 @@
 #include <ellcpp/oracles/qmi_oracle.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 
-#define ROW(X, idx) xt::view(X, idx, xt::all())
-#define COLUMN(X, idx) xt::view(X, xt::all(), idx)
+#define ROW(X, index) xt::view(X, index, xt::all())
+#define COLUMN(X, index) xt::view(X, xt::all(), index)
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 using Cut = std::tuple<Arr, double>;

@@ -27,8 +27,8 @@
  */
 template <typename Graph, typename T, typename Fn1, typename Fn2,
     typename Container>
-auto max_parametric(
-    Graph& G, T r_opt, Fn1& d, Fn2& zero_cancel, Container& dist, size_t max_iter=1000)
+auto max_parametric(Graph& G, T r_opt, Fn1& d, Fn2& zero_cancel,
+    Container& dist, size_t max_iter = 1000)
 {
     using edge_t = typename Graph::edge_t;
 

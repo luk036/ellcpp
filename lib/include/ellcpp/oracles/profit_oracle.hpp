@@ -147,7 +147,7 @@ class profit_rb_oracle
  *        x: input quantity (must be integer value)
  *        v: output price
  *        k: a given constant that restricts the quantity of x1
- * 
+ *
  * @see profit_oracle
  */
 class profit_q_oracle

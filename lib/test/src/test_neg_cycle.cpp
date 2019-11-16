@@ -70,8 +70,8 @@ static auto create_test_case_timing()
         B,
         C
     };
-    const auto edges = std::array {Edge(A, B), Edge(B, A), Edge(B, C), Edge(C, B),
-        Edge(B, C), Edge(C, B), Edge(C, A), Edge(A, C)};
+    const auto edges = std::array {Edge(A, B), Edge(B, A), Edge(B, C),
+        Edge(C, B), Edge(B, C), Edge(C, B), Edge(C, A), Edge(A, C)};
     const auto weights = std::array {7, 0, 3, 1, 6, 4, 2, 5};
     auto g = xn::DiGraphS(py::range<int>(num_nodes));
     g.add_edges_from(edges, weights);

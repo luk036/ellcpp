@@ -23,8 +23,10 @@
  * @param dist
  * @return auto
  */
-template <typename Graph, typename T, typename Fn1, typename Fn2, typename Container>
-auto min_cycle_ratio(Graph& G, T r0, Fn1 get_cost, Fn2 get_time, Container& dist, size_t max_iter=1000)
+template <typename Graph, typename T, typename Fn1, typename Fn2,
+    typename Container>
+auto min_cycle_ratio(Graph& G, T r0, Fn1 get_cost, Fn2 get_time,
+    Container& dist, size_t max_iter = 1000)
 {
     using edge_t = typename Graph::edge_t;
     using cost_T = decltype(get_cost(std::declval<edge_t>()));

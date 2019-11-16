@@ -20,7 +20,7 @@ template <typename Graph, typename Container, typename Fn>
 class network_oracle
 {
     using edge_t = typename Graph::edge_t;
-    
+
   private:
     const Graph& _G;
     Container& _u;
@@ -44,10 +44,10 @@ class network_oracle
     }
 
     /*!
-     * @brief 
-     * 
+     * @brief
+     *
      * @param t the best-so-far optimal value
-     * @return auto 
+     * @return auto
      */
     auto update(const double& t)
     {
@@ -64,7 +64,7 @@ class network_oracle
     auto operator()(const T& x) -> std::optional<std::tuple<T, double>>
     {
         auto get_weight = [this, &x](const edge_t& e) -> double {
-            return this->_h.eval(this->_G, e, x);
+            return this->_h.eval(e, x);
         };
 
         auto C = this->_S.find_neg_cycle(this->_u, get_weight);
@@ -77,8 +77,8 @@ class network_oracle
         auto f = 0.;
         for (const auto& e : C)
         {
-            f -= this->_h.eval(this->_G, e, x);
-            g -= this->_h.grad(this->_G, e, x);
+            f -= this->_h.eval(e, x);
+            g -= this->_h.grad(e, x);
         }
         return {{std::move(g), f}};
     }

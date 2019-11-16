@@ -14,10 +14,10 @@ using graph_t = boost::adjacency_list<boost::listS, boost::vecS,
 using Vertex = boost::graph_traits<graph_t>::vertex_descriptor;
 using Edge_it = boost::graph_traits<graph_t>::edge_iterator;
 
-/*! 
+/*!
  * @brief Create a test case1 object
- * 
- * @return xn::grAdaptor<graph_t> 
+ *
+ * @return xn::grAdaptor<graph_t>
  */
 static xn::grAdaptor<graph_t> create_test_case1()
 {
@@ -40,10 +40,10 @@ static xn::grAdaptor<graph_t> create_test_case1()
     return xn::grAdaptor<graph_t>(g);
 }
 
-/*! 
+/*!
  * @brief Create a test case2 object
- * 
- * @return xn::grAdaptor<graph_t> 
+ *
+ * @return xn::grAdaptor<graph_t>
  */
 static xn::grAdaptor<graph_t> create_test_case2()
 {
@@ -66,10 +66,10 @@ static xn::grAdaptor<graph_t> create_test_case2()
     return xn::grAdaptor<graph_t>(g);
 }
 
-/*! 
+/*!
  * @brief Create a test case timing object
- * 
- * @return xn::grAdaptor<graph_t> 
+ *
+ * @return xn::grAdaptor<graph_t>
  */
 static auto create_test_case_timing() -> xn::grAdaptor<graph_t>
 {
@@ -90,12 +90,12 @@ static auto create_test_case_timing() -> xn::grAdaptor<graph_t>
     return xn::grAdaptor<graph_t>(g);
 }
 
-/*! 
- * @brief 
- * 
- * @param G 
- * @return true 
- * @return false 
+/*!
+ * @brief
+ *
+ * @param G
+ * @return true
+ * @return false
  */
 auto do_case(xn::grAdaptor<graph_t>& G) -> bool
 {

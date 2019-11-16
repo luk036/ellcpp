@@ -133,7 +133,7 @@ class negCycleFinder
             const auto [u, v] = this->_G.end_points(e);
             const auto wt = get_weight(e);
             const auto d = dist[u] + wt;
-            
+
             if (dist[v] > d)
             {
                 this->_pred[v] = u;
@@ -195,8 +195,7 @@ class negCycleFinder
                 return true;
             }
             v = u;
-        }
-        while (v != handle);
+        } while (v != handle);
         return false;
     }
 };

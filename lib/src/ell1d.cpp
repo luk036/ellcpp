@@ -2,11 +2,11 @@
 #include <ellcpp/ell1d.hpp>
 // #include <tuple>
 
-/*! 
- * @brief 
- * 
- * @param cut 
- * @return ell1d::return_t 
+/*!
+ * @brief
+ *
+ * @param cut
+ * @return ell1d::return_t
  */
 ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
 {
@@ -25,8 +25,7 @@ ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
     {
         return {1, tsq}; // no sol'n
     }
-    [[unlikely]]
-    if (beta < -tau)
+    [[unlikely]] if (beta < -tau)
     {
         return {3, tsq}; // no effect
     }

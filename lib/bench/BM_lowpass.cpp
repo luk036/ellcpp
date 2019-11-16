@@ -13,6 +13,8 @@
 #include <xtensor-blas/xlinalg.hpp>
 #include <xtensor/xview.hpp>
 
+// @todo: do not use static global variables
+
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 static const auto PI = std::acos(-1);
 

@@ -8,12 +8,12 @@
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 using Cut = std::tuple<Arr, double>;
 
-/*! 
- * @brief 
- * 
- * @param z 
- * @param t 
- * @return std::tuple<Cut, double> 
+/*!
+ * @brief
+ *
+ * @param z
+ * @param t
+ * @return std::tuple<Cut, double>
  */
 std::tuple<Cut, double> my_oracle(const Arr& z, double t)
 {
@@ -22,7 +22,7 @@ std::tuple<Cut, double> my_oracle(const Arr& z, double t)
 
     // constraint 1: x + y <= 3
     auto fj = x + y - 3.;
-    if (fj > 0.) 
+    if (fj > 0.)
     {
         return {{Arr {1., 1.}, fj}, t};
     }
