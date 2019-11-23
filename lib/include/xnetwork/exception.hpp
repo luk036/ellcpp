@@ -16,27 +16,27 @@ Base exceptions and errors for XNetwork.
 namespace xn
 {
 
-static const auto __all__ = {
-    "HasACycle",
-    "NodeNotFound",
-    "PowerIterationFailedConvergence",
-    "ExceededMaxIterations",
-    "AmbiguousSolution",
-    "XNetworkAlgorithmError",
-    "XNetworkException",
-    "XNetworkError",
-    "XNetworkNoCycle",
-    "XNetworkNoPath",
-    "XNetworkNotImplemented",
-    "XNetworkPointlessConcept",
-    "XNetworkUnbounded",
-    "XNetworkUnfeasible",
-};
+// static const auto __all__ = {
+//     "HasACycle",
+//     "NodeNotFound",
+//     "PowerIterationFailedConvergence",
+//     "ExceededMaxIterations",
+//     "AmbiguousSolution",
+//     "XNetworkAlgorithmError",
+//     "XNetworkException",
+//     "XNetworkError",
+//     "XNetworkNoCycle",
+//     "XNetworkNoPath",
+//     "XNetworkNotImplemented",
+//     "XNetworkPointlessConcept",
+//     "XNetworkUnbounded",
+//     "XNetworkUnfeasible",
+// };
 
 /*! Base class for exceptions : XNetwork. */
 struct XNetworkException : std::runtime_error
 {
-    explicit XNetworkException(const char* msg)
+    explicit XNetworkException(std::string_view msg)
         : std::runtime_error(msg)
     {
     }
@@ -45,7 +45,7 @@ struct XNetworkException : std::runtime_error
 /*! Exception for a serious error : XNetwork */
 struct XNetworkError : XNetworkException
 {
-    explicit XNetworkError(const char* msg)
+    explicit XNetworkError(std::string_view msg)
         : XNetworkException(msg)
     {
     }
@@ -66,7 +66,7 @@ References
  */
 struct XNetworkPointlessConcept : XNetworkException
 {
-    explicit XNetworkPointlessConcept(const char* msg)
+    explicit XNetworkPointlessConcept(std::string_view msg)
         : XNetworkException(msg)
     {
     }
@@ -75,7 +75,7 @@ struct XNetworkPointlessConcept : XNetworkException
 /*! Exception for unexpected termination of algorithms. */
 struct XNetworkAlgorithmError : XNetworkException
 {
-    explicit XNetworkAlgorithmError(const char* msg)
+    explicit XNetworkAlgorithmError(std::string_view msg)
         : XNetworkException(msg)
     {
     }
@@ -85,7 +85,7 @@ struct XNetworkAlgorithmError : XNetworkException
 instance that has no feasible solution. */
 struct XNetworkUnfeasible : XNetworkAlgorithmError
 {
-    explicit XNetworkUnfeasible(const char* msg)
+    explicit XNetworkUnfeasible(std::string_view msg)
         : XNetworkAlgorithmError(msg)
     {
     }
@@ -95,7 +95,7 @@ struct XNetworkUnfeasible : XNetworkAlgorithmError
 on graphs where such a path does not exist. */
 struct XNetworkNoPath : XNetworkUnfeasible
 {
-    explicit XNetworkNoPath(const char* msg)
+    explicit XNetworkNoPath(std::string_view msg)
         : XNetworkUnfeasible(msg)
     {
     }
@@ -105,7 +105,7 @@ struct XNetworkNoPath : XNetworkUnfeasible
 on graphs where such a cycle does not exist. */
 struct XNetworkNoCycle : XNetworkUnfeasible
 {
-    explicit XNetworkNoCycle(const char* msg)
+    explicit XNetworkNoCycle(std::string_view msg)
         : XNetworkUnfeasible(msg)
     {
     }
@@ -115,7 +115,7 @@ struct XNetworkNoCycle : XNetworkUnfeasible
 will have no cycles. */
 struct HasACycle : XNetworkException
 {
-    explicit HasACycle(const char* msg)
+    explicit HasACycle(std::string_view msg)
         : XNetworkException(msg)
     {
     }
@@ -125,7 +125,7 @@ struct HasACycle : XNetworkException
 or a minimization problem instance that is unbounded. */
 struct XNetworkUnbounded : XNetworkAlgorithmError
 {
-    explicit XNetworkUnbounded(const char* msg)
+    explicit XNetworkUnbounded(std::string_view msg)
         : XNetworkAlgorithmError(msg)
     {
     }
@@ -134,7 +134,7 @@ struct XNetworkUnbounded : XNetworkAlgorithmError
 /*! Exception raised by algorithms not implemented for a type of graph. */
 struct XNetworkNotImplemented : XNetworkException
 {
-    explicit XNetworkNotImplemented(const char* msg)
+    explicit XNetworkNotImplemented(std::string_view msg)
         : XNetworkException(msg)
     {
     }
@@ -143,7 +143,7 @@ struct XNetworkNotImplemented : XNetworkException
 /*! Exception raised if (requested node is not present : the graph */
 struct NodeNotFound : XNetworkException
 {
-    explicit NodeNotFound(const char* msg)
+    explicit NodeNotFound(std::string_view msg)
         : XNetworkException(msg)
     {
     }
@@ -159,7 +159,7 @@ computing bipartite matchings.
  */
 struct AmbiguousSolution : XNetworkException
 {
-    explicit AmbiguousSolution(const char* msg)
+    explicit AmbiguousSolution(std::string_view msg)
         : XNetworkException(msg)
     {
     }
@@ -172,7 +172,7 @@ iteration bound specified by the user.
  */
 struct ExceededMaxIterations : XNetworkException
 {
-    explicit ExceededMaxIterations(const char* msg)
+    explicit ExceededMaxIterations(std::string_view msg)
         : XNetworkException(msg)
     {
     }

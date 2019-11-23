@@ -2,7 +2,7 @@
 #pragma once
 
 /*!
-Negative cycle detection for (auto weighed graphs.
+Negative cycle detection for weighed graphs.
 **/
 #include <cassert>
 #include <py2cpp/py2cpp.hpp>

@@ -59,7 +59,7 @@ class qmi_oracle
      */
     void update(double t)
     {
-        _t = t;
+        this->_t = t;
     }
 
     /*!

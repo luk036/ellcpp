@@ -85,7 +85,7 @@ TEST_CASE("Test Boost", "[test_boost]")
     // std::cout << "vertices(g) = ";
     // typedef graph_traits<Graph>::vertex_iterator vertex_iter;
     // std::pair<vertex_iter, vertex_iter> vp;
-    for (const Vertex& v : G)
+    for ([[maybe_unused]] const Vertex& v : G)
     {
         // std::cout << index[v] << " ";
     }
