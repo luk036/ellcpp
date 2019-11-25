@@ -6,9 +6,9 @@
 #include <xtensor/xarray.hpp>
 
 /*!
- * @brief Oracle for Optimal Matrix Scaling
+ * @brief Oracle for Optimal Matrix Scaling.
  *
- *    This example is taken from [Orlin and Rothblum, 1985]
+ *    This example is taken from [Orlin and Rothblum, 1985]:
  *
  *        min     π/ψ
  *        s.t.    ψ ≤ u[i] * |aij| * u[j]^−1 ≤ π,

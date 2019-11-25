@@ -7,10 +7,12 @@
 #include <xtensor/xarray.hpp>
 
 /*!
- * @brief Oracle for Linear Matrix Inequality
+ * @brief Oracle for Linear Matrix Inequality.
  *
- *   find  x
- *   s.t.​  (B - F*x) ⪰ 0
+ *    This oracle solves the following feasibility problem:
+ *
+ *        find  x
+ *        s.t.​  (B − F*x) ⪰ 0
  */
 class lmi_oracle
 {

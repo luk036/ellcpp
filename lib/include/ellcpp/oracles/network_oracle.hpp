@@ -6,10 +6,12 @@
 #include <optional>
 
 /*!
- * @brief Oracle for Parametric Network Problem:
+ * @brief Oracle for Parametric Network Problem.
+ *
+ *    This oracle solves the following feasibility problem:
  *
  *        find    x, u
- *        s.t.    u[j] - u[i] ≤ h(e, x)
+ *        s.t.    u[j] − u[i] ≤ h(e, x)
  *                ∀ e(i, j) ∈ E
  *
  * @tparam Graph

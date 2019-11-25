@@ -53,12 +53,6 @@ class my_oracle
      */
     std::tuple<Cut, double> operator()(const Arr& x, double t)
     {
-        const auto f0 = xt::linalg::dot(this->c, x)();
-        const auto f1 = f0 - t;
-        if (f1 > 0)
-        {
-            return {{this->c, f1}, t};
-        }
         if (auto cut = this->lmi1(x))
         {
             return {*cut, t};
@@ -66,6 +60,12 @@ class my_oracle
         if (auto cut = this->lmi2(x))
         {
             return {*cut, t};
+        }
+        const auto f0 = xt::linalg::dot(this->c, x)();
+        const auto f1 = f0 - t;
+        if (f1 > 0)
+        {
+            return {{this->c, f1}, t};
         }
         return {{this->c, 0.}, f0};
     }
@@ -108,7 +108,7 @@ TEST_CASE("LMI test", "[lmi_oracle]")
                                  "registry using the spdlog::get(logger_name)");
 
     CHECK(ell_info.feasible);
-    CHECK(ell_info.num_iters == 115);
+    CHECK(ell_info.num_iters == 113);
 }
 
 // TEST_CASE( "Projective Point", "[proj_plane]" ) {

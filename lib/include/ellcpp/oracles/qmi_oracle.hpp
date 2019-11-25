@@ -9,12 +9,14 @@
 /*!
  * @brief Oracle for Quadratic Matrix Inequality
  *
- *   find  x
- *   s.t.​  t*I - F(x)' F(x) ⪰ 0
+ *    This oracle solves the following feasibility problem:
  *
- * where
+ *        find  x
+ *        s.t.​  t*I − F(x)' F(x) ⪰ 0
  *
- *   F(x) = F0 - (F1 * x1 + F2 * x2 + ...)
+ *    where
+ *
+ *        F(x) = F0 − (F1 * x1 + F2 * x2 + ...)
  */
 class qmi_oracle
 {

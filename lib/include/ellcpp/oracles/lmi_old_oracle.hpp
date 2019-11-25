@@ -7,12 +7,12 @@
 #include <xtensor/xarray.hpp>
 
 /*!
- * @brief Oracle for Linear Matrix Inequality
+ * @brief Oracle for Linear Matrix Inequality.
  *
- * Oracle for:
- *    F * x <= B
- * or
- *    (B - F * x) must be a semidefinte matrix
+ *    This oracle solves the following feasibility problem:
+ *
+ *        find  x
+ *        s.t.  (B − F*x) ⪰ 0
  */
 class lmi_old_oracle
 {

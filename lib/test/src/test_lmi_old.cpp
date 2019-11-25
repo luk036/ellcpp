@@ -51,12 +51,6 @@ class my_oracle
     {
         using xt::linalg::dot;
 
-        auto f0 = dot(this->c, x)();
-        auto fj1 = f0 - t;
-        if (fj1 > 0)
-        {
-            return {{this->c, fj1}, t};
-        }
         if (auto cut = this->lmi1(x))
         {
             return {*cut, t};
@@ -64,6 +58,12 @@ class my_oracle
         if (auto cut = this->lmi2(x))
         {
             return {*cut, t};
+        }
+        auto f0 = dot(this->c, x)();
+        auto fj1 = f0 - t;
+        if (fj1 > 0)
+        {
+            return {{this->c, fj1}, t};
         }
         return {{this->c, 0.}, f0};
     }
@@ -88,5 +88,5 @@ TEST_CASE("LMI (old) test", "[lmi_old_oracle]")
     auto [_, ell_info] =
         cutting_plane_dc(P, E, std::numeric_limits<double>::max());
     CHECK(ell_info.feasible);
-    CHECK(ell_info.num_iters == 115);
+    CHECK(ell_info.num_iters == 113);
 }
