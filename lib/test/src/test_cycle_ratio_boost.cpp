@@ -111,7 +111,7 @@ TEST_CASE(
     const auto get_cost = [&](const auto& e) -> int {
         return boost::get(cost_pa, e);
     };
-    const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
+    const auto get_time = [&](const auto & /* e */) -> int { return 1; };
 
     auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
     const auto [r, c] =

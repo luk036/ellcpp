@@ -49,18 +49,18 @@ class network_oracle
      * @brief
      *
      * @param t the best-so-far optimal value
-     * @return auto
      */
-    auto update(const double& t)
+    auto update(const double& t) -> void
     {
         this->_h.update(t);
     }
 
     /*!
      * @brief Make object callable for cutting_plane_feas()
-     *
-     * @param x
-     * @return auto
+     * 
+     * @tparam T 
+     * @param x 
+     * @return std::optional<std::tuple<T, double>> 
      */
     template <typename T>
     auto operator()(const T& x) -> std::optional<std::tuple<T, double>>

@@ -614,6 +614,6 @@ _Stream& operator<<(_Stream& os, const Fraction<Z>& frac)
 }
 
 // For template deduction
-// Integral{Z} Fraction(const Z &, const Z &)->Fraction<Z>;
+// Integral{Z} Fraction(const Z &, const Z &) -> Fraction<Z>;
 
 } // namespace fun

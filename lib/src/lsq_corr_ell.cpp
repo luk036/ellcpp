@@ -340,7 +340,7 @@ class mle_oracle
  * @param P
  * @return auto
  */
-auto mle_corr_core(const Arr& /*Y*/, size_t m, mle_oracle& P)
+auto mle_corr_core(const Arr& /* Y */, size_t m, mle_oracle& P)
 {
     auto x = zeros({m});
     x(0) = 4.;

@@ -33,14 +33,14 @@ class my_fir_oracle
     using Cut = std::tuple<Arr, double>;
 
     // Gaussian filter with linear phase. (Uncomment lines below for this
-    // design.) var = 0.05 Hdes = 1/(xt::sqrt(2*PI*var)) *
-    // xt::exp(-xt::square(w-PI/2)/(2*var)) Hdes = xt::multiply(Hdes,
-    // xt::exp(-1j*n/2*w))
+    // design.) var = 0.05 Hdes = 1/(xt::sqrt(2 * PI * var)) *
+    // xt::exp(-xt::square(w-PI/2)/(2 * var)) Hdes = xt::multiply(Hdes,
+    // xt::exp(-1j * n/2 * w))
     Arr w = xt::linspace<double>(0, PI, m);
 
     // A is the matrix used to compute the frequency response
     // from a vector of filter coefficients:
-    //     A[w,:] = [1 exp(-j*w) exp(-j*2*w) ... exp(-j*n*w)]
+    //     A[w,:] = [1 exp(-j * w) exp(-j * 2 * w) ... exp(-j * n * w)]
     // CArr A = xt::exp(xt::linalg::kron(w, xt::arange(n)));
 
     // Presently CVXPY does not do complex-valued math, so the

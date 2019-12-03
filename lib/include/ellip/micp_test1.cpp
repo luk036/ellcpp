@@ -18,7 +18,7 @@ struct micp1
         /* C++98 style:
         double ga1[] = {1.1, 1.0};
         g = Vec(ga1, 2);
-        f = (g*x).sum() + 3.3;
+        f = (g * x).sum() + 3.3;
         if (f > 0.0) {
           Info4Ellipsoid<Vec> res = {false, x, g, f};
           return res;

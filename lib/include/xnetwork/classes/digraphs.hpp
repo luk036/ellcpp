@@ -378,7 +378,7 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
 
     /*! Returns True if node u has successor v.
 
-        This is true if graph has the edge u->v.
+        This is true if graph has the edge u -> v.
     */
     auto has_successor(const Node& u, const Node& v) -> bool
     {

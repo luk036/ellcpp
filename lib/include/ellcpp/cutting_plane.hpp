@@ -3,7 +3,6 @@
 
 #include <cmath>
 #include <tuple>
-// #include <xtensor/xarray.hpp>
 
 /*!
  * @brief Options
@@ -11,8 +10,8 @@
  */
 struct Options
 {
-    unsigned int max_it = 2000;
-    double tol = 1e-8;
+    unsigned int max_it = 2000; //!< maximum number of iterations
+    double tol = 1e-8;          //!< error tolerance
 };
 
 /*!
@@ -49,10 +48,10 @@ struct CInfo
  * @param Omega
  * @param I
  * @param options
- * @return auto
+ * @return CInfo
  */
 template <typename Oracle, typename Space>
-auto bsearch(Oracle& Omega, const Space& I, const Options& options = Options())
+auto bsearch(Oracle& Omega, const Space& I, const Options& options = Options()) -> CInfo
 {
     // assume monotone
     auto [l, u] = I;
@@ -98,8 +97,8 @@ class bsearch_adaptor
     /*!
      * @brief Construct a new bsearch adaptor object
      *
-     * @param P
-     * @param S
+     * @param P perform assessment on x0
+     * @param S search Space containing x*
      * @param options
      */
     bsearch_adaptor(Oracle& P, Space& S, const Options& options = Options())
@@ -123,9 +122,9 @@ class bsearch_adaptor
      * @brief
      *
      * @param t the best-so-far optimal value
-     * @return auto
+     * @return bool
      */
-    auto operator()(double t)
+    auto operator()(double t) -> bool
     {
         Space S(this->_S);
         this->_P.update(t);
@@ -145,7 +144,7 @@ class bsearch_adaptor
  * @tparam Oracle
  * @tparam Space
  * @tparam T
- * @param[in] Omega   perform assessment on x0
+ * @param[in] Omega    perform assessment on x0
  * @param[in] S        search Space containing x*
  * @param[in] max_it   maximum number of iterations
  * @param[in] tol      error tolerance
@@ -156,7 +155,7 @@ class bsearch_adaptor
  */
 template <typename Oracle, typename Space>
 auto cutting_plane_feas(
-    Oracle& Omega, Space& S, const Options& options = Options())
+    Oracle& Omega, Space& S, const Options& options = Options()) -> CInfo
 {
     auto feasible = false;
     auto niter = 1U, status = 0U;

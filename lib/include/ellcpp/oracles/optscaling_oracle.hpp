@@ -27,6 +27,10 @@ class optscaling_oracle
     using Cut = std::tuple<Arr, double>;
 
   public:
+    /**
+     * @brief Ratio
+     * 
+     */
     struct Ratio
     {
         const Graph& _G;
@@ -34,8 +38,9 @@ class optscaling_oracle
 
         /*!
          * @brief Construct a new Ratio object
-         *
-         * @param get_cost
+         * 
+         * @param G 
+         * @param get_cost 
          */
         explicit Ratio(const Graph& G, Fn get_cost)
             : _G {G}
@@ -44,9 +49,8 @@ class optscaling_oracle
         }
 
         /*!
-         * @brief
+         * @brief Evaluate function
          *
-         * @param G
          * @param e
          * @param x (π, ψ) in log scale
          * @return double
@@ -60,9 +64,8 @@ class optscaling_oracle
         }
 
         /*!
-         * @brief
+         * @brief Gradient function
          *
-         * @param G
          * @param e
          * @param x (π, ψ) in log scale
          * @return Arr

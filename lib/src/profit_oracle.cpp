@@ -42,7 +42,7 @@ std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
  * @return std::tuple<Cut, double, Arr, int>
  */
 std::tuple<Cut, double, Arr, int> profit_q_oracle::operator()(
-    const Arr& y, double t, int /*unused*/) const
+    const Arr& y, double t, int /* unused */) const
 {
     auto x = Arr {xt::round(xt::exp(y))};
     if (x[0] == 0.)

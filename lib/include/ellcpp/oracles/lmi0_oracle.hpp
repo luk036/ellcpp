@@ -13,7 +13,7 @@
  *    This oracle solves the following feasibility problem:
  *
  *        find  x
- *        s.t.​  F*x ⪰ 0
+ *        s.t.  F * x ⪰ 0
  */
 class lmi0_oracle
 {

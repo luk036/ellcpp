@@ -64,7 +64,7 @@ TEST_CASE("Test Cycle Ratio", "[test_cycle_ratio]")
         auto [u, v] = G.end_points(e);
         return cost[G[u][v]];
     };
-    const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
+    const auto get_time = [&](const auto & /* e */) -> int { return 1; };
 
     auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
     const auto [r, c] =
@@ -83,7 +83,7 @@ TEST_CASE("Test Cycle Ratio of Timing Graph", "[test_cycle_ratio]")
         auto [u, v] = G.end_points(e);
         return cost[G[u][v]];
     };
-    const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
+    const auto get_time = [&](const auto & /* e */) -> int { return 1; };
 
     auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
     const auto [r, c] =

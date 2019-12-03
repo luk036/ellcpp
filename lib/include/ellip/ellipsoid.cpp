@@ -45,7 +45,7 @@ CUTSTATUS ellipsoid::update(const Vec& g, double beta)
     {
         gt[i] = (_Ae[i] * g).sum();
     }
-    // b += (g*_x0).sum();
+    // b += (g * _x0).sum();
     double gamma = (g * gt).sum();
     assert(gamma >= 0);
 

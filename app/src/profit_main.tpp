@@ -70,7 +70,7 @@ int main() {
                 {15., 18.,  0.},
                 {-5.,  0., 11.}});
   std::cout << m1.shape()[0] << "\n";
-  auto Q1 = chol_ext(m1.shape()[0]);
+  auto Q1 = chol_ext<>(m1.shape()[0]);
   Q1.factorize(m1);
   if (!Q1.is_sd()) {
     auto v = Q1.witness();
@@ -88,7 +88,7 @@ int main() {
                 {54., 86., -174., 134.},
                 {42., 62., 134., -106.}});
   std::cout << m2.shape()[0] << "\n";
-  auto Q2 = chol_ext(m2.shape()[0]);
+  auto Q2 = chol_ext<>(m2.shape()[0]);
   Q2.factorize(m2);
   if (!Q2.is_sd()) {
     auto v = Q2.witness();

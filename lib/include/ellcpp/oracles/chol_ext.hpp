@@ -70,7 +70,7 @@ class chol_ext
     void factor(Fn getA)
     {
         auto& T = this->T;
-        this->p = std::pair {0U, 0U};
+        this->p = std::pair<size_t, size_t> {0U, 0U};
 
         auto i = 0U;
         for (; i < this->n; ++i)
