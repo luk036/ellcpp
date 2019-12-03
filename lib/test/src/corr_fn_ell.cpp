@@ -22,7 +22,7 @@ TEST_CASE("lsq_corr_fn", "[corr_fn]")
     const auto Y = create_2d_isotropic(s, 3000);
     auto [num_iters, feasible] = lsq_corr_poly2(Y, s, 4);
     CHECK(feasible);
-    CHECK(num_iters >= 692);
+    CHECK(num_iters >= 679);
     CHECK(num_iters <= 705);
 }
 
