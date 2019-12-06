@@ -20,7 +20,6 @@ struct Options
  */
 struct CInfo
 {
-    double value = 0.;
     bool feasible;
     size_t num_iters;
     int status;
@@ -51,15 +50,18 @@ struct CInfo
  * @return CInfo
  */
 template <typename Oracle, typename Space>
-auto bsearch(Oracle& Omega, const Space& I, const Options& options = Options()) -> CInfo
+auto bsearch(Oracle&& Omega, Space&& I, const Options& options = Options()) -> CInfo
 {
     // assume monotone
-    auto [l, u] = I;
+    auto& [l, u] = I;
     const auto u_orig = u;
     auto niter = 1U;
+    auto status = 0U;
+    auto tau = (u - l) / 2;
+
     for (; niter <= options.max_it; ++niter)
     {
-        auto t = l + (u - l) / 2;
+        auto t = l + tau;
         if (Omega(t))
         { // feasible sol'n obtained
             u = t;
@@ -68,15 +70,14 @@ auto bsearch(Oracle& Omega, const Space& I, const Options& options = Options()) 
         {
             l = t;
         }
-        auto tau = (u - l) / 2;
+        tau = (u - l) / 2;
         if (tau < options.tol)
         {
+            status = 2;
             break;
         }
     }
-    auto ret = CInfo(u != u_orig, niter, 0);
-    ret.value = u;
-    return ret;
+    return CInfo(u != u_orig, niter, status);
 }
 
 /*!
@@ -128,8 +129,7 @@ class bsearch_adaptor
     {
         Space S(this->_S);
         this->_P.update(t);
-        auto ret_info = cutting_plane_feas(this->_P, S, this->_options);
-        if (ret_info.feasible)
+        if (cutting_plane_feas(this->_P, S, this->_options).feasible)
         {
             this->_S.set_xc(S.xc());
             return true;
@@ -155,10 +155,11 @@ class bsearch_adaptor
  */
 template <typename Oracle, typename Space>
 auto cutting_plane_feas(
-    Oracle& Omega, Space& S, const Options& options = Options()) -> CInfo
+    Oracle&& Omega, Space&& S, const Options& options = Options()) -> CInfo
 {
     auto feasible = false;
-    auto niter = 1U, status = 0U;
+    auto niter = 1U;
+    auto status = 0U;
 
     for (; niter <= options.max_it; ++niter)
     {
@@ -200,9 +201,9 @@ auto cutting_plane_feas(
  * @return feasible   solution found or not
  * @return status how is the final cut
  */
-template <typename Oracle, typename Space>
+template <typename Oracle, typename Space, typename opt_type>
 auto cutting_plane_dc(
-    Oracle& Omega, Space& S, double t, const Options& options = Options())
+    Oracle&& Omega, Space&& S, opt_type&& t, const Options& options = Options())
 {
     const auto t_orig = t;
     auto x_best = S.xc();
@@ -211,7 +212,7 @@ auto cutting_plane_dc(
 
     for (; niter <= options.max_it; ++niter)
     {
-        auto [cut, t1] = Omega(S.xc(), t);
+        const auto [cut, t1] = Omega(S.xc(), t);
         if (t != t1)
         { // best t obtained
             // feasible = true;
@@ -232,7 +233,7 @@ auto cutting_plane_dc(
     }
     auto ret = CInfo(t != t_orig, niter, status);
     // ret.val = std::move(x_best);
-    ret.value = t;
+    // ret.value = t;
     return std::tuple {std::move(x_best), std::move(ret)};
 } // END
 
@@ -265,9 +266,9 @@ auto cutting_plane_dc(
  * @param options
  * @return auto
  */
-template <typename Oracle, typename Space>
+template <typename Oracle, typename Space, typename opt_type>
 auto cutting_plane_q(
-    Oracle& Omega, Space& S, double t, const Options& options = Options())
+    Oracle&& Omega, Space&& S, opt_type&& t, const Options& options = Options())
 {
     const auto t_orig = t;
     auto x_best = S.xc();
@@ -276,7 +277,7 @@ auto cutting_plane_q(
 
     for (; niter <= options.max_it; ++niter)
     {
-        auto [cut, t1, x0, loop] = Omega(S.xc(), t, (status != 3) ? 0 : 1);
+        const auto [cut, t1, x0, loop] = Omega(S.xc(), t, (status != 3) ? 0 : 1);
         // if (status != 3) {
         //     if (loop == 1) { // discrete sol'n
         //         h += xt::linalg::dot(g, x0 - S.xc())();
@@ -310,6 +311,7 @@ auto cutting_plane_q(
     }
     auto ret = CInfo(t != t_orig, niter, status);
     // ret.val = std::move(x_best);
-    ret.value = t;
+    // ret.value = t;
     return std::tuple {std::move(x_best), std::move(ret)};
 } // END
+

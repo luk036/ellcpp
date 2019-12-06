@@ -169,24 +169,24 @@ class lsq_oracle
      */
     std::tuple<Cut, double> operator()(const Arr& x, double t)
     {
-        auto n = x.size();
+        const auto n = x.size();
         auto g = zeros(x);
-        if (auto cut0 = this->_lmi0(xt::view(x, xt::range(0, n - 1))))
+        if (const auto cut0 = this->_lmi0(xt::view(x, xt::range(0, n - 1))))
         {
-            auto [g0, f0] = *cut0;
+            const auto& [g0, f0] = *cut0;
             xt::view(g, xt::range(0, n - 1)) = g0;
             g(n - 1) = 0.;
             return {{std::move(g), f0}, t};
         }
         this->_qmi.update(x(n - 1));
 
-        if (auto cut1 = this->_qmi(xt::view(x, xt::range(0, n - 1))))
+        if (const auto cut1 = this->_qmi(xt::view(x, xt::range(0, n - 1))))
         {
-            auto [g1, f1] = *cut1;
+            const auto& [g1, f1] = *cut1;
             xt::view(g, xt::range(0, n - 1)) = g1;
             auto& Q = this->_qmi._Q;
             // auto ep = Q.witness();
-            auto [start, stop] = Q.p;
+            const auto& [start, stop] = Q.p;
             auto v = xt::view(Q.v, xt::range(start, stop));
             g(n - 1) = -xt::linalg::dot(v, v)();
             return {{std::move(g), f1}, t};
@@ -221,8 +221,8 @@ auto lsq_corr_core2(const Arr& Y, size_t m, lsq_oracle& P)
     x(0) = 4;
     x(m) = normY2 / 2.;
     auto E = ell(val, x);
-    auto [x_best, ell_info] =
-        cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+    auto t = std::numeric_limits<double>::max();
+    const auto [x_best, ell_info] = cutting_plane_dc(P, E, t);
     Arr a = xt::view(x_best, xt::range(0, m));
     return std::tuple {std::move(a), ell_info.num_iters, ell_info.feasible};
 }
@@ -239,7 +239,7 @@ std::tuple<size_t, bool> lsq_corr_poly2(const Arr& Y, const Arr& s, size_t m)
 {
     auto Sig = construct_poly_matrix(s, m);
     auto P = lsq_oracle(Sig, Y);
-    auto [a, num_iters, feasible] = lsq_corr_core2(Y, m, P);
+    const auto [a, num_iters, feasible] = lsq_corr_core2(Y, m, P);
     // std::cout << "lsq_corr_poly2 = " << a << "\n";
     return {num_iters, feasible};
 }
@@ -345,8 +345,8 @@ auto mle_corr_core(const Arr& /* Y */, size_t m, mle_oracle& P)
     auto x = zeros({m});
     x(0) = 4.;
     auto E = ell(500., x);
-    auto [x_best, ell_info] =
-        cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+    auto t = std::numeric_limits<double>::max();
+    auto [x_best, ell_info] = cutting_plane_dc(P, E, t);
     return std::tuple {
         std::move(x_best), ell_info.num_iters, ell_info.feasible};
 }
@@ -361,9 +361,9 @@ auto mle_corr_core(const Arr& /* Y */, size_t m, mle_oracle& P)
  */
 std::tuple<size_t, bool> mle_corr_poly(const Arr& Y, const Arr& s, size_t m)
 {
-    auto Sig = construct_poly_matrix(s, m);
+    const auto Sig = construct_poly_matrix(s, m);
     auto P = mle_oracle(Sig, Y);
-    auto [a, num_iters, feasible] = mle_corr_core(Y, m, P);
+    const auto [a, num_iters, feasible] = mle_corr_core(Y, m, P);
     // std::cout << "mle_corr_poly = " << a << "\n";
     return {num_iters, feasible};
 }

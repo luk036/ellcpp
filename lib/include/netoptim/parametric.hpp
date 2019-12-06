@@ -60,7 +60,7 @@ auto max_parametric(Graph& G, T r_opt, Fn1& d, Fn2& zero_cancel,
         // update ???
         for (const auto& e : C_opt)
         {
-            auto [u, v] = G.end_points(e);
+            const auto [u, v] = G.end_points(e);
             dist[u] = dist[v] - get_weight(e);
         }
     }

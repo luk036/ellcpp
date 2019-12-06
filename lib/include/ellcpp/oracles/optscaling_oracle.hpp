@@ -42,7 +42,19 @@ class optscaling_oracle
          * @param G 
          * @param get_cost 
          */
-        explicit Ratio(const Graph& G, Fn get_cost)
+        Ratio(const Graph& G, Fn&& get_cost)
+            : _G {G}
+            , _get_cost {std::forward<Fn>(get_cost)}
+        {
+        }
+
+        /*!
+         * @brief Construct a new Ratio object
+         * 
+         * @param G 
+         * @param get_cost 
+         */
+        Ratio(const Graph& G, const Fn& get_cost)
             : _G {G}
             , _get_cost {get_cost}
         {
@@ -57,8 +69,8 @@ class optscaling_oracle
          */
         auto eval(const edge_t& e, const Arr& x) const -> double
         {
-            auto [u, v] = this->_G.end_points(e);
-            auto cost = this->_get_cost(e);
+            const auto [u, v] = this->_G.end_points(e);
+            const auto cost = this->_get_cost(e);
             assert(u != v);
             return (u < v) ? x(0) - cost : cost - x(1);
         }
@@ -72,7 +84,7 @@ class optscaling_oracle
          */
         auto grad(const edge_t& e, const Arr& x) const -> Arr
         {
-            auto [u, v] = this->_G.end_points(e);
+            const auto [u, v] = this->_G.end_points(e);
             assert(u != v);
             return (u < v) ? Arr {1., 0.} : Arr {0., -1.};
         }

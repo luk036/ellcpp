@@ -90,7 +90,7 @@ template <typename Graph>
 bool do_case(const Graph& G)
 {
     auto get_weight = [&](const auto& e) -> int {
-        auto [u, v] = G.end_points(e);
+        const auto [u, v] = G.end_points(e);
         return G[u][v];
     };
 

@@ -10,12 +10,12 @@ int main() {
   using xt::linalg::dot;
   using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-  auto n = 4u;   // number of points
-  auto s_begin = 1U;
-  auto s_end = 10u;
-  auto sdkern = 0.5;  // width of kernel
-  auto var = 2.;     // standard derivation
-  auto N = 500u;      // number of samples
+  const auto n = 4u;   // number of points
+  const auto s_begin = 1U;
+  const auto s_end = 10u;
+  const auto sdkern = 0.5;  // width of kernel
+  const auto var = 2.;     // standard derivation
+  const auto N = 500u;      // number of samples
 
   // auto dist = s_end - s_begin;
   Arr s = xt::linspace(s_begin, s_end, n);
@@ -25,7 +25,7 @@ int main() {
 
   for (auto i = 0U; i < n; ++i) {
     for (auto j = i+1; j < n; ++j) {
-      auto d = s[j] - s[i];
+      const auto d = s[j] - s[i];
       Sig(i, j) = std::exp(-0.5*(d*d)/(sdkern*sdkern)/2);
       Sig(j, i) = Sig(i,j);
     }

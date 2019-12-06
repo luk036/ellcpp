@@ -84,16 +84,16 @@ TEST_CASE(
         return boost::get(cost_pa, e);
     };
 
-    auto [cmin, cmax] = std::minmax_element(std::begin(cost), std::end(cost));
+    const auto [cmin, cmax] = std::minmax_element(std::begin(cost), std::end(cost));
     // auto cmin = *std::min_element(cost, cost + num_of_nodes);
-    auto x0 = Arr {*cmax, *cmin};
-    auto t = *cmax - *cmin;
-    auto E = ell {1.5 * t, x0};
+    const auto x0 = Arr {*cmax, *cmin};
+    auto t1 = *cmax - *cmin;
+    auto E = ell {1.5 * t1, x0};
     auto dist = std::vector(G.number_of_nodes(), 0.);
 
     auto P = optscaling_oracle {G, dist, get_cost};
-    auto [_, ell_info] =
-        cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+    auto t = std::numeric_limits<double>::max();
+    const auto [_, ell_info] = cutting_plane_dc(P, E, t);
 
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters <= 27);

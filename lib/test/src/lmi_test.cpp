@@ -92,10 +92,10 @@ TEST_CASE("LMI test", "[lmi_oracle]")
     // int niter, feasible, status;
     // Arr xb;
 
-    auto [_, ell_info] =
-        cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+    auto t = std::numeric_limits<double>::max();
+    const auto [_, ell_info] = cutting_plane_dc(P, E, t);
     fmt::print(
-        "{:f} {} {} \n", ell_info.value, ell_info.num_iters, ell_info.feasible);
+        "{:f} {} {} \n", t, ell_info.num_iters, ell_info.feasible);
     // std::cout << "LMI xbest: " << xb << "\n";
     // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible <<
     // ", " << status

@@ -371,7 +371,7 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
         auto N = edges.size();
         for (auto i = 0U; i < N; ++i)
         {
-            auto [u, v] = edges[i];
+            const auto& [u, v] = edges[i];
             this->add_edge(u, v, data[i]);
         }
     }

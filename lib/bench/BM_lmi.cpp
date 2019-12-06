@@ -90,8 +90,9 @@ static void BM_LMI_Lazy(benchmark::State& state)
     {
         auto P = my_oracle<lmi_oracle>(F1, B1, F2, B2, c);
         auto E = ell(10., Arr {0., 0., 0.});
-        [[maybe_unused]] auto [_, ell_info] =
-            cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+        auto t = std::numeric_limits<double>::max();
+        [[maybe_unused]] const auto [_, ell_info] =
+            cutting_plane_dc(P, E, t);
     }
 }
 
@@ -123,8 +124,9 @@ static void BM_LMI_old(benchmark::State& state)
     {
         auto P = my_oracle<lmi_old_oracle>(F1, B1, F2, B2, c);
         auto E = ell(10., Arr {0., 0., 0.});
-        [[maybe_unused]] auto [_, ell_info] =
-            cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+        auto t = std::numeric_limits<double>::max();
+        [[maybe_unused]] const auto [_, ell_info] =
+            cutting_plane_dc(P, E, t);
     }
 }
 BENCHMARK(BM_LMI_old);
@@ -153,8 +155,9 @@ static void BM_LMI_No_Trick(benchmark::State& state)
         auto P = my_oracle<lmi_oracle>(F1, B1, F2, B2, Arr {1., -1., 1.});
         auto E = ell(10., Arr {0., 0., 0.});
         E._no_defer_trick = true;
-        [[maybe_unused]] auto [_, ell_info] =
-            cutting_plane_dc(P, E, std::numeric_limits<double>::max());
+        auto t = std::numeric_limits<double>::max();
+        [[maybe_unused]] const auto [_, ell_info] =
+            cutting_plane_dc(P, E, t);
     }
 }
 

@@ -67,7 +67,7 @@ class chol_ext
      * See also: factorize()
      */
     template <typename Fn>
-    void factor(Fn getA)
+    void factor(Fn&& getA)
     {
         auto& T = this->T;
         this->p = std::pair<size_t, size_t> {0U, 0U};
@@ -135,7 +135,7 @@ class chol_ext
         {
             throw std::runtime_error {"Implementation Error."};
         }
-        auto [start, n] = this->p;
+        const auto& [start, n] = this->p;
         auto m = n - 1; // assume stop >= 0
         this->v(m) = 1.;
 

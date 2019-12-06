@@ -106,13 +106,13 @@ static auto run_lowpass(bool use_parallel_cut)
     auto r0 = zeros({N}); // initial x0
     auto E = ell(40., r0);
     auto P = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
-    auto options = Options();
+    const auto options = Options{.max_it = 50000};
 
-    options.max_it = 50000;
     E._use_parallel_cut = use_parallel_cut;
     // options.tol = 1e-8;
 
-    auto [r, ell_info] = cutting_plane_dc(P, E, Spsq, options);
+    auto t = Spsq;
+    const auto [r, ell_info] = cutting_plane_dc(P, E, t, options);
     // std::cout << "lowpass r: " << r << '\n';
     // auto Ustop = 20 * std::log10(std::sqrt(Spsq_new));
     // std::cout << "Min attenuation in the stopband is " << Ustop << " dB.\n";

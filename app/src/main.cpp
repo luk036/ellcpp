@@ -109,13 +109,10 @@ auto run_lowpass(bool use_parallel_cut)
     // r0[0] = 0;
     auto E       = ell(4., r0);
     auto P       = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
-    auto options = Options();
-
+    const auto options = Options{20000, 1e-8};
     E._use_parallel_cut = use_parallel_cut;
-    options.max_it      = 20000;
-    options.tol         = 1e-8;
-
-    auto [r, ell_info] = cutting_plane_dc(P, E, Spsq, options);
+    auto t = Spsq;
+    const auto [r, ell_info] = cutting_plane_dc(P, E, t, options);
     return std::tuple<bool, unsigned int>{ell_info.feasible, ell_info.num_iters};
 }
 
@@ -132,7 +129,7 @@ auto run_lowpass(bool use_parallel_cut)
 TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]")
 {
     // void test1() {
-    auto [feasible, num_iters] = run_lowpass(true);
+    const auto [feasible, num_iters] = run_lowpass(true);
     CHECK(feasible);
     CHECK(num_iters <= 510);
 }
@@ -140,7 +137,7 @@ TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]")
 TEST_CASE("Lowpass Filter (w/o parallel cut)", "[lowpass]")
 {
     // void test2() {
-    auto [feasible, num_iters] = run_lowpass(false);
+    const auto [feasible, num_iters] = run_lowpass(false);
     CHECK(feasible);
     CHECK(num_iters >= 13333);
 }

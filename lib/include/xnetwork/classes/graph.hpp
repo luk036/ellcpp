@@ -4,6 +4,7 @@
 #include <any>
 #include <cassert>
 #include <py2cpp/py2cpp.hpp>
+#include <string>
 #include <type_traits>
 #include <vector>
 #include <xnetwork/classes/coreviews.hpp> // import AtlasView, AdjacencyView
@@ -634,7 +635,7 @@ class Graph : public object
         auto N = edges.size();
         for (auto i = 0U; i < N; ++i)
         {
-            auto [u, v] = edges[i];
+            const auto& [u, v] = edges[i];
             this->add_edge(u, v, data[i]);
         }
     }
