@@ -111,7 +111,8 @@ auto run_lowpass(bool use_parallel_cut)
     // options.tol = 1e-8;
 
     auto t = Spsq;
-    const auto [r, ell_info] = cutting_plane_dc(P, E, t, options);
+    [[maybe_unused]] const auto [r, ell_info] =
+        cutting_plane_dc(P, E, t, options);
     // std::cout << "lowpass r: " << r << '\n';
     // auto Ustop = 20 * std::log10(std::sqrt(Spsq_new));
     // std::cout << "Min attenuation in the stopband is " << Ustop << " dB.\n";

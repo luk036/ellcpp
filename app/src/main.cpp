@@ -112,7 +112,7 @@ auto run_lowpass(bool use_parallel_cut)
     const auto options = Options{20000, 1e-8};
     E._use_parallel_cut = use_parallel_cut;
     auto t = Spsq;
-    const auto [r, ell_info] = cutting_plane_dc(P, E, t, options);
+    [[maybe_unused]] const auto [r, ell_info] = cutting_plane_dc(P, E, t, options);
     return std::tuple<bool, unsigned int>{ell_info.feasible, ell_info.num_iters};
 }
 

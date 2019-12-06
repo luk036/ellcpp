@@ -41,11 +41,11 @@ class ell
      * @param val
      * @param x
      */
-    ell(const Arr& val, Arr&& x)
+    ell(const Arr& val, Arr x)
         : _n {x.size()}
         , _c1 {double(_n * _n) / (_n * _n - 1)}
         , _kappa {1.}
-        , _xc {std::forward<Arr>(x)}
+        , _xc {std::move(x)}
         , _Q {xt::diag(val)}
     {
     }
@@ -57,43 +57,11 @@ class ell
      * @param val
      * @param x
      */
-    ell(const Arr& val, const Arr& x)
-        : _n {x.size()}
-        , _c1 {double(_n * _n) / (_n * _n - 1)}
-        , _kappa {1.}
-        , _xc {x}
-        , _Q {xt::diag(val)}
-    {
-    }
-
-    /*!
-     * @brief Construct a new ell object
-     *
-     * @tparam T
-     * @param val
-     * @param x
-     */
-    ell(const double& alpha, const Arr& x)
+    ell(const double& alpha, Arr x)
         : _n {x.size()}
         , _c1 {double(_n * _n) / (_n * _n - 1)}
         , _kappa {alpha}
-        , _xc {x}
-        , _Q {xt::eye(_n)}
-    {
-    }
-
-    /*!
-     * @brief Construct a new ell object
-     *
-     * @tparam T
-     * @param val
-     * @param x
-     */
-    ell(const double& alpha, Arr&& x)
-        : _n {x.size()}
-        , _c1 {double(_n * _n) / (_n * _n - 1)}
-        , _kappa {alpha}
-        , _xc {std::forward<Arr>(x)}
+        , _xc {std::move(x)}
         , _Q {xt::eye(_n)}
     {
     }

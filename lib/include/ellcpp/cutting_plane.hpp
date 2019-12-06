@@ -50,7 +50,8 @@ struct CInfo
  * @return CInfo
  */
 template <typename Oracle, typename Space>
-auto bsearch(Oracle&& Omega, Space&& I, const Options& options = Options()) -> CInfo
+auto bsearch(Oracle&& Omega, Space&& I, const Options& options = Options())
+    -> CInfo
 {
     // assume monotone
     auto& [l, u] = I;
@@ -61,7 +62,8 @@ auto bsearch(Oracle&& Omega, Space&& I, const Options& options = Options()) -> C
 
     for (; niter <= options.max_it; ++niter)
     {
-        auto t = l + tau;
+        auto t = l; // l may be `int` or `Fraction`
+        t += tau;
         if (Omega(t))
         { // feasible sol'n obtained
             u = t;
@@ -277,7 +279,8 @@ auto cutting_plane_q(
 
     for (; niter <= options.max_it; ++niter)
     {
-        const auto [cut, t1, x0, loop] = Omega(S.xc(), t, (status != 3) ? 0 : 1);
+        const auto [cut, t1, x0, loop] =
+            Omega(S.xc(), t, (status != 3) ? 0 : 1);
         // if (status != 3) {
         //     if (loop == 1) { // discrete sol'n
         //         h += xt::linalg::dot(g, x0 - S.xc())();
@@ -314,4 +317,3 @@ auto cutting_plane_q(
     // ret.value = t;
     return std::tuple {std::move(x_best), std::move(ret)};
 } // END
-

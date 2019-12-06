@@ -31,7 +31,7 @@ class qmi_oracle
     size_t _n;
     size_t _m;
     gsl::span<const Arr> _F;
-    const Arr& _F0;
+    Arr _F0;
     Arr _Fx;
 
   public:
@@ -44,11 +44,11 @@ class qmi_oracle
      * @param F
      * @param F0
      */
-    qmi_oracle(gsl::span<const Arr> F, const Arr& F0)
+    qmi_oracle(gsl::span<const Arr> F, Arr F0)
         : _n {F0.shape()[0]}
         , _m {F0.shape()[1]}
         , _F {F}
-        , _F0 {F0}
+        , _F0 {std::move(F0)}
         , _Fx {zeros({_m, _n})} // transposed
         , _Q(_m)                // take column
     {

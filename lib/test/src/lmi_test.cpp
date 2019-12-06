@@ -37,10 +37,10 @@ class my_oracle
      * @param c
      */
     my_oracle(const std::vector<Arr>& F1, const Arr& B1,
-        const std::vector<Arr>& F2, const Arr& B2, const Arr& c)
+        const std::vector<Arr>& F2, const Arr& B2, Arr c)
         : lmi1 {F1, B1}
         , lmi2 {F2, B2}
-        , c {c}
+        , c {std::move(c)}
     {
     }
 
@@ -76,7 +76,7 @@ TEST_CASE("LMI test", "[lmi_oracle]")
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using M_t = std::vector<Arr>;
 
-    const auto c = Arr {1., -1., 1.};
+    auto c = Arr {1., -1., 1.};
     auto F1 = M_t {{{-7., -11.}, {-11., 3.}}, {{7., -18.}, {-18., 8.}},
         {{-2., -8.}, {-8., 1.}}};
     auto B1 = Arr {{33., -9.}, {-9., 26.}};
@@ -93,9 +93,8 @@ TEST_CASE("LMI test", "[lmi_oracle]")
     // Arr xb;
 
     auto t = std::numeric_limits<double>::max();
-    const auto [_, ell_info] = cutting_plane_dc(P, E, t);
-    fmt::print(
-        "{:f} {} {} \n", t, ell_info.num_iters, ell_info.feasible);
+    [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);
+    fmt::print("{:f} {} {} \n", t, ell_info.num_iters, ell_info.feasible);
     // std::cout << "LMI xbest: " << xb << "\n";
     // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible <<
     // ", " << status

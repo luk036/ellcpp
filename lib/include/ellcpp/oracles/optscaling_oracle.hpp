@@ -29,7 +29,7 @@ class optscaling_oracle
   public:
     /**
      * @brief Ratio
-     * 
+     *
      */
     struct Ratio
     {
@@ -38,25 +38,13 @@ class optscaling_oracle
 
         /*!
          * @brief Construct a new Ratio object
-         * 
-         * @param G 
-         * @param get_cost 
+         *
+         * @param G
+         * @param get_cost
          */
-        Ratio(const Graph& G, Fn&& get_cost)
+        Ratio(const Graph& G, Fn get_cost)
             : _G {G}
-            , _get_cost {std::forward<Fn>(get_cost)}
-        {
-        }
-
-        /*!
-         * @brief Construct a new Ratio object
-         * 
-         * @param G 
-         * @param get_cost 
-         */
-        Ratio(const Graph& G, const Fn& get_cost)
-            : _G {G}
-            , _get_cost {get_cost}
+            , _get_cost {std::move(get_cost)}
         {
         }
 

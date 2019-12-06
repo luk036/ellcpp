@@ -53,7 +53,7 @@ std::tuple<Cut, double, Arr, int> profit_q_oracle::operator()(
     {
         x[1] = 1.;
     }
-    const auto yd = Arr {xt::log(x)};
+    auto yd = Arr {xt::log(x)};
     auto [cut, t1] = this->P(yd, t);
     auto& [g, h] = cut;
     h += xt::linalg::dot(g, yd - y)();

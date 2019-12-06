@@ -4,7 +4,7 @@
 #include <catch2/catch.hpp>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
-#include <ellcpp/ell1d.hpp>
+// #include <ellcpp/ell1d.hpp>
 #include <ellcpp/oracles/optscaling_oracle.hpp> // import optscaling
 #include <utility>                              // for std::pair
 #include <xnetwork/classes/digraphs.hpp>
@@ -56,7 +56,8 @@ TEST_CASE("Test Optimal Scaling (two varaibles)", "[test_optscaling]")
     };
 
 
-    const auto [cmin, cmax] = std::minmax_element(std::begin(cost), std::end(cost));
+    const auto [cmin, cmax] =
+        std::minmax_element(std::begin(cost), std::end(cost));
     const auto x0 = Arr {*cmax, *cmin};
     auto t1 = *cmax - *cmin;
     auto E = ell {1.5 * t1, x0};
@@ -64,7 +65,7 @@ TEST_CASE("Test Optimal Scaling (two varaibles)", "[test_optscaling]")
 
     auto P = optscaling_oracle {G, dist, get_cost};
     auto t = std::numeric_limits<double>::max();
-    const auto [_, ell_info] = cutting_plane_dc(P, E, t);
+    [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);
 
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters <= 27);

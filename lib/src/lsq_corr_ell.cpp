@@ -239,7 +239,8 @@ std::tuple<size_t, bool> lsq_corr_poly2(const Arr& Y, const Arr& s, size_t m)
 {
     auto Sig = construct_poly_matrix(s, m);
     auto P = lsq_oracle(Sig, Y);
-    const auto [a, num_iters, feasible] = lsq_corr_core2(Y, m, P);
+    [[maybe_unused]] const auto [a, num_iters, feasible] =
+        lsq_corr_core2(Y, m, P);
     // std::cout << "lsq_corr_poly2 = " << a << "\n";
     return {num_iters, feasible};
 }
@@ -363,7 +364,8 @@ std::tuple<size_t, bool> mle_corr_poly(const Arr& Y, const Arr& s, size_t m)
 {
     const auto Sig = construct_poly_matrix(s, m);
     auto P = mle_oracle(Sig, Y);
-    const auto [a, num_iters, feasible] = mle_corr_core(Y, m, P);
+    [[maybe_unused]] const auto [a, num_iters, feasible] =
+        mle_corr_core(Y, m, P);
     // std::cout << "mle_corr_poly = " << a << "\n";
     return {num_iters, feasible};
 }

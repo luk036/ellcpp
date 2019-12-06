@@ -50,6 +50,6 @@ TEST_CASE("Example 1", "[example1]")
     auto E = ell {10., Arr {0., 0.}};
     auto P = my_oracle;
     auto t = std::numeric_limits<double>::min();
-    const auto [_, ell_info] = cutting_plane_dc(P, E, t);
+    [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);
     CHECK(ell_info.feasible);
 }

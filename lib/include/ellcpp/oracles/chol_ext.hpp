@@ -69,43 +69,43 @@ class chol_ext
     template <typename Fn>
     void factor(Fn&& getA)
     {
-        auto& T = this->T;
-        this->p = std::pair<size_t, size_t> {0U, 0U};
-
+        this->p = {0U, 0U};
+        auto& [start, stop] = this->p;
         auto i = 0U;
         for (; i < this->n; ++i)
         {
-            for (auto j = this->p.first; j <= i; ++j)
+            for (auto j = start; j <= i; ++j)
             {
                 auto d = getA(i, j);
-                for (auto k = this->p.first; k < j; ++k)
+                for (auto k = start; k < j; ++k)
                 {
-                    d -= T(k, i) * T(j, k);
+                    d -= this->T(k, i) * this->T(j, k);
                 }
-                T(i, j) = d;
+                this->T(i, j) = d;
                 if (i != j)
                 {
-                    T(j, i) = d / T(j, j);
+                    this->T(j, i) = d / this->T(j, j);
                 }
             }
+
             if constexpr (Allow_semidefinite)
             {
-                if (T(i, i) < 0.)
+                if (this->T(i, i) < 0.)
                 {
                     // this->stop = i + 1;
-                    this->p.second = i + 1;
+                    stop = i + 1;
                     break;
                 }
-                if (T(i, i) == 0.)
+                if (this->T(i, i) == 0.)
                 {
-                    this->p.first = i + 1;
+                    start = i + 1;
                 }
             }
             else // strict positive definite
             {
-                if (T(i, i) <= 0.)
+                if (this->T(i, i) <= 0.)
                 {
-                    this->p.second = i + 1;
+                    stop = i + 1;
                     break;
                 }
             }

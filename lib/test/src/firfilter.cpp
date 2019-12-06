@@ -97,6 +97,6 @@ TEST_CASE("FIR Filter", "[firfilter]")
     auto E = ell(40., zeros({n}));
     auto P = my_fir_oracle();
     auto t = std::numeric_limits<double>::max();
-    const auto [_, ell_info] = cutting_plane_dc(P, E, t);
+    [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);
     CHECK(ell_info.feasible);
 }

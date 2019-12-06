@@ -31,23 +31,10 @@ class lmi_old_oracle
      * @param F
      * @param B
      */
-    lmi_old_oracle(gsl::span<const Arr> F, Arr&& B)
+    lmi_old_oracle(gsl::span<const Arr> F, Arr B)
         : _F {F}
-        , _F0 {std::forward<Arr>(B)}
+        , _F0 {std::move(B)}
         , _Q {this->_F0.shape()[0]}
-    {
-    }
-
-    /*!
-     * @brief Construct a new lmi oracle object
-     *
-     * @param F
-     * @param B
-     */
-    lmi_old_oracle(gsl::span<const Arr> F, const Arr& B)
-        : _F {F}
-        , _F0 {B}
-        , _Q(this->_F0.shape()[0])
     {
     }
 

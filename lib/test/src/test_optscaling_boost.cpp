@@ -7,7 +7,7 @@
 #include <catch2/catch.hpp>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
-#include <ellcpp/ell1d.hpp>
+// #include <ellcpp/ell1d.hpp>
 #include <ellcpp/oracles/optscaling_oracle.hpp> // import optscaling
 #include <py2cpp/nx2bgl.hpp>
 #include <utility> // for std::pair
@@ -84,7 +84,8 @@ TEST_CASE(
         return boost::get(cost_pa, e);
     };
 
-    const auto [cmin, cmax] = std::minmax_element(std::begin(cost), std::end(cost));
+    const auto [cmin, cmax] =
+        std::minmax_element(std::begin(cost), std::end(cost));
     // auto cmin = *std::min_element(cost, cost + num_of_nodes);
     const auto x0 = Arr {*cmax, *cmin};
     auto t1 = *cmax - *cmin;
@@ -93,7 +94,7 @@ TEST_CASE(
 
     auto P = optscaling_oracle {G, dist, get_cost};
     auto t = std::numeric_limits<double>::max();
-    const auto [_, ell_info] = cutting_plane_dc(P, E, t);
+    [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);
 
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters <= 27);

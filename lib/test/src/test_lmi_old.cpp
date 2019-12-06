@@ -36,7 +36,7 @@ class my_oracle
     my_oracle(const M_t& F1, const Arr& B1, const M_t& F2, const Arr& B2, Arr c)
         : lmi1 {F1, B1}
         , lmi2 {F2, B2}
-        , c {c}
+        , c {std::move(c)}
     {
     }
 
@@ -86,7 +86,7 @@ TEST_CASE("LMI (old) test", "[lmi_old_oracle]")
     auto P = my_oracle(F1, B1, F2, B2, Arr {1., -1., 1.});
     auto E = ell(10., Arr {0., 0., 0.});
     auto t = std::numeric_limits<double>::max();
-    const auto [_, ell_info] = cutting_plane_dc(P, E, t);
+    [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters == 113);
 }
