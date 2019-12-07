@@ -21,8 +21,8 @@ class lmi0_oracle
     using Cut = std::tuple<Arr, double>;
 
   private:
-    gsl::span<const Arr> _F;
-    size_t _n;
+    const gsl::span<const Arr> _F;
+    const size_t _n;
 
   public:
     chol_ext<> _Q;

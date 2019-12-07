@@ -6,6 +6,7 @@
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lmi_oracle.hpp>
 #include <fmt/format.h>
+#include <gsl/span>
 #include <spdlog/sinks/stdout_sinks.h>
 #include <spdlog/spdlog.h>
 #include <vector>
@@ -24,7 +25,7 @@ class my_oracle
   private:
     lmi_oracle lmi1;
     lmi_oracle lmi2;
-    Arr c;
+    const Arr c;
 
   public:
     /*!
@@ -36,8 +37,8 @@ class my_oracle
      * @param B2
      * @param c
      */
-    my_oracle(const std::vector<Arr>& F1, const Arr& B1,
-        const std::vector<Arr>& F2, const Arr& B2, Arr c)
+    my_oracle(gsl::span<const Arr> F1, const Arr& B1,
+        gsl::span<const Arr> F2, const Arr& B2, Arr c)
         : lmi1 {F1, B1}
         , lmi2 {F2, B2}
         , c {std::move(c)}
@@ -85,7 +86,7 @@ TEST_CASE("LMI test", "[lmi_oracle]")
         {{-5., 2., -17.}, {2., -6., 8.}, {-17., 8., 6.}}};
     auto B2 = Arr {{14., 9., 40.}, {9., 91., 10.}, {40., 10., 15.}};
 
-    auto P = my_oracle(F1, B1, F2, B2, c);
+    auto P = my_oracle(F1, B1, F2, B2, std::move(c));
     auto E = ell(10., Arr {0., 0., 0.});
 
     // double fb;

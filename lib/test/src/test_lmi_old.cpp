@@ -5,6 +5,7 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lmi_old_oracle.hpp>
+#include <gsl/span>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 
@@ -21,7 +22,7 @@ class my_oracle
   private:
     lmi_old_oracle lmi1;
     lmi_old_oracle lmi2;
-    Arr c;
+    const Arr c;
 
   public:
     /*!
@@ -33,7 +34,7 @@ class my_oracle
      * @param B2
      * @param c
      */
-    my_oracle(const M_t& F1, const Arr& B1, const M_t& F2, const Arr& B2, Arr c)
+    my_oracle(gsl::span<const Arr> F1, const Arr& B1, gsl::span<const Arr> F2, const Arr& B2, Arr c)
         : lmi1 {F1, B1}
         , lmi2 {F2, B2}
         , c {std::move(c)}
@@ -59,9 +60,9 @@ class my_oracle
         {
             return {*cut, t};
         }
-        auto f0 = dot(this->c, x)();
-        auto fj1 = f0 - t;
-        if (fj1 > 0)
+        const auto f0 = dot(this->c, x)();
+        const auto fj1 = f0 - t;
+        if (fj1 > 0.)
         {
             return {{this->c, fj1}, t};
         }

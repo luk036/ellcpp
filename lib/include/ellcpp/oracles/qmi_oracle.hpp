@@ -28,10 +28,10 @@ class qmi_oracle
     size_t _nx = 0;
     size_t _count = 0;
 
-    size_t _n;
-    size_t _m;
-    gsl::span<const Arr> _F;
-    Arr _F0;
+    const size_t _n;
+    const size_t _m;
+    const gsl::span<const Arr> _F;
+    const Arr _F0;
     Arr _Fx;
 
   public:

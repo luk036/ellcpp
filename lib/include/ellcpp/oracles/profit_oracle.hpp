@@ -29,9 +29,9 @@ class profit_oracle
     using Cut = std::tuple<Arr, double>;
 
   private:
-    double _log_pA;
-    double _log_k;
-    Arr _v;
+    const double _log_pA;
+    const double _log_k;
+    const Arr _v;
 
   public:
     Arr _a;
@@ -46,7 +46,7 @@ class profit_oracle
      * @param a the output elasticities
      * @param v output price
      */
-    profit_oracle(double p, double A, double k, Arr a, Arr v)
+    profit_oracle(double p, double A, double k, const Arr& a, const Arr& v)
         : _log_pA {std::log(p * A)}
         , _log_k {std::log(k)}
         , _v {v}
@@ -86,7 +86,7 @@ class profit_rb_oracle
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
   private:
-    Arr _uie;
+    const Arr _uie;
     Arr _a;
     profit_oracle _P;
 

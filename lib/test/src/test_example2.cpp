@@ -38,7 +38,7 @@ auto my_oracle2(const Arr& z) -> std::optional<Cut>
 TEST_CASE("Example 2", "[example2]")
 {
     auto E = ell {10., Arr {0., 0.}};
-    auto P = my_oracle2;
+    const auto P = my_oracle2;
     auto ell_info = cutting_plane_feas(P, E);
     CHECK(ell_info.feasible);
 }

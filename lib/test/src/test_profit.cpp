@@ -21,7 +21,7 @@ TEST_CASE("Profit Test 1", "[profit]")
 
     {
         // auto E = ell(100., Vec {0., 0.});
-        auto P = profit_oracle(p, A, k, a, v);
+        const auto P = profit_oracle(p, A, k, a, v);
         const auto [y, ell_info] =
             cutting_plane_dc(P, ell {100., Vec {0., 0.}}, 0.);
         CHECK(y[0] <= std::log(k));
@@ -37,7 +37,7 @@ TEST_CASE("Profit Test 1", "[profit]")
     }
 
     {
-        auto P = profit_q_oracle(p, A, k, a, v);
+        const auto P = profit_q_oracle(p, A, k, a, v);
         const auto [y, ell_info] =
             cutting_plane_q(P, ell(100., Vec {2, 0.}), 0.);
         CHECK(y[0] <= std::log(k));

@@ -27,8 +27,8 @@ class ell
     double _delta = 0.;
     double _tsq = 0.;
 
-    size_t _n;
-    double _c1;
+    const size_t _n;
+    const double _c1;
     double _kappa;
     Arr _xc;
     Arr _Q;

@@ -27,7 +27,7 @@ class chol_ext
     Vec v;        /**< witness vector */
 
   private:
-    size_t n; /**< dimension */
+    const size_t n; /**< dimension */
     Mat T;    /**< temporary storage */
 
   public:
