@@ -25,9 +25,9 @@ ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
     {
         return {1, tsq}; // no sol'n
     }
-    [[unlikely]] if (beta < -tau)
+    if (beta < -tau)
     {
-        return {3, tsq}; // no effect
+        [[unlikely]] return {3, tsq}; // no effect
     }
 
     const auto bound = this->_xc - beta / g;

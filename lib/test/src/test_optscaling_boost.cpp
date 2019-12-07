@@ -94,8 +94,9 @@ TEST_CASE(
 
     auto P = optscaling_oracle {G, dist, get_cost};
     auto t = std::numeric_limits<double>::max();
-    [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);
+    const auto [x, ell_info] = cutting_plane_dc(P, E, t);
 
+    CHECK(x[1] >= x[0]);
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters <= 27);
 }

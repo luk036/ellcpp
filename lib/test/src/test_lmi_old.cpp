@@ -86,7 +86,9 @@ TEST_CASE("LMI (old) test", "[lmi_old_oracle]")
     auto P = my_oracle(F1, B1, F2, B2, Arr {1., -1., 1.});
     auto E = ell(10., Arr {0., 0., 0.});
     auto t = std::numeric_limits<double>::max();
-    [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);
+    const auto [x, ell_info] = cutting_plane_dc(P, E, t);
+
+    CHECK(x[0] < -0.3);
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters == 113);
 }

@@ -93,7 +93,7 @@ TEST_CASE("LMI test", "[lmi_oracle]")
     // Arr xb;
 
     auto t = std::numeric_limits<double>::max();
-    [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);
+    const auto [x, ell_info] = cutting_plane_dc(P, E, t);
     fmt::print("{:f} {} {} \n", t, ell_info.num_iters, ell_info.feasible);
     // std::cout << "LMI xbest: " << xb << "\n";
     // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible <<
@@ -106,6 +106,7 @@ TEST_CASE("LMI test", "[lmi_oracle]")
     spdlog::get("console")->info("loggers can be retrieved from a global "
                                  "registry using the spdlog::get(logger_name)");
 
+    CHECK(x[0] < -0.3);
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters == 113);
 }

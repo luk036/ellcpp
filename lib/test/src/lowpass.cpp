@@ -111,11 +111,11 @@ auto run_lowpass(bool use_parallel_cut)
     // options.tol = 1e-8;
 
     auto t = Spsq;
-    [[maybe_unused]] const auto [r, ell_info] =
-        cutting_plane_dc(P, E, t, options);
+    const auto [r, ell_info] = cutting_plane_dc(P, E, t, options);
     // std::cout << "lowpass r: " << r << '\n';
     // auto Ustop = 20 * std::log10(std::sqrt(Spsq_new));
     // std::cout << "Min attenuation in the stopband is " << Ustop << " dB.\n";
+    CHECK(r[0] >= 0.);
     return std::tuple {ell_info.feasible, ell_info.num_iters};
 }
 

@@ -235,14 +235,12 @@ auto lsq_corr_core2(const Arr& Y, size_t m, lsq_oracle& P)
  * @param m
  * @return std::tuple<size_t, bool>
  */
-std::tuple<size_t, bool> lsq_corr_poly2(const Arr& Y, const Arr& s, size_t m)
+std::tuple<Arr, size_t, bool> lsq_corr_poly2(
+    const Arr& Y, const Arr& s, size_t m)
 {
     auto Sig = construct_poly_matrix(s, m);
     auto P = lsq_oracle(Sig, Y);
-    [[maybe_unused]] const auto [a, num_iters, feasible] =
-        lsq_corr_core2(Y, m, P);
-    // std::cout << "lsq_corr_poly2 = " << a << "\n";
-    return {num_iters, feasible};
+    return lsq_corr_core2(Y, m, P);
 }
 
 /*!
@@ -360,14 +358,12 @@ auto mle_corr_core(const Arr& /* Y */, size_t m, mle_oracle& P)
  * @param m
  * @return std::tuple<size_t, bool>
  */
-std::tuple<size_t, bool> mle_corr_poly(const Arr& Y, const Arr& s, size_t m)
+std::tuple<Arr, size_t, bool> mle_corr_poly(
+    const Arr& Y, const Arr& s, size_t m)
 {
     const auto Sig = construct_poly_matrix(s, m);
     auto P = mle_oracle(Sig, Y);
-    [[maybe_unused]] const auto [a, num_iters, feasible] =
-        mle_corr_core(Y, m, P);
-    // std::cout << "mle_corr_poly = " << a << "\n";
-    return {num_iters, feasible};
+    return mle_corr_core(Y, m, P);
 }
 
 /*!
@@ -378,7 +374,8 @@ std::tuple<size_t, bool> mle_corr_poly(const Arr& Y, const Arr& s, size_t m)
  * @param m
  * @return std::tuple<size_t, bool>
  */
-std::tuple<size_t, bool> lsq_corr_poly(const Arr& Y, const Arr& s, size_t m)
+std::tuple<Arr, size_t, bool> lsq_corr_poly(
+    const Arr& Y, const Arr& s, size_t m)
 {
     auto Sig = construct_poly_matrix(s, m);
     // P = mtx_norm_oracle(Sig, Y, a)
@@ -390,7 +387,6 @@ std::tuple<size_t, bool> lsq_corr_poly(const Arr& Y, const Arr& s, size_t m)
     auto bs_info = bsearch(P, std::tuple {0., 100. * 100.});
 
     // std::cout << niter << ", " << feasible << '\n';
-    a = P.x_best();
-    return {bs_info.num_iters, bs_info.feasible};
+    return {P.x_best(), bs_info.num_iters, bs_info.feasible};
     //  return prob.is_dcp()
 }

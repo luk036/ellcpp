@@ -19,9 +19,9 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
         return this->__calc_dc(b0);
     }
 
-    [[unlikely]] if (b1 < b0)
+    if (b1 < b0)
     {
-        return 1; // no sol'n
+        [[unlikely]] return 1; // no sol'n
     }
 
     if (b0 == 0.)
@@ -31,9 +31,9 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
     }
 
     const auto b0b1 = b0 * b1;
-    [[unlikely]] if (this->_n * b0b1 < -this->_tsq)
+    if (this->_n * b0b1 < -this->_tsq)
     {
-        return 3; // no effect
+        [[unlikely]] return 3; // no effect
     }
 
     const auto t0 = this->_tsq - b0 * b0;
@@ -87,9 +87,9 @@ int ell::__calc_dc(const double& beta)
     }
 
     const auto gamma = tau + this->_n * beta;
-    [[unlikely]] if (gamma < 0)
+    if (gamma < 0)
     {
-        return 3; // no effect
+        [[unlikely]] return 3; // no effect
     }
 
     this->_rho = gamma / (this->_n + 1.);
@@ -137,9 +137,9 @@ std::tuple<int, double> ell::update(const std::tuple<Arr, T>& cut)
     }
     else
     { // parallel cut
-        [[unlikely]] if (beta.shape()[0] < 2)
+        if (beta.shape()[0] < 2)
         {
-            status = this->__calc_dc(beta[0]);
+            [[unlikely]] status = this->__calc_dc(beta[0]);
         }
         else
         {
