@@ -35,8 +35,9 @@ class VertexView : public Graph
      */
     auto begin() const
     {
-        auto [v_iter, v_end] = boost::vertices(*this);
-        return v_iter;
+        // auto [v_iter, v_end] = boost::vertices(*this);
+        // return v_iter;
+        return boost::vertices(*this).first;
     }
 
     /*!
@@ -46,8 +47,9 @@ class VertexView : public Graph
      */
     auto end() const
     {
-        auto [v_iter, v_end] = boost::vertices(*this);
-        return v_end;
+        // auto [v_iter, v_end] = boost::vertices(*this);
+        // return v_end;
+        return boost::vertices(*this).second;
     }
 
     /*!
@@ -57,8 +59,9 @@ class VertexView : public Graph
      */
     auto cbegin() const
     {
-        auto [v_iter, v_end] = boost::vertices(*this);
-        return v_iter;
+        // auto [v_iter, v_end] = boost::vertices(*this);
+        // return v_iter;
+        return boost::vertices(*this).first;
     }
 
     /*!
@@ -68,8 +71,9 @@ class VertexView : public Graph
      */
     auto cend() const
     {
-        auto [v_iter, v_end] = boost::vertices(*this);
-        return v_end;
+        // auto [v_iter, v_end] = boost::vertices(*this);
+        // return v_end;
+        return boost::vertices(*this).second;
     }
 };
 
@@ -102,8 +106,9 @@ class EdgeView
      */
     auto begin() const
     {
-        auto [e_iter, e_end] = boost::edges(_G);
-        return e_iter;
+        // auto [e_iter, e_end] = boost::edges(_G);
+        // return e_iter;
+        return boost::edges(_G).first;
     }
 
     /*!
@@ -113,8 +118,9 @@ class EdgeView
      */
     auto end() const
     {
-        auto [e_iter, e_end] = boost::edges(_G);
-        return e_end;
+        // auto [e_iter, e_end] = boost::edges(_G);
+        // return e_end;
+        return boost::edges(_G).second;
     }
 
     /*!
@@ -124,8 +130,9 @@ class EdgeView
      */
     auto cbegin() const
     {
-        auto [e_iter, e_end] = boost::edges(_G);
-        return e_iter;
+        // auto [e_iter, e_end] = boost::edges(_G);
+        // return e_iter;
+        return boost::edges(_G).first;
     }
 
     /*!
@@ -135,8 +142,9 @@ class EdgeView
      */
     auto cend() const
     {
-        auto [e_iter, e_end] = boost::edges(_G);
-        return e_end;
+        // auto [e_iter, e_end] = boost::edges(_G);
+        // return e_end;
+        return boost::edges(_G).second;
     }
 };
 
@@ -173,8 +181,9 @@ class AtlasView
      */
     auto begin() const
     {
-        auto [e_iter, e_end] = boost::out_edges(_v, _G);
-        return e_iter;
+        // auto [e_iter, e_end] = boost::out_edges(_v, _G);
+        // return e_iter;
+        return boost::out_edges(_v, _G).first;
     }
 
     /*!
@@ -184,8 +193,9 @@ class AtlasView
      */
     auto end() const
     {
-        auto [e_iter, e_end] = boost::out_edges(_v, _G);
-        return e_end;
+        // auto [e_iter, e_end] = boost::out_edges(_v, _G);
+        // return e_end;
+        return boost::out_edges(_v, _G).second;
     }
 
     /*!
@@ -195,8 +205,9 @@ class AtlasView
      */
     auto cbegin() const
     {
-        auto [e_iter, e_end] = boost::out_edges(_v, _G);
-        return e_iter;
+        // auto [e_iter, e_end] = boost::out_edges(_v, _G);
+        // return e_iter;
+        return boost::out_edges(_v, _G).first;
     }
 
     /*!
@@ -206,8 +217,9 @@ class AtlasView
      */
     auto cend() const
     {
-        auto [e_iter, e_end] = boost::out_edges(_v, _G);
-        return e_end;
+        // auto [e_iter, e_end] = boost::out_edges(_v, _G);
+        // return e_end;
+        return boost::out_edges(_v, _G).second;
     }
 };
 
