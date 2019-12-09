@@ -183,17 +183,16 @@ class lsq_oracle
         if (const auto cut1 = this->_qmi(xt::view(x, xt::range(0, n - 1))))
         {
             const auto& [g1, f1] = *cut1;
-            xt::view(g, xt::range(0, n - 1)) = g1;
-            auto& Q = this->_qmi._Q;
-            // auto ep = Q.witness();
+            const auto& Q = this->_qmi._Q;
             const auto& [start, stop] = Q.p;
-            auto v = xt::view(Q.v, xt::range(start, stop));
+            const auto v = xt::view(Q.v, xt::range(start, stop));
+            xt::view(g, xt::range(0, n - 1)) = g1;
             g(n - 1) = -xt::linalg::dot(v, v)();
             return {{std::move(g), f1}, t};
         }
         g(n - 1) = 1.;
 
-        auto f0 = x(n - 1) - t;
+        const auto f0 = x(n - 1) - t;
         if (f0 > 0)
         {
             return {{std::move(g), f0}, t};

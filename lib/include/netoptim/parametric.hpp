@@ -9,9 +9,11 @@
 /*!
  * @brief maximum parametric problem
  *
- *    max  r
- *    s.t. dist[v] - dist[u] <= d(u, v, r)
- *         for all (u, v) : G
+ *    This function solves the following network parametric problem:
+ *
+ *        max  r
+ *        s.t. dist[v] − dist[u] ≤ d(u, v, r)
+ *             ∀ e(u, v) ∈ G(V, E)
  *
  * @tparam Graph
  * @tparam T
@@ -27,8 +29,8 @@
  */
 template <typename Graph, typename T, typename Fn1, typename Fn2,
     typename Container>
-auto max_parametric(Graph& G, T r_opt, Fn1& d, Fn2& zero_cancel,
-    Container& dist, size_t max_iter = 1000)
+auto max_parametric(const Graph& G, T& r_opt, Fn1&& d, Fn2&& zero_cancel,
+    Container&& dist, size_t max_iter = 1000)
 {
     using edge_t = typename Graph::edge_t;
 
@@ -42,7 +44,8 @@ auto max_parametric(Graph& G, T r_opt, Fn1& d, Fn2& zero_cancel,
     auto niter = 0U;
     for (; niter < max_iter; ++niter)
     {
-        const auto& C_min = S.find_neg_cycle(dist, get_weight);
+        const auto& C_min = S.find_neg_cycle(std::forward<Container>(dist),
+                                             std::move(get_weight));
         if (C_min.empty())
         {
             break;
@@ -58,12 +61,12 @@ auto max_parametric(Graph& G, T r_opt, Fn1& d, Fn2& zero_cancel,
         r_opt = r_min;
 
         // update ???
-        for (const auto& e : C_opt)
+        for (auto&& e : C_opt)
         {
             const auto [u, v] = G.end_points(e);
             dist[u] = dist[v] - get_weight(e);
         }
     }
 
-    return std::tuple {r_opt, std::move(C_opt)};
+    return C_opt;
 }

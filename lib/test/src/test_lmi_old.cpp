@@ -34,9 +34,9 @@ class my_oracle
      * @param B2
      * @param c
      */
-    my_oracle(gsl::span<const Arr> F1, const Arr& B1, gsl::span<const Arr> F2, const Arr& B2, Arr c)
-        : lmi1 {F1, B1}
-        , lmi2 {F2, B2}
+    my_oracle(gsl::span<const Arr> F1, Arr B1, gsl::span<const Arr> F2, Arr B2, Arr c)
+        : lmi1 {F1, std::move(B1)}
+        , lmi2 {F2, std::move(B2)}
         , c {std::move(c)}
     {
     }
@@ -78,13 +78,13 @@ TEST_CASE("LMI (old) test", "[lmi_old_oracle]")
     // const auto c = Arr {1., -1., 1.};
     const auto F1 = M_t {{{-7., -11.}, {-11., 3.}}, {{7., -18.}, {-18., 8.}},
         {{-2., -8.}, {-8., 1.}}};
-    const auto B1 = Arr {{33., -9.}, {-9., 26.}};
+    auto B1 = Arr {{33., -9.}, {-9., 26.}};
     const auto F2 = M_t {{{-21., -11., 0.}, {-11., 10., 8.}, {0., 8., 5.}},
         {{0., 10., 16.}, {10., -10., -10.}, {16., -10., 3.}},
         {{-5., 2., -17.}, {2., -6., 8.}, {-17., 8., 6.}}};
-    const auto B2 = Arr {{14., 9., 40.}, {9., 91., 10.}, {40., 10., 15.}};
-
-    auto P = my_oracle(F1, B1, F2, B2, Arr {1., -1., 1.});
+    auto B2 = Arr {{14., 9., 40.}, {9., 91., 10.}, {40., 10., 15.}};
+    auto c = Arr {1., -1., 1.};
+    auto P = my_oracle(F1, std::move(B1), F2, std::move(B2), std::move(c));
     auto E = ell(10., Arr {0., 0., 0.});
     auto t = std::numeric_limits<double>::max();
     const auto [x, ell_info] = cutting_plane_dc(P, E, t);

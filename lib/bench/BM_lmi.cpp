@@ -3,8 +3,10 @@
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lmi_old_oracle.hpp>
 #include <ellcpp/oracles/lmi_oracle.hpp>
+#include <gsl/span>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
+
 
 /*!
  * @brief
@@ -20,7 +22,7 @@ class my_oracle
   private:
     Oracle lmi1;
     Oracle lmi2;
-    Arr c;
+    const Arr c;
 
   public:
     /*!
@@ -32,11 +34,11 @@ class my_oracle
      * @param B2
      * @param c
      */
-    my_oracle(const std::vector<Arr>& F1, const Arr& B1,
-        const std::vector<Arr>& F2, const Arr& B2, Arr c)
+    my_oracle(gsl::span<const Arr>  F1, const Arr& B1,
+        gsl::span<const Arr> F2, const Arr& B2, Arr c)
         : lmi1 {F1, B1}
         , lmi2 {F2, B2}
-        , c {c}
+        , c {std::move(c)}
     {
     }
 
@@ -76,7 +78,7 @@ static void BM_LMI_Lazy(benchmark::State& state)
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-    const auto c = Arr {1., -1., 1.};
+    // auto c = Arr {1., -1., 1.};
     const auto F1 = std::vector<Arr> {{{-7., -11.}, {-11., 3.}},
         {{7., -18.}, {-18., 8.}}, {{-2., -8.}, {-8., 1.}}};
     const auto B1 = Arr {{33., -9.}, {-9., 26.}};
@@ -88,7 +90,7 @@ static void BM_LMI_Lazy(benchmark::State& state)
 
     while (state.KeepRunning())
     {
-        auto P = my_oracle<lmi_oracle>(F1, B1, F2, B2, c);
+        auto P = my_oracle<lmi_oracle>(F1, B1, F2, B2, Arr {1., -1., 1.});
         auto E = ell(10., Arr {0., 0., 0.});
         auto t = std::numeric_limits<double>::max();
         [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);
@@ -109,7 +111,7 @@ static void BM_LMI_old(benchmark::State& state)
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
-    const auto c = Arr {1., -1., 1.};
+    // auto c = Arr {1., -1., 1.};
     const auto F1 = std::vector<Arr> {{{-7., -11.}, {-11., 3.}},
         {{7., -18.}, {-18., 8.}}, {{-2., -8.}, {-8., 1.}}};
     const auto B1 = Arr {{33., -9.}, {-9., 26.}};
@@ -121,7 +123,7 @@ static void BM_LMI_old(benchmark::State& state)
 
     while (state.KeepRunning())
     {
-        auto P = my_oracle<lmi_old_oracle>(F1, B1, F2, B2, c);
+        auto P = my_oracle<lmi_old_oracle>(F1, B1, F2, B2, Arr {1., -1., 1.});
         auto E = ell(10., Arr {0., 0., 0.});
         auto t = std::numeric_limits<double>::max();
         [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);

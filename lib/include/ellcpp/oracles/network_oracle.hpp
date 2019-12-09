@@ -37,10 +37,10 @@ class network_oracle
      * @param u list or dictionary
      * @param h function evaluation and gradient
      */
-    network_oracle(const Graph& G, Container& u, const Fn& h)
+    network_oracle(const Graph& G, Container& u, Fn h)
         : _G {G}
         , _u {u}
-        , _h {h}
+        , _h {std::move(h)}
         , _S(G)
     {
     }
@@ -78,7 +78,7 @@ class network_oracle
 
         auto g = zeros(x);
         auto f = 0.;
-        for (const auto& e : C)
+        for (auto&& e : C)
         {
             f -= this->_h.eval(e, x);
             g -= this->_h.grad(e, x);

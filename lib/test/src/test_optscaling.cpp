@@ -58,14 +58,13 @@ TEST_CASE("Test Optimal Scaling (two varaibles)", "[test_optscaling]")
 
     const auto [cmin, cmax] =
         std::minmax_element(std::begin(cost), std::end(cost));
-    const auto x0 = Arr {*cmax, *cmin};
+    auto x0 = Arr {*cmax, *cmin};
     auto t1 = *cmax - *cmin;
-    auto E = ell {1.5 * t1, x0};
+    auto E = ell {1.5 * t1, std::move(x0)};
     auto dist = std::vector(G.number_of_nodes(), 0.);
-
     auto P = optscaling_oracle {G, dist, get_cost};
     auto t = std::numeric_limits<double>::max();
-    const auto [x, ell_info] = cutting_plane_dc(P, E, t);
+    const auto [x, ell_info] = cutting_plane_dc(std::move(P), std::move(E), t);
 
     CHECK(x[1] >= x[0]);
     CHECK(ell_info.feasible);

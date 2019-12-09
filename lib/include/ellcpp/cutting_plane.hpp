@@ -142,18 +142,13 @@ class bsearch_adaptor
 
 /*!
  * @brief Find a point in a convex set (defined through a cutting-plane oracle).
- *
- * @tparam Oracle
- * @tparam Space
- * @tparam T
- * @param[in] Omega    perform assessment on x0
- * @param[in] S        search Space containing x*
- * @param[in] max_it   maximum number of iterations
- * @param[in] tol      error tolerance
- * @return x      solution vector
- * @return niter  number of iterations performed
- * @return feasible   solution found or not
- * @return status how is the final cut
+ * 
+ * @tparam Oracle 
+ * @tparam Space 
+ * @param Omega    perform assessment on x0
+ * @param S        search Space containing x*
+ * @param options  Maximum iteration and error tolerance etc.
+ * @return Information of Cutting-plane method
  */
 template <typename Oracle, typename Space>
 auto cutting_plane_feas(
@@ -184,7 +179,6 @@ auto cutting_plane_feas(
         }
     }
     return CInfo(feasible, niter, status);
-    // return std::tuple{S.xc(), niter, feasible, status};
 }
 
 /*!

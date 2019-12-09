@@ -14,11 +14,6 @@ using graph_t = boost::adjacency_list<boost::listS, boost::vecS,
 using Vertex = boost::graph_traits<graph_t>::vertex_descriptor;
 using Edge_it = boost::graph_traits<graph_t>::edge_iterator;
 
-/*!
- * @brief Create a test case1 object
- *
- * @return xn::grAdaptor<graph_t>
- */
 static xn::grAdaptor<graph_t> create_test_case1()
 {
     using Edge = std::pair<int, int>;
@@ -32,19 +27,14 @@ static xn::grAdaptor<graph_t> create_test_case1()
         E
     };
     static Edge edge_array[] = {
-        Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E), Edge(E, A)};
+        Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
     int weights[] = {-5, 1, 1, 1, 1};
     int num_arcs = sizeof(edge_array) / sizeof(Edge);
     static auto g =
         graph_t(edge_array, edge_array + num_arcs, weights, num_nodes);
-    return xn::grAdaptor<graph_t>(g);
+    return xn::grAdaptor<graph_t> {g};
 }
 
-/*!
- * @brief Create a test case2 object
- *
- * @return xn::grAdaptor<graph_t>
- */
 static xn::grAdaptor<graph_t> create_test_case2()
 {
     using Edge = std::pair<int, int>;
@@ -58,84 +48,65 @@ static xn::grAdaptor<graph_t> create_test_case2()
         E
     };
     static Edge edge_array[] = {
-        Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E), Edge(E, A)};
+        Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
     int weights[] = {2, 1, 1, 1, 1};
     int num_arcs = sizeof(edge_array) / sizeof(Edge);
     static auto g =
         graph_t(edge_array, edge_array + num_arcs, weights, num_nodes);
-    return xn::grAdaptor<graph_t>(g);
+    return xn::grAdaptor<graph_t> {g};
 }
 
-/*!
- * @brief Create a test case timing object
- *
- * @return xn::grAdaptor<graph_t>
- */
 static auto create_test_case_timing() -> xn::grAdaptor<graph_t>
 {
     using Edge = std::pair<int, int>;
-    const auto num_nodes = 3;
+    constexpr auto num_nodes = 3;
     enum nodes
     {
         A,
         B,
         C
     };
-    static Edge edge_array[] = {Edge(A, B), Edge(B, A), Edge(B, C), Edge(C, B),
-        Edge(B, C), Edge(C, B), Edge(C, A), Edge(A, C)};
+    static Edge edge_array[] = {Edge {A, B}, Edge {B, A}, Edge {B, C},
+        Edge {C, B}, Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
     int weights[] = {7, 0, 3, 1, 6, 4, 2, 5};
-    int num_arcs = sizeof(edge_array) / sizeof(Edge);
+    constexpr int num_arcs = sizeof(edge_array) / sizeof(Edge);
     static auto g =
         graph_t(edge_array, edge_array + num_arcs, weights, num_nodes);
-    return xn::grAdaptor<graph_t>(g);
+    return xn::grAdaptor<graph_t> {g};
 }
 
-/*!
- * @brief
- *
- * @param G
- * @return true
- * @return false
- */
-auto do_case(xn::grAdaptor<graph_t>& G) -> bool
+auto do_case(const xn::grAdaptor<graph_t>& G) -> bool
 {
     using edge_t = decltype(*(std::begin(G.edges())));
 
-    auto get_weight = [&](const edge_t& e) -> int {
+    const auto get_weight = [&](const edge_t& e) -> int {
         const auto& weightmap = boost::get(boost::edge_weight, G);
         return weightmap[e];
     };
 
     auto dist = std::vector(G.number_of_nodes(), 0);
-    auto N = negCycleFinder(G);
-    auto cycle = N.find_neg_cycle(dist, get_weight);
+    auto N = negCycleFinder {G};
+    const auto cycle = N.find_neg_cycle(dist, get_weight);
     return !cycle.empty();
 }
 
 TEST_CASE("Test Negative Cycle (boost)", "[test_neg_cycle_boost]")
 {
-    auto G = create_test_case1();
-    // boost::property_map<graph_t, boost::edge_weight_t>::type weightmap =
-    // boost::get(boost::edge_weight, G); std::vector<Vertex>
-    // p(boost::num_vertices(G));
-    auto hasNeg = do_case(G);
+    const auto G = create_test_case1();
+    const auto hasNeg = do_case(G);
     CHECK(hasNeg);
-
-    // G = xn::path_graph(5, create_using=xn::DiGraph());
-    // hasNeg = do_case(G);
-    // CHECK(!hasNeg);
 }
 
 TEST_CASE("Test No Negative Cycle (boost)", "[test_neg_cycle_boost]")
 {
-    auto G = create_test_case2();
-    auto hasNeg = do_case(G);
+    const auto G = create_test_case2();
+    const auto hasNeg = do_case(G);
     CHECK(!hasNeg);
 }
 
 TEST_CASE("Test Timing Graph (boost)", "[test_neg_cycle_boost]")
 {
-    auto G = create_test_case_timing();
-    auto hasNeg = do_case(G);
+    const auto G = create_test_case_timing();
+    const auto hasNeg = do_case(G);
     CHECK(!hasNeg);
 }

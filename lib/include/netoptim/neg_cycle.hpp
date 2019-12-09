@@ -54,7 +54,7 @@ class negCycleFinder
      * @return std::vector<edge_t>
      */
     template <typename Container, typename WeightFn>
-    auto find_neg_cycle(Container& dist, const WeightFn& get_weight)
+    auto find_neg_cycle(Container&& dist, WeightFn&& get_weight)
         -> std::vector<edge_t>
     {
         this->_pred.clear();
@@ -82,7 +82,7 @@ class negCycleFinder
     {
         auto visited = py::dict<node_t, node_t> {};
 
-        for (const auto& v : this->_G)
+        for (auto&& v : this->_G)
         {
             if (visited.contains(v))
             {
@@ -125,10 +125,10 @@ class negCycleFinder
      * @return false
      */
     template <typename Container, typename WeightFn>
-    auto __relax(Container& dist, const WeightFn& get_weight) -> bool
+    auto __relax(Container&& dist, WeightFn&& get_weight) -> bool
     {
         auto changed = false;
-        for (auto e : this->_G.edges())
+        for (auto&& e : this->_G.edges())
         {
             const auto [u, v] = this->_G.end_points(e);
             const auto wt = get_weight(e);
@@ -180,8 +180,8 @@ class negCycleFinder
      * @return false
      */
     template <typename Container, typename WeightFn>
-    auto __is_negative(const node_t& handle, Container& dist,
-        const WeightFn& get_weight) -> bool
+    auto __is_negative(const node_t& handle, Container&& dist,
+        WeightFn&& get_weight) -> bool
     {
         auto v = handle;
         // while (true)
@@ -195,7 +195,12 @@ class negCycleFinder
                 return true;
             }
             v = u;
+            // if (v == handle)
+            // {
+            //     break;
+            // }
         } while (v != handle);
+
         return false;
     }
 };

@@ -8,7 +8,7 @@
 /*!
  * @brief Ellipsoid Search Space
  *
- *   ell = {x | (x − xc)' Q^−1 (x − xc) ​≤ κ}
+ *        ell = {x | (x − xc)' Q^−1 (x − xc) ​≤ κ}
  */
 class ell
 {
@@ -37,7 +37,6 @@ class ell
     /*!
      * @brief Construct a new ell object
      *
-     * @tparam T
      * @param val
      * @param x
      */
@@ -53,8 +52,7 @@ class ell
     /*!
      * @brief Construct a new ell object
      *
-     * @tparam T
-     * @param val
+     * @param alpha
      * @param x
      */
     ell(const double& alpha, Arr x)
@@ -108,8 +106,8 @@ class ell
     /*!
      * @brief Calculate new ellipsoid under Parallel Cut
      *
-     *    g' (x − xc​) + β0 ​≤ 0
-     *    g' (x − xc​) + β1 ​≥ 0
+     *        g' (x − xc​) + β0 ​≤ 0
+     *        g' (x − xc​) + β1 ​≥ 0
      *
      * @param b0
      * @param b1
@@ -120,8 +118,8 @@ class ell
     /*!
      * @brief Calculate new ellipsoid under Parallel Cut, one of them is central
      *
-     *    g' (x − xc​) ​≤ 0
-     *    g' (x − xc​) + β1 ​≥ 0
+     *        g' (x − xc​) ​≤ 0
+     *        g' (x − xc​) + β1 ​≥ 0
      *
      * @param b1
      * @param t1
@@ -132,20 +130,18 @@ class ell
     /*!
      * @brief Calculate new ellipsoid under Deep Cut
      *
-     *    g' (x − xc​) + β0 ​≤ 0
+     *        g' (x − xc​) + β0 ​≤ 0
      *
      * @param b0
-     * @return int
      */
     auto __calc_dc(const double& b0) -> int;
 
     /*!
      * @brief Calculate new ellipsoid under Central Cut
      *
-     *    g' (x − xc​) ≤ 0
+     *        g' (x − xc​) ≤ 0
      *
      * @param tau
-     * @return void
      */
     auto __calc_cc(const double& tau) -> void;
 }; // } ell
