@@ -31,7 +31,7 @@ std::tuple<ParallelCut, double> lowpass_oracle::operator()(
     // 2. passband constraints
     auto N = this->_Ap.shape()[0];
     // for (k in chain(range(i_As, N), range(i_As))) {
-    for (size_t i = 0U, k = this->_i_Ap; i < N; ++i, ++k)
+    for (size_t i = 0U, k = this->_i_Ap; i != N; ++i, ++k)
     {
         if (k == N)
         {
@@ -63,7 +63,7 @@ std::tuple<ParallelCut, double> lowpass_oracle::operator()(
     auto fmax = std::numeric_limits<double>::min();
     auto imax = 0U;
     // for (k in chain(range(i_As, N), range(i_As))) {
-    for (size_t i = 0U, k = this->_i_As; i < N; ++i, ++k)
+    for (size_t i = 0U, k = this->_i_As; i != N; ++i, ++k)
     {
         if (k == N)
         {
@@ -97,7 +97,7 @@ std::tuple<ParallelCut, double> lowpass_oracle::operator()(
     // case 4,
     // 1. nonnegative-real constraint
     N = this->_Anr.shape()[0];
-    for (size_t i = 0U, k = this->_i_Anr; i < N; ++i, ++k)
+    for (size_t i = 0U, k = this->_i_Anr; i != N; ++i, ++k)
     {
         if (k == N)
         {

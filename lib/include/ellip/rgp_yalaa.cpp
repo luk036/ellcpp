@@ -54,7 +54,7 @@ monomial<double>::monomial(const monomial<aaf>& mon, const pmap& polarity)
     : _b(eval(mon._b, polarity))
     , _a(mon._a.size())
 {
-    for (size_t i = 0; i < _a.size(); ++i)
+    for (size_t i = 0; i != _a.size(); ++i)
     {
         _a[i] = eval(mon._a[i], polarity);
     }
@@ -67,7 +67,7 @@ posynomial<double>::posynomial(
     const posynomial<aaf>& posyn, const pmap& polarity)
     : _M(posyn._M.size(), monomial<double>(posyn._M[0]._a.size()))
 {
-    for (size_t i = 0; i < _M.size(); ++i)
+    for (size_t i = 0; i != _M.size(); ++i)
     {
         _M[i] = monomial<double>(posyn._M[i], polarity);
     }
@@ -83,7 +83,7 @@ Info4EM<Vec> gp_base<aaf>::operator()(const Vec& x) const
     Vec g(x.size());
     pmap polarity;
 
-    for (size_t i = 1; i < _M.size(); ++i)
+    for (size_t i = 1; i != _M.size(); ++i)
     {
         f = max(_M[i].lse(x), polarity);
         if (f > 0)

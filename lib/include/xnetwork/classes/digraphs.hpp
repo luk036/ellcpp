@@ -369,7 +369,7 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     auto add_edges_from(const C1& edges, const C2& data)
     {
         auto N = edges.size();
-        for (auto i = 0U; i < N; ++i)
+        for (auto i = 0U; i != N; ++i)
         {
             const auto& [u, v] = edges[i];
             this->add_edge(u, v, data[i]);
@@ -484,9 +484,9 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     auto edges() const -> pull_t
     {
         auto func = [&](typename coro_t::push_type& yield) {
-            for (auto [n, nbrs] : this->_nodes_nbrs())
+            for (auto&& [n, nbrs] : this->_nodes_nbrs())
             {
-                for (auto nbr : nbrs)
+                for (auto&& nbr : nbrs)
                 {
                     yield(std::pair {n, nbr});
                 }

@@ -3,7 +3,7 @@
 void ellipsoid::update(const Vec& g)
 {
     Vec gt(_n);
-    for (size_t i = 0; i < _n; ++i)
+    for (size_t i = 0; i != _n; ++i)
     {
         gt[i] = (_Ae[i] * g).sum();
     }
@@ -17,10 +17,10 @@ void ellipsoid::update(const Vec& g)
 
     _x -= gt / ((_n + 1) * tau);
 
-    for (size_t i = 0; i < _n; ++i)
+    for (size_t i = 0; i != _n; ++i)
     {
         const double temp = sigma * gt[i];
-        for (size_t j = i; j < _n; ++j)
+        for (size_t j = i; j != _n; ++j)
         {
             _Ae[i][j] -= temp * gt[j];
             _Ae[i][j] *= delta;
@@ -28,9 +28,9 @@ void ellipsoid::update(const Vec& g)
     }
 
     // Make symmetric
-    for (size_t i = 0; i < _n - 1; ++i)
+    for (size_t i = 0; i != _n - 1; ++i)
     {
-        for (size_t j = i + 1; j < _n; ++j)
+        for (size_t j = i + 1; j != _n; ++j)
         {
             _Ae[j][i] = _Ae[i][j];
         }
@@ -41,7 +41,7 @@ void ellipsoid::update(const Vec& g)
 CUTSTATUS ellipsoid::update(const Vec& g, double beta)
 {
     Vec gt(_n);
-    for (size_t i = 0; i < _n; ++i)
+    for (size_t i = 0; i != _n; ++i)
     {
         gt[i] = (_Ae[i] * g).sum();
     }
@@ -63,10 +63,10 @@ CUTSTATUS ellipsoid::update(const Vec& g, double beta)
 
     _x -= (rho / gamma) * gt;
 
-    for (size_t i = 0; i < _n; ++i)
+    for (size_t i = 0; i != _n; ++i)
     {
         const double temp = sigma * gt[i];
-        for (size_t j = i; j < _n; ++j)
+        for (size_t j = i; j != _n; ++j)
         {
             _Ae[i][j] -= temp * gt[j];
             _Ae[i][j] *= delta;
@@ -74,9 +74,9 @@ CUTSTATUS ellipsoid::update(const Vec& g, double beta)
     }
 
     // Make symmetric
-    for (size_t i = 0; i < _n - 1; ++i)
+    for (size_t i = 0; i != _n - 1; ++i)
     {
-        for (size_t j = i + 1; j < _n; ++j)
+        for (size_t j = i + 1; j != _n; ++j)
         {
             _Ae[j][i] = _Ae[i][j];
         }

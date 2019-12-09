@@ -73,7 +73,7 @@ TEST_CASE(
     const auto num_of_nodes = sizeof(elem) / sizeof(double);
 
     double cost[num_of_nodes];
-    for (size_t i = 0U; i < num_of_nodes; ++i)
+    for (size_t i = 0U; i != num_of_nodes; ++i)
     {
         cost[i] = std::log(std::abs(elem[i]));
     }

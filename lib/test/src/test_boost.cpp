@@ -73,7 +73,7 @@ TEST_CASE("Test Boost", "[test_boost]")
     // using edge_t = typename boost::graph_traits<Graph>::edge_descriptor;
 
     // add the edges to the graph object
-    for (size_t i = 0U; i < num_edges; ++i)
+    for (size_t i = 0U; i != num_edges; ++i)
         G.add_edge(edge_array[i].first, edge_array[i].second);
 
     // typedef graph_traits<Graph>::vertex_descriptor Vertex;
@@ -93,7 +93,7 @@ TEST_CASE("Test Boost", "[test_boost]")
 
     // std::cout << "edges(g) = ";
     // graph_traits<Graph>::edge_iterator ei, ei_end;
-    // for (const auto &e : G.edges())
+    // for (auto&& e : G.edges())
     //     std::cout << "(" << index[boost::source(e, G)] << ","
     //               << index[boost::target(e, G)] << ") ";
     // std::cout << std::endl;

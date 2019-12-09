@@ -633,7 +633,7 @@ class Graph : public object
     auto add_edges_from(const C1& edges, const C2& data)
     {
         auto N = edges.size();
-        for (auto i = 0U; i < N; ++i)
+        for (auto i = 0U; i != N; ++i)
         {
             const auto& [u, v] = edges[i];
             this->add_edge(u, v, data[i]);
@@ -696,7 +696,7 @@ class Graph : public object
         attributes (but does not provide set-like operations).
         Hence, `G.edges[u, v]["color"]` provides the value of the color
         attribute for edge `(u, v)` while
-        `for (auto u, v, c] : G.edges.data("color", default="red") {`
+        `for (auto&& [u, v, c] : G.edges.data("color", default="red") {`
         iterates through all the edges yielding the color attribute
         with default `"red"` if (no color attribute exists.
 

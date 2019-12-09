@@ -8,7 +8,7 @@ Info4EM<Vec> gp_base<double>::operator()(const Vec& x) const
     double f;
     Vec g(x.size());
 
-    for (size_t i = 1; i < _M.size(); ++i)
+    for (size_t i = 1; i != _M.size(); ++i)
     {
         g = _M[i].lse_gradient(x, f);
         if (f > 0)

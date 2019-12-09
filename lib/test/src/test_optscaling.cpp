@@ -45,7 +45,7 @@ TEST_CASE("Test Optimal Scaling (two varaibles)", "[test_optscaling]")
     // @todo: use std::array<> instead
     // double cost[num_of_nodes];
     auto cost = std::array<double, num_of_nodes> {};
-    for (size_t i = 0U; i < num_of_nodes; ++i)
+    for (size_t i = 0U; i != num_of_nodes; ++i)
     {
         cost[i] = std::log(std::abs(elem[i]));
     }

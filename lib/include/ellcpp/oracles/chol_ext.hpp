@@ -72,12 +72,12 @@ class chol_ext
         this->p = {0U, 0U};
         auto& [start, stop] = this->p;
         auto i = 0U;
-        for (; i < this->n; ++i)
+        for (; i != this->n; ++i)
         {
             for (auto j = start; j <= i; ++j)
             {
                 auto d = getA(i, j);
-                for (auto k = start; k < j; ++k)
+                for (auto k = start; k != j; ++k)
                 {
                     d -= this->T(k, i) * this->T(j, k);
                 }
@@ -163,10 +163,10 @@ class chol_ext
         auto res = 0.;
         const auto& v = this->v;
         const auto& [start, stop] = this->p;
-        for (auto i = start; i < stop; ++i)
+        for (auto i = start; i != stop; ++i)
         {
             auto s = 0.;
-            for (auto j = i + 1; j < stop; ++j)
+            for (auto j = i + 1; j != stop; ++j)
             {
                 s += A(i, j) * v(j);
             }
@@ -187,10 +187,10 @@ class chol_ext
         // }
         auto M = zeros({this->n, this->n});
 
-        for (auto i = 0U; i < this->n; ++i)
+        for (auto i = 0U; i != this->n; ++i)
         {
             M(i, i) = std::sqrt(this->T(i, i));
-            for (auto j = i + 1; j < this->n; ++j)
+            for (auto j = i + 1; j != this->n; ++j)
             {
                 M(i, j) = this->T(i, j) * M(i, i);
             }

@@ -42,7 +42,7 @@ auto max_parametric(const Graph& G, T& r_opt, Fn1&& d, Fn2&& zero_cancel,
     auto C_opt = std::vector<edge_t> {}; // should initial outside
 
     auto niter = 0U;
-    for (; niter < max_iter; ++niter)
+    for (; niter != max_iter; ++niter)
     {
         const auto& C_min = S.find_neg_cycle(std::forward<Container>(dist),
                                              std::move(get_weight));

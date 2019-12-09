@@ -54,7 +54,7 @@ class posynomial
     posynomial(const posynomial<Up>& posyn, const Map& polarity)
         : _M(posyn._M.size(), monomial<_Tp>(posyn._M[0]._a.size()))
     {
-        for (size_t i = 0; i < _M.size(); ++i)
+        for (size_t i = 0; i != _M.size(); ++i)
         {
             _M[i] = monomial<_Tp>(posyn._M[i], polarity);
         }
@@ -73,7 +73,7 @@ class posynomial
     /** Add and assign */
     _Self& operator+=(const _Self& P)
     {
-        for (size_t i = 0; i < P._M.size(); ++i)
+        for (size_t i = 0; i != P._M.size(); ++i)
             _M.push_back(P._M[i]);
         return *this;
     }
@@ -81,7 +81,7 @@ class posynomial
     /** Multiply and assign */
     _Self& operator*=(const monomial<_Tp>& m)
     {
-        for (size_t i = 0; i < _M.size(); ++i)
+        for (size_t i = 0; i != _M.size(); ++i)
             _M[i] *= m;
         return *this;
     }
@@ -89,7 +89,7 @@ class posynomial
     /** Divide and assign */
     _Self& operator/=(const monomial<_Tp>& m)
     {
-        for (size_t i = 0; i < _M.size(); ++i)
+        for (size_t i = 0; i != _M.size(); ++i)
             _M[i] /= m;
         return *this;
     }
@@ -97,7 +97,7 @@ class posynomial
     /** Multiply and assign */
     _Self& operator*=(const _Tp& c)
     {
-        for (size_t i = 0; i < _M.size(); ++i)
+        for (size_t i = 0; i != _M.size(); ++i)
             _M[i] *= c;
         return *this;
     }
@@ -105,7 +105,7 @@ class posynomial
     /** Divide and assign */
     _Self& operator/=(const _Tp& c)
     {
-        for (size_t i = 0; i < _M.size(); ++i)
+        for (size_t i = 0; i != _M.size(); ++i)
             _M[i] /= c;
         return *this;
     }
@@ -115,9 +115,9 @@ class posynomial
     {
         _Self res(_M[0]._a.size(), _M.size() * P._M.size());
         size_t k = 0;
-        for (size_t i = 0; i < _M.size(); ++i)
+        for (size_t i = 0; i != _M.size(); ++i)
         {
-            for (size_t j = 0; j < P._M.size(); ++j)
+            for (size_t j = 0; j != P._M.size(); ++j)
             {
                 res._M[k++] = _M[i] * P._M[j];
             }
@@ -135,7 +135,7 @@ class posynomial
         const size_t N = _M.size();
         std::valarray<_Tp> p(_Tp(0.0), N);
 
-        for (size_t i = 0; i < N; ++i)
+        for (size_t i = 0; i != N; ++i)
             p[i] = _M[i].lse(y);
 
         if (N == 1) // monomial
@@ -143,7 +143,7 @@ class posynomial
 
         // f <- log(sum_i(exp(y_i)))
         _Tp sum(0.0);
-        for (size_t i = 0; i < N; ++i)
+        for (size_t i = 0; i != N; ++i)
         {
             sum += exp(p[i]);
         }
@@ -165,7 +165,7 @@ class posynomial
         if (N == 1)
         { // monomial
             const Vec& gt = _M[0].gradient(y);
-            for (size_t i = 0; i < n; ++i)
+            for (size_t i = 0; i != n; ++i)
             {
                 g[i] = gt[i];
             }
@@ -179,7 +179,7 @@ class posynomial
         std::valarray<_Tp> z(N);
 
         _Tp sum(0.0);
-        for (size_t i = 0; i < N; ++i)
+        for (size_t i = 0; i != N; ++i)
         {
             z[i] = exp(_M[i].lse(y));
             sum += z[i];
@@ -187,10 +187,10 @@ class posynomial
 
         z /= sum;
 
-        for (size_t i = 0; i < n; ++i)
+        for (size_t i = 0; i != n; ++i)
         {
             g[i] = 0.;
-            for (size_t l = 0; l < N; ++l)
+            for (size_t l = 0; l != N; ++l)
             {
                 g[i] += _M[l]._a[i] * z[l];
             }
@@ -210,13 +210,13 @@ class posynomial
         const size_t N = _M.size();
         std::valarray<_Tp> p(N);
 
-        for (size_t i = 0; i < N; ++i)
+        for (size_t i = 0; i != N; ++i)
             p[i] = _M[i].lse(y);
 
         if (N == 1)
         { // i.e. monomial
             const Vec& gt = _M[0].gradient(y);
-            for (size_t i = 0; i < n; ++i)
+            for (size_t i = 0; i != n; ++i)
             {
                 g[i] = gt[i];
             }
@@ -225,7 +225,7 @@ class posynomial
 
         // f <- log(sum_i(exp(y_i)))
         _Tp sum(0.0);
-        for (size_t i = 0; i < N; ++i)
+        for (size_t i = 0; i != N; ++i)
         {
             p[i] = exp(p[i]);
             sum += p[i];
@@ -234,10 +234,10 @@ class posynomial
         // g = Aj' * (exp(yj)./sum(exp(yj)));
         p /= sum;
 
-        for (size_t i = 0; i < n; ++i)
+        for (size_t i = 0; i != n; ++i)
         {
             g[i] = 0.0;
-            for (size_t l = 0; l < N; ++l)
+            for (size_t l = 0; l != N; ++l)
             {
                 g[i] += _M[l]._a[i] * p[l];
             }
@@ -256,7 +256,7 @@ class posynomial
         const size_t N = _M.size();
         std::valarray<_Tp> p(N);
 
-        for (size_t i = 0; i < N; ++i)
+        for (size_t i = 0; i != N; ++i)
             p[i] = _M[i].lse(y);
 
         if (N == 1)
@@ -267,7 +267,7 @@ class posynomial
 
         // f <- log(sum_i(exp(y_i)))
         _Tp sum(0.0);
-        for (size_t i = 0; i < N; ++i)
+        for (size_t i = 0; i != N; ++i)
         {
             p[i] = exp(p[i]);
             sum += p[i];
@@ -277,10 +277,10 @@ class posynomial
         p /= sum;
 
         std::valarray<_Tp> g(n);
-        for (size_t i = 0; i < n; ++i)
+        for (size_t i = 0; i != n; ++i)
         {
             g[i] = 0.0;
-            for (size_t l = 0; l < N; ++l)
+            for (size_t l = 0; l != N; ++l)
             {
                 g[i] += _M[l]._a[i] * p[l];
             }
