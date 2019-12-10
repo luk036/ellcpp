@@ -41,7 +41,7 @@ std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
  * @param t the best-so-far optimal value
  * @return std::tuple<Cut, double, Arr, int>
  */
-std::tuple<Cut, double, Arr, int> profit_q_oracle::operator()(
+std::tuple<Cut, Arr, double, int> profit_q_oracle::operator()(
     const Arr& y, double t, int /* unused */) const
 {
     auto x = Arr {xt::round(xt::exp(y))};
@@ -57,5 +57,5 @@ std::tuple<Cut, double, Arr, int> profit_q_oracle::operator()(
     auto [cut, t1] = this->P(yd, t);
     auto& [g, h] = cut;
     h += xt::linalg::dot(g, yd - y)();
-    return {std::move(cut), t1, std::move(yd), 1};
+    return {std::move(cut), std::move(yd), t1, 1};
 }

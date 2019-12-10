@@ -183,5 +183,5 @@ class profit_q_oracle
      * @see cutting_plane_q
      */
     auto operator()(const Arr& y, double t, int /* unused */) const
-        -> std::tuple<Cut, double, Arr, int>;
+        -> std::tuple<Cut, Arr, double, int>;
 };

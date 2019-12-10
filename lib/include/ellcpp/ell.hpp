@@ -17,15 +17,14 @@ class ell
     // using params_t = std::tuple<double, double, double>;
     // using return_t = std::tuple<int, params_t>;
 
-  public:
     bool _use_parallel_cut = true;
     bool _no_defer_trick = false;
 
   private:
-    double _rho = 0.;
-    double _sigma = 0.;
-    double _delta = 0.;
-    double _tsq = 0.;
+    double _rho {};
+    double _sigma {};
+    double _delta {};
+    double _tsq {};
 
     const size_t _n;
     const double _c1;
@@ -65,12 +64,17 @@ class ell
     }
 
 
+  private:
     /*!
      * @brief Construct a new ell object
      *
      * @param E
      */
     ell(const ell& E) = default;
+    ell& operator=(const ell& E) = delete;
+
+  public:
+    ell copy() const { return ell(*this); }
 
     /*!
      * @brief copy the whole array anyway
@@ -122,19 +126,18 @@ class ell
      *        g' (x − xc​) + β1 ​≥ 0
      *
      * @param b1
-     * @param t1
-     * @return void
+     * @param b1sq
      */
-    auto __calc_ll_cc(const double& b1, const double& t1) -> void;
+    auto __calc_ll_cc(const double& b1, const double& b1sq) -> void;
 
     /*!
      * @brief Calculate new ellipsoid under Deep Cut
      *
-     *        g' (x − xc​) + β0 ​≤ 0
+     *        g' (x − xc​) + β ​≤ 0
      *
-     * @param b0
+     * @param beta
      */
-    auto __calc_dc(const double& b0) -> int;
+    auto __calc_dc(const double& beta) -> int;
 
     /*!
      * @brief Calculate new ellipsoid under Central Cut

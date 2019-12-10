@@ -45,6 +45,9 @@ class network_oracle
     {
     }
 
+    network_oracle(const network_oracle& ) = delete;
+    network_oracle& operator=(const network_oracle& ) = delete;
+
     /*!
      * @brief
      *

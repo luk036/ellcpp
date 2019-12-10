@@ -54,32 +54,32 @@ auto bsearch(Oracle&& Omega, Space&& I, const Options& options = Options())
     -> CInfo
 {
     // assume monotone
-    auto& [l, u] = I;
-    const auto u_orig = u;
-    auto niter = 1U;
+    auto& [lower, upper] = I;
+    const auto u_orig = upper;
+    auto niter = 0U;
     auto status = 0U;
-    auto tau = (u - l) / 2;
 
-    for (; niter <= options.max_it; ++niter)
+    for (; niter != options.max_it; ++niter)
     {
-        auto t = l; // l may be `int` or `Fraction`
-        t += tau;
-        if (Omega(t))
-        { // feasible sol'n obtained
-            u = t;
-        }
-        else
-        {
-            l = t;
-        }
-        tau = (u - l) / 2;
+        auto tau = (upper - lower) / 2;
         if (tau < options.tol)
         {
             status = 2;
             break;
         }
+
+        auto t = lower; // l may be `int` or `Fraction`
+        t += tau;
+        if (Omega(t))
+        { // feasible sol'n obtained
+            upper = t;
+        }
+        else
+        {
+            lower = t;
+        }
     }
-    return CInfo(u != u_orig, niter, status);
+    return CInfo(upper != u_orig, niter + 1, status);
 }
 
 /*!
@@ -111,6 +111,9 @@ class bsearch_adaptor
     {
     }
 
+    bsearch_adaptor(const bsearch_adaptor<Oracle, Space>& ) = delete;
+    bsearch_adaptor& operator=(const bsearch_adaptor<Oracle, Space>& ) = delete;
+
     /*!
      * @brief get best x
      *
@@ -127,22 +130,36 @@ class bsearch_adaptor
      * @param t the best-so-far optimal value
      * @return bool
      */
-    auto operator()(double t) -> bool
+    template <typename opt_type>
+    auto operator()(const opt_type& t) -> bool
     {
-        Space S(this->_S);
+        Space S = this->_S.copy();
         this->_P.update(t);
-        if (cutting_plane_feas(this->_P, S, this->_options).feasible)
+        const auto ell_info = cutting_plane_feas(this->_P, S, this->_options);
+        if (ell_info.feasible)
         {
             this->_S.set_xc(S.xc());
-            return true;
         }
-        return false;
+        return ell_info.feasible;
     }
 };
 
 /*!
  * @brief Find a point in a convex set (defined through a cutting-plane oracle).
  * 
+ *     A function f(x) is *convex* if there always exist a g(x)
+ *     such that f(z) >= f(x) + g(x)' * (z - x), forall z, x in dom f.
+ *     Note that dom f does not need to be a convex set in our definition.
+ *     The affine function g' (x - xc) + beta is called a cutting-plane,
+ *     or a ``cut'' for short.
+ *     This algorithm solves the following feasibility problem:
+ *
+ *             find x
+ *             s.t. f(x) <= 0,
+ *
+ *     A *separation oracle* asserts that an evalution point x0 is feasible,
+ *     or provide a cut that separates the feasible region and x0.
+ *    
  * @tparam Oracle 
  * @tparam Space 
  * @param Omega    perform assessment on x0
@@ -155,10 +172,10 @@ auto cutting_plane_feas(
     Oracle&& Omega, Space&& S, const Options& options = Options()) -> CInfo
 {
     auto feasible = false;
-    auto niter = 1U;
+    auto niter = 0U;
     auto status = 0U;
 
-    for (; niter <= options.max_it; ++niter)
+    for (; niter != options.max_it; ++niter)
     {
         auto cut = Omega(S.xc()); // query the oracle at S.xc()
         if (!cut)
@@ -178,7 +195,7 @@ auto cutting_plane_feas(
             break;
         }
     }
-    return CInfo(feasible, niter, status);
+    return CInfo(feasible, niter + 1, status);
 }
 
 /*!
@@ -186,16 +203,12 @@ auto cutting_plane_feas(
  *
  * @tparam Oracle
  * @tparam Space
- * @tparam T
- * @param[in] Omega    perform assessment on x0
- * @param[in] S        search Space containing x*
- * @param[in] t        best-so-far optimal sol'n
- * @param[in] max_it   maximum number of iterations
- * @param[in] tol      error tolerance
- * @return x      solution vector
- * @return niter   number of iterations performed
- * @return feasible   solution found or not
- * @return status how is the final cut
+ * @tparam opt_type
+ * @param Omega    perform assessment on x0
+ * @param S        search Space containing x*
+ * @param t[inout] best-so-far optimal sol'n
+ * @param options  Maximum iteration and error tolerance etc.
+ * @return Information of Cutting-plane method
  */
 template <typename Oracle, typename Space, typename opt_type>
 auto cutting_plane_dc(
@@ -203,10 +216,10 @@ auto cutting_plane_dc(
 {
     const auto t_orig = t;
     auto x_best = S.xc();
-    auto niter = 1U;
+    auto niter = 0U;
     auto status = 0U;
 
-    for (; niter <= options.max_it; ++niter)
+    for (; niter != options.max_it; ++niter)
     {
         const auto [cut, t1] = Omega(S.xc(), t);
         if (t != t1)
@@ -227,9 +240,7 @@ auto cutting_plane_dc(
             break;
         }
     }
-    auto ret = CInfo(t != t_orig, niter, status);
-    // ret.val = std::move(x_best);
-    // ret.value = t;
+    auto ret = CInfo(t != t_orig, niter + 1, status);
     return std::tuple {std::move(x_best), std::move(ret)};
 } // END
 
@@ -251,46 +262,38 @@ auto cutting_plane_dc(
 // #include <xtensor/xarray.hpp>
 
 /*!
- * @brief
+ * @brief Cutting-plane method for solving convex discrete optimization problem
  *
  * @tparam Oracle
  * @tparam Space
- * @tparam T
- * @param Omega
- * @param S
- * @param t the best-so-far optimal value
- * @param options
- * @return auto
+ * @param Omega    perform assessment on x0
+ * @param S        search Space containing x*
+ * @param t[inout] best-so-far optimal sol'n
+ * @param options  Maximum iteration and error tolerance etc.
+ * @return Information of Cutting-plane method
  */
 template <typename Oracle, typename Space, typename opt_type>
 auto cutting_plane_q(
     Oracle&& Omega, Space&& S, opt_type&& t, const Options& options = Options())
 {
+    auto x_best = S.xc();  // copying
     const auto t_orig = t;
-    auto x_best = S.xc();
     auto status = 1U;
-    auto niter = 1U;
+    auto niter = 0U;
 
-    for (; niter <= options.max_it; ++niter)
+    for (; niter != options.max_it; ++niter)
     {
-        const auto [cut, t1, x0, loop] =
+        const auto [cut, x0, t1, loop] =
             Omega(S.xc(), t, (status != 3) ? 0 : 1);
-        // if (status != 3) {
-        //     if (loop == 1) { // discrete sol'n
-        //         h += xt::linalg::dot(g, x0 - S.xc())();
-        //     }
-        // } else { // can't cut in the previous iteration
         if (status == 3)
         {
             if (loop == 0)
             {
                 break; // no more alternative cut
             }
-            // h += xt::linalg::dot(g, x0 - S.xc())();
         }
         if (t != t1)
         { // best t obtained
-            // feasible = true;
             t = t1;
             x_best = x0;
         }
@@ -306,8 +309,6 @@ auto cutting_plane_q(
             break;
         }
     }
-    auto ret = CInfo(t != t_orig, niter, status);
-    // ret.val = std::move(x_best);
-    // ret.value = t;
+    auto ret = CInfo(t != t_orig, niter + 1, status);
     return std::tuple {std::move(x_best), std::move(ret)};
 } // END

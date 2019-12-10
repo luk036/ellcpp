@@ -48,6 +48,8 @@ class optscaling_oracle
         {
         }
 
+        Ratio& operator=(const Ratio& ) = delete;
+
         /*!
          * @brief Evaluate function
          *
@@ -93,6 +95,9 @@ class optscaling_oracle
         : _network(G, u, Ratio {G, get_cost})
     {
     }
+
+    optscaling_oracle(const optscaling_oracle& ) = delete;
+    optscaling_oracle& operator=(const optscaling_oracle& ) = delete;
 
     /*!
      * @brief Make object callable for cutting_plane_dc()

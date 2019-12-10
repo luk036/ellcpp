@@ -24,14 +24,15 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
         return 1; // no sol'n
     }
 
-    [[unlikely]] if (b0 == 0.)
+    if (b0 == 0.)
     {
         this->__calc_ll_cc(b1, b1sq);
         return 0;
     }
 
     const auto b0b1 = b0 * b1;
-    [[unlikely]] if (this->_n * b0b1 < -this->_tsq)
+    const auto& n = this->_n; 
+    [[unlikely]] if (n * b0b1 < -this->_tsq)
     {
         return 3; // no effect
     }
@@ -39,12 +40,12 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
     const auto t0 = this->_tsq - b0 * b0;
     const auto t1 = this->_tsq - b1sq;
     const auto bav = (b0 + b1) / 2;
-    const auto temp = this->_n * bav * (b1 - b0);
+    const auto temp = n * bav * (b1 - b0);
     const auto xi = std::sqrt(t0 * t1 + temp * temp);
-    this->_sigma = (this->_n + (this->_tsq - b0b1 - xi) / (2 * bav * bav)) /
-        (this->_n + 1.);
+    this->_sigma = (n + (this->_tsq - b0b1 - xi) / (2 * bav * bav)) /
+        (n + 1.);
     this->_rho = this->_sigma * bav;
-    this->_delta = this->_c1 * ((t0 + t1) / 2 + xi / this->_n) / this->_tsq;
+    this->_delta = this->_c1 * ((t0 + t1) / 2 + xi / n) / this->_tsq;
     return 0;
 }
 
@@ -57,12 +58,13 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
  */
 void ell::__calc_ll_cc(const double& b1, const double& b1sq)
 {
-    const auto temp = this->_n * b1sq / 2;
+    const auto& n = this->_n;
+    const auto temp = n * b1sq / 2;
     const auto xi = std::sqrt(this->_tsq * (this->_tsq - b1sq) + temp * temp);
-    this->_sigma = (this->_n + 2 * (this->_tsq - xi) / b1sq) / (this->_n + 1.);
+    this->_sigma = (n + 2 * (this->_tsq - xi) / b1sq) / (n + 1);
     this->_rho = this->_sigma * b1 / 2;
     this->_delta =
-        this->_c1 * (this->_tsq - b1sq / 2 + xi / this->_n) / this->_tsq;
+        this->_c1 * (this->_tsq - b1sq / 2 + xi / n) / this->_tsq;
 }
 
 /*!
@@ -114,7 +116,8 @@ void ell::__calc_cc(const double& tau)
 
 /*!
  * @brief Update ellipsoid core function using the cut
- *          g' * (x - xc) + beta <= 0
+ *
+ *        g' * (x - xc) + beta <= 0
  *
  * @tparam T
  * @param g
@@ -125,7 +128,6 @@ template <typename T>
 std::tuple<int, double> ell::update(const std::tuple<Arr, T>& cut)
 {
     const auto& [g, beta] = cut;
-
     const auto Qg = Arr {xt::linalg::dot(_Q, g)};
     const auto omega = xt::linalg::dot(g, Qg)();
     this->_tsq = this->_kappa * omega;

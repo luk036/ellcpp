@@ -43,6 +43,9 @@ class chol_ext
     {
     }
 
+    chol_ext(const chol_ext& ) = delete; 
+    chol_ext& operator=(const chol_ext& ) = delete; 
+
     /*!
      * @brief Perform Cholesky Factorization
      *

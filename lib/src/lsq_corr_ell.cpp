@@ -135,7 +135,7 @@ std::vector<Arr> construct_poly_matrix(const Arr& s, size_t m)
  *
  *        ρ(h) = p1 Ψ1(h) + ··· + pn Ψn(h)
  *
- *        {Fk}i,j = Ψk(‖sj − si‖^2)
+ *        {Fk}i,j = Ψk( ‖sj − si‖^2 )
  */
 class lsq_oracle
 {
