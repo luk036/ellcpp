@@ -69,7 +69,7 @@ static auto create_test_case_timing()
     return xn::grAdaptor<graph_t> {g};
 }
 
-TEST_CASE("Test Cycle Ratio (boost)", "[test_cycle_ratio_boost]")
+TEST_CASE("Test Parametric (boost)", "[test_parametric_boost]")
 {
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;
@@ -97,7 +97,7 @@ TEST_CASE("Test Cycle Ratio (boost)", "[test_cycle_ratio_boost]")
 }
 
 TEST_CASE(
-    "Test Cycle Ratio of Timing Graph (boost)", "[test_cycle_ratio_boost]")
+    "Test Parametric of Timing Graph (boost)", "[test_parametric_boost]")
 {
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;
