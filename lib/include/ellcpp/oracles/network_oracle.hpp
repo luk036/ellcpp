@@ -25,7 +25,7 @@ class network_oracle
 
   private:
     const Graph& _G;
-    Container& _u;
+    Container& _u; // reference???
     Fn _h;
     negCycleFinder<Graph> _S;
 

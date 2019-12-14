@@ -22,21 +22,7 @@ struct CInfo
 {
     bool feasible;
     size_t num_iters;
-    int status;
-
-    /*!
-     * @brief Construct a new CInfo object
-     *
-     * @param feasible
-     * @param num_iters
-     * @param status
-     */
-    CInfo(bool feasible, size_t num_iters, int status)
-        : feasible {feasible}
-        , num_iters {num_iters}
-        , status {status}
-    {
-    }
+    unsigned int status;
 };
 
 /*!
@@ -79,7 +65,7 @@ auto bsearch(Oracle&& Omega, Space&& I, const Options& options = Options())
             lower = t;
         }
     }
-    return CInfo(upper != u_orig, niter + 1, status);
+    return {upper != u_orig, niter + 1, status};
 }
 
 /*!
@@ -172,7 +158,7 @@ auto cutting_plane_feas(
     Oracle&& Omega, Space&& S, const Options& options = Options()) -> CInfo
 {
     auto feasible = false;
-    auto niter = 0U;
+    auto niter = 1U;
     auto status = 0U;
 
     for (; niter != options.max_it; ++niter)
@@ -183,10 +169,10 @@ auto cutting_plane_feas(
             feasible = true;
             break;
         }
-        double tsq;
-        std::tie(status, tsq) = S.update(*cut); // update S
-        if (status != 0)
+        const auto [cutstatus, tsq] = S.update(*cut); // update S
+        if (cutstatus != 0)
         {
+            status = cutstatus;
             break;
         }
         if (tsq < options.tol)
@@ -195,7 +181,7 @@ auto cutting_plane_feas(
             break;
         }
     }
-    return CInfo(feasible, niter + 1, status);
+    return {feasible, niter, status};
 }
 
 /*!
@@ -216,7 +202,7 @@ auto cutting_plane_dc(
 {
     const auto t_orig = t;
     auto x_best = S.xc();
-    auto niter = 0U;
+    auto niter = 1U;
     auto status = 0U;
 
     for (; niter != options.max_it; ++niter)
@@ -228,10 +214,10 @@ auto cutting_plane_dc(
             t = t1;
             x_best = S.xc();
         }
-        double tsq;
-        std::tie(status, tsq) = S.update(cut);
-        if (status == 1)
+        const auto [cutstatus, tsq] = S.update(cut);
+        if (cutstatus != 0) // ???
         {
+            status = cutstatus;
             break;
         }
         if (tsq < options.tol)
@@ -240,7 +226,7 @@ auto cutting_plane_dc(
             break;
         }
     }
-    auto ret = CInfo(t != t_orig, niter + 1, status);
+    auto ret = CInfo{t != t_orig, niter, status};
     return std::tuple {std::move(x_best), std::move(ret)};
 } // END
 
@@ -278,8 +264,8 @@ auto cutting_plane_q(
 {
     auto x_best = S.xc();  // copying
     const auto t_orig = t;
-    auto status = 1U;
-    auto niter = 0U;
+    auto status = 1U; // note!!!
+    auto niter = 1U;
 
     for (; niter != options.max_it; ++niter)
     {
@@ -297,10 +283,10 @@ auto cutting_plane_q(
             t = t1;
             x_best = x0;
         }
-        double tsq;
-        std::tie(status, tsq) = S.update(cut);
-        if (status == 1)
+        const auto [cutstatus, tsq] = S.update(cut);
+        if (cutstatus == 1)
         {
+            status = cutstatus;
             break;
         }
         if (tsq < options.tol)
@@ -309,6 +295,6 @@ auto cutting_plane_q(
             break;
         }
     }
-    auto ret = CInfo(t != t_orig, niter + 1, status);
+    auto ret = CInfo{t != t_orig, niter, status};
     return std::tuple {std::move(x_best), std::move(ret)};
 } // END

@@ -26,16 +26,17 @@ class optscaling_oracle
     using edge_t = typename Graph::edge_t;
     using Cut = std::tuple<Arr, double>;
 
-  public:
     /**
      * @brief Ratio
      *
      */
-    struct Ratio
+    class Ratio
     {
+      private:
         const Graph& _G;
         Fn _get_cost;
 
+      public:
         /*!
          * @brief Construct a new Ratio object
          *
@@ -47,8 +48,6 @@ class optscaling_oracle
             , _get_cost {std::move(get_cost)}
         {
         }
-
-        Ratio& operator=(const Ratio& ) = delete;
 
         /*!
          * @brief Evaluate function
@@ -80,7 +79,6 @@ class optscaling_oracle
         }
     };
 
-  private:
     network_oracle<Graph, Container, Ratio> _network;
 
   public:

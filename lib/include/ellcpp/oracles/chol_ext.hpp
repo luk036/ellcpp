@@ -10,9 +10,9 @@
  *
  *  - LDL^T square-root-free version
  *  - Option allow semidefinite
- *  - A matrix $A in R^{m x m}$ is positive definite iff v' A v > 0
+ *  - A matrix A in R^{m x m} is positive definite iff v' A v > 0
  *      for all v in R^n.
- *  - O($p^2 n$) per iteration, independent of $m$
+ *  - O(p^2) per iteration, independent of N
  */
 template <bool Allow_semidefinite = false> //
 class chol_ext
@@ -23,12 +23,12 @@ class chol_ext
     using Rng = std::pair<size_t, size_t>;
 
   public:
-    Rng p {0, 0}; /**< the rows where the process starts and stops */
-    Vec v;        /**< witness vector */
+    Rng p {0, 0}; //!< the rows where the process starts and stops
+    Vec v;        //!< witness vector
 
   private:
-    const size_t n; /**< dimension */
-    Mat T;    /**< temporary storage */
+    const size_t n; //!< dimension
+    Mat T;    //!< temporary storage
 
   public:
     /*!
@@ -45,6 +45,7 @@ class chol_ext
 
     chol_ext(const chol_ext& ) = delete; 
     chol_ext& operator=(const chol_ext& ) = delete; 
+    chol_ext(chol_ext&& ) = default; 
 
     /*!
      * @brief Perform Cholesky Factorization
@@ -90,7 +91,6 @@ class chol_ext
                     this->T(j, i) = d / this->T(j, j);
                 }
             }
-
             if constexpr (Allow_semidefinite)
             {
                 if (this->T(i, i) < 0.)
@@ -139,7 +139,7 @@ class chol_ext
             throw std::runtime_error {"Implementation Error."};
         }
         const auto& [start, n] = this->p;
-        auto m = n - 1; // assume stop >= 0
+        auto m = n - 1; // assume stop > 0
         this->v(m) = 1.;
 
         for (auto i = m; i > start; --i)
@@ -163,12 +163,12 @@ class chol_ext
      */
     auto sym_quad(const Vec& A) const -> double
     {
-        auto res = 0.;
+        auto res = double{};
         const auto& v = this->v;
         const auto& [start, stop] = this->p;
         for (auto i = start; i != stop; ++i)
         {
-            auto s = 0.;
+            auto s = double{};
             for (auto j = i + 1; j != stop; ++j)
             {
                 s += A(i, j) * v(j);
@@ -185,11 +185,7 @@ class chol_ext
             throw std::runtime_error {"Implementation Error."};
         }
 
-        // if (!this->sqrt_free) {
-        //     return Mat{this->T};
-        // }
         auto M = zeros({this->n, this->n});
-
         for (auto i = 0U; i != this->n; ++i)
         {
             M(i, i) = std::sqrt(this->T(i, i));
@@ -198,7 +194,6 @@ class chol_ext
                 M(i, j) = this->T(i, j) * M(i, i);
             }
         }
-
         return M;
     }
 };

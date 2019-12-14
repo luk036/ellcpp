@@ -21,10 +21,10 @@ class lowpass_oracle
     using ParallelCut = std::tuple<Arr, Arr>;
 
   private:
-    mutable unsigned int _i_Anr {0};
-    mutable unsigned int _i_As {0};
-    mutable unsigned int _i_Ap {0};
-    // mutable unsigned int _count{0};
+    mutable unsigned int _i_Anr {};
+    mutable unsigned int _i_As {};
+    mutable unsigned int _i_Ap {};
+    // mutable unsigned int _count{};
 
     const Arr& _Ap;
     const Arr& _As;

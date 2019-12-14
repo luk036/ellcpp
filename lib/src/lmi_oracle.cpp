@@ -13,7 +13,7 @@ using Cut = std::tuple<Arr, double>;
  */
 std::optional<Cut> lmi_oracle::operator()(const Arr& x)
 {
-    auto n = x.size();
+    const auto n = x.size();
 
     auto getA = [&, this](unsigned i, unsigned j) -> double {
         auto a = this->_F0(i, j);
