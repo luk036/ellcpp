@@ -63,8 +63,8 @@ class my_oracle
             return {*cut, t};
         }
         const auto f0 = xt::linalg::dot(this->c, x)();
-        const auto f1 = f0 - t;
-        if (f1 > 0)
+        // const auto f1 = f0 - t;
+        if (const auto f1 = f0 - t; f1 > 0)
         {
             return {{this->c, f1}, t};
         }

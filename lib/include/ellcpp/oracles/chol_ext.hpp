@@ -78,35 +78,34 @@ class chol_ext
         auto i = 0U;
         for (; i != this->n; ++i)
         {
-            for (auto j = start; j <= i; ++j)
+            auto d = getA(i, start);
+            for (auto j = start; j != i; ++j)
             {
-                auto d = getA(i, j);
-                for (auto k = start; k != j; ++k)
-                {
-                    d -= this->T(k, i) * this->T(j, k);
-                }
                 this->T(i, j) = d;
-                if (i != j)
+                this->T(j, i) = d / this->T(j, j); // note: T(j, i) here!
+                d = getA(i, j+1);
+                for (auto k = start; k != j+1; ++k)
                 {
-                    this->T(j, i) = d / this->T(j, j);
+                    d -= this->T(k, i) * this->T(j+1, k);
                 }
             }
+            this->T(i, i) = d;
             if constexpr (Allow_semidefinite)
             {
-                if (this->T(i, i) < 0.)
+                if (d < 0.)
                 {
                     // this->stop = i + 1;
                     stop = i + 1;
                     break;
                 }
-                if (this->T(i, i) == 0.)
+                if (d == 0.)
                 {
                     start = i + 1;
                 }
             }
             else // strict positive definite
             {
-                if (this->T(i, i) <= 0.)
+                if (d <= 0.)
                 {
                     stop = i + 1;
                     break;

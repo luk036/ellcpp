@@ -1,5 +1,7 @@
 #include <cmath>
 #include <ellcpp/ell1d.hpp>
+#include <ellcpp/half_nonnegative.hpp>
+
 // #include <tuple>
 
 /*!
@@ -34,7 +36,7 @@ ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
     const auto u = g > 0. ? bound : this->_xc + this->_r;
     const auto l = g > 0. ? this->_xc - this->_r : bound;
 
-    this->_r = (u - l) / 2;
+    this->_r = algo::half_nonnegative(u - l);
     this->_xc = l + this->_r;
     return {0, tsq};
 }

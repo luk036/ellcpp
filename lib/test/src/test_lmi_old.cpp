@@ -61,10 +61,10 @@ class my_oracle
             return {*cut, t};
         }
         const auto f0 = dot(this->c, x)();
-        const auto fj1 = f0 - t;
-        if (fj1 > 0.)
+        // const auto fj1 = f0 - t;
+        if (const auto fj = f0 - t; fj > 0.)
         {
-            return {{this->c, fj1}, t};
+            return {{this->c, fj}, t};
         }
         return {{this->c, 0.}, f0};
     }

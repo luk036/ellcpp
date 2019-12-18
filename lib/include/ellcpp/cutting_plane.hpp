@@ -1,8 +1,10 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
+#include <cassert>
 #include <cmath>
 #include <tuple>
+#include "half_nonnegative.hpp"
 
 /*!
  * @brief Options
@@ -41,13 +43,14 @@ auto bsearch(Oracle&& Omega, Space&& I, const Options& options = Options())
 {
     // assume monotone
     auto& [lower, upper] = I;
+    assert(lower <= upper);
     const auto u_orig = upper;
     auto niter = 0U;
     auto status = 0U;
 
     for (; niter != options.max_it; ++niter)
     {
-        auto tau = (upper - lower) / 2;
+        auto tau = algo::half_nonnegative(upper - lower);
         if (tau < options.tol)
         {
             status = 2;
