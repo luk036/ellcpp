@@ -167,7 +167,7 @@ auto cutting_plane_feas(
     for (; niter != options.max_it; ++niter)
     {
         auto cut = Omega(S.xc()); // query the oracle at S.xc()
-        if (!cut)
+        if (not cut)
         { // feasible sol'n obtained
             feasible = true;
             break;

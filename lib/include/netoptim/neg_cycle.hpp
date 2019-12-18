@@ -92,7 +92,7 @@ class negCycleFinder
             while (true)
             {
                 visited[u] = v;
-                if (!this->_pred.contains(u))
+                if (not this->_pred.contains(u))
                 {
                     break;
                 }

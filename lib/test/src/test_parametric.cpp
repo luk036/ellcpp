@@ -69,7 +69,7 @@ TEST_CASE("Test Parametric", "[test_parametric]")
     auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
     auto r = fun::Fraction<int>(5);
     const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
-    CHECK(!c.empty());
+    CHECK(not c.empty());
     CHECK(c.size() == 5);
     CHECK(r == fun::Fraction<int>(9, 5));
 }
@@ -88,7 +88,7 @@ TEST_CASE("Test Parametric of Timing Graph", "[test_parametric]")
     auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
     auto r = fun::Fraction<int>(7);
     const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
-    CHECK(!c.empty());
+    CHECK(not c.empty());
     CHECK(r == fun::Fraction<int>(1, 1));
     CHECK(c.size() == 3);
     // print(r);

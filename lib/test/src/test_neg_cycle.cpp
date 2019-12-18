@@ -97,7 +97,7 @@ bool do_case(const Graph& G)
     auto dist = std::vector(G.number_of_nodes(), 0);
     auto N = negCycleFinder(G);
     const auto cycle = N.find_neg_cycle(dist, get_weight);
-    return !cycle.empty();
+    return not cycle.empty();
 }
 
 /*!
@@ -119,7 +119,7 @@ TEST_CASE("Test No Negative Cycle", "[test_neg_cycle]")
 {
     const auto G = create_test_case2();
     const auto hasNeg = do_case(G);
-    CHECK(!hasNeg);
+    CHECK(not hasNeg);
 }
 
 /*!
@@ -130,5 +130,5 @@ TEST_CASE("Test Timing Graph", "[test_neg_cycle]")
 {
     const auto G = create_test_case_timing();
     const auto hasNeg = do_case(G);
-    CHECK(!hasNeg);
+    CHECK(not hasNeg);
 }

@@ -287,18 +287,18 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
         return AdjacencyView(this->_succ);
     }
 
-    /*! Add an edge between u && v.
+    /*! Add an edge between u and v.
 
-        The nodes u && v will be automatically added if (they are
+        The nodes u and v will be automatically added if (they are
         not already : the graph.
 
-        Edge attributes can be specified with keywords || by directly
+        Edge attributes can be specified with keywords or by directly
         accessing the edge"s attribute dictionary. See examples below.
 
         Parameters
         ----------
         u, v : nodes
-            Nodes can be, for example, strings || numbers.
+            Nodes can be, for example, strings or numbers.
             Nodes must be hashable (and not None) C++ objects.
 
         See Also
@@ -382,7 +382,7 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     */
     auto has_successor(const Node& u, const Node& v) -> bool
     {
-        return this->_node.contains(u) && this->_succ[u].contains(v);
+        return this->_node.contains(u) and this->_succ[u].contains(v);
     }
 
     /*! Returns an iterator over successor nodes of n.
@@ -508,9 +508,9 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
         return this->_succ[n].size();
     }
 
-    /*! Remove all nodes && edges from the graph.
+    /*! Remove all nodes and edges from the graph.
 
-        This also removes the name, && all graph, node, && edge attributes.
+        This also removes the name, and all graph, node, and edge attributes.
 
         Examples
         --------

@@ -60,10 +60,10 @@
 
 // TEST_CASE("Test XNetwork 2", "[test_xnetwork]") {
 //     auto G = create_test_case2();
-//     // CHECK(!hasNeg);
+//     // CHECK(not hasNeg);
 // }
 
 // TEST_CASE("Test Timing Graph", "[test_xnetwork]") {
 //     auto G = create_test_case_timing();
-//     // CHECK(!hasNeg);
+//     // CHECK(not hasNeg);
 // }

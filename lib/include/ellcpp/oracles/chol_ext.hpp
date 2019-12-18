@@ -98,7 +98,7 @@ class chol_ext
                     stop = i + 1;
                     break;
                 }
-                if (d == 0.)
+                [[unlikely]] if (d == 0.)
                 {
                     start = i + 1;
                 }
@@ -179,7 +179,7 @@ class chol_ext
 
     auto sqrt() -> Mat
     {
-        if (!this->is_spd())
+        if (not this->is_spd())
         {
             throw std::runtime_error {"Implementation Error."};
         }
