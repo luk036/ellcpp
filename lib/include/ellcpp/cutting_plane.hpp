@@ -6,6 +6,14 @@
 #include <tuple>
 #include "half_nonnegative.hpp"
 
+enum class CUTStatus
+{
+    success,
+    nosoln,
+    smallenough,
+    noeffect
+};
+
 /*!
  * @brief Options
  *
@@ -24,7 +32,7 @@ struct CInfo
 {
     bool feasible;
     size_t num_iters;
-    unsigned int status;
+    CUTStatus status;
 };
 
 /*!
@@ -46,14 +54,14 @@ auto bsearch(Oracle&& Omega, Space&& I, const Options& options = Options())
     assert(lower <= upper);
     const auto u_orig = upper;
     auto niter = 0U;
-    auto status = 0U;
+    auto status = CUTStatus::success;
 
     for (; niter != options.max_it; ++niter)
     {
         auto tau = algo::half_nonnegative(upper - lower);
         if (tau < options.tol)
         {
-            status = 2;
+            status = CUTStatus::smallenough;
             break;
         }
 
@@ -99,9 +107,6 @@ class bsearch_adaptor
         , _options {options}
     {
     }
-
-    bsearch_adaptor(const bsearch_adaptor<Oracle, Space>& ) = delete;
-    bsearch_adaptor& operator=(const bsearch_adaptor<Oracle, Space>& ) = delete;
 
     /*!
      * @brief get best x
@@ -162,7 +167,7 @@ auto cutting_plane_feas(
 {
     auto feasible = false;
     auto niter = 1U;
-    auto status = 0U;
+    auto status = CUTStatus::success;
 
     for (; niter != options.max_it; ++niter)
     {
@@ -173,14 +178,14 @@ auto cutting_plane_feas(
             break;
         }
         const auto [cutstatus, tsq] = S.update(*cut); // update S
-        if (cutstatus != 0)
+        if (cutstatus != CUTStatus::success)
         {
             status = cutstatus;
             break;
         }
         if (tsq < options.tol)
         { // no more
-            status = 2;
+            status = CUTStatus::smallenough;
             break;
         }
     }
@@ -206,7 +211,7 @@ auto cutting_plane_dc(
     const auto t_orig = t;
     auto x_best = S.xc();
     auto niter = 1U;
-    auto status = 0U;
+    auto status = CUTStatus::success;
 
     for (; niter != options.max_it; ++niter)
     {
@@ -218,14 +223,14 @@ auto cutting_plane_dc(
             x_best = S.xc();
         }
         const auto [cutstatus, tsq] = S.update(cut);
-        if (cutstatus != 0) // ???
+        if (cutstatus != CUTStatus::success) // ???
         {
             status = cutstatus;
             break;
         }
         if (tsq < options.tol)
         { // no more
-            status = 2;
+            status = CUTStatus::smallenough;
             break;
         }
     }
@@ -267,14 +272,14 @@ auto cutting_plane_q(
 {
     auto x_best = S.xc();  // copying
     const auto t_orig = t;
-    auto status = 1U; // note!!!
+    auto status = CUTStatus::nosoln; // note!!!
     auto niter = 1U;
 
     for (; niter != options.max_it; ++niter)
     {
-        const auto [cut, x0, t1, loop] =
-            Omega(S.xc(), t, (status != 3) ? 0 : 1);
-        if (status == 3)
+        auto retry = status == CUTStatus::noeffect? 1 : 0;
+        const auto [cut, x0, t1, loop] = Omega(S.xc(), t, retry);
+        if (status == CUTStatus::noeffect)
         {
             if (loop == 0)
             {
@@ -287,14 +292,14 @@ auto cutting_plane_q(
             x_best = x0;
         }
         const auto [cutstatus, tsq] = S.update(cut);
-        if (cutstatus == 1)
+        if (cutstatus == CUTStatus::nosoln)
         {
             status = cutstatus;
             break;
         }
         if (tsq < options.tol)
         {
-            status = 2;
+            status = CUTStatus::smallenough;
             break;
         }
     }

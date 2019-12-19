@@ -1,4 +1,5 @@
 #include <cmath>
+#include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 
@@ -11,7 +12,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param b1
  * @return int
  */
-int ell::_calc_ll_core(const double& b0, const double& b1)
+CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
 {
     const auto b1sq = b1 * b1;
     if (b1sq > this->_tsq or not this->_use_parallel_cut)
@@ -21,20 +22,20 @@ int ell::_calc_ll_core(const double& b0, const double& b1)
 
     [[unlikely]] if (b1 < b0)
     {
-        return 1; // no sol'n
+        return CUTStatus::nosoln; // no sol'n
     }
 
     if (b0 == 0.)
     {
         this->_calc_ll_cc(b1, b1sq);
-        return 0;
+        return CUTStatus::success;
     }
 
     const auto b0b1 = b0 * b1;
     const auto& n = this->_n; 
     [[unlikely]] if (n * b0b1 < -this->_tsq)
     {
-        return 3; // no effect
+        return CUTStatus::noeffect; // no effect
     }
 
     const auto t0 = this->_tsq - b0 * b0;
@@ -46,7 +47,7 @@ int ell::_calc_ll_core(const double& b0, const double& b1)
         (n + 1.);
     this->_rho = this->_sigma * bav;
     this->_delta = this->_c1 * ((t0 + t1) / 2 + xi / n) / this->_tsq;
-    return 0;
+    return CUTStatus::success;
 }
 
 /*!
@@ -73,31 +74,31 @@ void ell::_calc_ll_cc(const double& b1, const double& b1sq)
  * @param beta
  * @return int
  */
-int ell::_calc_dc(const double& beta)
+CUTStatus ell::_calc_dc(const double& beta)
 {
     const auto tau = std::sqrt(this->_tsq);
 
     if (beta > tau)
     {
-        return 1; // no sol'n
+        return CUTStatus::nosoln; // no sol'n
     }
 
     if (beta == 0.)
     {
         this->_calc_cc(tau);
-        return 0;
+        return CUTStatus::success;
     }
 
     const auto gamma = tau + this->_n * beta;
     [[unlikely]] if (gamma < 0)
     {
-        return 3; // no effect
+        return CUTStatus::noeffect; // no effect
     }
 
     this->_rho = gamma / (this->_n + 1.);
     this->_sigma = 2 * this->_rho / (tau + beta);
     this->_delta = this->_c1 * (this->_tsq - beta * beta) / this->_tsq;
-    return 0;
+    return CUTStatus::success;
 }
 
 /*!
@@ -125,13 +126,13 @@ void ell::_calc_cc(const double& tau)
  * @return std::tuple<int, double>
  */
 template <typename T>
-std::tuple<int, double> ell::update(const std::tuple<Arr, T>& cut)
+std::tuple<CUTStatus, double> ell::update(const std::tuple<Arr, T>& cut)
 {
     const auto& [g, beta] = cut;
     const auto Qg = Arr {xt::linalg::dot(_Q, g)};
     const auto omega = xt::linalg::dot(g, Qg)();
     this->_tsq = this->_kappa * omega;
-    auto status = 0;
+    auto status = CUTStatus::success;
 
     if constexpr (std::is_scalar_v<T>)
     { // C++17
@@ -149,7 +150,7 @@ std::tuple<int, double> ell::update(const std::tuple<Arr, T>& cut)
         }
     }
 
-    if (status != 0)
+    if (status != CUTStatus::success)
     {
         return {status, this->_tsq};
     }
@@ -167,6 +168,6 @@ std::tuple<int, double> ell::update(const std::tuple<Arr, T>& cut)
 }
 
 // Instantiation
-template std::tuple<int, double> ell::update(
+template std::tuple<CUTStatus, double> ell::update(
     const std::tuple<Arr, double>& cut);
-template std::tuple<int, double> ell::update(const std::tuple<Arr, Arr>& cut);
+template std::tuple<CUTStatus, double> ell::update(const std::tuple<Arr, Arr>& cut);

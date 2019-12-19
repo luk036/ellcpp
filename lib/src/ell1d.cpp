@@ -1,4 +1,5 @@
 #include <cmath>
+#include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell1d.hpp>
 #include <ellcpp/half_nonnegative.hpp>
 
@@ -21,15 +22,15 @@ ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
     {
         this->_r /= 2;
         this->_xc += g > 0. ? -this->_r : this->_r;
-        return {0, tsq};
+        return {CUTStatus::success, tsq};
     }
     [[unlikely]] if (beta > tau)
     {
-        return {1, tsq}; // no sol'n
+        return {CUTStatus::nosoln, tsq}; // no sol'n
     }
     [[unlikely]] if (beta < -tau)
     {
-        return {3, tsq}; // no effect
+        return {CUTStatus::noeffect, tsq}; // no effect
     }
 
     const auto bound = this->_xc - beta / g;
@@ -38,5 +39,5 @@ ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
 
     this->_r = algo::half_nonnegative(u - l);
     this->_xc = l + this->_r;
-    return {0, tsq};
+    return {CUTStatus::success, tsq};
 }

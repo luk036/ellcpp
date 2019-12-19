@@ -4,6 +4,9 @@
 #include <cmath>
 #include <tuple>
 
+// forward declaration
+enum class CUTStatus;
+
 /*!
  * @brief Ellipsoid Method for special 1D case
  *
@@ -11,7 +14,7 @@
 class ell1d
 {
   public:
-    using return_t = std::tuple<int, double>;
+    using return_t = std::tuple<CUTStatus, double>;
 
   private:
     double _r;

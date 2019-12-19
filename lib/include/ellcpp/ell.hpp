@@ -5,6 +5,9 @@
 #include <tuple>
 #include <xtensor/xarray.hpp>
 
+// forward declaration
+enum class CUTStatus;
+
 /*!
  * @brief Ellipsoid Search Space
  *
@@ -63,6 +66,7 @@ class ell
     {
     }
 
+    ell(ell&& E) = default;
 
   private:
     /*!
@@ -104,7 +108,7 @@ class ell
      * @return std::tuple<int, double>
      */
     template <typename T>
-    std::tuple<int, double> update(const std::tuple<Arr, T>& cut);
+    std::tuple<CUTStatus, double> update(const std::tuple<Arr, T>& cut);
 
   private:
     /*!
@@ -117,7 +121,7 @@ class ell
      * @param b1
      * @return int
      */
-    auto _calc_ll_core(const double& b0, const double& b1) -> int;
+    auto _calc_ll_core(const double& b0, const double& b1) -> CUTStatus;
 
     /*!
      * @brief Calculate new ellipsoid under Parallel Cut, one of them is central
@@ -137,7 +141,7 @@ class ell
      *
      * @param beta
      */
-    auto _calc_dc(const double& beta) -> int;
+    auto _calc_dc(const double& beta) -> CUTStatus;
 
     /*!
      * @brief Calculate new ellipsoid under Central Cut
