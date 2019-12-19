@@ -75,18 +75,18 @@ class chol_ext
     {
         this->p = {0U, 0U};
         auto& [start, stop] = this->p;
-        auto i = 0U;
-        for (; i != this->n; ++i)
+        for (auto i = 0U; i != this->n; ++i)
         {
-            auto d = getA(i, start);
-            for (auto j = start; j != i; ++j)
+            auto j = start;
+            auto d = getA(i, j);
+            while (j != i)
             {
                 this->T(i, j) = d;
                 this->T(j, i) = d / this->T(j, j); // note: T(j, i) here!
-                d = getA(i, j+1);
-                for (auto k = start; k != j+1; ++k)
+                d = getA(i, ++j);
+                for (auto k = start; k != j; ++k)
                 {
-                    d -= this->T(k, i) * this->T(j+1, k);
+                    d -= this->T(k, i) * this->T(j, k);
                 }
             }
             this->T(i, i) = d;

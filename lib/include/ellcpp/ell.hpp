@@ -117,7 +117,7 @@ class ell
      * @param b1
      * @return int
      */
-    auto __calc_ll_core(const double& b0, const double& b1) -> int;
+    auto _calc_ll_core(const double& b0, const double& b1) -> int;
 
     /*!
      * @brief Calculate new ellipsoid under Parallel Cut, one of them is central
@@ -128,7 +128,7 @@ class ell
      * @param b1
      * @param b1sq
      */
-    auto __calc_ll_cc(const double& b1, const double& b1sq) -> void;
+    auto _calc_ll_cc(const double& b1, const double& b1sq) -> void;
 
     /*!
      * @brief Calculate new ellipsoid under Deep Cut
@@ -137,7 +137,7 @@ class ell
      *
      * @param beta
      */
-    auto __calc_dc(const double& beta) -> int;
+    auto _calc_dc(const double& beta) -> int;
 
     /*!
      * @brief Calculate new ellipsoid under Central Cut
@@ -146,5 +146,5 @@ class ell
      *
      * @param tau
      */
-    auto __calc_cc(const double& tau) -> void;
+    auto _calc_cc(const double& tau) -> void;
 }; // } ell

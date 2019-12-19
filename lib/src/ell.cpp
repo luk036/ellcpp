@@ -11,12 +11,12 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @param b1
  * @return int
  */
-int ell::__calc_ll_core(const double& b0, const double& b1)
+int ell::_calc_ll_core(const double& b0, const double& b1)
 {
     const auto b1sq = b1 * b1;
     if (b1sq > this->_tsq or not this->_use_parallel_cut)
     {
-        return this->__calc_dc(b0);
+        return this->_calc_dc(b0);
     }
 
     [[unlikely]] if (b1 < b0)
@@ -26,7 +26,7 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
 
     if (b0 == 0.)
     {
-        this->__calc_ll_cc(b1, b1sq);
+        this->_calc_ll_cc(b1, b1sq);
         return 0;
     }
 
@@ -56,7 +56,7 @@ int ell::__calc_ll_core(const double& b0, const double& b1)
  * @param b1sq
  * @return void
  */
-void ell::__calc_ll_cc(const double& b1, const double& b1sq)
+void ell::_calc_ll_cc(const double& b1, const double& b1sq)
 {
     const auto& n = this->_n;
     const auto temp = n * b1sq / 2;
@@ -73,7 +73,7 @@ void ell::__calc_ll_cc(const double& b1, const double& b1sq)
  * @param beta
  * @return int
  */
-int ell::__calc_dc(const double& beta)
+int ell::_calc_dc(const double& beta)
 {
     const auto tau = std::sqrt(this->_tsq);
 
@@ -84,7 +84,7 @@ int ell::__calc_dc(const double& beta)
 
     if (beta == 0.)
     {
-        this->__calc_cc(tau);
+        this->_calc_cc(tau);
         return 0;
     }
 
@@ -106,7 +106,7 @@ int ell::__calc_dc(const double& beta)
  * @param tau
  * @return int
  */
-void ell::__calc_cc(const double& tau)
+void ell::_calc_cc(const double& tau)
 {
     const auto np1 = this->_n + 1;
     this->_sigma = 2. / np1;
@@ -135,17 +135,17 @@ std::tuple<int, double> ell::update(const std::tuple<Arr, T>& cut)
 
     if constexpr (std::is_scalar_v<T>)
     { // C++17
-        status = this->__calc_dc(beta);
+        status = this->_calc_dc(beta);
     }
     else
     { // parallel cut
         [[unlikely]] if (beta.shape()[0] < 2)
         {
-            status = this->__calc_dc(beta[0]);
+            status = this->_calc_dc(beta[0]);
         }
         else
         {
-            status = this->__calc_ll_core(beta[0], beta[1]);
+            status = this->_calc_ll_core(beta[0], beta[1]);
         }
     }
 

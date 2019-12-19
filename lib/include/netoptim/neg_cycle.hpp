@@ -60,13 +60,13 @@ class negCycleFinder
         this->_pred.clear();
         this->_edge.clear();
 
-        while (this->__relax(dist, get_weight))
+        while (this->_relax(dist, get_weight))
         {
-            const auto v = this->__find_cycle();
+            const auto v = this->_find_cycle();
             if (v != this->_G.null_vertex())
             {
-                assert(this->__is_negative(v, dist, get_weight));
-                return this->__cycle_list(v);
+                assert(this->_is_negative(v, dist, get_weight));
+                return this->_cycle_list(v);
             }
         }
         return std::vector<edge_t> {}; // ???
@@ -78,7 +78,7 @@ class negCycleFinder
      *
      * @return node_t a start node of the cycle
      */
-    auto __find_cycle() -> node_t
+    auto _find_cycle() -> node_t
     {
         auto visited = py::dict<node_t, node_t> {};
 
@@ -101,7 +101,7 @@ class negCycleFinder
                 {
                     if (visited[u] == v)
                     {
-                        // if (this->__is_negative(u)) {
+                        // if (this->_is_negative(u)) {
                         // should be "yield u";
                         return u;
                         // }
@@ -125,7 +125,7 @@ class negCycleFinder
      * @return false
      */
     template <typename Container, typename WeightFn>
-    auto __relax(Container&& dist, WeightFn&& get_weight) -> bool
+    auto _relax(Container&& dist, WeightFn&& get_weight) -> bool
     {
         auto changed = false;
         for (auto&& e : this->_G.edges())
@@ -151,20 +151,16 @@ class negCycleFinder
      * @param handle
      * @return std::vector<edge_t>
      */
-    auto __cycle_list(const node_t& handle) -> std::vector<edge_t>
+    auto _cycle_list(const node_t& handle) -> std::vector<edge_t>
     {
         auto v = handle;
         auto cycle = std::vector<edge_t> {}; // ???
-        while (true)
+        do
         {
             const auto& u = this->_pred[v];
             cycle.push_back(this->_edge[v]); // ???
             v = u;
-            if (v == handle)
-            {
-                break;
-            }
-        }
+        } while (v != handle);
         return cycle;
     }
 
@@ -180,11 +176,10 @@ class negCycleFinder
      * @return false
      */
     template <typename Container, typename WeightFn>
-    auto __is_negative(const node_t& handle, Container&& dist,
+    auto _is_negative(const node_t& handle, Container&& dist,
         WeightFn&& get_weight) -> bool
     {
         auto v = handle;
-        // while (true)
         do
         {
             const auto u = this->_pred[v];
@@ -195,10 +190,6 @@ class negCycleFinder
                 return true;
             }
             v = u;
-            // if (v == handle)
-            // {
-            //     break;
-            // }
         } while (v != handle);
 
         return false;

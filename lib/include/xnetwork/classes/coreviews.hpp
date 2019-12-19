@@ -16,7 +16,7 @@
 // from collections import Mapping
 // #include <xnetwork.hpp> // as xn
 
-// static const auto __all__ = {
+// static const auto _all__ = {
 //     "AtlasView",
 //     "AdjacencyView",
 //     "MultiAdjacencyView",
@@ -80,12 +80,12 @@ class AtlasView
     //     return std::tuple{n: self[n].copy() for n : this->_atlas};
     // }
 
-    // auto __str__( ) {
+    // auto _str__( ) {
     //     return str(this->_atlas);  // {nbr: self[nbr] for nbr : self});
     // }
 
-    // auto __repr__( ) {
-    //     return "%s(%r)" % (this->__class__.__name__, this->_atlas);
+    // auto _repr__( ) {
+    //     return "%s(%r)" % (this->_class__.__name__, this->_atlas);
     // }
 };
 
@@ -132,7 +132,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //     AtlasView - View into dict-of-dict
 //     AdjacencyView - View into dict-of-dict-of-dict
 //      */
-//     // static const auto __slots__ = ();   // Still uses AtlasView slots
+//     // static const auto _slots__ = ();   // Still uses AtlasView slots
 //     names _atlas static const char *__slots__ = nullptr;   // Still uses
 //     AtlasView slots names _atlas
 
@@ -160,13 +160,13 @@ class AdjacencyView : public AtlasView<Atlas>
 //      */
 //     using _Self = UnionAtlas;
 
-//     static const auto __slots__ = {"_succ", "_pred"};
+//     static const auto _slots__ = {"_succ", "_pred"};
 
-//     auto __getstate__( ) {
+//     auto _getstate__( ) {
 //         return std::tuple{"_succ": this->_succ, "_pred": this->_pred};
 //     }
 
-//     auto __setstate__( state) {
+//     auto _setstate__( state) {
 //         this->_succ = state["_succ"];
 //         this->_pred = state["_pred"];
 //     }
@@ -180,7 +180,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //         return this->_succ.size() + this->_pred.size();
 //     }
 
-//     auto __iter__( ) {
+//     auto _iter__( ) {
 //         return iter(set(this->_succ.keys()) | set(this->_pred.keys()));
 //     }
 
@@ -204,12 +204,12 @@ class AdjacencyView : public AtlasView<Atlas>
 //         return result;
 //     }
 
-//     auto __str__( ) {
+//     auto _str__( ) {
 //         return str({nbr: self[nbr] for nbr : self});
 //     }
 
-//     auto __repr__( ) {
-//         return "%s(%r, %r)" % (this->__class__.__name__, this->_succ,
+//     auto _repr__( ) {
+//         return "%s(%r, %r)" % (this->_class__.__name__, this->_succ,
 //         this->_pred);
 //     }
 // };
@@ -233,13 +233,13 @@ class AdjacencyView : public AtlasView<Atlas>
 //      */
 //     using _Self = UnionAdjacency;
 
-//     static const auto __slots__ = {"_succ", "_pred"};
+//     static const auto _slots__ = {"_succ", "_pred"};
 
-//     auto __getstate__( ) {
+//     auto _getstate__( ) {
 //         return std::tuple{"_succ": this->_succ, "_pred": this->_pred};
 //     }
 
-//     auto __setstate__( state) {
+//     auto _setstate__( state) {
 //         this->_succ = state["_succ"];
 //         this->_pred = state["_pred"];
 //     }
@@ -256,7 +256,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //         same
 //     }
 
-//     auto __iter__( ) {
+//     auto _iter__( ) {
 //         return iter(this->_succ);
 //     }
 
@@ -268,12 +268,12 @@ class AdjacencyView : public AtlasView<Atlas>
 //         return std::tuple{n: self[n].copy() for n : this->_succ};
 //     }
 
-//     auto __str__( ) {
+//     auto _str__( ) {
 //         return str({nbr: self[nbr] for nbr : self});
 //     }
 
-//     auto __repr__( ) {
-//         return "%s(%r, %r)" % (this->__class__.__name__, this->_succ,
+//     auto _repr__( ) {
+//         return "%s(%r, %r)" % (this->_class__.__name__, this->_succ,
 //         this->_pred);
 //     }
 // };
@@ -293,7 +293,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //     UnionAdjacency - View into dict-of-dict-of-dict
 //     UnionMultiAdjacency - View into dict-of-dict-of-dict-of-dict
 //      */
-//     static const auto __slots__ = ()   // Still uses UnionAtlas slots names
+//     static const auto _slots__ = ()   // Still uses UnionAtlas slots names
 //     _succ, _pred;
 
 //     auto operator[]( node) {
@@ -326,7 +326,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //     UnionAtlas - View into dict-of-dict
 //     UnionMultiInner - View into dict-of-dict-of-dict
 //      */
-//     static const auto __slots__ = ();   // Still uses UnionAdjacency slots
+//     static const auto _slots__ = ();   // Still uses UnionAdjacency slots
 //     names _succ, _pred;
 
 //     auto operator[]( node) {
@@ -367,7 +367,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //         return sum(1 for n : *this);
 //     }
 
-//     auto __iter__( ) {
+//     auto _iter__( ) {
 //         if (hasattr(this->NODE_OK, "nodes") {
 //             return (n for n : this->NODE_OK.nodes if (n : this->_atlas);
 //         }
@@ -390,12 +390,12 @@ class AdjacencyView : public AtlasView<Atlas>
 //                 if (this->NODE_OK(u)};
 //     }
 
-//     auto __str__( ) {
+//     auto _str__( ) {
 //         return str({nbr: self[nbr] for nbr : self});
 //     }
 
-//     auto __repr__( ) {
-//         return "%s(%r, %r)" % (this->__class__.__name__, this->_atlas,
+//     auto _repr__( ) {
+//         return "%s(%r, %r)" % (this->_class__.__name__, this->_atlas,
 //                                this->NODE_OK);
 //     }
 
@@ -412,7 +412,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //         return sum(1 for n : *this);
 //     }
 
-//     auto __iter__( ) {
+//     auto _iter__( ) {
 //         if (hasattr(this->NODE_OK, "nodes") {
 //             return (n for n : this->NODE_OK.nodes if (n : this->_atlas);
 //         }
@@ -442,18 +442,18 @@ class AdjacencyView : public AtlasView<Atlas>
 //                 if (this->NODE_OK(u)};
 //     }
 
-//     auto __str__( ) {
+//     auto _str__( ) {
 //         return str({nbr: self[nbr] for nbr : self});
 //     }
 
-//     auto __repr__( ) {
-//         return "%s(%r, %r, %r)" % (this->__class__.__name__, this->_atlas,
+//     auto _repr__( ) {
+//         return "%s(%r, %r, %r)" % (this->_class__.__name__, this->_atlas,
 //                                    this->NODE_OK, this->EDGE_OK);
 //     }
 // };
 
 // class FilterMultiInner(FilterAdjacency) {  // muliedge_seconddict
-//     auto __iter__( ) {
+//     auto _iter__( ) {
 //         if (hasattr(this->NODE_OK, "nodes") {
 //             my_nodes = (n for n : this->NODE_OK.nodes if (n : this->_atlas);
 //         } else {

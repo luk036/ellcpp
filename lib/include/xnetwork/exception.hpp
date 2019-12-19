@@ -16,7 +16,7 @@ Base exceptions and errors for XNetwork.
 namespace xn
 {
 
-// static const auto __all__ = {
+// static const auto _all__ = {
 //     "HasACycle",
 //     "NodeNotFound",
 //     "PowerIterationFailedConvergence",

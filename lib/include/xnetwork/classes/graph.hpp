@@ -229,8 +229,8 @@ class Graph : public object
     // node_dict_factory _node{};  // empty node attribute dict
     adjlist_outer_dict_factory _adj; // empty adjacency dict
 
-    // auto __getstate__() {
-    //     attr = this->__dict__.copy();
+    // auto _getstate__() {
+    //     attr = this->_dict__.copy();
     //     // remove lazy property attributes
     //     if ("nodes" : attr) {
     //         del attr["nodes"];
