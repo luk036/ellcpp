@@ -49,8 +49,6 @@ auto min_cycle_ratio(const Graph& G, T& r0, Fn1&& get_cost, Fn2&& get_time,
         return get_cost(e) - r * get_time(e);
     };
 
-    return max_parametric(G, r0, 
-                          std::move(calc_weight),
-                          std::move(calc_ratio),
-                          std::forward<Container>(dist), max_iter);
+    return max_parametric(G, r0, std::move(calc_weight), std::move(calc_ratio),
+        std::forward<Container>(dist), max_iter);
 }

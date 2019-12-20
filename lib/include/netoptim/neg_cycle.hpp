@@ -176,8 +176,8 @@ class negCycleFinder
      * @return false
      */
     template <typename Container, typename WeightFn>
-    auto _is_negative(const node_t& handle, Container&& dist,
-        WeightFn&& get_weight) -> bool
+    auto _is_negative(
+        const node_t& handle, Container&& dist, WeightFn&& get_weight) -> bool
     {
         auto v = handle;
         do

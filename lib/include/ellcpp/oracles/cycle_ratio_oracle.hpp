@@ -94,9 +94,9 @@ class cycle_ratio_oracle
     {
     }
 
-    cycle_ratio_oracle(const cycle_ratio_oracle& ) = delete;
-    cycle_ratio_oracle& operator=(const cycle_ratio_oracle& ) = delete;
-    cycle_ratio_oracle(cycle_ratio_oracle&& ) = default;
+    cycle_ratio_oracle(const cycle_ratio_oracle&) = delete;
+    cycle_ratio_oracle& operator=(const cycle_ratio_oracle&) = delete;
+    cycle_ratio_oracle(cycle_ratio_oracle&&) = default;
 
     /*!
      * @brief Make object callable for cutting_plane_dc()
@@ -110,7 +110,7 @@ class cycle_ratio_oracle
     auto operator()(const double& x, double t) -> std::tuple<Cut, double>
     {
         auto fj = t - x;
-        if (fj >=  0)
+        if (fj >= 0)
         {
             return {{-1., fj}, t};
         }

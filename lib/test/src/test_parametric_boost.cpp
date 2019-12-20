@@ -96,8 +96,7 @@ TEST_CASE("Test Parametric (boost)", "[test_parametric_boost]")
     // print(dist.items());
 }
 
-TEST_CASE(
-    "Test Parametric of Timing Graph (boost)", "[test_parametric_boost]")
+TEST_CASE("Test Parametric of Timing Graph (boost)", "[test_parametric_boost]")
 {
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;

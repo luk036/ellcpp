@@ -78,7 +78,10 @@ class ell
     ell& operator=(const ell& E) = delete;
 
   public:
-    ell copy() const { return ell(*this); }
+    ell copy() const
+    {
+        return ell(*this);
+    }
 
     /*!
      * @brief copy the whole array anyway

@@ -146,7 +146,7 @@ inline constexpr auto range(T start, T stop)
         } // no bounds checking
         constexpr auto contains(T n) const -> bool
         {
-            return not (n < start) and n < stop;
+            return not(n < start) and n < stop;
         }
     };
 

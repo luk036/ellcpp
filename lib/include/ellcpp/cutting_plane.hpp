@@ -1,10 +1,10 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
+#include "half_nonnegative.hpp"
 #include <cassert>
 #include <cmath>
 #include <tuple>
-#include "half_nonnegative.hpp"
 
 enum class CUTStatus
 {
@@ -140,7 +140,7 @@ class bsearch_adaptor
 
 /*!
  * @brief Find a point in a convex set (defined through a cutting-plane oracle).
- * 
+ *
  *     A function f(x) is *convex* if there always exist a g(x)
  *     such that f(z) >= f(x) + g(x)' * (z - x), forall z, x in dom f.
  *     Note that dom f does not need to be a convex set in our definition.
@@ -153,9 +153,9 @@ class bsearch_adaptor
  *
  *     A *separation oracle* asserts that an evalution point x0 is feasible,
  *     or provide a cut that separates the feasible region and x0.
- *    
- * @tparam Oracle 
- * @tparam Space 
+ *
+ * @tparam Oracle
+ * @tparam Space
  * @param Omega    perform assessment on x0
  * @param S        search Space containing x*
  * @param options  Maximum iteration and error tolerance etc.
@@ -234,7 +234,7 @@ auto cutting_plane_dc(
             break;
         }
     }
-    auto ret = CInfo{t != t_orig, niter, status};
+    auto ret = CInfo {t != t_orig, niter, status};
     return std::tuple {std::move(x_best), std::move(ret)};
 } // END
 
@@ -270,14 +270,14 @@ template <typename Oracle, typename Space, typename opt_type>
 auto cutting_plane_q(
     Oracle&& Omega, Space&& S, opt_type&& t, const Options& options = Options())
 {
-    auto x_best = S.xc();  // copying
+    auto x_best = S.xc(); // copying
     const auto t_orig = t;
     auto status = CUTStatus::nosoln; // note!!!
     auto niter = 1U;
 
     for (; niter != options.max_it; ++niter)
     {
-        auto retry = status == CUTStatus::noeffect? 1 : 0;
+        auto retry = status == CUTStatus::noeffect ? 1 : 0;
         const auto [cut, x0, t1, loop] = Omega(S.xc(), t, retry);
         if (status == CUTStatus::noeffect)
         {
@@ -303,6 +303,6 @@ auto cutting_plane_q(
             break;
         }
     }
-    auto ret = CInfo{t != t_orig, niter, status};
+    auto ret = CInfo {t != t_orig, niter, status};
     return std::tuple {std::move(x_best), std::move(ret)};
 } // END

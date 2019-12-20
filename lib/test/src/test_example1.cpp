@@ -45,7 +45,7 @@ std::tuple<Cut, double> my_oracle(const Arr& z, double t)
     return {{Arr {-1., -1.}, fj}, t};
 }
 
-TEST_CASE("Example 1", "[example1]")
+TEST_CASE("Example 1, test feasible", "[example1]")
 {
     auto E = ell {10., Arr {0., 0.}};
     const auto P = my_oracle;
@@ -53,4 +53,24 @@ TEST_CASE("Example 1", "[example1]")
     const auto [x, ell_info] = cutting_plane_dc(P, E, t);
     CHECK(x[0] >= 0.);
     CHECK(ell_info.feasible);
+}
+
+TEST_CASE("Example 1, test infeasible 1", "[example1]")
+{
+    auto E = ell {10., Arr {100., 100.}}; // wrong initial guess
+                                          // or ellipsoid is too small
+    const auto P = my_oracle;
+    auto t = std::numeric_limits<double>::min();
+    const auto [x, ell_info] = cutting_plane_dc(P, E, t);
+    CHECK(not ell_info.feasible);
+    CHECK(ell_info.status == CUTStatus::nosoln); // no sol'n
+}
+
+TEST_CASE("Example 1, test infeasible 2", "[example1]")
+{
+    auto E = ell {10., Arr {0., 0.}};
+    const auto P = my_oracle;
+    const auto [x, ell_info] =
+        cutting_plane_dc(P, E, 100); // wrong initial guess
+    CHECK(not ell_info.feasible);
 }

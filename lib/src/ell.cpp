@@ -32,7 +32,7 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
     }
 
     const auto b0b1 = b0 * b1;
-    const auto& n = this->_n; 
+    const auto& n = this->_n;
     [[unlikely]] if (n * b0b1 < -this->_tsq)
     {
         return CUTStatus::noeffect; // no effect
@@ -43,8 +43,7 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
     const auto bav = (b0 + b1) / 2;
     const auto temp = n * bav * (b1 - b0);
     const auto xi = std::sqrt(t0 * t1 + temp * temp);
-    this->_sigma = (n + (this->_tsq - b0b1 - xi) / (2 * bav * bav)) /
-        (n + 1.);
+    this->_sigma = (n + (this->_tsq - b0b1 - xi) / (2 * bav * bav)) / (n + 1.);
     this->_rho = this->_sigma * bav;
     this->_delta = this->_c1 * ((t0 + t1) / 2 + xi / n) / this->_tsq;
     return CUTStatus::success;
@@ -64,8 +63,7 @@ void ell::_calc_ll_cc(const double& b1, const double& b1sq)
     const auto xi = std::sqrt(this->_tsq * (this->_tsq - b1sq) + temp * temp);
     this->_sigma = (n + 2 * (this->_tsq - xi) / b1sq) / (n + 1);
     this->_rho = this->_sigma * b1 / 2;
-    this->_delta =
-        this->_c1 * (this->_tsq - b1sq / 2 + xi / n) / this->_tsq;
+    this->_delta = this->_c1 * (this->_tsq - b1sq / 2 + xi / n) / this->_tsq;
 }
 
 /*!
@@ -170,4 +168,5 @@ std::tuple<CUTStatus, double> ell::update(const std::tuple<Arr, T>& cut)
 // Instantiation
 template std::tuple<CUTStatus, double> ell::update(
     const std::tuple<Arr, double>& cut);
-template std::tuple<CUTStatus, double> ell::update(const std::tuple<Arr, Arr>& cut);
+template std::tuple<CUTStatus, double> ell::update(
+    const std::tuple<Arr, Arr>& cut);

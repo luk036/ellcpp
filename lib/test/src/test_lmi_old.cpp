@@ -34,7 +34,8 @@ class my_oracle
      * @param B2
      * @param c
      */
-    my_oracle(gsl::span<const Arr> F1, Arr B1, gsl::span<const Arr> F2, Arr B2, Arr c)
+    my_oracle(
+        gsl::span<const Arr> F1, Arr B1, gsl::span<const Arr> F2, Arr B2, Arr c)
         : lmi1 {F1, std::move(B1)}
         , lmi2 {F2, std::move(B2)}
         , c {std::move(c)}

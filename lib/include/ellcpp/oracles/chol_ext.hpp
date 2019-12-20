@@ -28,7 +28,7 @@ class chol_ext
 
   private:
     const size_t n; //!< dimension
-    Mat T;    //!< temporary storage
+    Mat T;          //!< temporary storage
 
   public:
     /*!
@@ -43,9 +43,9 @@ class chol_ext
     {
     }
 
-    chol_ext(const chol_ext& ) = delete; 
-    chol_ext& operator=(const chol_ext& ) = delete; 
-    chol_ext(chol_ext&& ) = default; 
+    chol_ext(const chol_ext&) = delete;
+    chol_ext& operator=(const chol_ext&) = delete;
+    chol_ext(chol_ext&&) = default;
 
     /*!
      * @brief Perform Cholesky Factorization
@@ -162,12 +162,12 @@ class chol_ext
      */
     auto sym_quad(const Vec& A) const -> double
     {
-        auto res = double{};
+        auto res = double {};
         const auto& v = this->v;
         const auto& [start, stop] = this->p;
         for (auto i = start; i != stop; ++i)
         {
-            auto s = double{};
+            auto s = double {};
             for (auto j = i + 1; j != stop; ++j)
             {
                 s += A(i, j) * v(j);

@@ -4,7 +4,7 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell1d.hpp>
 #include <ellcpp/oracles/cycle_ratio_oracle.hpp> // import cycle_ratio
-#include <utility>                              // for std::pair
+#include <utility>                               // for std::pair
 #include <xnetwork/classes/digraphs.hpp>
 
 /*!
@@ -72,7 +72,7 @@ TEST_CASE("Test Cycle Ratio", "[test_cycle_ratio]")
     auto E = ell1d {-100., 100.};
     auto P = cycle_ratio_oracle {G, dist, get_cost, get_time};
     auto r = std::numeric_limits<double>::min();
-    const auto opts = Options{2000, 1e-12};
+    const auto opts = Options {2000, 1e-12};
     const auto [x, ell_info] = cutting_plane_dc(P, E, r, opts);
     CHECK(ell_info.feasible);
     CHECK(r == Approx(9. / 5.));
@@ -93,7 +93,7 @@ TEST_CASE("Test Cycle Ratio of Timing Graph", "[test_cycle_ratio]")
     auto E = ell1d {-100., 100.};
     auto P = cycle_ratio_oracle {G, dist, get_cost, get_time};
     auto r = std::numeric_limits<double>::min();
-    const auto opts = Options{2000, 1e-12};
+    const auto opts = Options {2000, 1e-12};
     const auto [x, ell_info] = cutting_plane_dc(P, E, r, opts);
     CHECK(ell_info.feasible);
     CHECK(r == Approx(1.));
