@@ -156,8 +156,8 @@ class profit_q_oracle
     using Cut = std::tuple<Arr, double>;
 
   private:
-    profit_oracle P;
-    Arr yd;
+    profit_oracle _P;
+    Arr _yd;
 
   public:
     /*!
@@ -170,7 +170,7 @@ class profit_q_oracle
      * @param v output price
      */
     profit_q_oracle(double p, double A, double k, const Arr& a, const Arr& v)
-        : P(p, A, k, a, v)
+        : _P(p, A, k, a, v)
     {
     }
 

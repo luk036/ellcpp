@@ -55,10 +55,10 @@ std::tuple<Cut, Arr, double, bool> profit_q_oracle::operator()(
         {
             x[1] = 1.;
         }
-        this->yd = xt::log(x);
+        this->_yd = xt::log(x);
     }
-    auto [cut, t1] = this->P(this->yd, t);
+    auto [cut, t1] = this->_P(this->_yd, t);
     auto& [g, h] = cut;
-    h += xt::linalg::dot(g, this->yd - y)();
-    return {std::move(cut), yd, t1, not retry};
+    h += xt::linalg::dot(g, this->_yd - y)();
+    return {std::move(cut), this->_yd, t1, not retry};
 }
