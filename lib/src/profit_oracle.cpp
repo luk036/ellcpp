@@ -41,21 +41,24 @@ std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
  * @param t the best-so-far optimal value
  * @return std::tuple<Cut, double, Arr, int>
  */
-std::tuple<Cut, Arr, double, int> profit_q_oracle::operator()(
-    const Arr& y, double t, int /* unused */) const
+std::tuple<Cut, Arr, double, bool> profit_q_oracle::operator()(
+    const Arr& y, double t, bool retry)
 {
-    auto x = Arr {xt::round(xt::exp(y))};
-    if (x[0] == 0.)
+    if (not retry)
     {
-        x[0] = 1.; // nearest integer than 0
+        auto x = Arr {xt::round(xt::exp(y))};
+        if (x[0] == 0.)
+        {
+            x[0] = 1.; // nearest integer than 0
+        }
+        if (x[1] == 0.)
+        {
+            x[1] = 1.;
+        }
+        this->yd = xt::log(x);
     }
-    if (x[1] == 0.)
-    {
-        x[1] = 1.;
-    }
-    auto yd = Arr {xt::log(x)};
-    auto [cut, t1] = this->P(yd, t);
+    auto [cut, t1] = this->P(this->yd, t);
     auto& [g, h] = cut;
-    h += xt::linalg::dot(g, yd - y)();
-    return {std::move(cut), std::move(yd), t1, 1};
+    h += xt::linalg::dot(g, this->yd - y)();
+    return {std::move(cut), yd, t1, not retry};
 }

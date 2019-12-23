@@ -154,7 +154,7 @@ static void BM_LMI_No_Trick(benchmark::State& state)
     {
         auto P = my_oracle<lmi_oracle>(F1, B1, F2, B2, Arr {1., -1., 1.});
         auto E = ell(10., Arr {0., 0., 0.});
-        E._no_defer_trick = true;
+        E.no_defer_trick = true;
         auto t = std::numeric_limits<double>::max();
         [[maybe_unused]] const auto [_, ell_info] = cutting_plane_dc(P, E, t);
     }

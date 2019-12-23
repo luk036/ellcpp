@@ -15,7 +15,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
 CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
 {
     const auto b1sq = b1 * b1;
-    if (b1sq > this->_tsq or not this->_use_parallel_cut)
+    if (b1sq > this->_tsq or not this->use_parallel_cut)
     {
         return this->_calc_dc(b0);
     }
@@ -157,7 +157,7 @@ std::tuple<CUTStatus, double> ell::update(const std::tuple<Arr, T>& cut)
     this->_Q -= (this->_sigma / omega) * xt::linalg::outer(Qg, Qg);
     this->_kappa *= this->_delta;
 
-    if (this->_no_defer_trick)
+    if (this->no_defer_trick)
     {
         this->_Q *= this->_kappa;
         this->_kappa = 1.;

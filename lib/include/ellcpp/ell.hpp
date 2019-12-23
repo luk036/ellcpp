@@ -20,8 +20,8 @@ class ell
     // using params_t = std::tuple<double, double, double>;
     // using return_t = std::tuple<int, params_t>;
 
-    bool _use_parallel_cut = true;
-    bool _no_defer_trick = false;
+    bool use_parallel_cut = true;
+    bool no_defer_trick = false;
 
   private:
     double _rho {};

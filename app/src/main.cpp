@@ -110,7 +110,7 @@ auto run_lowpass(bool use_parallel_cut)
     auto E       = ell(4., r0);
     auto P       = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
     const auto options = Options{20000, 1e-8};
-    E._use_parallel_cut = use_parallel_cut;
+    E.use_parallel_cut = use_parallel_cut;
     auto t = Spsq;
     const auto [r, ell_info] = cutting_plane_dc(P, E, t, options);
     std::cout << r << '\n';

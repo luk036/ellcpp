@@ -108,7 +108,7 @@ static auto run_lowpass(bool use_parallel_cut)
     auto P = lowpass_oracle(Ap, As, Anr, Lpsq, Upsq);
     const auto options = Options {.max_it = 50000};
 
-    E._use_parallel_cut = use_parallel_cut;
+    E.use_parallel_cut = use_parallel_cut;
     // options.tol = 1e-8;
 
     auto t = Spsq;

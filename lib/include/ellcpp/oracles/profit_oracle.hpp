@@ -157,6 +157,7 @@ class profit_q_oracle
 
   private:
     profit_oracle P;
+    Arr yd;
 
   public:
     /*!
@@ -182,6 +183,6 @@ class profit_q_oracle
      *
      * @see cutting_plane_q
      */
-    auto operator()(const Arr& y, double t, int /* unused */) const
-        -> std::tuple<Cut, Arr, double, int>;
+    auto operator()(const Arr& y, double t, bool retry)
+        -> std::tuple<Cut, Arr, double, bool>;
 };

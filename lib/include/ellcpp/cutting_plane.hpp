@@ -277,21 +277,21 @@ auto cutting_plane_q(
 
     for (; niter != options.max_it; ++niter)
     {
-        auto retry = status == CUTStatus::noeffect ? 1 : 0;
-        const auto [cut, x0, t1, loop] = Omega(S.xc(), t, retry);
-        if (status == CUTStatus::noeffect)
-        {
-            if (loop == 0)
-            {
-                break; // no more alternative cut
-            }
-        }
+        auto retry = (status == CUTStatus::noeffect);
+        const auto [cut, x0, t1, more_alt] = Omega(S.xc(), t, retry);
         if (t != t1)
         { // best t obtained
             t = t1;
             x_best = x0;
         }
         const auto [cutstatus, tsq] = S.update(cut);
+        if (cutstatus == CUTStatus::noeffect)
+        {
+            if (not more_alt)
+            {
+                break; // no more alternative cut
+            }
+        }
         if (cutstatus == CUTStatus::nosoln)
         {
             status = cutstatus;
