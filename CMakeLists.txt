@@ -73,11 +73,34 @@ if (xtensor-blas_FOUND)
     message(STATUS "Found xtensor-blas: ${xtensor-blas_INCLUDE_DIRS}")
     # set(LIBS ${LIBS} ${xtensor-blas_LIBRARIES})
 endif (xtensor-blas_FOUND)
+
 find_package (xtensor REQUIRED)
 if (xtensor_FOUND)
     message(STATUS "Found xtensor: ${xtensor_INCLUDE_DIRS}")
     set(LIBS ${LIBS} ${xtensor_LIBRARIES})
 endif (xtensor_FOUND)
+
+find_package (xtensor-fftw REQUIRED)
+if (xtensor-fftw_FOUND)
+    message(STATUS "Found xtensor-fftw: ${xtensor-fftw_INCLUDE_DIRS}")
+    # set(LIBS ${LIBS} ${xtensor-blas_LIBRARIES})
+endif (xtensor-fftw_FOUND)
+
+# .. fftw
+if(MSVC)
+    # no long double component, since in the Windows conda-forge build it is not available
+    # and the "official" prebuilt long double library can only be used from MinGW
+    find_package(FFTW REQUIRED
+            COMPONENTS FLOAT_LIB DOUBLE_LIB)
+    add_definitions(-DFFTW_NO_LONGDOUBLE)
+else()
+    find_package(FFTW REQUIRED
+            COMPONENTS FLOAT_LIB DOUBLE_LIB LONGDOUBLE_LIB)
+endif(MSVC)
+if (FFTW_FOUND)
+    set(LIBS ${LIBS} ${FFTW_LIBRARIES})
+    include_directories(${FFTW_INCLUDE_DIRS})
+endif (FFTW_FOUND)
 
 set(OpenBLAS_USE_STATIC_LIBS TRUE)
 find_package (OpenBLAS REQUIRED)
