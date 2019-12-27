@@ -1,8 +1,10 @@
 // -*- coding: utf-8 -*-
 #include <array>
 #include <catch2/catch.hpp>
-#include <netoptim/min_cycle_ratio.hpp>
-#include <py2cpp/fractions.hpp> // import Fraction
+#include <ellcpp/cutting_plane.hpp>
+#include <ellcpp/ell1d.hpp>
+#include <ellcpp/oracles/cycle_ratio_oracle.hpp> // import cycle_ratio
+#include <utility>                               // for std::pair
 #include <xnetwork/classes/digraphs.hpp>
 
 /*!
@@ -55,7 +57,7 @@ static auto create_test_case_timing()
     return g;
 }
 
-TEST_CASE("Test Cycle Ratio", "[test_cycle_ratio]")
+TEST_CASE("Test Cycle Ratio 2", "[test_cycle_ratio2]")
 {
     const auto G = create_test_case1();
     const auto cost = std::array {5, 1, 1, 1, 1};
@@ -66,31 +68,35 @@ TEST_CASE("Test Cycle Ratio", "[test_cycle_ratio]")
     };
     const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
 
-    auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
-    auto r = fun::Fraction<int>(5);
-    const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
-    CHECK(not c.empty());
-    CHECK(c.size() == 5);
-    CHECK(r == fun::Fraction<int>(9, 5));
+    auto dist = std::vector(G.number_of_nodes(), 0.);
+    auto E = ell1d {-100., 100.};
+    auto P = cycle_ratio_oracle {G, dist, get_cost, get_time};
+    auto r = std::numeric_limits<double>::min();
+    const auto opts = Options {2000, 1e-12};
+    const auto [x, ell_info] = cutting_plane_dc(P, E, r, opts);
+    CHECK(ell_info.feasible);
+    CHECK(r == Approx(9. / 5.));
 }
 
-TEST_CASE("Test Cycle Ratio of Timing Graph", "[test_cycle_ratio]")
+TEST_CASE("Test Cycle Ratio of Timing Graph 2", "[test_cycle_ratio2]")
 {
     const auto G = create_test_case_timing();
     const auto cost = std::array {7, -1, 3, 0, 2, 4};
 
-    const auto get_cost = [&](const auto& e) {
+    const auto get_cost = [&](const auto& e) -> int {
         auto [u, v] = G.end_points(e);
         return cost[G[u][v]];
     };
-    const auto get_time = [&](const auto& /*e*/) { return 1; };
+    const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
 
-    auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
-    auto r = fun::Fraction<int>(7);
-    const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
-    CHECK(not c.empty());
-    CHECK(r == fun::Fraction<int>(1, 1));
-    CHECK(c.size() == 3);
+    auto dist = std::vector(G.number_of_nodes(), 0.);
+    auto E = ell1d {-100., 100.};
+    auto P = cycle_ratio_oracle {G, dist, get_cost, get_time};
+    auto r = std::numeric_limits<double>::min();
+    const auto opts = Options {2000, 1e-12};
+    const auto [x, ell_info] = cutting_plane_dc(P, E, r, opts);
+    CHECK(ell_info.feasible);
+    CHECK(r == Approx(1.));
     // print(r);
     // print(c);
     // print(dist.items());

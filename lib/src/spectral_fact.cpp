@@ -1,18 +1,18 @@
 #include <cassert>
-#include <xtensor-blas/xlinalg.hpp>
-#include <xtensor-fftw/basic.hpp>   // rfft, irfft
-#include <xtensor-fftw/helper.hpp>  // rfftscale 
-#include <xtensor/xarray.hpp>
-#include <xtensor/xbuilder.hpp>     // xt::arange
-#include <xtensor/xmath.hpp>        // xt::sin, cos
 #include <complex>
+#include <xtensor-blas/xlinalg.hpp>
+#include <xtensor-fftw/basic.hpp>  // rfft, irfft
+#include <xtensor-fftw/helper.hpp> // rfftscale
+#include <xtensor/xarray.hpp>
+#include <xtensor/xbuilder.hpp> // xt::arange
 #include <xtensor/xio.hpp>
+#include <xtensor/xmath.hpp> // xt::sin, cos
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 
 /**
  * @brief Spectral factorization
- * 
+ *
  *    Spectral factorization using Kolmogorov 1939 approach.
  *      (code follows pp. 232-233, Signal Analysis, by A. Papoulis)
  *
@@ -26,7 +26,7 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  *      Output
  *        h: impulse response that gives the desired auto-correlation
  *
- * @return auto 
+ * @return auto
  */
 // auto spectral_fact(const Arr& r)
 // {

@@ -33,6 +33,10 @@ struct CInfo
     bool feasible;
     size_t num_iters;
     CUTStatus status;
+
+    CInfo(const CInfo&) = delete;
+    CInfo operator=(const CInfo&) = delete;
+    CInfo(CInfo&&) noexcept = default;
 };
 
 /*!
@@ -91,7 +95,7 @@ class bsearch_adaptor
   private:
     Oracle& _P;
     Space& _S;
-    Options _options;
+    const Options _options;
 
   public:
     /*!
@@ -99,9 +103,20 @@ class bsearch_adaptor
      *
      * @param P perform assessment on x0
      * @param S search Space containing x*
+     */
+    bsearch_adaptor(Oracle& P, Space& S)
+        : bsearch_adaptor {P, S, Options()}
+    {
+    }
+
+    /*!
+     * @brief Construct a new bsearch adaptor object
+     *
+     * @param P perform assessment on x0
+     * @param S search Space containing x*
      * @param options
      */
-    bsearch_adaptor(Oracle& P, Space& S, const Options& options = Options())
+    bsearch_adaptor(Oracle& P, Space& S, const Options& options)
         : _P {P}
         , _S {S}
         , _options {options}

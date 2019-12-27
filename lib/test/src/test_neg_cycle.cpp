@@ -89,7 +89,7 @@ static auto create_test_case_timing()
 template <typename Graph>
 bool do_case(const Graph& G)
 {
-    const auto get_weight = [&](const auto& e) -> int {
+    const auto get_weight = [&](const auto& e) {
         const auto [u, v] = G.end_points(e);
         return G[u][v];
     };
@@ -106,7 +106,7 @@ bool do_case(const Graph& G)
  */
 TEST_CASE("Test Negative Cycle", "[test_neg_cycle]")
 {
-    auto G = create_test_case1();
+    const auto G = create_test_case1();
     const auto hasNeg = do_case(G);
     CHECK(hasNeg);
 }
