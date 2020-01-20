@@ -102,8 +102,8 @@ TEST_CASE("LMI test", "[lmi_oracle]")
     //           << "\n";
 
     // create color multi threaded logger
-    auto console = spdlog::stdout_color_mt("console");
-    auto err_logger = spdlog::stderr_color_mt("stderr");
+    auto console = spdlog::stdout_logger_mt("console");
+    auto err_logger = spdlog::stderr_logger_mt("stderr");
     spdlog::get("console")->info("loggers can be retrieved from a global "
                                  "registry using the spdlog::get(logger_name)");
 
