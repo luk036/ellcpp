@@ -11,6 +11,11 @@
 
 Ellipsoid Method C++ Code
 
+To run in gitpod.io:
+
+    ./envconfig.sh  # first time when gitpod image is built
+    conda activate /workspace/conda/arcw
+
 To build with Ninja:
 
     mkdir build && cd build
