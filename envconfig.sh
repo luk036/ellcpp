@@ -3,26 +3,31 @@
 echo Initializing...
 
 #Create directories to store persistent data
-mkdir -p /workspace/conda
-mkdir -p /workspace/data
+# mkdir -p /workspace/conda
+# mkdir -p /workspace/data
 
 #Create a new env called arcw
-conda create --prefix /workspace/conda/arcw python=3.6 &&
-echo "conda activate /workspace/conda/arcw" >> ~/.bashrc &&
-export PATH=/workspace/conda/arcw/bin:$PATH &&
+# conda create --prefix /workspace/conda/arcw python=3.6 &&
+# echo "conda activate /workspace/conda/arcw" >> ~/.bashrc &&
+export CONDA_PREFIX=/opt/conda
+export PATH=$CONDA_PREFIX/bin:$PATH &&
 source ~/.bashrc
 export SHELL=/bin/bash
-export CONDA_PREFIX=/workspace/conda/arcw
 
 #Install conda packages for to run jupyterlab
+hash -r
+conda config --set always_yes yes --set changeps1 no
+conda update -q conda
+conda info -a
 conda install -y ninja
+conda install -y -c conda-forge catch2
 conda install -y -c conda-forge xtensor-fftw=0.2.5
 conda install -y -c conda-forge xtensor-blas=0.16.1
 conda install -y -c conda-forge xtensor=0.20.10
 conda install -y -c conda-forge openblas
 conda install -y -c conda-forge lapack
 conda install -y -c conda-forge libboost
-conda install -y -c conda-forge catch2
+conda install -y -c conda-forge cppcheck
 
 # conda install -y -c conda-forge jupyterlab
 # conda install -y -c conda-forge beakerx
