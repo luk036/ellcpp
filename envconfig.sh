@@ -15,19 +15,14 @@ source ~/.bashrc
 export SHELL=/bin/bash
 
 #Install conda packages for to run jupyterlab
-hash -r
-conda config --set always_yes yes --set changeps1 no
-conda update -q conda
-conda info -a
-conda install -y ninja
-conda install -y -c conda-forge catch2
-conda install -y -c conda-forge xtensor-fftw=0.2.5
-conda install -y -c conda-forge xtensor-blas=0.16.1
-conda install -y -c conda-forge xtensor=0.20.10
-conda install -y -c conda-forge openblas
-conda install -y -c conda-forge lapack
-conda install -y -c conda-forge libboost
-conda install -y -c conda-forge cppcheck
+# hash -r
+# conda config --set always_yes yes --set changeps1 no
+# conda update -q conda
+# conda info -a
+# conda install -y ninja
+# conda install -y -c conda-forge catch2
+# conda install -y -c conda-forge libboost
+# conda install -y -c conda-forge cppcheck
 
 # conda install -y -c conda-forge jupyterlab
 # conda install -y -c conda-forge beakerx
