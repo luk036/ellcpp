@@ -8,9 +8,6 @@ RUN apt-get update \
   sudo \
   git \
   less \
-  libfmt-dev \
-  libspdlog-dev \
-  lcov \
   wget
 
 RUN mkdir -p /workspace/data \
@@ -35,16 +32,19 @@ RUN /opt/conda/bin/conda config --set always_yes yes --set changeps1 no \
     && /opt/conda/bin/conda info -a
 
 RUN /opt/conda/bin/conda install -y \
-    ninja
+    ninja \
+    lcov
 
 RUN /opt/conda/bin/conda install -y -c conda-forge \
     catch2 \
+    fmt \
+    lapack \
+    libboost \
+    openblas \
+    spdlog \
     xtensor-fftw=0.2.5 \
     xtensor-blas=0.16.1 \
     xtensor=0.20.10 \
-    openblas \
-    lapack \
-    libboost \
     cppcheck
 
 RUN apt-get clean && rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
