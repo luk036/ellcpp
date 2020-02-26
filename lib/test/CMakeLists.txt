@@ -22,7 +22,7 @@ file (GLOB TEST_SOURCE_FILES "${TEST_SRC_PATH}/*.cpp")
 add_executable (${TEST_APP_NAME} ${TEST_SOURCE_FILES})
 
 #add the library
-target_link_libraries (${TEST_APP_NAME} ${LIB_NAME} ${LIBS} fmt::fmt Threads::Threads)
+target_link_libraries (${TEST_APP_NAME} ${LIB_NAME} ${LIBS} fmt::fmt Threads::Threads -lrt)
 
 # Turn on CMake testing capabilities
 enable_testing()
