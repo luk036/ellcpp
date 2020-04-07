@@ -11,8 +11,8 @@ using Cut = std::tuple<Arr, double>;
 /*!
  * @brief
  *
- * @param z
- * @param t
+ * @param[in] z
+ * @param[in] t
  * @return std::tuple<Cut, double>
  */
 std::tuple<Cut, double> my_oracle(const Arr& z, double t)

@@ -40,11 +40,11 @@ class profit_oracle
     /*!
      * @brief Construct a new profit oracle object
      *
-     * @param p the market price per unit
-     * @param A the scale of production
-     * @param k a given constant that restricts the quantity of x1
-     * @param a the output elasticities
-     * @param v output price
+     * @param[in] p the market price per unit
+     * @param[in] A the scale of production
+     * @param[in] k a given constant that restricts the quantity of x1
+     * @param[in] a the output elasticities
+     * @param[in] v output price
      */
     profit_oracle(double p, double A, double k, const Arr& a, const Arr& v)
         : _log_pA {std::log(p * A)}
@@ -57,8 +57,8 @@ class profit_oracle
     /*!
      * @brief
      *
-     * @param y input quantity (in log scale)
-     * @param t the best-so-far optimal value
+     * @param[in] y input quantity (in log scale)
+     * @param[in] t the best-so-far optimal value
      * @return std::tuple<Cut, double> Cut and the updated best-so-far value
      */
     auto operator()(const Arr& y, double t) const -> std::tuple<Cut, double>;
@@ -94,14 +94,13 @@ class profit_rb_oracle
     /*!
      * @brief Construct a new profit rb oracle object
      *
-     * @param p the market price per unit
-     * @param A the scale of production
-     * @param k a given constant that restricts the quantity of x1
-     * @param a the output elasticities
-     * @param v output price
-     * @param ui paramters for uncertainty
-     * @param e paramters for uncertainty
-     * @param e3 paramters for uncertainty
+     * @param[in] p the market price per unit
+     * @param[in] A the scale of production
+     * @param[in] k a given constant that restricts the quantity of x1
+     * @param[in] a the output elasticities
+     * @param[in] v output price
+     * @param[in] e paramters for uncertainty
+     * @param[in] e3 paramters for uncertainty
      */
     profit_rb_oracle(double p, double A, double k, const Arr& a, const Arr& v,
         const Arr& e, double e3)
@@ -114,8 +113,8 @@ class profit_rb_oracle
     /*!
      * @brief Make object callable for cutting_plane_dc()
      *
-     * @param y input quantity (in log scale)
-     * @param t the best-so-far optimal value
+     * @param[in] y input quantity (in log scale)
+     * @param[in] t the best-so-far optimal value
      * @return Cut and the updated best-so-far value
      *
      * @see cutting_plane_dc
@@ -163,11 +162,11 @@ class profit_q_oracle
     /*!
      * @brief Construct a new profit q oracle object
      *
-     * @param p the market price per unit
-     * @param A the scale of production
-     * @param k a given constant that restricts the quantity of x1
-     * @param a the output elasticities
-     * @param v output price
+     * @param[in] p the market price per unit
+     * @param[in] A the scale of production
+     * @param[in] k a given constant that restricts the quantity of x1
+     * @param[in] a the output elasticities
+     * @param[in] v output price
      */
     profit_q_oracle(double p, double A, double k, const Arr& a, const Arr& v)
         : _P(p, A, k, a, v)
@@ -177,8 +176,8 @@ class profit_q_oracle
     /*!
      * @brief Make object callable for cutting_plane_q()
      *
-     * @param y input quantity (in log scale)
-     * @param t the best-so-far optimal value
+     * @param[in] y input quantity (in log scale)
+     * @param[in] t the best-so-far optimal value
      * @return Cut and the updated best-so-far value
      *
      * @see cutting_plane_q

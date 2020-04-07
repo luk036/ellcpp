@@ -16,8 +16,8 @@ namespace fun
  * @brief Greatest common divider
  *
  * @tparam _Mn
- * @param __m
- * @param __n
+ * @param[in] __m
+ * @param[in] __n
  * @return _Mn
  */
 template <typename _Mn>
@@ -30,8 +30,8 @@ constexpr _Mn gcd(_Mn __m, _Mn __n)
  * @brief Least common multiple
  *
  * @tparam _Mn
- * @param __m
- * @param __n
+ * @param[in] __m
+ * @param[in] __n
  * @return _Mn
  */
 template <typename _Mn>
@@ -51,8 +51,8 @@ struct Fraction
     /*!
      * @brief Construct a new Fraction object
      *
-     * @param numerator
-     * @param denominator
+     * @param[in] numerator
+     * @param[in] denominator
      */
     constexpr Fraction(const Z& numerator, const Z& denominator)
     {
@@ -64,7 +64,7 @@ struct Fraction
     /*!
      * @brief Construct a new Fraction object
      *
-     * @param numerator
+     * @param[in] numerator
      */
     constexpr explicit Fraction(const Z& numerator)
         : _numerator {numerator}
@@ -132,7 +132,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param frac
+     * @param[in] frac
      * @return _Self
      */
     constexpr _Self operator+(const _Self& frac) const
@@ -150,7 +150,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param frac
+     * @param[in] frac
      * @return _Self
      */
     constexpr _Self operator-(const _Self& frac) const
@@ -161,7 +161,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param frac
+     * @param[in] frac
      * @return _Self
      */
     constexpr _Self operator*(const _Self& frac) const
@@ -174,7 +174,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param frac
+     * @param[in] frac
      * @return _Self
      */
     constexpr _Self operator/(_Self frac) const
@@ -186,7 +186,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param i
+     * @param[in] i
      * @return _Self
      */
     constexpr _Self operator+(const Z& i) const
@@ -198,7 +198,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param i
+     * @param[in] i
      * @return _Self
      */
     constexpr _Self operator-(const Z& i) const
@@ -209,7 +209,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param i
+     * @param[in] i
      * @return _Self
      */
     constexpr _Self operator*(const Z& i) const
@@ -221,7 +221,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param i
+     * @param[in] i
      * @return _Self
      */
     constexpr _Self operator/(const Z& i) const
@@ -233,7 +233,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param frac
+     * @param[in] frac
      * @return _Self
      */
     constexpr _Self operator+=(const _Self& frac)
@@ -244,7 +244,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param frac
+     * @param[in] frac
      * @return _Self
      */
     constexpr _Self operator-=(const _Self& frac)
@@ -255,7 +255,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param frac
+     * @param[in] frac
      * @return _Self
      */
     constexpr _Self operator*=(const _Self& frac)
@@ -266,7 +266,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param frac
+     * @param[in] frac
      * @return _Self
      */
     constexpr _Self operator/=(const _Self& frac)
@@ -277,7 +277,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param i
+     * @param[in] i
      * @return _Self
      */
     constexpr _Self operator+=(const Z& i)
@@ -288,7 +288,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param i
+     * @param[in] i
      * @return _Self
      */
     constexpr _Self operator-=(const Z& i)
@@ -299,7 +299,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param i
+     * @param[in] i
      * @return _Self
      */
     constexpr _Self operator*=(const Z& i)
@@ -310,7 +310,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param i
+     * @param[in] i
      * @return _Self
      */
     constexpr _Self operator/=(const Z& i)
@@ -321,7 +321,7 @@ struct Fraction
     /*!
      * @brief Three way comparison
      *
-     * @param frac
+     * @param[in] frac
      * @return auto
      */
     template <typename U>
@@ -337,7 +337,7 @@ struct Fraction
      * @brief
      *
      * @tparam U
-     * @param frac
+     * @param[in] frac
      * @return true
      * @return false
      */
@@ -355,7 +355,7 @@ struct Fraction
      * @brief
      *
      * @tparam U
-     * @param frac
+     * @param[in] frac
      * @return true
      * @return false
      */
@@ -369,7 +369,7 @@ struct Fraction
      * @brief
      *
      * @tparam U
-     * @param frac
+     * @param[in] frac
      * @return true
      * @return false
      */
@@ -387,7 +387,7 @@ struct Fraction
      * @brief
      *
      * @tparam U
-     * @param frac
+     * @param[in] frac
      * @return true
      * @return false
      */
@@ -401,7 +401,7 @@ struct Fraction
      * @brief
      *
      * @tparam U
-     * @param frac
+     * @param[in] frac
      * @return true
      * @return false
      */
@@ -415,7 +415,7 @@ struct Fraction
      * @brief
      *
      * @tparam U
-     * @param frac
+     * @param[in] frac
      * @return true
      * @return false
      */
@@ -428,7 +428,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param c
+     * @param[in] c
      * @return auto
      */
     constexpr auto cmp(const Z& c) const
@@ -439,7 +439,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param c
+     * @param[in] c
      * @return true
      * @return false
      */
@@ -451,7 +451,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param c
+     * @param[in] c
      * @return true
      * @return false
      */
@@ -463,7 +463,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param c
+     * @param[in] c
      * @return true
      * @return false
      */
@@ -475,7 +475,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param c
+     * @param[in] c
      * @return true
      * @return false
      */
@@ -487,7 +487,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param c
+     * @param[in] c
      * @return true
      * @return false
      */
@@ -499,7 +499,7 @@ struct Fraction
     /*!
      * @brief
      *
-     * @param c
+     * @param[in] c
      * @return true
      * @return false
      */
@@ -522,8 +522,8 @@ struct Fraction
 /*!
  * @brief
  *
- * @param c
- * @param frac
+ * @param[in] c
+ * @param[in] frac
  * @return Fraction<Z>
  */
 template <typename Z>
@@ -535,8 +535,8 @@ constexpr Fraction<Z> operator+(const Z& c, const Fraction<Z>& frac)
 /*!
  * @brief
  *
- * @param c
- * @param frac
+ * @param[in] c
+ * @param[in] frac
  * @return Fraction<Z>
  */
 template <typename Z>
@@ -548,8 +548,8 @@ constexpr Fraction<Z> operator-(const Z& c, const Fraction<Z>& frac)
 /*!
  * @brief
  *
- * @param c
- * @param frac
+ * @param[in] c
+ * @param[in] frac
  * @return Fraction<Z>
  */
 template <typename Z>
@@ -561,8 +561,8 @@ constexpr Fraction<Z> operator*(const Z& c, const Fraction<Z>& frac)
 /*!
  * @brief
  *
- * @param c
- * @param frac
+ * @param[in] c
+ * @param[in] frac
  * @return Fraction<Z>
  */
 template <typename Z>
@@ -574,8 +574,8 @@ constexpr Fraction<Z> operator+(int&& c, const Fraction<Z>& frac)
 /*!
  * @brief
  *
- * @param c
- * @param frac
+ * @param[in] c
+ * @param[in] frac
  * @return Fraction<Z>
  */
 template <typename Z>
@@ -587,8 +587,8 @@ constexpr Fraction<Z> operator-(int&& c, const Fraction<Z>& frac)
 /*!
  * @brief
  *
- * @param c
- * @param frac
+ * @param[in] c
+ * @param[in] frac
  * @return Fraction<Z>
  */
 template <typename Z>
@@ -602,8 +602,8 @@ constexpr Fraction<Z> operator*(int&& c, const Fraction<Z>& frac)
  *
  * @tparam _Stream
  * @tparam Z
- * @param os
- * @param frac
+ * @param[in] os
+ * @param[in] frac
  * @return _Stream&
  */
 template <typename _Stream, typename Z>

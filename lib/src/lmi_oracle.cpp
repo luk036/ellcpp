@@ -8,7 +8,7 @@ using Cut = std::tuple<Arr, double>;
 /*!
  * @brief
  *
- * @param x
+ * @param[in] x
  * @return std::optional<Cut>
  */
 std::optional<Cut> lmi_oracle::operator()(const Arr& x)

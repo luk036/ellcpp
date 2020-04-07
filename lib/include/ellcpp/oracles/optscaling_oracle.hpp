@@ -40,8 +40,8 @@ class optscaling_oracle
         /*!
          * @brief Construct a new Ratio object
          *
-         * @param G
-         * @param get_cost
+         * @param[in] G
+         * @param[in] get_cost
          */
         Ratio(const Graph& G, Fn get_cost)
             : _G {G}
@@ -52,8 +52,8 @@ class optscaling_oracle
         /*!
          * @brief Evaluate function
          *
-         * @param e
-         * @param x (π, ψ) in log scale
+         * @param[in] e
+         * @param[in] x (π, ψ) in log scale
          * @return double
          */
         auto eval(const edge_t& e, const Arr& x) const -> double
@@ -67,8 +67,8 @@ class optscaling_oracle
         /*!
          * @brief Gradient function
          *
-         * @param e
-         * @param x (π, ψ) in log scale
+         * @param[in] e
+         * @param[in] x (π, ψ) in log scale
          * @return Arr
          */
         auto grad(const edge_t& e, const Arr& x) const -> Arr
@@ -85,9 +85,9 @@ class optscaling_oracle
     /*!
      * @brief Construct a new optscaling oracle object
      *
-     * @param G
-     * @param u
-     * @param get_cost
+     * @param[in] G
+     * @param[in,out] u
+     * @param[in] get_cost
      */
     optscaling_oracle(const Graph& G, Container& u, Fn get_cost)
         : _network(G, u, Ratio {G, get_cost})
@@ -100,8 +100,8 @@ class optscaling_oracle
     /*!
      * @brief Make object callable for cutting_plane_dc()
      *
-     * @param x (π, ψ) in log scale
-     * @param t the best-so-far optimal value
+     * @param[in] x (π, ψ) in log scale
+     * @param[in] t the best-so-far optimal value
      * @return std::tuple<Cut, double>
      *
      * @see cutting_plane_dc

@@ -39,8 +39,8 @@ class ell
     /*!
      * @brief Construct a new ell object
      *
-     * @param val
-     * @param x
+     * @param[in] val
+     * @param[in] x
      */
     ell(const Arr& val, Arr x)
         : _n {x.size()}
@@ -54,8 +54,8 @@ class ell
     /*!
      * @brief Construct a new ell object
      *
-     * @param alpha
-     * @param x
+     * @param[in] alpha
+     * @param[in] x
      */
     ell(const double& alpha, Arr x)
         : _n {x.size()}
@@ -66,18 +66,28 @@ class ell
     {
     }
 
+    /**
+     * @brief Construct a new ell object
+     * 
+     * @param[in] E (move) 
+     */
     ell(ell&& E) = default;
 
   private:
     /*!
      * @brief Construct a new ell object
      *
-     * @param E
+     * @param[in] E
      */
     ell(const ell& E) = default;
     ell& operator=(const ell& E) = delete;
 
   public:
+    /**
+     * @brief explicitly copy
+     * 
+     * @return ell 
+     */
     ell copy() const
     {
         return ell(*this);
@@ -86,7 +96,7 @@ class ell
     /*!
      * @brief copy the whole array anyway
      *
-     * @return const Arr&
+     * @return Arr
      */
     auto xc() const -> Arr
     {
@@ -96,7 +106,7 @@ class ell
     /*!
      * @brief Set the xc object
      *
-     * @param xc
+     * @param[in] xc
      */
     void set_xc(const Arr& xc)
     {
@@ -107,7 +117,7 @@ class ell
      * @brief Update ellipsoid core function using the cut(s)
      *
      * @tparam T
-     * @param cut cutting-plane
+     * @param[in] cut cutting-plane
      * @return std::tuple<int, double>
      */
     template <typename T>
@@ -120,8 +130,8 @@ class ell
      *        g' (x − xc​) + β0 ​≤ 0
      *        g' (x − xc​) + β1 ​≥ 0
      *
-     * @param b0
-     * @param b1
+     * @param[in] b0
+     * @param[in] b1
      * @return int
      */
     auto _calc_ll_core(const double& b0, const double& b1) -> CUTStatus;
@@ -132,8 +142,8 @@ class ell
      *        g' (x − xc​) ​≤ 0
      *        g' (x − xc​) + β1 ​≥ 0
      *
-     * @param b1
-     * @param b1sq
+     * @param[in] b1
+     * @param[in] b1sq
      */
     auto _calc_ll_cc(const double& b1, const double& b1sq) -> void;
 
@@ -142,7 +152,7 @@ class ell
      *
      *        g' (x − xc​) + β ​≤ 0
      *
-     * @param beta
+     * @param[in] beta
      */
     auto _calc_dc(const double& beta) -> CUTStatus;
 
@@ -151,7 +161,7 @@ class ell
      *
      *        g' (x − xc​) ≤ 0
      *
-     * @param tau
+     * @param[in] tau
      */
     auto _calc_cc(const double& tau) -> void;
 }; // } ell

@@ -28,11 +28,11 @@ class my_oracle
     /*!
      * @brief Construct a new my oracle object
      *
-     * @param F1
-     * @param B1
-     * @param F2
-     * @param B2
-     * @param c
+     * @param[in] F1
+     * @param[in] B1
+     * @param[in] F2
+     * @param[in] B2
+     * @param[in] c
      */
     my_oracle(gsl::span<const Arr> F1, const Arr& B1, gsl::span<const Arr> F2,
         const Arr& B2, Arr c)
@@ -45,8 +45,8 @@ class my_oracle
     /*!
      * @brief
      *
-     * @param x
-     * @param t
+     * @param[in] x
+     * @param[in] t
      * @return std::tuple<Cut, double>
      */
     std::tuple<Cut, double> operator()(const Arr& x, double t)
@@ -72,7 +72,7 @@ class my_oracle
 /*!
  * @brief
  *
- * @param state
+ * @param[in,out] state
  */
 static void BM_LMI_Lazy(benchmark::State& state)
 {
@@ -105,7 +105,7 @@ BENCHMARK(BM_LMI_Lazy);
 /*!
  * @brief Define another benchmark
  *
- * @param state
+ * @param[in,out] state
  */
 static void BM_LMI_old(benchmark::State& state)
 {
@@ -134,7 +134,7 @@ BENCHMARK(BM_LMI_old);
 /*!
  * @brief
  *
- * @param state
+ * @param[in,out] state
  */
 static void BM_LMI_No_Trick(benchmark::State& state)
 {

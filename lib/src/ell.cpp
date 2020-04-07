@@ -8,8 +8,8 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
 /*!
  * @brief
  *
- * @param b0
- * @param b1
+ * @param[in] b0
+ * @param[in] b1
  * @return int
  */
 CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
@@ -52,8 +52,8 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
 /*!
  * @brief
  *
- * @param b1
- * @param b1sq
+ * @param[in] b1
+ * @param[in] b1sq
  * @return void
  */
 void ell::_calc_ll_cc(const double& b1, const double& b1sq)
@@ -69,7 +69,7 @@ void ell::_calc_ll_cc(const double& b1, const double& b1sq)
 /*!
  * @brief Deep Cut
  *
- * @param beta
+ * @param[in] beta
  * @return int
  */
 CUTStatus ell::_calc_dc(const double& beta)
@@ -102,7 +102,7 @@ CUTStatus ell::_calc_dc(const double& beta)
 /*!
  * @brief Central Cut
  *
- * @param tau
+ * @param[in] tau
  * @return int
  */
 void ell::_calc_cc(const double& tau)
@@ -119,8 +119,7 @@ void ell::_calc_cc(const double& tau)
  *        g' * (x - xc) + beta <= 0
  *
  * @tparam T
- * @param g
- * @param beta
+ * @param[in] cut
  * @return std::tuple<int, double>
  */
 template <typename T>

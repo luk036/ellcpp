@@ -82,7 +82,7 @@ static auto create_test_case_timing()
  * @brief
  *
  * @tparam Graph
- * @param G
+ * @param[in] G
  * @return true
  * @return false
  */

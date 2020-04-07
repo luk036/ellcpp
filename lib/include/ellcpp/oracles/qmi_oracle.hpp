@@ -41,8 +41,8 @@ class qmi_oracle
     /*!
      * @brief Construct a new qmi oracle object
      *
-     * @param F
-     * @param F0
+     * @param[in] F
+     * @param[in] F0
      */
     qmi_oracle(gsl::span<const Arr> F, Arr F0)
         : _n {F0.shape()[0]}
@@ -57,7 +57,7 @@ class qmi_oracle
     /*!
      * @brief Update t
      *
-     * @param t the best-so-far optimal value
+     * @param[in] t the best-so-far optimal value
      */
     auto update(double t) -> void
     {
@@ -67,7 +67,7 @@ class qmi_oracle
     /*!
      * @brief
      *
-     * @param x
+     * @param[in] x
      * @return std::optional<Cut>
      */
     auto operator()(const Arr& x) -> std::optional<Cut>;

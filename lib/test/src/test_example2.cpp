@@ -10,7 +10,7 @@ using Cut = std::tuple<Arr, double>;
 /*!
  * @brief
  *
- * @param z
+ * @param[in] z
  * @return std::optional<Cut>
  */
 auto my_oracle2(const Arr& z) -> std::optional<Cut>

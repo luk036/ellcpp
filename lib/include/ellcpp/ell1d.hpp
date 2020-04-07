@@ -24,8 +24,8 @@ class ell1d
     /*!
      * @brief Construct a new ell1d object
      *
-     * @param l
-     * @param u
+     * @param[in] l
+     * @param[in] u
      */
     ell1d(const double& l, const double& u) //
         : _r {(u - l) / 2}
@@ -36,7 +36,7 @@ class ell1d
     /*!
      * @brief Construct a new ell1d object
      *
-     * @param E
+     * @param[in] E
      */
     ell1d(const ell1d& E) = default;
 
@@ -53,7 +53,7 @@ class ell1d
     /*!
      * @brief Set the xc object
      *
-     * @param xc
+     * @param[in] xc
      */
     void set_xc(const double& xc)
     {
@@ -63,8 +63,7 @@ class ell1d
     /*!
      * @brief
      *
-     * @param g
-     * @param beta
+     * @param[in] cut
      * @return return_t
      */
     return_t update(const std::tuple<double, double>& cut);

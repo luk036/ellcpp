@@ -36,7 +36,7 @@ class negCycleFinder
     /*!
      * @brief Construct a new neg Cycle Finder object
      *
-     * @param G
+     * @param[in] G
      */
     explicit negCycleFinder(const Graph& G)
         : _G {G}
@@ -49,8 +49,8 @@ class negCycleFinder
      *
      * @tparam Container
      * @tparam WeightFn
-     * @param[inout] dist
-     * @param get_weight
+     * @param[in,out] dist
+     * @param[in] get_weight
      * @return std::vector<edge_t>
      */
     template <typename Container, typename WeightFn>
@@ -119,8 +119,8 @@ class negCycleFinder
      *
      * @tparam Container
      * @tparam WeightFn
-     * @param dist
-     * @param get_weight
+     * @param[in,out] dist
+     * @param[in] get_weight
      * @return true
      * @return false
      */
@@ -148,7 +148,7 @@ class negCycleFinder
     /*!
      * @brief generate a cycle list
      *
-     * @param handle
+     * @param[in] handle
      * @return std::vector<edge_t>
      */
     auto _cycle_list(const node_t& handle) -> std::vector<edge_t>
@@ -169,9 +169,9 @@ class negCycleFinder
      *
      * @tparam Container
      * @tparam WeightFn
-     * @param handle
-     * @param dist
-     * @param get_weight
+     * @param[in] handle
+     * @param[in,out] dist
+     * @param[in] get_weight
      * @return true
      * @return false
      */

@@ -34,7 +34,7 @@ class chol_ext
     /*!
      * @brief Construct a new chol ext object
      *
-     * @param N dimension
+     * @param[in] N dimension
      */
     explicit chol_ext(size_t N)
         : v {zeros({N})}
@@ -50,7 +50,7 @@ class chol_ext
     /*!
      * @brief Perform Cholesky Factorization
      *
-     * @param A Symmetric Matrix
+     * @param[in] A Symmetric Matrix
      *
      * If $A$ is positive definite, then $p$ is zero.
      * If it is not, then $p$ is a positive integer,
@@ -66,7 +66,7 @@ class chol_ext
      * @brief Perform Cholesky Factorization (Lazy evaluation)
      *
      * @tparam Fn
-     * @param getA function to access the elements of A
+     * @param[in] getA function to access the elements of A
      *
      * See also: factorize()
      */
@@ -156,8 +156,7 @@ class chol_ext
     /*!
      * @brief Calculate v'*{A}(p,p)*v
      *
-     * @param v
-     * @param A
+     * @param[in] A
      * @return double
      */
     auto sym_quad(const Vec& A) const -> double

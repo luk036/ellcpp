@@ -41,9 +41,9 @@ class cycle_ratio_oracle
         /*!
          * @brief Construct a new Ratio object
          *
-         * @param G
-         * @param get_cost
-         * @param get_time
+         * @param[in] G
+         * @param[in] get_cost
+         * @param[in] get_time
          */
         Ratio(const Graph& G, Fn1 get_cost, Fn2 get_time)
             : _G {G}
@@ -55,8 +55,8 @@ class cycle_ratio_oracle
         /*!
          * @brief Evaluate function
          *
-         * @param e
-         * @param x (π, ψ) in log scale
+         * @param[in] e
+         * @param[in] x (π, ψ) in log scale
          * @return double
          */
         auto eval(const edge_t& e, const double& x) const -> double
@@ -69,8 +69,8 @@ class cycle_ratio_oracle
         /*!
          * @brief Gradient function
          *
-         * @param e
-         * @param x (π, ψ) in log scale
+         * @param[in] e
+         * @param[in] x (π, ψ) in log scale
          * @return double
          */
         auto grad(const edge_t& e, const double& x) const -> double
@@ -85,9 +85,9 @@ class cycle_ratio_oracle
     /*!
      * @brief Construct a new cycle_ratio oracle object
      *
-     * @param G
-     * @param u
-     * @param get_cost
+     * @param[in] G
+     * @param[in,out] u
+     * @param[in] get_cost
      */
     cycle_ratio_oracle(const Graph& G, Container& u, Fn1 get_cost, Fn2 get_time)
         : _network(G, u, Ratio {G, get_cost, get_time})
@@ -101,8 +101,8 @@ class cycle_ratio_oracle
     /*!
      * @brief Make object callable for cutting_plane_dc()
      *
-     * @param x
-     * @param t the best-so-far optimal value
+     * @param[in] x
+     * @param[in] t the best-so-far optimal value
      * @return std::tuple<Cut, double>
      *
      * @see cutting_plane_dc

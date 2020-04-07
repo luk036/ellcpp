@@ -11,7 +11,7 @@ using Cut = std::tuple<Arr, double>;
 /*!
  * @brief
  *
- * @param x
+ * @param[in] x
  * @return std::optional<Cut>
  */
 std::optional<Cut> qmi_oracle::operator()(const Arr& x)

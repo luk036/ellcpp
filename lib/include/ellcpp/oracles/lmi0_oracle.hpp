@@ -31,7 +31,7 @@ class lmi0_oracle
     /*!
      * @brief Construct a new lmi0 oracle object
      *
-     * @param F
+     * @param[in] F
      */
     explicit lmi0_oracle(gsl::span<const Arr> F)
         : _F {F}
@@ -43,7 +43,7 @@ class lmi0_oracle
     /*!
      * @brief
      *
-     * @param x
+     * @param[in] x
      * @return std::optional<Cut>
      */
     auto operator()(const Arr& x) -> std::optional<Cut>;

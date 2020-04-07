@@ -36,11 +36,11 @@ class lowpass_oracle
     /*!
      * @brief Construct a new lowpass oracle object
      *
-     * @param Ap
-     * @param As
-     * @param Anr
-     * @param Lpsq
-     * @param Upsq
+     * @param[in] Ap
+     * @param[in] As
+     * @param[in] Anr
+     * @param[in] Lpsq
+     * @param[in] Upsq
      */
     lowpass_oracle(
         const Arr& Ap, const Arr& As, const Arr& Anr, double Lpsq, double Upsq)
@@ -55,8 +55,8 @@ class lowpass_oracle
     /*!
      * @brief
      *
-     * @param x
-     * @param Spsq
+     * @param[in] x
+     * @param[in] Spsq
      * @return auto
      */
     auto operator()(const Arr& x, double Spsq) const

@@ -20,11 +20,11 @@
  * @tparam Fn1
  * @tparam Fn2
  * @tparam Container
- * @param G directed graph
- * @param[inout] r_opt parameter to be maximized, initially a large number
- * @param d monotone decreasing function w.r.t. r
- * @param zero_cancel
- * @param[inout] dist
+ * @param[in] G directed graph
+ * @param[in,out] r_opt parameter to be maximized, initially a large number
+ * @param[in] d monotone decreasing function w.r.t. r
+ * @param[in] zero_cancel
+ * @param[in,out] dist
  * @return optimal r and the critical cycle
  */
 template <typename Graph, typename T, typename Fn1, typename Fn2,

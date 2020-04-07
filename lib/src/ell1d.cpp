@@ -8,7 +8,7 @@
 /*!
  * @brief
  *
- * @param cut
+ * @param[in] cut
  * @return ell1d::return_t
  */
 ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)

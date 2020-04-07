@@ -33,9 +33,9 @@ class network_oracle
     /*!
      * @brief Construct a new network oracle object
      *
-     * @param G a directed graph (V, E)
-     * @param u list or dictionary
-     * @param h function evaluation and gradient
+     * @param[in] G a directed graph (V, E)
+     * @param[in,out] u list or dictionary
+     * @param[in] h function evaluation and gradient
      */
     network_oracle(const Graph& G, Container& u, Fn h)
         : _G {G}
@@ -51,7 +51,7 @@ class network_oracle
     /*!
      * @brief
      *
-     * @param t the best-so-far optimal value
+     * @param[in] t the best-so-far optimal value
      */
     template <typename opt_type>
     auto update(const opt_type& t) -> void
@@ -63,7 +63,7 @@ class network_oracle
      * @brief Make object callable for cutting_plane_feas()
      *
      * @tparam T
-     * @param x
+     * @param[in] x
      * @return std::optional<std::tuple<T, double>>
      */
     template <typename T>

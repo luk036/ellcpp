@@ -44,9 +44,9 @@ struct CInfo
  *
  * @tparam Oracle
  * @tparam Space
- * @param Omega
- * @param I
- * @param options
+ * @param[in,out] Omega    perform assessment on x0
+ * @param[in,out] I        interval containing x*
+ * @param[in]     options  maximum iteration and error tolerance etc.
  * @return CInfo
  */
 template <typename Oracle, typename Space>
@@ -101,8 +101,8 @@ class bsearch_adaptor
     /*!
      * @brief Construct a new bsearch adaptor object
      *
-     * @param P perform assessment on x0
-     * @param S search Space containing x*
+     * @param[in,out] P perform assessment on x0
+     * @param[in,out] S search Space containing x*
      */
     bsearch_adaptor(Oracle& P, Space& S)
         : bsearch_adaptor {P, S, Options()}
@@ -112,9 +112,9 @@ class bsearch_adaptor
     /*!
      * @brief Construct a new bsearch adaptor object
      *
-     * @param P perform assessment on x0
-     * @param S search Space containing x*
-     * @param options
+     * @param[in,out] P perform assessment on x0
+     * @param[in,out] S search Space containing x*
+     * @param[in] options maximum iteration and error tolerance etc.
      */
     bsearch_adaptor(Oracle& P, Space& S, const Options& options)
         : _P {P}
@@ -136,7 +136,7 @@ class bsearch_adaptor
     /*!
      * @brief
      *
-     * @param t the best-so-far optimal value
+     * @param[in] t the best-so-far optimal value
      * @return bool
      */
     template <typename opt_type>
@@ -171,9 +171,9 @@ class bsearch_adaptor
  *
  * @tparam Oracle
  * @tparam Space
- * @param Omega    perform assessment on x0
- * @param S        search Space containing x*
- * @param options  Maximum iteration and error tolerance etc.
+ * @param[in,out] Omega perform assessment on x0
+ * @param[in,out] S     search Space containing x*
+ * @param[in] options   maximum iteration and error tolerance etc.
  * @return Information of Cutting-plane method
  */
 template <typename Oracle, typename Space>
@@ -213,10 +213,10 @@ auto cutting_plane_feas(
  * @tparam Oracle
  * @tparam Space
  * @tparam opt_type
- * @param Omega    perform assessment on x0
- * @param S        search Space containing x*
- * @param t[inout] best-so-far optimal sol'n
- * @param options  Maximum iteration and error tolerance etc.
+ * @param[in,out] Omega perform assessment on x0
+ * @param[in,out] S     search Space containing x*
+ * @param[in,out] t     best-so-far optimal sol'n
+ * @param[in] options   maximum iteration and error tolerance etc.
  * @return Information of Cutting-plane method
  */
 template <typename Oracle, typename Space, typename opt_type>
@@ -275,10 +275,10 @@ auto cutting_plane_dc(
  *
  * @tparam Oracle
  * @tparam Space
- * @param Omega    perform assessment on x0
- * @param S        search Space containing x*
- * @param t[inout] best-so-far optimal sol'n
- * @param options  Maximum iteration and error tolerance etc.
+ * @param[in,out] Omega perform assessment on x0
+ * @param[in,out] S     search Space containing x*
+ * @param[in,out] t     best-so-far optimal sol'n
+ * @param[in] options   maximum iteration and error tolerance etc.
  * @return Information of Cutting-plane method
  */
 template <typename Oracle, typename Space, typename opt_type>

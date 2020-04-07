@@ -28,11 +28,11 @@ class my_oracle
     /*!
      * @brief Construct a new my oracle object
      *
-     * @param F1
-     * @param B1
-     * @param F2
-     * @param B2
-     * @param c
+     * @param[in] F1
+     * @param[in] B1
+     * @param[in] F2
+     * @param[in] B2
+     * @param[in] c
      */
     my_oracle(
         gsl::span<const Arr> F1, Arr B1, gsl::span<const Arr> F2, Arr B2, Arr c)
@@ -45,8 +45,8 @@ class my_oracle
     /*!
      * @brief
      *
-     * @param x
-     * @param t the best-so-far optimal value
+     * @param[in] x
+     * @param[in] t the best-so-far optimal value
      * @return std::tuple<Cut, double>
      */
     std::tuple<Cut, double> operator()(const Arr& x, double t)

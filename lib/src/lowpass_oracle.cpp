@@ -8,8 +8,8 @@ using ParallelCut = std::tuple<Arr, Arr>;
 /*!
  * @brief
  *
- * @param x
- * @param Spsq
+ * @param[in] x
+ * @param[in] Spsq
  * @return auto
  */
 std::tuple<ParallelCut, double> lowpass_oracle::operator()(

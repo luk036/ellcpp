@@ -8,6 +8,7 @@ RUN apt-get update \
   sudo \
   git \
   less \
+  neofetch \
   wget
 
 RUN mkdir -p /workspace/data \

@@ -20,8 +20,8 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
 /*!
  * @brief Create a 2d sites object
  *
- * @param nx
- * @param ny
+ * @param[in] nx
+ * @param[in] ny
  * @return Arr location of sites
  */
 Arr create_2d_sites(size_t nx = 10U, size_t ny = 8U)
@@ -39,8 +39,8 @@ Arr create_2d_sites(size_t nx = 10U, size_t ny = 8U)
 /*!
  * @brief Create a 2d isotropic object
  *
- * @param s location of sites
- * @param N
+ * @param[in] s location of sites
+ * @param[in] N
  * @return Arr Biased covariance matrix
  */
 Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
@@ -82,7 +82,7 @@ Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 /*!
  * @brief Construct a distance matrix object
  *
- * @param s location of sites
+ * @param[in] s location of sites
  * @return std::vector<Arr>
  */
 Arr construct_distance_matrix(const Arr& s)
@@ -105,8 +105,8 @@ Arr construct_distance_matrix(const Arr& s)
 /*!
  * @brief Construct distance matrix for polynomial
  *
- * @param s location of sites
- * @param m degree of polynomial
+ * @param[in] s location of sites
+ * @param[in] m degree of polynomial
  * @return std::vector<Arr>
  */
 std::vector<Arr> construct_poly_matrix(const Arr& s, size_t m)
@@ -151,8 +151,8 @@ class lsq_oracle
     /*!
      * @brief Construct a new lsq oracle object
      *
-     * @param F
-     * @param F0
+     * @param[in] F
+     * @param[in] F0
      */
     lsq_oracle(const std::vector<Arr>& F, const Arr& F0)
         : _qmi(F, F0)
@@ -163,8 +163,8 @@ class lsq_oracle
     /*!
      * @brief
      *
-     * @param x
-     * @param t the best-so-far optimal value
+     * @param[in] x
+     * @param[in] t the best-so-far optimal value
      * @return auto
      */
     std::tuple<Cut, double> operator()(const Arr& x, double t)
@@ -204,9 +204,9 @@ class lsq_oracle
 /*!
  * @brief
  *
- * @param Y
- * @param m
- * @param P
+ * @param[in] Y
+ * @param[in] m
+ * @param[in] P
  * @return auto
  */
 auto lsq_corr_core2(const Arr& Y, size_t m, lsq_oracle& P)
@@ -229,9 +229,9 @@ auto lsq_corr_core2(const Arr& Y, size_t m, lsq_oracle& P)
 /*!
  * @brief
  *
- * @param Y
- * @param s
- * @param m
+ * @param[in] Y
+ * @param[in] s
+ * @param[in] m
  * @return std::tuple<size_t, bool>
  */
 std::tuple<Arr, size_t, bool> lsq_corr_poly2(
@@ -262,8 +262,8 @@ class mle_oracle
     /*!
      * @brief Construct a new mle oracle object
      *
-     * @param Sig
-     * @param Y
+     * @param[in] Sig
+     * @param[in] Y
      */
     mle_oracle(const std::vector<Arr>& Sig, const Arr& Y)
         : _Y {Y}
@@ -276,8 +276,8 @@ class mle_oracle
     /*!
      * @brief
      *
-     * @param x
-     * @param t the best-so-far optimal value
+     * @param[in] x
+     * @param[in] t the best-so-far optimal value
      * @return auto
      */
     std::tuple<Cut, double> operator()(const Arr& x, double t)
@@ -333,9 +333,9 @@ class mle_oracle
 /*!
  * @brief
  *
- * @param Y
- * @param m
- * @param P
+ * @param[in] Y
+ * @param[in] m
+ * @param[in] P
  * @return auto
  */
 auto mle_corr_core(const Arr& /* Y */, size_t m, mle_oracle& P)
@@ -352,9 +352,9 @@ auto mle_corr_core(const Arr& /* Y */, size_t m, mle_oracle& P)
 /*!
  * @brief
  *
- * @param Y
- * @param s
- * @param m
+ * @param[in] Y
+ * @param[in] s
+ * @param[in] m
  * @return std::tuple<size_t, bool>
  */
 std::tuple<Arr, size_t, bool> mle_corr_poly(
@@ -368,9 +368,9 @@ std::tuple<Arr, size_t, bool> mle_corr_poly(
 /*!
  * @brief
  *
- * @param Y
- * @param s
- * @param m
+ * @param[in] Y
+ * @param[in] s
+ * @param[in] m
  * @return std::tuple<size_t, bool>
  */
 std::tuple<Arr, size_t, bool> lsq_corr_poly(

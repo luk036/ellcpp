@@ -28,8 +28,8 @@ class lmi_oracle
     /*!
      * @brief Construct a new lmi oracle object
      *
-     * @param F
-     * @param B
+     * @param[in] F
+     * @param[in] B
      */
     lmi_oracle(gsl::span<const Arr> F, Arr B)
         : _F {F}
@@ -41,7 +41,7 @@ class lmi_oracle
     /*!
      * @brief
      *
-     * @param x
+     * @param[in] x
      * @return std::optional<Cut>
      */
     auto operator()(const Arr& x) -> std::optional<Cut>;
