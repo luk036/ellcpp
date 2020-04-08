@@ -45,7 +45,7 @@ class ellipsoid
         }
     }
 
-    ~ellipsoid() {}
+    ~ellipsoid() { }
 
     Vec& x()
     {

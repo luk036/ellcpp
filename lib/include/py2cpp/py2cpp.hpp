@@ -286,7 +286,7 @@ inline size_t len(const set<Key>& m)
  * @tparam Key
  */
 template <typename Key>
-set(std::initializer_list<Key>)->set<Key>;
+set(std::initializer_list<Key>) -> set<Key>;
 
 // template <typename Key>
 // set(std::initializer_list<const char*> ) -> set<std::string>;
@@ -501,10 +501,10 @@ inline size_t len(const dict<Key, T>& m)
  * @tparam T
  */
 template <typename Key, typename T>
-dict(std::initializer_list<std::pair<const Key, T>>)->dict<Key, T>;
+dict(std::initializer_list<std::pair<const Key, T>>) -> dict<Key, T>;
 
 template <class Sequence>
 dict(const Sequence& S)
-    ->dict<std::remove_cv_t<decltype(*std::begin(S))>, size_t>;
+    -> dict<std::remove_cv_t<decltype(*std::begin(S))>, size_t>;
 
 } // namespace py

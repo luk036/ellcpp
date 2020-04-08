@@ -90,7 +90,7 @@ class monomial
     }
 
     /** Destructor */
-    ~monomial() {}
+    ~monomial() { }
 
     /** Multiply and assign */
     _Self& operator*=(const _Self& M)

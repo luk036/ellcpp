@@ -68,8 +68,8 @@ class ell
 
     /**
      * @brief Construct a new ell object
-     * 
-     * @param[in] E (move) 
+     *
+     * @param[in] E (move)
      */
     ell(ell&& E) = default;
 
@@ -85,8 +85,8 @@ class ell
   public:
     /**
      * @brief explicitly copy
-     * 
-     * @return ell 
+     *
+     * @return ell
      */
     ell copy() const
     {

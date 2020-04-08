@@ -83,7 +83,7 @@ TEST_CASE("Test Parametric (boost)", "[test_parametric_boost]")
     auto get_cost = [&](const auto& e) -> int {
         return boost::get(cost_pa, e);
     };
-    auto get_time = [&](const auto& /*unused*/) -> int { return 1; };
+    auto get_time = [&](const auto & /*unused*/) -> int { return 1; };
 
     auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
     auto r = fun::Fraction<int>(5);

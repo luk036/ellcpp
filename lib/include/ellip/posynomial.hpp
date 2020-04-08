@@ -61,7 +61,7 @@ class posynomial
     }
 
     /** Destructor */
-    ~posynomial() {}
+    ~posynomial() { }
 
     /** Add and assign */
     _Self& operator+=(const monomial<_Tp>& m)

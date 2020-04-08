@@ -12,8 +12,8 @@ class gp_base
     using Vec = std::valarray<double>;
 
   public:
-    gp_base() {}
-    ~gp_base() {}
+    gp_base() { }
+    ~gp_base() { }
 
     Info4EM<Vec> operator()(const Vec& x) const;
 
