@@ -20,7 +20,7 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
         return this->_calc_dc(b0);
     }
 
-    [[unlikely]] if (b1 < b0)
+    if (b1 < b0) [[unlikely]]
     {
         return CUTStatus::nosoln; // no sol'n
     }
@@ -33,7 +33,7 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
 
     const auto b0b1 = b0 * b1;
     const auto& n = this->_n;
-    [[unlikely]] if (n * b0b1 < -this->_tsq)
+    if (n * b0b1 < -this->_tsq) [[unlikely]]
     {
         return CUTStatus::noeffect; // no effect
     }
@@ -88,7 +88,7 @@ CUTStatus ell::_calc_dc(const double& beta)
     }
 
     const auto gamma = tau + this->_n * beta;
-    [[unlikely]] if (gamma < 0)
+    if (gamma < 0) [[unlikely]]
     {
         return CUTStatus::noeffect; // no effect
     }
@@ -137,7 +137,7 @@ std::tuple<CUTStatus, double> ell::update(const std::tuple<Arr, T>& cut)
     }
     else
     { // parallel cut
-        [[unlikely]] if (beta.shape()[0] < 2)
+        if (beta.shape()[0] < 2) [[unlikely]]
         {
             status = this->_calc_dc(beta[0]);
         }

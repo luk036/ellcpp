@@ -18,17 +18,17 @@ ell1d::return_t ell1d::update(const std::tuple<double, double>& cut)
     const auto tau = std::abs(this->_r * g);
     const auto tsq = tau * tau;
 
-    [[unlikely]] if (beta == 0.)
+    if (beta == 0.) [[unlikely]]
     {
         this->_r /= 2;
         this->_xc += g > 0. ? -this->_r : this->_r;
         return {CUTStatus::success, tsq};
     }
-    [[unlikely]] if (beta > tau)
+    if (beta > tau) [[unlikely]]
     {
         return {CUTStatus::nosoln, tsq}; // no sol'n
     }
-    [[unlikely]] if (beta < -tau)
+    if (beta < -tau) [[unlikely]]
     {
         return {CUTStatus::noeffect, tsq}; // no effect
     }

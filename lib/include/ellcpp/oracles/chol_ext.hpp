@@ -98,7 +98,7 @@ class chol_ext
                     stop = i + 1;
                     break;
                 }
-                [[unlikely]] if (d == 0.)
+                if (d == 0.) [[unlikely]]
                 {
                     start = i + 1;
                 }
