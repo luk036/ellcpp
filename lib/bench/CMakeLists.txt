@@ -1,4 +1,5 @@
 # find_package(Threads REQUIRED)
+find_package(benchmark REQUIRED)
 
 #~~~~~~~~~~~~~~~~
 
@@ -20,8 +21,7 @@ foreach(ONE_BENCH_CPP ${ALL_BENCH_CPP})
 
    # If required, you can add your project library here
 # ...
-    ${LIB_NAME} ${LIBS} fmt::fmt Threads::Threads -lrt
-    benchmark
+    ${LIB_NAME} ${LIBS} fmt::fmt Threads::Threads benchmark::benchmark
    )
 
    # If you want to run benchmarks with the "make test" command, uncomment me

@@ -9,6 +9,8 @@ RUN apt-get update \
   git \
   less \
   neofetch \
+  asciinema \
+  tmux \
   wget
 
 RUN mkdir -p /workspace/data \
@@ -37,6 +39,7 @@ RUN /opt/conda/bin/conda install -y \
     lcov
 
 RUN /opt/conda/bin/conda install -y -c conda-forge \
+    benchmark \
     catch2 \
     fmt \
     lapack \
