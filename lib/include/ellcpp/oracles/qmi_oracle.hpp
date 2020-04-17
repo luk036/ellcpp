@@ -12,11 +12,11 @@
  *    This oracle solves the following feasibility problem:
  *
  *        find  x
- *        s.t.​  t * I − F(x)' F(x) ⪰ 0
+ *        s.t.​  t * I - F(x)' F(x) >= 0
  *
  *    where
  *
- *        F(x) = F0 − (F1 * x1 + F2 * x2 + ...)
+ *        F(x) = F0 - (F1 * x1 + F2 * x2 + ...)
  */
 class qmi_oracle
 {

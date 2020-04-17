@@ -54,7 +54,7 @@ class chol_ext
      *
      * If $A$ is positive definite, then $p$ is zero.
      * If it is not, then $p$ is a positive integer,
-     * such that $v = R^−1 e_p$ is a certificate vector
+     * such that $v = R^-1 e_p$ is a certificate vector
      * to make $v'*A[:p,:p]*v < 0$
      */
     void factorize(const Mat& A)
@@ -178,7 +178,7 @@ class chol_ext
 
     auto sqrt() -> Mat
     {
-        if (not this->is_spd())
+        if (!this->is_spd())
         {
             throw std::runtime_error {"Implementation Error."};
         }

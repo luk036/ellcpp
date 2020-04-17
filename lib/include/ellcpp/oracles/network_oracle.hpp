@@ -11,8 +11,8 @@
  *    This oracle solves the following feasibility problem:
  *
  *        find    x, u
- *        s.t.    u[j] − u[i] ≤ h(e, x)
- *                ∀ e(i, j) ∈ E
+ *        s.t.    u[j] - u[i] \le h(e, x)
+ *                \forall e(i, j) \in E
  *
  * @tparam Graph
  * @tparam Container

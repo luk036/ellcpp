@@ -142,11 +142,11 @@ inline constexpr auto range(T start, T stop)
         }
         constexpr auto operator[](size_t n) const -> T
         {
-            return start + n;
+            return T(start + n);
         } // no bounds checking
         constexpr auto contains(T n) const -> bool
         {
-            return not(n < start) and n < stop;
+            return !(n < start) && n < stop;
         }
     };
 
@@ -378,7 +378,7 @@ class dict : public std::unordered_map<Key, T>
      */
     T get(const Key& key, const T& default_value)
     {
-        if (not contains(key))
+        if (!contains(key))
         {
             return default_value;
         }

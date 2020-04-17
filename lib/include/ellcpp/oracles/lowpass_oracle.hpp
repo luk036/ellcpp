@@ -12,8 +12,8 @@
  *    This example is taken from Almir Mutapcic in 2006:
  *
  *        min   γ
- *        s.t.  L^2(ω) ≤ R(ω) ≤ U^2(ω), ∀ ω ∈ [0, π]
- *              R(ω) > 0, ∀ ω ∈ [0, π]
+ *        s.t.  L^2(ω) \le R(ω) \le U^2(ω), \forall ω \in [0, \pi]
+ *              R(ω) > 0, \forall ω \in [0, \pi]
  */
 class lowpass_oracle
 {

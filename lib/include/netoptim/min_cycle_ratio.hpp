@@ -12,8 +12,8 @@
  *    This function solves the following network parametric problem:
  *
  *        max  r
- *        s.t. dist[v] − dist[u] ≤ cost(u, v) − r * time(u, v)
- *             ∀ e(u, v) ∈ G(V, E)
+ *        s.t. dist[v] - dist[u] \le cost(u, v) - r * time(u, v)
+ *             \forall e(u, v) \in G(V, E)
  *
  * @tparam Graph
  * @tparam Fn1

@@ -10,10 +10,10 @@
  *
  *    This example is taken from [Orlin and Rothblum, 1985]:
  *
- *        min     π/ψ
- *        s.t.    ψ ≤ u[i] * |aij| * u[j]^−1 ≤ π,
- *                ∀ aij != 0,
- *                π, ψ, u, positive
+ *        min     \pi/\phi
+ *        s.t.    \phi \le u[i] * |aij| * u[j]^-1 \le \pi,
+ *                \forall aij != 0,
+ *                \pi, \phi, u, positive
  *
  * @tparam Graph
  * @tparam Container
@@ -53,7 +53,7 @@ class optscaling_oracle
          * @brief Evaluate function
          *
          * @param[in] e
-         * @param[in] x (π, ψ) in log scale
+         * @param[in] x (\pi, \phi) in log scale
          * @return double
          */
         auto eval(const edge_t& e, const Arr& x) const -> double
@@ -68,7 +68,7 @@ class optscaling_oracle
          * @brief Gradient function
          *
          * @param[in] e
-         * @param[in] x (π, ψ) in log scale
+         * @param[in] x (\pi, \phi) in log scale
          * @return Arr
          */
         auto grad(const edge_t& e, const Arr& x) const -> Arr
@@ -100,7 +100,7 @@ class optscaling_oracle
     /*!
      * @brief Make object callable for cutting_plane_dc()
      *
-     * @param[in] x (π, ψ) in log scale
+     * @param[in] x (\pi, \phi) in log scale
      * @param[in] t the best-so-far optimal value
      * @return std::tuple<Cut, double>
      *

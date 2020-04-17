@@ -382,7 +382,7 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     */
     auto has_successor(const Node& u, const Node& v) -> bool
     {
-        return this->_node.contains(u) and this->_succ[u].contains(v);
+        return this->_node.contains(u) && this->_succ[u].contains(v);
     }
 
     /*! Returns an iterator over successor nodes of n.

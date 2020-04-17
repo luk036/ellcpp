@@ -12,7 +12,7 @@ TEST_CASE("PY2CPP", "[py2cpp]")
 
     py::set S{"hello", "world", "test"};
     CHECK(S.contains("test"));
-    CHECK(not S.contains("test2"));
+    CHECK(!S.contains("test2"));
     CHECK(py::len(S) == 3);
     for (const auto& e : S)
     {
@@ -22,7 +22,7 @@ TEST_CASE("PY2CPP", "[py2cpp]")
 
     py::dict<int, std::any> M{{1, "hello"}, {8, 5.6}, {9, 4.2}};
     CHECK(M.contains(8));
-    CHECK(not M.contains(10));
+    CHECK(!M.contains(10));
     CHECK(py::len(M) == 3);
     for (auto [e, _] : M.items())
     {

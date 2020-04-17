@@ -187,7 +187,7 @@ auto cutting_plane_feas(
     for (; niter != options.max_it; ++niter)
     {
         auto cut = Omega(S.xc()); // query the oracle at S.xc()
-        if (not cut)
+        if (!cut)
         { // feasible sol'n obtained
             feasible = true;
             break;
@@ -302,7 +302,7 @@ auto cutting_plane_q(
         const auto [cutstatus, tsq] = S.update(cut);
         if (cutstatus == CUTStatus::noeffect)
         {
-            if (not more_alt)
+            if (!more_alt)
             {
                 break; // no more alternative cut
             }

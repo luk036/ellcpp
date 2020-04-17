@@ -72,7 +72,7 @@ int main() {
   std::cout << m1.shape()[0] << "\n";
   auto Q1 = chol_ext<>(m1.shape()[0]);
   Q1.factorize(m1);
-  if (not Q1.is_sd()) {
+  if (!Q1.is_sd()) {
     auto v = Q1.witness();
     auto p = v.size();
     auto sub = xt::range(0, p);
@@ -90,7 +90,7 @@ int main() {
   std::cout << m2.shape()[0] << "\n";
   auto Q2 = chol_ext<>(m2.shape()[0]);
   Q2.factorize(m2);
-  if (not Q2.is_sd()) {
+  if (!Q2.is_sd()) {
     auto v = Q2.witness();
     auto p = v.size();
     auto sub = xt::range(0, p);

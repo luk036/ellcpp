@@ -10,8 +10,8 @@
  *    This example solves the following convex problem:
  *
  *        max     t
- *        s.t.    u[j] - u[i] ≤ mij - sij * x,
- *                t ≤ x
+ *        s.t.    u[j] - u[i] \le mij - sij * x,
+ *                t \le x
  *
  *    where sij is not necessarily positive.
  *
@@ -56,7 +56,7 @@ class cycle_ratio_oracle
          * @brief Evaluate function
          *
          * @param[in] e
-         * @param[in] x (π, ψ) in log scale
+         * @param[in] x (\pi, \phi) in log scale
          * @return double
          */
         auto eval(const edge_t& e, const double& x) const -> double
@@ -70,7 +70,7 @@ class cycle_ratio_oracle
          * @brief Gradient function
          *
          * @param[in] e
-         * @param[in] x (π, ψ) in log scale
+         * @param[in] x (\pi, \phi) in log scale
          * @return double
          */
         auto grad(const edge_t& e, const double& x) const -> double

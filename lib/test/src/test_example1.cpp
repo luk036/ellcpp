@@ -62,7 +62,7 @@ TEST_CASE("Example 1, test infeasible 1", "[example1]")
     const auto P = my_oracle;
     auto t = std::numeric_limits<double>::min();
     const auto [x, ell_info] = cutting_plane_dc(P, E, t);
-    CHECK(not ell_info.feasible);
+    CHECK(!ell_info.feasible);
     CHECK(ell_info.status == CUTStatus::nosoln); // no sol'n
 }
 
@@ -72,5 +72,5 @@ TEST_CASE("Example 1, test infeasible 2", "[example1]")
     const auto P = my_oracle;
     const auto [x, ell_info] =
         cutting_plane_dc(P, E, 100); // wrong initial guess
-    CHECK(not ell_info.feasible);
+    CHECK(!ell_info.feasible);
 }

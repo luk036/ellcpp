@@ -332,7 +332,7 @@ class Graph : public object
         keyed by the string `"name"`. as well as an attribute (technically
         a property) `G.name`. This is entirely user controlled.
          */
-        if (not this->graph.contains("name"))
+        if (!this->graph.contains("name"))
             return "";
         return std::any_cast<const char*>(this->graph["name"]);
     }
@@ -404,7 +404,12 @@ class Graph : public object
     >>> G[0];
     AtlasView({1: {}});
      */
-    auto operator[](const Node& n) const
+    const auto& operator[](const Node& n) const
+    {
+        return this->adj()[n];
+    }
+
+    auto& operator[](const Node& n)
     {
         return this->adj()[n];
     }

@@ -128,14 +128,14 @@ std::vector<Arr> construct_poly_matrix(const Arr& s, size_t m)
 /*!
  * @brief
  *
- *    min   ‖ Σ(p) − Y ‖
- *    s.t.  Σ(p) ⪰ 0
+ *    min   || \Sigma(p) - Y ||
+ *    s.t.  \Sigma(p) >= 0
  *
  *    where
  *
- *        ρ(h) = p1 Ψ1(h) + ··· + pn Ψn(h)
+ *        ρ(h) = p1 \phi1(h) + ··· + pn \phin(h)
  *
- *        {Fk}i,j = Ψk( ‖sj − si‖^2 )
+ *        {Fk}i,j = \phik( ||sj - si||^2 )
  */
 class lsq_oracle
 {

@@ -12,7 +12,7 @@
  *    This oracle solves the following feasibility problem:
  *
  *        find  x
- *        s.t.  (B − F * x) ⪰ 0
+ *        s.t.  (B - F * x) >= 0
  */
 class lmi_old_oracle
 {
