@@ -404,12 +404,7 @@ class Graph : public object
     >>> G[0];
     AtlasView({1: {}});
      */
-    const auto& operator[](const Node& n) const
-    {
-        return this->adj()[n];
-    }
-
-    auto& operator[](const Node& n)
+    auto operator[](const Node& n) const
     {
         return this->adj()[n];
     }
