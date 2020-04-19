@@ -1,6 +1,7 @@
 // -*- coding: utf-8 -*-
-#define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+
+#include <doctest.h>
 #include <iostream>
 #include <tuple>
 
@@ -127,7 +128,7 @@ auto run_lowpass(bool use_parallel_cut)
 //     assert result == 568
 // }
 
-TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]")
+TEST_CASE("Lowpass Filter (w/ parallel cut)")
 {
     // void test1() {
     const auto [feasible, num_iters] = run_lowpass(true);
@@ -135,7 +136,7 @@ TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]")
     CHECK(num_iters <= 510);
 }
 
-TEST_CASE("Lowpass Filter (w/o parallel cut)", "[lowpass]")
+TEST_CASE("Lowpass Filter (w/o parallel cut)")
 {
     // void test2() {
     const auto [feasible, num_iters] = run_lowpass(false);

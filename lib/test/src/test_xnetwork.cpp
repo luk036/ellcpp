@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <utility> // for std::pair
 
 // auto get_weight(const graph_t &G, const Edge_it &e) {
@@ -53,17 +53,17 @@
 //     return std::move(g);
 // }
 
-// TEST_CASE("Test XNetwork", "[test_xnetwork]") {
+// TEST_CASE("Test XNetwork") {
 //     auto G = create_test_case1();
 //     // CHECK(hasNeg);
 // }
 
-// TEST_CASE("Test XNetwork 2", "[test_xnetwork]") {
+// TEST_CASE("Test XNetwork 2") {
 //     auto G = create_test_case2();
 //     // CHECK(!hasNeg);
 // }
 
-// TEST_CASE("Test Timing Graph", "[test_xnetwork]") {
+// TEST_CASE("Test Timing Graph") {
 //     auto G = create_test_case_timing();
 //     // CHECK(!hasNeg);
 // }

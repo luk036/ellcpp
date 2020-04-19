@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <iostream>
 #include <tuple>
 
@@ -119,14 +119,14 @@ auto run_lowpass(bool use_parallel_cut)
     return std::tuple {ell_info.feasible, ell_info.num_iters};
 }
 
-TEST_CASE("Lowpass Filter (w/ parallel cut)", "[lowpass]")
+TEST_CASE("Lowpass Filter (w/ parallel cut)")
 {
     const auto [feasible, num_iters] = run_lowpass(true);
     CHECK(feasible);
     CHECK(num_iters <= 634);
 }
 
-TEST_CASE("Lowpass Filter (w/o parallel cut)", "[lowpass]")
+TEST_CASE("Lowpass Filter (w/o parallel cut)")
 {
     const auto [feasible, num_iters] = run_lowpass(false);
     CHECK(feasible);

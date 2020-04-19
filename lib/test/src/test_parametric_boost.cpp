@@ -3,7 +3,7 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
 #include <boost/property_map/property_map.hpp>
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <netoptim/min_cycle_ratio.hpp> // import min_cycle_ratio, set_default
 #include <py2cpp/fractions.hpp>         // import Fraction
 #include <py2cpp/nx2bgl.hpp>
@@ -69,7 +69,7 @@ static auto create_test_case_timing()
     return xn::grAdaptor<graph_t> {g};
 }
 
-TEST_CASE("Test Parametric (boost)", "[test_parametric_boost]")
+TEST_CASE("Test Parametric (boost)")
 {
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;
@@ -96,7 +96,7 @@ TEST_CASE("Test Parametric (boost)", "[test_parametric_boost]")
     // print(dist.items());
 }
 
-TEST_CASE("Test Parametric of Timing Graph (boost)", "[test_parametric_boost]")
+TEST_CASE("Test Parametric of Timing Graph (boost)")
 {
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;

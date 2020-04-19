@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 #include <array>
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell1d.hpp>
 #include <ellcpp/oracles/cycle_ratio_oracle.hpp> // import cycle_ratio
@@ -57,7 +57,7 @@ static auto create_test_case_timing()
     return g;
 }
 
-TEST_CASE("Test Cycle Ratio 2", "[test_cycle_ratio2]")
+TEST_CASE("Test Cycle Ratio 2")
 {
     const auto G = create_test_case1();
     const auto cost = std::array {5, 1, 1, 1, 1};
@@ -75,10 +75,10 @@ TEST_CASE("Test Cycle Ratio 2", "[test_cycle_ratio2]")
     const auto opts = Options {2000, 1e-12};
     const auto [x, ell_info] = cutting_plane_dc(P, E, r, opts);
     CHECK(ell_info.feasible);
-    CHECK(r == Approx(9. / 5.));
+    CHECK(r == doctest::Approx(9. / 5.));
 }
 
-TEST_CASE("Test Cycle Ratio of Timing Graph 2", "[test_cycle_ratio2]")
+TEST_CASE("Test Cycle Ratio of Timing Graph 2")
 {
     const auto G = create_test_case_timing();
     const auto cost = std::array {7, -1, 3, 0, 2, 4};
@@ -96,7 +96,7 @@ TEST_CASE("Test Cycle Ratio of Timing Graph 2", "[test_cycle_ratio2]")
     const auto opts = Options {2000, 1e-12};
     const auto [x, ell_info] = cutting_plane_dc(P, E, r, opts);
     CHECK(ell_info.feasible);
-    CHECK(r == Approx(1.));
+    CHECK(r == doctest::Approx(1.));
     // print(r);
     // print(c);
     // print(dist.items());

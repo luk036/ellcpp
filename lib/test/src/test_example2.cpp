@@ -1,5 +1,5 @@
 /* -*- coding: utf-8 -*- */
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <optional>
@@ -35,7 +35,7 @@ auto my_oracle2(const Arr& z) -> std::optional<Cut>
     return {};
 }
 
-TEST_CASE("Example 2", "[example2]")
+TEST_CASE("Example 2")
 {
     auto E = ell {10., Arr {0., 0.}};
     const auto P = my_oracle2;

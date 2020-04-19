@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <xtensor/xarray.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
@@ -11,14 +11,14 @@ extern std::tuple<Arr, size_t, bool> lsq_corr_poly2(
 extern std::tuple<Arr, size_t, bool> mle_corr_poly(
     const Arr&, const Arr&, size_t);
 
-TEST_CASE("check create_2d_isotropic", "[corr_fn]")
+TEST_CASE("check create_2d_isotropic")
 {
     const auto s = create_2d_sites(5, 4);
     const auto Y = create_2d_isotropic(s, 3000);
-    CHECK(s(6, 0) == Approx(2.5));
+    CHECK(s(6, 0) == doctest::Approx(2.5));
 }
 
-TEST_CASE("lsq_corr_fn", "[corr_fn]")
+TEST_CASE("lsq_corr_fn")
 {
     const auto s = create_2d_sites(10, 8);
     const auto Y = create_2d_isotropic(s, 3000);
@@ -29,7 +29,7 @@ TEST_CASE("lsq_corr_fn", "[corr_fn]")
     CHECK(num_iters <= 705);
 }
 
-TEST_CASE("mle_corr_fn", "[corr_fn]")
+TEST_CASE("mle_corr_fn")
 {
     const auto s = create_2d_sites(10, 8);
     const auto Y = create_2d_isotropic(s, 3000);

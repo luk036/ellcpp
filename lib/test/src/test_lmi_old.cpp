@@ -1,7 +1,7 @@
 /*
  *  Distributed under the MIT License (See accompanying file /LICENSE )
  */
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lmi_old_oracle.hpp>
@@ -71,7 +71,7 @@ class my_oracle
     }
 };
 
-TEST_CASE("LMI (old) test", "[lmi_old_oracle]")
+TEST_CASE("LMI (old) test")
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using M_t = std::vector<Arr>;

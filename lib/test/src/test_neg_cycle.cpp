@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 #include <array>
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <netoptim/neg_cycle.hpp> // import negCycleFinder
 #include <vector>
 #include <xnetwork/classes/digraphs.hpp>
@@ -104,7 +104,7 @@ bool do_case(const Graph& G)
  * @brief
  *
  */
-TEST_CASE("Test Negative Cycle", "[test_neg_cycle]")
+TEST_CASE("Test Negative Cycle")
 {
     const auto G = create_test_case1();
     const auto hasNeg = do_case(G);
@@ -115,7 +115,7 @@ TEST_CASE("Test Negative Cycle", "[test_neg_cycle]")
  * @brief
  *
  */
-TEST_CASE("Test No Negative Cycle", "[test_neg_cycle]")
+TEST_CASE("Test No Negative Cycle")
 {
     const auto G = create_test_case2();
     const auto hasNeg = do_case(G);
@@ -126,7 +126,7 @@ TEST_CASE("Test No Negative Cycle", "[test_neg_cycle]")
  * @brief
  *
  */
-TEST_CASE("Test Timing Graph", "[test_neg_cycle]")
+TEST_CASE("Test Timing Graph")
 {
     const auto G = create_test_case_timing();
     const auto hasNeg = do_case(G);

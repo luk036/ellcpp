@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <py2cpp/nx2bgl.hpp>
 
 #include <algorithm> // for std::for_each
@@ -41,7 +41,7 @@ struct exercise_vertex
     //...
 };
 
-TEST_CASE("Test Boost", "[test_boost]")
+TEST_CASE("Test Boost")
 {
     // create a typedef for the Graph type
     using Graph =

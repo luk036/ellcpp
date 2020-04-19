@@ -1,12 +1,12 @@
 // -*- coding: utf-8 -*-
 #include <any>
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <iostream>
 #include <string>
 
 #include <py2cpp/py2cpp.hpp>
 
-TEST_CASE("PY2CPP", "[py2cpp]")
+TEST_CASE("PY2CPP")
 {
     // using namespace std::string_literals;
 

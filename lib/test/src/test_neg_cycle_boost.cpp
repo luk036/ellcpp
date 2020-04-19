@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <netoptim/min_cycle_ratio.hpp>
 #include <netoptim/neg_cycle.hpp> // import negCycleFinder
 #include <py2cpp/nx2bgl.hpp>
@@ -90,21 +90,21 @@ auto do_case(const xn::grAdaptor<graph_t>& G) -> bool
     return !cycle.empty();
 }
 
-TEST_CASE("Test Negative Cycle (boost)", "[test_neg_cycle_boost]")
+TEST_CASE("Test Negative Cycle (boost)")
 {
     const auto G = create_test_case1();
     const auto hasNeg = do_case(G);
     CHECK(hasNeg);
 }
 
-TEST_CASE("Test No Negative Cycle (boost)", "[test_neg_cycle_boost]")
+TEST_CASE("Test No Negative Cycle (boost)")
 {
     const auto G = create_test_case2();
     const auto hasNeg = do_case(G);
     CHECK(!hasNeg);
 }
 
-TEST_CASE("Test Timing Graph (boost)", "[test_neg_cycle_boost]")
+TEST_CASE("Test Timing Graph (boost)")
 {
     const auto G = create_test_case_timing();
     const auto hasNeg = do_case(G);

@@ -20,6 +20,9 @@ endif()
 project (EllCpp LANGUAGES CXX)
 
 option(ENABLE_COVERAGE "Generates the coverage build" OFF)
+option(ENABLE_DOCTESTS "Include tests in the library. Setting this to OFF will remove all doctest related code.
+                        Tests in tests/*.cpp will still be enabled." OFF)
+
 
 include(CTest) # Must be called before adding tests but after calling project(). This automatically calls enable_testing() and configures ctest targets when using Make/Ninja
 include(CMakeDependentOption)# This is a really useful scripts that creates options that depends on other options. It can even be used with generator expressions !
@@ -27,6 +30,8 @@ include(CMakeDependentOption)# This is a really useful scripts that creates opti
 # Custom modules and scripts
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
+include(Colors)
+include(Doctest)
 include(LTO)
 include(Warnings)
 include(CopyDllsForDebug)
@@ -129,7 +134,7 @@ if (Boost_FOUND)
 endif (Boost_FOUND)
 
 # add_definitions ( -std=c++1z -g)
-add_subdirectory (third_party EXCLUDE_FROM_ALL)
+add_subdirectory (external EXCLUDE_FROM_ALL)
 
 set (LIBRARY_INCLUDE_PATH ${LIBRARY_INCLUDE_PATH} ${xtensor_INCLUDE_DIRS})
 

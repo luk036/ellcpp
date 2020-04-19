@@ -1,7 +1,7 @@
 /*
  *  Distributed under the MIT License (See accompanying file /LICENSE )
  */
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/profit_oracle.hpp>
@@ -9,7 +9,7 @@
 
 // using namespace fun;
 
-TEST_CASE("Profit Test 1", "[profit]")
+TEST_CASE("Profit Test 1")
 {
     using Vec = xt::xarray<double, xt::layout_type::row_major>;
 

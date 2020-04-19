@@ -3,7 +3,7 @@
 # CMake build : third party
 
 #configure directories
-set (THIRD_PARTY_MODULE_PATH "${PROJECT_SOURCE_DIR}/third_party")
+set (THIRD_PARTY_MODULE_PATH "${PROJECT_SOURCE_DIR}/external")
 
 # -------------------------------------------------------------------------
 # fmt

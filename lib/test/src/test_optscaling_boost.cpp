@@ -4,7 +4,7 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
 #include <boost/property_map/property_map.hpp>
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 // #include <ellcpp/ell1d.hpp>
@@ -59,8 +59,7 @@ static xn::grAdaptor<graph_t> create_test_case1()
     return xn::grAdaptor<graph_t>(g);
 }
 
-TEST_CASE(
-    "Test Optimal Scaling (two varaibles, boost)", "[test_optscaling_boost]")
+TEST_CASE("Test Optimal Scaling (two varaibles, boost)")
 {
     using EdgeIndexMap =
         typename boost::property_map<graph_t, boost::edge_id_tag_t>::type;

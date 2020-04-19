@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 #include <algorithm>
 #include <array>
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 // #include <ellcpp/ell1d.hpp>
@@ -35,7 +35,7 @@ static auto create_test_case1()
     return g;
 }
 
-TEST_CASE("Test Optimal Scaling (two varaibles)", "[test_optscaling]")
+TEST_CASE("Test Optimal Scaling (two varaibles)")
 {
     auto G = create_test_case1();
 

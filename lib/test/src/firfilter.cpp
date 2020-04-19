@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-#include <catch2/catch.hpp>
+#include <doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/utility.hpp>
@@ -92,7 +92,7 @@ class my_fir_oracle
     }
 };
 
-TEST_CASE("FIR Filter", "[firfilter]")
+TEST_CASE("FIR Filter")
 {
     auto E = ell(40., zeros({n}));
     auto P = my_fir_oracle();
