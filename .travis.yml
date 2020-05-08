@@ -17,13 +17,13 @@ matrix:
             - libfmt-dev
             - libspdlog-dev
             - lcov
-      env: COMPILER=gcc GCC=7 BLAS=mkl BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
       addons: *gcc7
-      env: COMPILER=gcc GCC=7 BLAS=mkl BUILD_TYPE='Release'
+      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Release'
     - os: linux
       addons: *gcc7
-      env: COMPILER=gcc GCC=7 BLAS=mkl BUILD_TYPE='Coverage'
+      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Coverage'
     - os: linux
       addons: &gcc8
         apt:
@@ -34,10 +34,10 @@ matrix:
             - libfmt-dev
             - libspdlog-dev
             - lcov
-      env: COMPILER=gcc GCC=8 BLAS=mkl BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
       addons: *gcc8
-      env: COMPILER=gcc GCC=8 BLAS=mkl BUILD_TYPE='Release'
+      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Release'
     - os: linux
       addons: &clang8
         apt:
@@ -48,10 +48,10 @@ matrix:
             - libfmt-dev
             - libspdlog-dev
             - lcov
-      env: COMPILER=clang CLANG=8 BLAS=mkl BUILD_TYPE='Debug'
+      env: COMPILER=clang CLANG=8 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
       addons: *clang8
-      env: COMPILER=clang CLANG=8 BLAS=mkl BUILD_TYPE='Release'
+      env: COMPILER=clang CLANG=8 BLAS=OpenBLAS BUILD_TYPE='Release'
 
 env:
   global:
@@ -91,7 +91,6 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
-  - conda install pkg-config -c conda-forge
   # - conda install gtest cmake -c conda-forge
   # Install xtensor and BLAS
   - if [[ "$BLAS" == "OpenBLAS" ]]; then
@@ -99,9 +98,9 @@ install:
     elif [[ "$BLAS" == "mkl" ]]; then
       conda install mkl -c conda-forge;
     fi
-  - conda install xtensor=0.20.10 -c conda-forge
-  - conda install xtensor-blas=0.16.1 -c conda-forge
   - conda install xtensor-fftw=0.2.5 -c conda-forge
+  - conda install xtensor-blas=0.16.1 -c conda-forge
+  - conda install xtensor=0.20.10 -c conda-forge
   # - conda install xtensor-blas=0.11.1 -c conda-forge
   # - conda install xtensor=0.16.4 -c conda-forge
   - conda install lapack -c conda-forge
