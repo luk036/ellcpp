@@ -107,13 +107,13 @@ if (FFTW_FOUND)
     include_directories(${FFTW_INCLUDE_DIRS})
 endif (FFTW_FOUND)
 
-set(OpenBLAS_USE_STATIC_LIBS TRUE)
-find_package (OpenBLAS REQUIRED)
-if (OpenBLAS_FOUND)
-    message(STATUS "Found OpenBLAS: ${OpenBLAS_LIBRARIES}")
-    # set(LIBS ${LIBS} ${CMAKE_PREFIX_PATH}/lib/libopenblas.so.0) # can't find .so ???
-    set(LIBS ${LIBS} ${OpenBLAS_LIBRARIES})
-endif (OpenBLAS_FOUND)
+# set(OpenBLAS_USE_STATIC_LIBS TRUE)
+# find_package (OpenBLAS REQUIRED)
+# if (OpenBLAS_FOUND)
+#     message(STATUS "Found OpenBLAS: ${OpenBLAS_LIBRARIES}")
+#     # set(LIBS ${LIBS} ${CMAKE_PREFIX_PATH}/lib/libopenblas.so.0) # can't find .so ???
+#     set(LIBS ${LIBS} ${OpenBLAS_LIBRARIES})
+# endif (OpenBLAS_FOUND)
 
 find_package(LAPACK REQUIRED)
 if (LAPACK_FOUND)

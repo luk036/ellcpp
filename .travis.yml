@@ -17,13 +17,13 @@ matrix:
             - libfmt-dev
             - libspdlog-dev
             - lcov
-      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=7 BLAS=mkl BUILD_TYPE='Debug'
     - os: linux
       addons: *gcc7
-      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Release'
+      env: COMPILER=gcc GCC=7 BLAS=mkl BUILD_TYPE='Release'
     - os: linux
       addons: *gcc7
-      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Coverage'
+      env: COMPILER=gcc GCC=7 BLAS=mkl BUILD_TYPE='Coverage'
     - os: linux
       addons: &gcc8
         apt:
@@ -34,10 +34,10 @@ matrix:
             - libfmt-dev
             - libspdlog-dev
             - lcov
-      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=8 BLAS=mkl BUILD_TYPE='Debug'
     - os: linux
       addons: *gcc8
-      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Release'
+      env: COMPILER=gcc GCC=8 BLAS=mkl BUILD_TYPE='Release'
     - os: linux
       addons: &clang8
         apt:
@@ -48,10 +48,10 @@ matrix:
             - libfmt-dev
             - libspdlog-dev
             - lcov
-      env: COMPILER=clang CLANG=8 BLAS=OpenBLAS BUILD_TYPE='Debug'
+      env: COMPILER=clang CLANG=8 BLAS=mkl BUILD_TYPE='Debug'
     - os: linux
       addons: *clang8
-      env: COMPILER=clang CLANG=8 BLAS=OpenBLAS BUILD_TYPE='Release'
+      env: COMPILER=clang CLANG=8 BLAS=mkl BUILD_TYPE='Release'
 
 env:
   global:
@@ -96,7 +96,7 @@ install:
   - if [[ "$BLAS" == "OpenBLAS" ]]; then
       conda install openblas -c conda-forge;
     elif [[ "$BLAS" == "mkl" ]]; then
-      conda install mkl;
+      conda install mkl -c conda-forge;
     fi
   - conda install xtensor=0.20.10 -c conda-forge
   - conda install xtensor-blas=0.16.1 -c conda-forge

@@ -36,6 +36,6 @@ TEST_CASE("mle_corr_fn")
     const auto [a, num_iters, feasible] = mle_corr_poly(Y, s, 4);
     CHECK(a[0] >= 0.);
     CHECK(feasible);
-    CHECK(num_iters >= 237);
+    CHECK(num_iters >= 236);
     CHECK(num_iters <= 241);
 }
