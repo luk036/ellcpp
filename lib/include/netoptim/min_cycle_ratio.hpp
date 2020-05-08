@@ -45,7 +45,7 @@ auto min_cycle_ratio(const Graph& G, T& r0, Fn1&& get_cost, Fn2&& get_time,
         return T(total_cost) / total_time;
     };
 
-    auto calc_weight = [&](const T& r, const auto& e) {
+    auto calc_weight = [&](const T& r, const auto& e) -> T {
         return get_cost(e) - r * get_time(e);
     };
 

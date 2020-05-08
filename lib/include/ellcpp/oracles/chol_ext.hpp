@@ -59,7 +59,7 @@ class chol_ext
      */
     void factorize(const Mat& A)
     {
-        this->factor([&](unsigned i, unsigned j) { return A(i, j); });
+        this->factor([&](size_t i, size_t j) { return A(i, j); });
     }
 
     /*!
@@ -75,7 +75,7 @@ class chol_ext
     {
         this->p = {0U, 0U};
         auto& [start, stop] = this->p;
-        for (auto i = 0U; i != this->n; ++i)
+        for (size_t i = 0U; i != this->n; ++i)
         {
             auto j = start;
             auto d = getA(i, j);

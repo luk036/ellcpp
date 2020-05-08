@@ -127,8 +127,8 @@ class ell
     /*!
      * @brief Calculate new ellipsoid under Parallel Cut
      *
-     *        g' (x - xc​) + beta0 \le 0
-     *        g' (x - xc​) + beta1 \ge 0
+     *        g' (x - xc) + beta0 \le 0
+     *        g' (x - xc) + beta1 \ge 0
      *
      * @param[in] b0
      * @param[in] b1
@@ -139,8 +139,8 @@ class ell
     /*!
      * @brief Calculate new ellipsoid under Parallel Cut, one of them is central
      *
-     *        g' (x - xc​) \le 0
-     *        g' (x - xc​) + beta1 \ge 0
+     *        g' (x - xc) \le 0
+     *        g' (x - xc) + beta1 \ge 0
      *
      * @param[in] b1
      * @param[in] b1sq
@@ -150,7 +150,7 @@ class ell
     /*!
      * @brief Calculate new ellipsoid under Deep Cut
      *
-     *        g' (x - xc​) + beta \le 0
+     *        g' (x - xc) + beta \le 0
      *
      * @param[in] beta
      */
@@ -159,7 +159,7 @@ class ell
     /*!
      * @brief Calculate new ellipsoid under Central Cut
      *
-     *        g' (x - xc​) \le 0
+     *        g' (x - xc) \le 0
      *
      * @param[in] tau
      */

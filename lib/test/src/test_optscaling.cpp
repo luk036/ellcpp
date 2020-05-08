@@ -9,6 +9,8 @@
 #include <utility>                              // for std::pair
 #include <xnetwork/classes/digraphs.hpp>
 #include <xtensor/xarray.hpp>
+#include <limits>
+#include <cstddef>
 
 /*!
  * @brief Create a test case1 object
@@ -63,7 +65,7 @@ TEST_CASE("Test Optimal Scaling (two varaibles)")
     auto E = ell {1.5 * t1, std::move(x0)};
     auto dist = std::vector(G.number_of_nodes(), 0.);
     auto P = optscaling_oracle {G, dist, get_cost};
-    auto t = std::numeric_limits<double>::max();
+    auto t = 1.e100; // std::numeric_limits<double>::max()
     const auto [x, ell_info] = cutting_plane_dc(std::move(P), std::move(E), t);
 
     CHECK(x[1] >= x[0]);

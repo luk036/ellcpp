@@ -12,7 +12,7 @@
  *    This oracle solves the following feasibility problem:
  *
  *        find  x
- *        s.t.​  t * I - F(x)' F(x) >= 0
+ *        s.t.  t * I - F(x)' F(x) >= 0
  *
  *    where
  *

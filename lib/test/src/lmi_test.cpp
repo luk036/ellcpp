@@ -93,7 +93,7 @@ TEST_CASE("LMI test")
     // int niter, feasible, status;
     // Arr xb;
 
-    auto t = std::numeric_limits<double>::max();
+    auto t = 1.e100; // std::numeric_limits<double>::max()
     const auto [x, ell_info] = cutting_plane_dc(P, E, t);
     fmt::print("{:f} {} {} \n", t, ell_info.num_iters, ell_info.feasible);
     // std::cout << "LMI xbest: " << xb << "\n";

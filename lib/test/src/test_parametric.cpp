@@ -62,7 +62,7 @@ TEST_CASE("Test Parametric")
 
     const auto get_cost = [&](const auto& e) -> int {
         auto [u, v] = G.end_points(e);
-        return cost[G[u][v]];
+        return cost[G[u].at(v)];
     };
     const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
 

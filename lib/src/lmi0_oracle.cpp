@@ -15,7 +15,7 @@ std::optional<Cut> lmi0_oracle::operator()(const Arr& x)
 {
     auto n = x.size();
 
-    auto getA = [&, this](unsigned i, unsigned j) -> double {
+    auto getA = [&, this](size_t i, size_t j) -> double {
         auto a = 0.;
         for (size_t k = 0U; k != n; ++k)
         {

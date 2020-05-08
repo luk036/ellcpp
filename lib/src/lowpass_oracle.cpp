@@ -60,8 +60,8 @@ std::tuple<ParallelCut, double> lowpass_oracle::operator()(
     // 3. stopband constraint
     N = this->_As.shape()[0];
     // Arr w = xt::zeros<double>({N});
-    auto fmax = std::numeric_limits<double>::min();
-    auto imax = 0U;
+    auto fmax = -1.e100; // std::numeric_limits<double>::min()
+    size_t imax{0};
     // for (k in chain(range(i_As, N), range(i_As))) {
     for (size_t i = 0U, k = this->_i_As; i != N; ++i, ++k)
     {

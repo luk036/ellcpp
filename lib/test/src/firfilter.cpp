@@ -63,7 +63,7 @@ class my_fir_oracle
   public:
     auto operator()(const Arr& h, double t) const -> std::tuple<Cut, double>
     {
-        auto fmax = std::numeric_limits<double>::min();
+        auto fmax = -1.e100; // std::numeric_limits<double>::min()
         auto gmax = zeros({n});
 
         for (auto i = 0U; i != m; ++i)
@@ -96,7 +96,7 @@ TEST_CASE("FIR Filter")
 {
     auto E = ell(40., zeros({n}));
     auto P = my_fir_oracle();
-    auto t = std::numeric_limits<double>::max();
+    auto t = 1.e100; // std::numeric_limits<double>::max()
     const auto [r, ell_info] = cutting_plane_dc(P, E, t);
     CHECK(r[0] >= 0.);
     CHECK(ell_info.feasible);

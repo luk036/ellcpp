@@ -220,7 +220,7 @@ auto lsq_corr_core2(const Arr& Y, size_t m, lsq_oracle& P)
     x(0) = 4;
     x(m) = normY2 / 2.;
     auto E = ell(val, x);
-    auto t = std::numeric_limits<double>::max();
+    auto t = 1.e100; // std::numeric_limits<double>::max()
     const auto [x_best, ell_info] = cutting_plane_dc(P, E, t);
     Arr a = xt::view(x_best, xt::range(0, m));
     return std::tuple {std::move(a), ell_info.num_iters, ell_info.feasible};
@@ -343,7 +343,7 @@ auto mle_corr_core(const Arr& /* Y */, size_t m, mle_oracle& P)
     auto x = zeros({m});
     x(0) = 4.;
     auto E = ell(500., x);
-    auto t = std::numeric_limits<double>::max();
+    auto t = 1.e100; // std::numeric_limits<double>::max()
     auto [x_best, ell_info] = cutting_plane_dc(P, E, t);
     return std::tuple {
         std::move(x_best), ell_info.num_iters, ell_info.feasible};

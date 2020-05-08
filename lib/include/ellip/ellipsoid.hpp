@@ -124,7 +124,7 @@ STATUS ellipsoid_dc_discrete(Enclosing& E, Oracle& P, Vec& best_x,
     CUTSTATUS status = CUT;
 
     Vec lx = E.x();
-    best_f = std::numeric_limits<double>::max();
+    best_f = 1.e100; // std::numeric_limits<double>::max()
 
     for (int iter = 1; iter <= max_it; ++iter)
     {
@@ -168,7 +168,7 @@ STATUS ellipsoid_dc(Enclosing& E, Oracle& P, Vec& best_x, double& best_f,
     CUTSTATUS status = CUT;
 
     Vec lx = E.x();
-    best_f = std::numeric_limits<double>::max();
+    best_f = 1.e100; // std::numeric_limits<double>::max()
 
     for (int iter = 1; iter <= max_it; ++iter)
     {
@@ -212,7 +212,7 @@ STATUS ellipsoid_algo(Enclosing& E, Oracle& P, Vec& best_x, double& best_f,
 {
     STATUS flag = NOTFOUND;
     Vec lx = E.x();
-    best_f = std::numeric_limits<double>::max();
+    best_f = 1.e100; // std::numeric_limits<double>::max()
 
     for (int iter = 1; iter <= max_it; ++iter)
     {

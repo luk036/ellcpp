@@ -6,6 +6,8 @@
 #include <ellcpp/oracles/cycle_ratio_oracle.hpp> // import cycle_ratio
 #include <utility>                               // for std::pair
 #include <xnetwork/classes/digraphs.hpp>
+#include <limits>
+#include <cstddef>
 
 /*!
  * @brief Create a test case1 object
@@ -71,7 +73,7 @@ TEST_CASE("Test Cycle Ratio 2")
     auto dist = std::vector(G.number_of_nodes(), 0.);
     auto E = ell1d {-100., 100.};
     auto P = cycle_ratio_oracle {G, dist, get_cost, get_time};
-    auto r = std::numeric_limits<double>::min();
+    auto r = -1.e100; // std::numeric_limits<double>::min()
     const auto opts = Options {2000, 1e-12};
     const auto [x, ell_info] = cutting_plane_dc(P, E, r, opts);
     CHECK(ell_info.feasible);
@@ -92,7 +94,7 @@ TEST_CASE("Test Cycle Ratio of Timing Graph 2")
     auto dist = std::vector(G.number_of_nodes(), 0.);
     auto E = ell1d {-100., 100.};
     auto P = cycle_ratio_oracle {G, dist, get_cost, get_time};
-    auto r = std::numeric_limits<double>::min();
+    auto r = -1.e100; // std::numeric_limits<double>::min()
     const auto opts = Options {2000, 1e-12};
     const auto [x, ell_info] = cutting_plane_dc(P, E, r, opts);
     CHECK(ell_info.feasible);

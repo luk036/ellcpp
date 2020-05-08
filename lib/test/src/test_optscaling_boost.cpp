@@ -92,7 +92,7 @@ TEST_CASE("Test Optimal Scaling (two varaibles, boost)")
     auto dist = std::vector(G.number_of_nodes(), 0.);
 
     auto P = optscaling_oracle {G, dist, get_cost};
-    auto t = std::numeric_limits<double>::max();
+    auto t = 1.e100; // std::numeric_limits<double>::max()
     const auto [x, ell_info] = cutting_plane_dc(P, E, t);
 
     CHECK(x[1] >= x[0]);
