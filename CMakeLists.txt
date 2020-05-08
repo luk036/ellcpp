@@ -61,7 +61,7 @@ set (CMAKE_CXX_STANDARD_REQUIRED ON)
 # Don't use e.g. GNU extension (like -std=gnu++11) for portability
 set(CMAKE_CXX_EXTENSIONS OFF)
 if(MSVC)
-    add_compile_options(/std:c++17 /W3 /WX )
+    add_compile_options(/std:c++latest /Wv:18 /W3 /WX )
 else()
     add_compile_options(-std=c++17 -Wall -Wnon-virtual-dtor -Wunused -pedantic)
 endif()
@@ -136,7 +136,7 @@ endif (Boost_FOUND)
 # add_definitions ( -std=c++1z -g)
 add_subdirectory (external EXCLUDE_FROM_ALL)
 
-set (LIBRARY_INCLUDE_PATH ${LIBRARY_INCLUDE_PATH} ${xtensor_INCLUDE_DIRS})
+# set (LIBRARY_INCLUDE_PATH ${LIBRARY_INCLUDE_PATH} ${xtensor_INCLUDE_DIRS})
 
 # Enable code coverage with -DENABLE_COVERAGE=1
 if(ENABLE_COVERAGE)

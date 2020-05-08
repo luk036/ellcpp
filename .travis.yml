@@ -98,11 +98,11 @@ install:
   - conda install xtensor-fftw=0.2.5 -c conda-forge
   # - conda install xtensor-blas=0.11.1 -c conda-forge
   # - conda install xtensor=0.16.4 -c conda-forge
-  # - if [[ "$BLAS" == "OpenBLAS" ]]; then
-  #     conda install openblas -c conda-forge;
-  #   elif [[ "$BLAS" == "mkl" ]]; then
-  #     conda install mkl;
-  #   fi
+  - if [[ "$BLAS" == "OpenBLAS" ]]; then
+      conda install openblas -c conda-forge;
+    elif [[ "$BLAS" == "mkl" ]]; then
+      conda install mkl;
+    fi
   - conda install lapack -c conda-forge
   - conda install libboost -c conda-forge
   - conda install catch2 -c conda-forge
