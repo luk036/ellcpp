@@ -54,7 +54,7 @@ TEST_CASE("Test Optimal Scaling (two varaibles)")
 
     auto get_cost = [&](const auto& e) -> int {
         const auto [u, v] = G.end_points(e);
-        return cost[G[u][v]];
+        return cost[G[u].at(v)];
     };
 
 

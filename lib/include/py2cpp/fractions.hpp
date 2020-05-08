@@ -1,4 +1,3 @@
-// -*- coding: utf-8 -*-
 #pragma once
 
 /*! @file include/fractions.hpp
@@ -77,15 +76,15 @@ struct Fraction
      *
      */
     constexpr Fraction() = default;
-    // Fraction(const _Self &) = delete;
-    // Fraction(_Self &&) = default;
+
+    // Fraction(_Self &&) noexcept = default;
 
     /*!
      * @brief
      *
      * @return const Z&
      */
-    constexpr const Z& numerator() const
+    [[nodiscard]] constexpr const Z& numerator() const
     {
         return _numerator;
     }
@@ -95,7 +94,7 @@ struct Fraction
      *
      * @return const Z&
      */
-    constexpr const Z& denominator() const
+    [[nodiscard]] constexpr const Z& denominator() const
     {
         return _denominator;
     }
@@ -105,7 +104,7 @@ struct Fraction
      *
      * @return _Self
      */
-    constexpr _Self abs() const
+    [[nodiscard]] constexpr _Self abs() const
     {
         return _Self(std::abs(_numerator), std::abs(_denominator));
     }
@@ -142,6 +141,7 @@ struct Fraction
             return _Self(_numerator + frac._numerator, _denominator);
         }
         auto common = lcm(_denominator, frac._denominator);
+        // divisor-by-zero???
         auto n = common / _denominator * _numerator +
             common / frac._denominator * frac._numerator;
         return _Self(n, common);
@@ -325,7 +325,7 @@ struct Fraction
      * @return auto
      */
     template <typename U>
-    constexpr auto cmp(const Fraction<U>& frac) const
+    [[nodiscard]] constexpr auto cmp(const Fraction<U>& frac) const
     {
         // if (_denominator == frac._denominator) {
         //     return _numerator - frac._numerator;
@@ -431,7 +431,7 @@ struct Fraction
      * @param[in] c
      * @return auto
      */
-    constexpr auto cmp(const Z& c) const
+    [[nodiscard]] constexpr auto cmp(const Z& c) const
     {
         return _numerator - _denominator * c;
     }
@@ -614,6 +614,6 @@ _Stream& operator<<(_Stream& os, const Fraction<Z>& frac)
 }
 
 // For template deduction
-// Integral{Z} Fraction(const Z &, const Z &) -> Fraction<Z>;
+// Integral{Z} Fraction(const Z &, const Z &)->Fraction<Z>;
 
 } // namespace fun

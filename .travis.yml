@@ -91,6 +91,7 @@ install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
   - conda info -a
+  - conda install pkg-config -c conda-forge
   # - conda install gtest cmake -c conda-forge
   # Install xtensor and BLAS
   - if [[ "$BLAS" == "OpenBLAS" ]]; then

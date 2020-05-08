@@ -5,15 +5,10 @@
 #include <py2cpp/fractions.hpp> // import Fraction
 #include <xnetwork/classes/digraphs.hpp>
 
-/*!
- * @brief Create a test case1 object
- *
- * @return auto
- */
-static auto create_test_case1()
+TEST_CASE("Test Parametric")
 {
     using Edge = std::pair<int, int>;
-    constexpr auto num_nodes = 5;
+    constexpr int num_nodes = 5;
     enum nodes
     {
         A,
@@ -25,39 +20,8 @@ static auto create_test_case1()
     const auto edges = std::array {
         Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
     const auto indices = std::array {0, 1, 2, 3, 4};
-    auto g = xn::DiGraphS {py::range<int>(num_nodes)};
-    g.add_edges_from(edges, indices);
-    return g;
-}
-
-/*!
- * @brief Create a test case timing object
- *
- * @return auto
- */
-static auto create_test_case_timing()
-{
-    using Edge = std::pair<int, int>;
-    constexpr auto num_nodes = 3;
-    enum nodes
-    {
-        A,
-        B,
-        C
-    };
-    const auto edges = std::array {Edge {A, B}, Edge {B, A}, Edge {B, C},
-        Edge {C, B}, Edge {C, A}, Edge {A, C}};
-    // make sure no parallel edges!!!
-
-    const auto indices = std::array {0, 1, 2, 3, 4, 5};
-    auto g = xn::DiGraphS {py::range<int>(num_nodes)};
-    g.add_edges_from(edges, indices);
-    return g;
-}
-
-TEST_CASE("Test Parametric")
-{
-    const auto G = create_test_case1();
+    auto G = xn::DiGraphS {py::range<int>(num_nodes)};
+    G.add_edges_from(edges, indices);
     const auto cost = std::array {5, 1, 1, 1, 1};
 
     const auto get_cost = [&](const auto& e) -> int {
@@ -76,12 +40,26 @@ TEST_CASE("Test Parametric")
 
 TEST_CASE("Test Parametric of Timing Graph")
 {
-    const auto G = create_test_case_timing();
+    using Edge = std::pair<int, int>;
+    constexpr int num_nodes = 3;
+    enum nodes
+    {
+        A,
+        B,
+        C
+    };
+    const auto edges = std::array {Edge {A, B}, Edge {B, A}, Edge {B, C},
+        Edge {C, B}, Edge {C, A}, Edge {A, C}};
+    // make sure no parallel edges!!!
+
+    const auto indices = std::array {0, 1, 2, 3, 4, 5};
+    auto G = xn::DiGraphS {py::range<int>(num_nodes)};
+    G.add_edges_from(edges, indices);
     const auto cost = std::array {7, -1, 3, 0, 2, 4};
 
     const auto get_cost = [&](const auto& e) -> int {
         auto [u, v] = G.end_points(e);
-        return cost[G[u][v]];
+        return cost[G[u].at(v)];
     };
     const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
 

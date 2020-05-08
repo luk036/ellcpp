@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 #pragma once
-
+ 
 #include "parametric.hpp" // import max_parametric
 #include <algorithm>
 #include <numeric>
@@ -12,7 +12,7 @@
  *    This function solves the following network parametric problem:
  *
  *        max  r
- *        s.t. dist[v] - dist[u] \le cost(u, v) - r * time(u, v)
+ *        s.t. dist[v] - dist[u] \ge cost(u, v) - r * time(u, v)
  *             \forall e(u, v) \in G(V, E)
  *
  * @tparam Graph
@@ -20,6 +20,7 @@
  * @tparam Fn2
  * @tparam Container
  * @param[in] G
+ * @param[in,out] r0
  * @param[in] get_cost
  * @param[in] get_time
  * @param[in,out] dist

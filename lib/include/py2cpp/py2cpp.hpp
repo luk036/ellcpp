@@ -1,4 +1,3 @@
-// -*- coding: utf-8 -*-
 #pragma once
 
 #include <initializer_list>
@@ -20,7 +19,7 @@ namespace py
  * @tparam T
  * @tparam decltype(std::begin(std::declval<T>()))
  * @tparam decltype(std::end(std::declval<T>()))
- * @param[in] iterable (forward)
+ * @param[in] iterable
  * @return constexpr auto
  */
 template <typename T, typename TIter = decltype(std::begin(std::declval<T>())),
@@ -120,23 +119,24 @@ inline constexpr auto range(T start, T stop)
 
     struct iterable_wrapper
     {
-        using value_type [[maybe_unused]] = T; // luk
+      public:
+        using value_type [[maybe_unused]] = T; // luk:
         using iterator = __iterator;           // luk
         T start;
         T stop;
-        constexpr auto begin() const
+        [[nodiscard]] constexpr auto begin() const
         {
             return iterator {start};
         }
-        constexpr auto end() const
+        [[nodiscard]] constexpr auto end() const
         {
             return iterator {stop};
         }
-        constexpr auto empty() const -> bool
+        [[nodiscard]] constexpr auto empty() const -> bool
         {
             return stop == start;
         }
-        constexpr auto size() const -> size_t
+        [[nodiscard]] constexpr auto size() const -> size_t
         {
             return stop - start;
         }
@@ -144,14 +144,16 @@ inline constexpr auto range(T start, T stop)
         {
             return T(start + n);
         } // no bounds checking
-        constexpr auto contains(T n) const -> bool
+        [[nodiscard]] constexpr auto contains(T n) const -> bool
         {
             return !(n < start) && n < stop;
         }
     };
 
-    if (stop < start)
-        stop = start;
+    stop = std::max(stop, start);
+    // if (stop < start) {
+    //     stop = start;
+    // }
     return iterable_wrapper {start, stop};
 }
 
@@ -196,7 +198,7 @@ class set : public std::unordered_set<Key>
      *
      * @param[in] init
      */
-    explicit set(std::initializer_list<Key> init)
+    set(std::initializer_list<Key> init)
         : std::unordered_set<Key> {init}
     {
     }
@@ -235,13 +237,13 @@ class set : public std::unordered_set<Key>
      *
      * @return _Self&
      */
-    _Self& operator=(_Self&&) = default;
+    _Self& operator=(_Self&&) noexcept = default;
 
     /*!
      * @brief Move Constructor (default)
      *
      */
-    set(set<Key>&&) = default;
+    set(set<Key>&&) noexcept = default;
 
   private:
     /*!
@@ -286,7 +288,7 @@ inline size_t len(const set<Key>& m)
  * @tparam Key
  */
 template <typename Key>
-set(std::initializer_list<Key>) -> set<Key>;
+set(std::initializer_list<Key>)->set<Key>;
 
 // template <typename Key>
 // set(std::initializer_list<const char*> ) -> set<std::string>;
@@ -338,7 +340,7 @@ class dict : public std::unordered_map<Key, T>
      *
      * @param[in] init
      */
-    explicit dict(std::initializer_list<value_type> init)
+    dict(std::initializer_list<value_type> init)
         : std::unordered_map<Key, T> {init}
     {
     }
@@ -352,7 +354,7 @@ class dict : public std::unordered_map<Key, T>
     // template <class Sequence>
     // explicit dict(const Sequence &S) {
     //     this->reserve(S.size());
-    //     for (auto [i_v, v] : py::enumerate(S)) {
+    //     for (auto&& [i_v, v] : py::enumerate(S)) {
     //         (*this)[v] = i_v;
     //     }
     // }
@@ -447,13 +449,13 @@ class dict : public std::unordered_map<Key, T>
      *
      * @return _Self&
      */
-    _Self& operator=(_Self&&) = default;
+    _Self& operator=(_Self&&) noexcept = default;
 
     /*!
      * @brief Move Constructor (default)
      *
      */
-    dict(dict<Key, T>&&) = default;
+    dict(dict<Key, T>&&) noexcept = default;
 
   private:
     /*!
@@ -501,10 +503,10 @@ inline size_t len(const dict<Key, T>& m)
  * @tparam T
  */
 template <typename Key, typename T>
-dict(std::initializer_list<std::pair<const Key, T>>) -> dict<Key, T>;
+dict(std::initializer_list<std::pair<const Key, T>>)->dict<Key, T>;
 
 template <class Sequence>
 dict(const Sequence& S)
-    -> dict<std::remove_cv_t<decltype(*std::begin(S))>, size_t>;
+    ->dict<std::remove_cv_t<decltype(*std::begin(S))>, size_t>;
 
 } // namespace py

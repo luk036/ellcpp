@@ -12,7 +12,7 @@
  *    This function solves the following network parametric problem:
  *
  *        max  r
- *        s.t. dist[v] - dist[u] \le d(u, v, r)
+ *        s.t. dist[v] - dist[u] \ge d(u, v, r)
  *             \forall e(u, v) \in G(V, E)
  *
  * @tparam Graph

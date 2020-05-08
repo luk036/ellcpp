@@ -1,4 +1,3 @@
-// -*- coding: utf-8 -*-
 #pragma once
 
 #include <any>
@@ -371,14 +370,14 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
         auto N = edges.size();
         for (auto i = 0U; i != N; ++i)
         {
-            const auto& [u, v] = edges[i];
+            auto [u, v] = edges[i];
             this->add_edge(u, v, data[i]);
         }
     }
 
     /*! Returns True if node u has successor v.
 
-        This is true if graph has the edge u -> v.
+        This is true if graph has the edge u->v.
     */
     auto has_successor(const Node& u, const Node& v) -> bool
     {
@@ -488,7 +487,7 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
             {
                 for (auto&& nbr : nbrs)
                 {
-                    yield(std::pair {n, nbr});
+                    yield(edge_t{Node(n), Node(nbr)});
                 }
             }
         };

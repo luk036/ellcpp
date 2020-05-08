@@ -1,4 +1,3 @@
-// -*- coding: utf-8 -*-
 #pragma once
 
 //    Copyright (C) 2004-2018 by
@@ -51,7 +50,7 @@ DegreeView
 
     `V = G.degree` allows iteration over (node, degree) pairs as well
     as lookup: `deg=V[n]`. There are many flavors of DegreeView
-    for (auto In/Out/Directed/Multi. For Directed Graphs, `G.degree`
+    for In/Out/Directed/Multi. For Directed Graphs, `G.degree`
     counts both : and out going edges. `G.out_degree` &&
     `G.in_degree` count only specific directions.
     Weighted degree using edge data attributes is provide via
@@ -102,7 +101,7 @@ EdgeDataView
 namespace xn
 {
 
-// static const auto _all__ = {"NodeView",
+// static const auto __all__ = {"NodeView",
 //                              "NodeDataView",
 //                              "EdgeView",
 //                              "OutEdgeView",
@@ -182,11 +181,11 @@ class NodeView
 
     nodeview_t& _nodes;
 
-    // auto _getstate__( ) {
+    // auto __getstate__( ) {
     //     return {"_nodes": this->_nodes};
     // }
 
-    // auto _setstate__( state) {
+    // auto __setstate__( state) {
     //     this->_nodes = state["_nodes"];
     // }
   public:
@@ -228,7 +227,7 @@ class NodeView
     // }
 
     // // DataView method
-    // auto _call__( data=false, default=None) {
+    // auto __call__( data=false, default=None) {
     //     if (data == false) {
     //         return (*this);
     //     }
@@ -242,12 +241,12 @@ class NodeView
     //     return NodeDataView(this->_nodes, data, default);
     // }
 
-    // auto _str__( ) {
+    // auto __str__( ) {
     //     return str(list( ));
     // }
 
-    // auto _repr__( ) {
-    //     return "%s(%r)" % (this->_class__.__name__, tuple( ));
+    // auto __repr__( ) {
+    //     return "%s(%r)" % (this->__class__.__name__, tuple( ));
     // }
 };
 
@@ -270,15 +269,15 @@ class NodeView
 //      */
 //     using _Self = NodeDataView;
 
-//     static const auto _slots__ = ("_nodes", "_data", "_default");
+//     static const auto __slots__ = ("_nodes", "_data", "_default");
 
-//     // auto _getstate__( ) {
+//     // auto __getstate__( ) {
 //     //     return {"_nodes": this->_nodes,
 //     //             "_data": this->_data,
 //     //             "_default": this->_default};
 //     // }
 
-//     // auto _setstate__( state) {
+//     // auto __setstate__( state) {
 //     //     this->_nodes = state["_nodes"];
 //     //     this->_data = state["_data"];
 //     //     this->_default = state["_default"];
@@ -303,11 +302,11 @@ class NodeView
 //         }
 //     }
 
-//     auto _len__( ) {
+//     auto __len__( ) {
 //         return len(this->_nodes);
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         data = this->_data;
 //         if (data == false) {
 //             return iter(this->_nodes);
@@ -346,19 +345,19 @@ class NodeView
 //         return ddict[data] if (data : ddict else this->_default;
 //     }
 
-//     auto _str__( ) {
+//     auto __str__( ) {
 //         return str(list( ));
 //     }
 
-//     // auto _repr__( ) {
+//     // auto __repr__( ) {
 //     //     if (this->_data == false) {
-//     //         return "%s(%r)" % (this->_class__.__name__, tuple( ));
+//     //         return "%s(%r)" % (this->__class__.__name__, tuple( ));
 //     //     }
 //     //     if (this->_data == true) {
-//     //         return "%s(%r)" % (this->_class__.__name__, dict( ));
+//     //         return "%s(%r)" % (this->__class__.__name__, dict( ));
 //     //     }
 //     //     return "%s(%r, data=%r)" %
-//     //            this->_class__.__name__, dict( ), this->_data);
+//     //            this->__class__.__name__, dict( ), this->_data);
 //     // }
 // };
 
@@ -411,24 +410,24 @@ class NodeView
 //         this->_weight = weight;
 //     }
 
-//     auto _call__( nbunch=None, weight=None) {
+//     auto __call__( nbunch=None, weight=None) {
 //         if (nbunch.empty()) {
 //             if (weight == this->_weight) {
 //                 return (*this);
 //             }
-//             return this->_class__(this->_graph, None, weight);
+//             return this->__class__(this->_graph, None, weight);
 //         }
 //         try {
 //             if (nbunch : this->_nodes) {
 //                 if (weight == this->_weight) {
 //                     return (*this)[nbunch];
 //                 }
-//                 return this->_class__(this->_graph, None, weight)[nbunch];
+//                 return this->__class__(this->_graph, None, weight)[nbunch];
 //             }
 //         } catch (TypeError) {
 //             // pass;
 //         }
-//         return this->_class__(this->_graph, nbunch, weight);
+//         return this->__class__(this->_graph, nbunch, weight);
 //     }
 
 //     auto operator[]( n) {
@@ -442,7 +441,7 @@ class NodeView
 //             sum(dd.get(weight, 1) for dd : preds.values());
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         weight = this->_weight;
 //         if (weight.empty()) {
 //             for (auto n : this->_nodes) {
@@ -461,16 +460,16 @@ class NodeView
 //         }
 //     }
 
-//     auto _len__( ) {
+//     auto __len__( ) {
 //         return len(this->_nodes);
 //     }
 
-//     auto _str__( ) {
+//     auto __str__( ) {
 //         return str(list( ));
 //     }
 
-//     // auto _repr__( ) {
-//     //     return "%s(%r)" % (this->_class__.__name__, dict( ));
+//     // auto __repr__( ) {
+//     //     return "%s(%r)" % (this->__class__.__name__, dict( ));
 //     // }
 // };
 
@@ -528,7 +527,7 @@ class NodeView
 //             (n : nbrs and nbrs[n].get(weight, 1));
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         weight = this->_weight;
 //         if (weight.empty()) {
 //             for (auto n : this->_nodes) {
@@ -559,7 +558,7 @@ class NodeView
 //         return sum(dd.get(this->_weight, 1) for dd : nbrs.values());
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         weight = this->_weight;
 //         if (weight.empty()) {
 //             for (auto n : this->_nodes) {
@@ -589,7 +588,7 @@ class NodeView
 //         return sum(dd.get(weight, 1) for dd : nbrs.values());
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         weight = this->_weight;
 //         if (weight.empty()) {
 //             for (auto n : this->_nodes) {
@@ -625,7 +624,7 @@ class NodeView
 //         return deg;
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         weight = this->_weight;
 //         if (weight.empty()) {
 //             for (auto n : this->_nodes) {
@@ -667,7 +666,7 @@ class NodeView
 //         return deg;
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         weight = this->_weight;
 //         if (weight.empty()) {
 //             for (auto n : this->_nodes) {
@@ -706,7 +705,7 @@ class NodeView
 //                    for (auto d : key_dict.values());
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         weight = this->_weight;
 //         if (weight.empty()) {
 //             for (auto n : this->_nodes) {
@@ -740,7 +739,7 @@ class NodeView
 //                    for (auto d : key_dict.values());
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         weight = this->_weight;
 //         if (weight.empty()) {
 //             for (auto n : this->_nodes) {
@@ -762,18 +761,18 @@ class NodeView
 // // EdgeDataViews
 // class OutEdgeDataView: public object {
 //     /*! EdgeDataView for outward edges of DiGraph; See EdgeDataView */
-//     static const auto _slots__ = ("_viewer", "_nbunch", "_data", "_default",
+//     static const auto __slots__ = ("_viewer", "_nbunch", "_data", "_default",
 //                  "_adjdict", "_nodes_nbrs", "_report");
 
-//     auto _getstate__( ) {
+//     auto __getstate__( ) {
 //         return {"viewer": this->_viewer,
 //                 "nbunch": this->_nbunch,
 //                 "data": this->_data,;
 //                 "default": this->_default};
 //     }
 
-//     auto _setstate__( state) {
-//         this->_init__(**state);
+//     auto __setstate__( state) {
+//         this->__init__(**state);
 //     }
 
 //     explicit _Self( viewer, nbunch=None, data=false, default=None) {
@@ -800,11 +799,11 @@ class NodeView
 //         }
 //     }
 
-//     auto _len__( ) {
+//     auto __len__( ) {
 //         return sum(len(nbrs) for n, nbrs : this->_nodes_nbrs());
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         return (this->_report(n, nbr, dd) for n, nbrs : this->_nodes_nbrs();
 //                 for (auto nbr, dd : nbrs.items());
 //     }
@@ -819,12 +818,12 @@ class NodeView
 //         return e == this->_report(u, v, ddict);
 //     }
 
-//     auto _str__( ) {
+//     auto __str__( ) {
 //         return str(list( ));
 //     }
 
-//     // auto _repr__( ) {
-//     //     return "%s(%r)" % (this->_class__.__name__, list( ));
+//     // auto __repr__( ) {
+//     //     return "%s(%r)" % (this->__class__.__name__, list( ));
 //     // }
 // };
 
@@ -856,13 +855,13 @@ class NodeView
 //     [(0, 1, "biz"), (1, 2, "bar")];
 //     >>> assert((0, 1, "biz"] : G.edges(data="foo", default="biz"));
 //      */
-//     static const auto _slots__ = ();
+//     static const auto __slots__ = ();
 
-//     auto _len__( ) {
+//     auto __len__( ) {
 //         return sum(1 for e : *this);
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         seen = {};
 //         for (auto n, nbrs : this->_nodes_nbrs() {
 //             for (auto nbr, dd : nbrs.items() {
@@ -892,9 +891,9 @@ class NodeView
 
 // class InEdgeDataView(OutEdgeDataView) {
 //     /*! An EdgeDataView class for outward edges of DiGraph; See EdgeDataView
-//     */ static const auto _slots__ = ();
+//     */ static const auto __slots__ = ();
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         return (this->_report(nbr, n, dd) for n, nbrs : this->_nodes_nbrs();
 //                 for (auto nbr, dd : nbrs.items());
 //     }
@@ -912,9 +911,9 @@ class NodeView
 
 // class OutMultiEdgeDataView(OutEdgeDataView) {
 //     /*! An EdgeDataView for outward edges of MultiDiGraph; See EdgeDataView
-//     */ static const auto _slots__ = ("keys",);
+//     */ static const auto __slots__ = ("keys",);
 
-//     auto _getstate__( ) {
+//     auto __getstate__( ) {
 //         return {"viewer": this->_viewer,
 //                 "nbunch": this->_nbunch,
 //                 "keys": this->keys,
@@ -922,8 +921,8 @@ class NodeView
 //                 "default": this->_default};
 //     }
 
-//     auto _setstate__( state) {
-//         this->_init__(**state);
+//     auto __setstate__( state) {
+//         this->__init__(**state);
 //     }
 
 //     explicit _Self( viewer, nbunch=None,
@@ -965,11 +964,11 @@ class NodeView
 //         }
 //     }
 
-//     auto _len__( ) {
+//     auto __len__( ) {
 //         return sum(1 for e : *this);
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         return (this->_report(n, nbr, k, dd) for n, nbrs :
 //         this->_nodes_nbrs();
 //                 for (auto nbr, kd : nbrs.items() for k, dd : kd.items());
@@ -1002,9 +1001,9 @@ class NodeView
 
 // class MultiEdgeDataView(OutMultiEdgeDataView) {
 //     /*! An EdgeDataView class for edges of MultiGraph; See EdgeDataView */
-//     static const auto _slots__ = ();
+//     static const auto __slots__ = ();
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         seen = {};
 //         for (auto n, nbrs : this->_nodes_nbrs() {
 //             for (auto nbr, kd : nbrs.items() {
@@ -1050,9 +1049,9 @@ class NodeView
 
 // class InMultiEdgeDataView(OutMultiEdgeDataView) {
 //     /*! An EdgeDataView for inward edges of MultiDiGraph; See EdgeDataView */
-//     static const auto _slots__ = ();
+//     static const auto __slots__ = ();
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         return (this->_report(nbr, n, k, dd) for n, nbrs :
 //         this->_nodes_nbrs();
 //                 for (auto nbr, kd : nbrs.items() for k, dd : kd.items());
@@ -1084,13 +1083,13 @@ class NodeView
 /*! A EdgeView class for outward edges of a DiGraph */
 // template <typename graph_t>
 // class OutEdgeView {
-//     // static const auto _slots__ = ("_adjdict", "_graph", "_nodes_nbrs");
+//     // static const auto __slots__ = ("_adjdict", "_graph", "_nodes_nbrs");
 
-//     // auto _getstate__( ) {
+//     // auto __getstate__( ) {
 //     //     return {"_graph": this->_graph};
 //     // }
 
-//     // auto _setstate__( state) {
+//     // auto __setstate__( state) {
 //     //     this->_graph = G = state["_graph"];
 //     //     this->_adjdict = G._succ if (hasattr(G, "succ") else G._adj;
 //     //     this->_nodes_nbrs = this->_adjdict.items;
@@ -1123,11 +1122,11 @@ class NodeView
 //     {}
 
 //     // Set methods
-//     // auto _len__( ) {
+//     // auto __len__( ) {
 //     //     return sum(len(nbrs) for n, nbrs : this->_nodes_nbrs());
 //     // }
 
-//     // auto _iter__( ) {
+//     // auto __iter__( ) {
 //     //     for (auto [n, nbrs] : this->_nodes_nbrs()) {
 //     //         for (auto nbr : nbrs) {
 //     //             yield (n, nbr);
@@ -1147,7 +1146,7 @@ class NodeView
 //     }
 
 //     // // EdgeDataView methods
-//     // auto _call__( nbunch=None, data=false, default=None) {
+//     // auto __call__( nbunch=None, data=false, default=None) {
 //     //     if (nbunch.empty() and data == false) {
 //     //         return (*this);
 //     //     }
@@ -1162,11 +1161,11 @@ class NodeView
 //     // }
 
 //     // // String Methods
-//     // auto _str__( ) {
+//     // auto __str__( ) {
 //     //     return str(list( ));
 //     // }
 
-//     // auto _repr__( ) {
+//     // auto __repr__( ) {
 //     //     return "{0.__class__.__name__}({1!r})".format( list( ));
 //     // }
 // };
@@ -1236,16 +1235,16 @@ class NodeView
 //     (2, 3, 0);
 //     (2, 3, 1);
 //      */
-//     static const auto _slots__ = ();
+//     static const auto __slots__ = ();
 
 //     dataview = EdgeDataView;
 
-//     auto _len__( ) {
+//     auto __len__( ) {
 //         return sum(len(nbrs) + (n : nbrs) for n, nbrs : this->_nodes_nbrs())
 //         / 2;
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         seen = {};
 //         for (auto n, nbrs : this->_nodes_nbrs() {
 //             for (auto nbr : nbrs) {
@@ -1270,9 +1269,9 @@ class NodeView
 
 // class InEdgeView(OutEdgeView) {
 //     /*! A EdgeView class for inward edges of a DiGraph */
-//     static const auto _slots__ = ();
+//     static const auto __slots__ = ();
 
-//     auto _setstate__( state) {
+//     auto __setstate__( state) {
 //         this->_graph = G = state["_graph"];
 //         this->_adjdict = G._pred if (hasattr(G, "pred") else G._adj;
 //         this->_nodes_nbrs = this->_adjdict.items;
@@ -1286,7 +1285,7 @@ class NodeView
 //         this->_nodes_nbrs = this->_adjdict.items;
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         for (auto n, nbrs : this->_nodes_nbrs() {
 //             for (auto nbr : nbrs) {
 //                 yield (nbr, n);
@@ -1311,16 +1310,16 @@ class NodeView
 
 // class OutMultiEdgeView(OutEdgeView) {
 //     /*! A EdgeView class for outward edges of a MultiDiGraph */
-//     static const auto _slots__ = ();
+//     static const auto __slots__ = ();
 
 //     dataview = OutMultiEdgeDataView;
 
-//     auto _len__( ) {
+//     auto __len__( ) {
 //         return sum(len(kdict) for n, nbrs : this->_nodes_nbrs();
 //                    for (auto nbr, kdict : nbrs.items());
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         for (auto n, nbrs : this->_nodes_nbrs() {
 //             for (auto nbr, kdict : nbrs.items() {
 //                 for (auto key : kdict) {
@@ -1352,7 +1351,7 @@ class NodeView
 //         return this->_adjdict[u][v][k];
 //     }
 
-//     auto _call__( nbunch=None, data=false, keys=false, default=None) {
+//     auto __call__( nbunch=None, data=false, keys=false, default=None) {
 //         if (nbunch.empty() and data == false and keys == true) {
 //             return (*this);
 //         }
@@ -1369,15 +1368,15 @@ class NodeView
 
 // class MultiEdgeView(OutMultiEdgeView) {
 //     /*! A EdgeView class for edges of a MultiGraph */
-//     static const auto _slots__ = ();
+//     static const auto __slots__ = ();
 
 //     dataview = MultiEdgeDataView;
 
-//     auto _len__( ) {
+//     auto __len__( ) {
 //         return sum(1 for e : *this);
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         seen = {};
 //         for (auto n, nbrs : this->_nodes_nbrs() {
 //             for (auto nbr, kd : nbrs.items() {
@@ -1395,9 +1394,9 @@ class NodeView
 
 // class InMultiEdgeView(OutMultiEdgeView) {
 //     /*! A EdgeView class for inward edges of a MultiDiGraph */
-//     static const auto _slots__ = ();
+//     static const auto __slots__ = ();
 
-//     auto _setstate__( state) {
+//     auto __setstate__( state) {
 //         this->_graph = G = state["_graph"];
 //         this->_adjdict = G._pred if (hasattr(G, "pred") else G._adj;
 //         this->_nodes_nbrs = this->_adjdict.items;
@@ -1411,7 +1410,7 @@ class NodeView
 //         this->_nodes_nbrs = this->_adjdict.items;
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         for (auto n, nbrs : this->_nodes_nbrs() {
 //             for (auto nbr, kdict : nbrs.items() {
 //                 for (auto key : kdict) {

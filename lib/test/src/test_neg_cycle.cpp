@@ -5,84 +5,12 @@
 #include <vector>
 #include <xnetwork/classes/digraphs.hpp>
 
-/*!
- * @brief Create a test case1 object
- *
- * @return auto
- */
-static auto create_test_case1()
-{
-    using Edge = std::pair<int, int>;
-    constexpr auto num_nodes = 5;
-    enum nodes
-    {
-        A,
-        B,
-        C,
-        D,
-        E
-    };
-    const auto edges = std::array {
-        Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
-    constexpr auto weights = std::array {-5, 1, 1, 1, 1};
-    auto g = xn::DiGraphS {py::range<int>(num_nodes)};
-    g.add_edges_from(edges, weights);
-    return g;
-}
-
-/*!
- * @brief Create a test case2 object
- *
- * @return auto
- */
-static auto create_test_case2()
-{
-    using Edge = std::pair<int, int>;
-    constexpr auto num_nodes = 5;
-    enum nodes
-    {
-        A,
-        B,
-        C,
-        D,
-        E
-    };
-    auto edges = std::array {
-        Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
-    auto weights = std::array {2, 1, 1, 1, 1};
-    auto g = xn::DiGraphS {py::range<int>(num_nodes)};
-    g.add_edges_from(edges, weights);
-    return g;
-}
-
-/*!
- * @brief Create a test case timing object
- *
- * @return auto
- */
-static auto create_test_case_timing()
-{
-    using Edge = std::pair<int, int>;
-    constexpr auto num_nodes = 3;
-    enum nodes
-    {
-        A,
-        B,
-        C
-    };
-    const auto edges = std::array {Edge {A, B}, Edge {B, A}, Edge {B, C},
-        Edge {C, B}, Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
-    const auto weights = std::array {7, 0, 3, 1, 6, 4, 2, 5};
-    auto g = xn::DiGraphS {py::range<int>(num_nodes)};
-    g.add_edges_from(edges, weights);
-    return g;
-}
 
 /*!
  * @brief
  *
  * @tparam Graph
- * @param[in] G
+ * @param G
  * @return true
  * @return false
  */
@@ -106,7 +34,21 @@ bool do_case(const Graph& G)
  */
 TEST_CASE("Test Negative Cycle")
 {
-    const auto G = create_test_case1();
+    using Edge = std::pair<int, int>;
+    constexpr int num_nodes = 5;
+    enum nodes
+    {
+        A,
+        B,
+        C,
+        D,
+        E
+    };
+    const auto edges = std::array {
+        Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
+    constexpr auto weights = std::array {-5, 1, 1, 1, 1};
+    auto G = xn::DiGraphS {py::range<int>(num_nodes)};
+    G.add_edges_from(edges, weights);
     const auto hasNeg = do_case(G);
     CHECK(hasNeg);
 }
@@ -117,7 +59,21 @@ TEST_CASE("Test Negative Cycle")
  */
 TEST_CASE("Test No Negative Cycle")
 {
-    const auto G = create_test_case2();
+    using Edge = std::pair<int, int>;
+    constexpr auto num_nodes = 5;
+    enum nodes
+    {
+        A,
+        B,
+        C,
+        D,
+        E
+    };
+    auto edges = std::array {
+        Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
+    auto weights = std::array {2, 1, 1, 1, 1};
+    auto G = xn::DiGraphS {py::range<int>(num_nodes)};
+    G.add_edges_from(edges, weights);
     const auto hasNeg = do_case(G);
     CHECK(!hasNeg);
 }
@@ -128,7 +84,19 @@ TEST_CASE("Test No Negative Cycle")
  */
 TEST_CASE("Test Timing Graph")
 {
-    const auto G = create_test_case_timing();
+    using Edge = std::pair<int, int>;
+    constexpr auto num_nodes = 3;
+    enum nodes
+    {
+        A,
+        B,
+        C
+    };
+    const auto edges = std::array {Edge {A, B}, Edge {B, A}, Edge {B, C},
+        Edge {C, B}, Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
+    const auto weights = std::array {7, 0, 3, 1, 6, 4, 2, 5};
+    auto G = xn::DiGraphS {py::range<int>(num_nodes)};
+    G.add_edges_from(edges, weights);
     const auto hasNeg = do_case(G);
     CHECK(!hasNeg);
 }

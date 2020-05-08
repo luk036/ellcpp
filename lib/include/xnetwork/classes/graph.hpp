@@ -1,10 +1,8 @@
-// -*- coding: utf-8 -*-
 #pragma once
 
 #include <any>
 #include <cassert>
 #include <py2cpp/py2cpp.hpp>
-#include <string>
 #include <type_traits>
 #include <vector>
 #include <xnetwork/classes/coreviews.hpp> // import AtlasView, AdjacencyView
@@ -229,8 +227,8 @@ class Graph : public object
     // node_dict_factory _node{};  // empty node attribute dict
     adjlist_outer_dict_factory _adj; // empty adjacency dict
 
-    // auto _getstate__() {
-    //     attr = this->_dict__.copy();
+    // auto __getstate__() {
+    //     attr = this->__dict__.copy();
     //     // remove lazy property attributes
     //     if ("nodes" : attr) {
     //         del attr["nodes"];
@@ -270,10 +268,14 @@ class Graph : public object
     {
     }
 
+    Graph(const Graph&) = delete;            // don't copy
+    Graph& operator=(const Graph&) = delete; // don't copy
+    Graph(Graph&&) noexcept = default;
+
     /*!
      * @brief For compatible with BGL adaptor
      *
-     * @param e
+     * @param[in] e
      * @return edge_t&
      */
     static edge_t& end_points(edge_t& e)
@@ -284,7 +286,7 @@ class Graph : public object
     /*!
      * @brief For compatible with BGL adaptor
      *
-     * @param e
+     * @param[in] e
      * @return edge_t&
      */
     static const edge_t& end_points(const edge_t& e)
@@ -333,7 +335,9 @@ class Graph : public object
         a property) `G.name`. This is entirely user controlled.
          */
         if (!this->graph.contains("name"))
+        {
             return "";
+        }
         return std::any_cast<const char*>(this->graph["name"]);
     }
 
@@ -343,7 +347,7 @@ class Graph : public object
         this->graph["name"] = std::any(s);
     }
 
-    /*! Iterate over the nodes. Use: "for (auto n : G)".
+    /*! Iterate over the nodes. Use: "for (auto&& n : G)".
      *
     Returns
     -------
@@ -404,10 +408,16 @@ class Graph : public object
     >>> G[0];
     AtlasView({1: {}});
      */
-    auto operator[](const Node& n) const
+    const auto& operator[](const Node& n) const
     {
         return this->adj()[n];
     }
+
+    auto& operator[](const Node& n)
+    {
+        return this->adj()[n];
+    }
+
 
     /// @property
     auto nodes()
@@ -635,7 +645,7 @@ class Graph : public object
         auto N = edges.size();
         for (auto i = 0U; i != N; ++i)
         {
-            const auto& [u, v] = edges[i];
+            auto [u, v] = edges[i];
             this->add_edge(u, v, data[i]);
         }
     }
@@ -696,7 +706,7 @@ class Graph : public object
         attributes (but does not provide set-like operations).
         Hence, `G.edges[u, v]["color"]` provides the value of the color
         attribute for edge `(u, v)` while
-        `for (auto&& [u, v, c] : G.edges.data("color", default="red") {`
+        `for (auto [u, v, c] : G.edges.data("color", default="red") {`
         iterates through all the edges yielding the color attribute
         with default `"red"` if (no color attribute exists.
 
@@ -753,7 +763,7 @@ class Graph : public object
     //     The weighted node degree is the sum of the edge weights for
     //     edges incident to that node.
 
-    //     This object provides an iterator for (auto node, degree) as well as
+    //     This object provides an iterator for (node, degree) as well as
     //     lookup for the degree for a single node.
 
     //     Parameters

@@ -5,12 +5,8 @@
 #include <py2cpp/fractions.hpp> // import Fraction
 #include <xnetwork/classes/digraphs.hpp>
 
-/*!
- * @brief Create a test case1 object
- *
- * @return auto
- */
-static auto create_test_case1()
+
+TEST_CASE("Test Cycle Ratio")
 {
     using Edge = std::pair<int, int>;
     constexpr auto num_nodes = 5;
@@ -25,17 +21,26 @@ static auto create_test_case1()
     const auto edges = std::array {
         Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
     const auto indices = std::array {0, 1, 2, 3, 4};
-    auto g = xn::DiGraphS {py::range<int>(num_nodes)};
-    g.add_edges_from(edges, indices);
-    return g;
+    auto G = xn::DiGraphS {py::range<int>(num_nodes)};
+    G.add_edges_from(edges, indices);
+
+    const auto cost = std::array {5, 1, 1, 1, 1};
+
+    const auto get_cost = [&](const auto& e) -> int {
+        auto [u, v] = G.end_points(e);
+        return cost[G[u].at(v)];
+    };
+    const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
+
+    auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
+    auto r = fun::Fraction<int>(5);
+    const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
+    CHECK(!c.empty());
+    CHECK(c.size() == 5);
+    CHECK(r == fun::Fraction<int>(9, 5));
 }
 
-/*!
- * @brief Create a test case timing object
- *
- * @return auto
- */
-static auto create_test_case_timing()
+TEST_CASE("Test Cycle Ratio of Timing Graph")
 {
     using Edge = std::pair<int, int>;
     constexpr auto num_nodes = 3;
@@ -50,40 +55,15 @@ static auto create_test_case_timing()
     // make sure no parallel edges!!!
 
     const auto indices = std::array {0, 1, 2, 3, 4, 5};
-    auto g = xn::DiGraphS {py::range<int>(num_nodes)};
-    g.add_edges_from(edges, indices);
-    return g;
-}
-
-TEST_CASE("Test Cycle Ratio")
-{
-    const auto G = create_test_case1();
-    const auto cost = std::array {5, 1, 1, 1, 1};
-
-    const auto get_cost = [&](const auto& e) -> int {
-        auto [u, v] = G.end_points(e);
-        return cost[G[u][v]];
-    };
-    const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
-
-    auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
-    auto r = fun::Fraction<int>(5);
-    const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
-    CHECK(!c.empty());
-    CHECK(c.size() == 5);
-    CHECK(r == fun::Fraction<int>(9, 5));
-}
-
-TEST_CASE("Test Cycle Ratio of Timing Graph")
-{
-    const auto G = create_test_case_timing();
+    auto G = xn::DiGraphS {py::range<int>(num_nodes)};
+    G.add_edges_from(edges, indices);
     const auto cost = std::array {7, -1, 3, 0, 2, 4};
 
     const auto get_cost = [&](const auto& e) -> int {
         auto [u, v] = G.end_points(e);
-        return cost[G[u][v]];
+        return cost[G[u].at(v)];
     };
-    const auto get_time = [&](const auto& /*e*/) { return 1; };
+    const auto get_time = [&](const auto& /*e*/) -> int { return 1; };
 
     auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
     auto r = fun::Fraction<int>(7);

@@ -1,4 +1,3 @@
-// -*- coding: utf-8 -*-
 #pragma once
 
 #include <boost/graph/adjacency_list.hpp>
@@ -21,7 +20,7 @@ class VertexView : public Graph
     /*!
      * @brief Construct a new Vertex View object
      *
-     * @param[in,out] G
+     * @param[in] G
      */
     explicit VertexView(Graph& G)
         : Graph(G)
@@ -33,7 +32,7 @@ class VertexView : public Graph
      *
      * @return auto
      */
-    auto begin() const
+    [[nodiscard]] auto begin() const
     {
         // auto [v_iter, v_end] = boost::vertices(*this);
         // return v_iter;
@@ -45,7 +44,7 @@ class VertexView : public Graph
      *
      * @return auto
      */
-    auto end() const
+    [[nodiscard]] auto end() const
     {
         // auto [v_iter, v_end] = boost::vertices(*this);
         // return v_end;
@@ -57,7 +56,7 @@ class VertexView : public Graph
      *
      * @return auto
      */
-    auto cbegin() const
+    [[nodiscard]] auto cbegin() const
     {
         // auto [v_iter, v_end] = boost::vertices(*this);
         // return v_iter;
@@ -69,7 +68,7 @@ class VertexView : public Graph
      *
      * @return auto
      */
-    auto cend() const
+    [[nodiscard]] auto cend() const
     {
         // auto [v_iter, v_end] = boost::vertices(*this);
         // return v_end;
@@ -104,7 +103,7 @@ class EdgeView
      *
      * @return auto
      */
-    auto begin() const
+    [[nodiscard]] auto begin() const
     {
         // auto [e_iter, e_end] = boost::edges(_G);
         // return e_iter;
@@ -116,7 +115,7 @@ class EdgeView
      *
      * @return auto
      */
-    auto end() const
+    [[nodiscard]] auto end() const
     {
         // auto [e_iter, e_end] = boost::edges(_G);
         // return e_end;
@@ -128,7 +127,7 @@ class EdgeView
      *
      * @return auto
      */
-    auto cbegin() const
+    [[nodiscard]] auto cbegin() const
     {
         // auto [e_iter, e_end] = boost::edges(_G);
         // return e_iter;
@@ -140,7 +139,7 @@ class EdgeView
      *
      * @return auto
      */
-    auto cend() const
+    [[nodiscard]] auto cend() const
     {
         // auto [e_iter, e_end] = boost::edges(_G);
         // return e_end;
@@ -248,19 +247,23 @@ class grAdaptor : public VertexView<Graph>
     /*!
      * @brief Construct a new gr Adaptor object
      *
-     * @param[in,out] G
+     * @param[in] G
      */
     explicit grAdaptor(Graph& G)
         : VertexView<Graph>(G)
     {
     }
 
+    // grAdaptor(const grAdaptor&) = delete;            // don't copy
+    // grAdaptor& operator=(const grAdaptor&) = delete; // don't assign
+    // grAdaptor(grAdaptor&&) noexcept = default;                // don't copy
+
     /*!
      * @brief
      *
      * @return auto
      */
-    auto number_of_nodes() const
+    [[nodiscard]] auto number_of_nodes() const
     {
         return boost::num_vertices(*this);
     }
@@ -270,7 +273,7 @@ class grAdaptor : public VertexView<Graph>
      *
      * @return auto
      */
-    auto number_of_edges() const
+    [[nodiscard]] auto number_of_edges() const
     {
         return boost::num_edges(*this);
     }
@@ -280,7 +283,7 @@ class grAdaptor : public VertexView<Graph>
      *
      * @return EdgeView<Graph>
      */
-    EdgeView<Graph> edges() const
+    [[nodiscard]] EdgeView<Graph> edges() const
     {
         return EdgeView<Graph>(*this);
     }
@@ -291,7 +294,7 @@ class grAdaptor : public VertexView<Graph>
      * @param[in] v
      * @return AtlasView<Vertex, Graph>
      */
-    AtlasView<Vertex, Graph> neighbors(Vertex v) const
+    [[nodiscard]] AtlasView<Vertex, Graph> neighbors(Vertex v) const
     {
         return AtlasView<Vertex, Graph>(v, *this);
     }
@@ -352,7 +355,7 @@ class grAdaptor : public VertexView<Graph>
      * @return auto
      */
     template <typename Edge>
-    auto end_points(const Edge& e) const
+    [[nodiscard]] auto end_points(const Edge& e) const
     {
         auto s = boost::source(e, *this);
         auto t = boost::target(e, *this);

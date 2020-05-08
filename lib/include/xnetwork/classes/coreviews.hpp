@@ -1,4 +1,3 @@
-// -*- coding: utf-8 -*-
 #pragma once
 
 //    Copyright (C) 2004-2018 by
@@ -16,20 +15,22 @@
 // from collections import Mapping
 // #include <xnetwork.hpp> // as xn
 
-// static const auto _all__ = {
-//     "AtlasView",
-//     "AdjacencyView",
-//     "MultiAdjacencyView",
-//     "UnionAtlas",
-//     "UnionAdjacency",
-//     "UnionMultiInner",
-//     "UnionMultiAdjacency",
-//     "FilterAtlas",
-//     "FilterAdjacency",
-//     "FilterMultiInner",
-//     "FilterMultiAdjacency",
-//     "ReadOnlyGraph",
-// };
+/*
+static const auto __all__ = {
+    "AtlasView",
+    "AdjacencyView",
+    "MultiAdjacencyView",
+    "UnionAtlas",
+    "UnionAdjacency",
+    "UnionMultiInner",
+    "UnionMultiAdjacency",
+    "FilterAtlas",
+    "FilterAdjacency",
+    "FilterMultiInner",
+    "FilterMultiAdjacency",
+    "ReadOnlyGraph",
+};
+*/
 
 /*! An AtlasView is a Read-only Mapping of Mappings.
 
@@ -55,23 +56,29 @@ class AtlasView
     {
     }
 
-    auto size() const
+    [[nodiscard]] auto size() const
     {
         return this->_atlas.size();
     }
 
-    auto begin() const
+    [[nodiscard]] auto begin() const
     {
         return std::begin(this->_atlas);
     }
 
-    auto end() const
+    [[nodiscard]] auto end() const
     {
         return std::end(this->_atlas);
     }
 
     template <typename T>
-    auto operator[](const T& key) const
+    const auto& operator[](const T& key) const
+    {
+        return this->_atlas.at(key);
+    }
+
+    template <typename T>
+    auto& operator[](const T& key)
     {
         return this->_atlas.at(key);
     }
@@ -80,12 +87,12 @@ class AtlasView
     //     return std::tuple{n: self[n].copy() for n : this->_atlas};
     // }
 
-    // auto _str__( ) {
+    // auto __str__( ) {
     //     return str(this->_atlas);  // {nbr: self[nbr] for nbr : self});
     // }
 
-    // auto _repr__( ) {
-    //     return "%s(%r)" % (this->_class__.__name__, this->_atlas);
+    // auto __repr__( ) {
+    //     return "%s(%r)" % (this->__class__.__name__, this->_atlas);
     // }
 };
 
@@ -109,11 +116,11 @@ class AdjacencyView : public AtlasView<Atlas>
     {
     }
 
-    template <typename T>
-    auto operator[](const T& name) const
-    {
-        return AtlasView(this->_atlas[name]);
-    }
+    // template <typename T>
+    // auto operator[](const T& name) const
+    // {
+    //     return AtlasView(this->_atlas[name]);
+    // }
 
     // auto copy( ) {
     //     return std::tuple{n: self[n].copy() for n : this->_atlas};
@@ -132,7 +139,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //     AtlasView - View into dict-of-dict
 //     AdjacencyView - View into dict-of-dict-of-dict
 //      */
-//     // static const auto _slots__ = ();   // Still uses AtlasView slots
+//     // static const auto __slots__ = ();   // Still uses AtlasView slots
 //     names _atlas static const char *__slots__ = nullptr;   // Still uses
 //     AtlasView slots names _atlas
 
@@ -160,13 +167,13 @@ class AdjacencyView : public AtlasView<Atlas>
 //      */
 //     using _Self = UnionAtlas;
 
-//     static const auto _slots__ = {"_succ", "_pred"};
+//     static const auto __slots__ = {"_succ", "_pred"};
 
-//     auto _getstate__( ) {
+//     auto __getstate__( ) {
 //         return std::tuple{"_succ": this->_succ, "_pred": this->_pred};
 //     }
 
-//     auto _setstate__( state) {
+//     auto __setstate__( state) {
 //         this->_succ = state["_succ"];
 //         this->_pred = state["_pred"];
 //     }
@@ -180,7 +187,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //         return this->_succ.size() + this->_pred.size();
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         return iter(set(this->_succ.keys()) | set(this->_pred.keys()));
 //     }
 
@@ -204,12 +211,12 @@ class AdjacencyView : public AtlasView<Atlas>
 //         return result;
 //     }
 
-//     auto _str__( ) {
+//     auto __str__( ) {
 //         return str({nbr: self[nbr] for nbr : self});
 //     }
 
-//     auto _repr__( ) {
-//         return "%s(%r, %r)" % (this->_class__.__name__, this->_succ,
+//     auto __repr__( ) {
+//         return "%s(%r, %r)" % (this->__class__.__name__, this->_succ,
 //         this->_pred);
 //     }
 // };
@@ -233,13 +240,13 @@ class AdjacencyView : public AtlasView<Atlas>
 //      */
 //     using _Self = UnionAdjacency;
 
-//     static const auto _slots__ = {"_succ", "_pred"};
+//     static const auto __slots__ = {"_succ", "_pred"};
 
-//     auto _getstate__( ) {
+//     auto __getstate__( ) {
 //         return std::tuple{"_succ": this->_succ, "_pred": this->_pred};
 //     }
 
-//     auto _setstate__( state) {
+//     auto __setstate__( state) {
 //         this->_succ = state["_succ"];
 //         this->_pred = state["_pred"];
 //     }
@@ -256,7 +263,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //         same
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         return iter(this->_succ);
 //     }
 
@@ -268,12 +275,12 @@ class AdjacencyView : public AtlasView<Atlas>
 //         return std::tuple{n: self[n].copy() for n : this->_succ};
 //     }
 
-//     auto _str__( ) {
+//     auto __str__( ) {
 //         return str({nbr: self[nbr] for nbr : self});
 //     }
 
-//     auto _repr__( ) {
-//         return "%s(%r, %r)" % (this->_class__.__name__, this->_succ,
+//     auto __repr__( ) {
+//         return "%s(%r, %r)" % (this->__class__.__name__, this->_succ,
 //         this->_pred);
 //     }
 // };
@@ -293,7 +300,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //     UnionAdjacency - View into dict-of-dict-of-dict
 //     UnionMultiAdjacency - View into dict-of-dict-of-dict-of-dict
 //      */
-//     static const auto _slots__ = ()   // Still uses UnionAtlas slots names
+//     static const auto __slots__ = ()   // Still uses UnionAtlas slots names
 //     _succ, _pred;
 
 //     auto operator[]( node) {
@@ -326,7 +333,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //     UnionAtlas - View into dict-of-dict
 //     UnionMultiInner - View into dict-of-dict-of-dict
 //      */
-//     static const auto _slots__ = ();   // Still uses UnionAdjacency slots
+//     static const auto __slots__ = ();   // Still uses UnionAdjacency slots
 //     names _succ, _pred;
 
 //     auto operator[]( node) {
@@ -367,7 +374,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //         return sum(1 for n : *this);
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         if (hasattr(this->NODE_OK, "nodes") {
 //             return (n for n : this->NODE_OK.nodes if (n : this->_atlas);
 //         }
@@ -390,12 +397,12 @@ class AdjacencyView : public AtlasView<Atlas>
 //                 if (this->NODE_OK(u)};
 //     }
 
-//     auto _str__( ) {
+//     auto __str__( ) {
 //         return str({nbr: self[nbr] for nbr : self});
 //     }
 
-//     auto _repr__( ) {
-//         return "%s(%r, %r)" % (this->_class__.__name__, this->_atlas,
+//     auto __repr__( ) {
+//         return "%s(%r, %r)" % (this->__class__.__name__, this->_atlas,
 //                                this->NODE_OK);
 //     }
 
@@ -412,7 +419,7 @@ class AdjacencyView : public AtlasView<Atlas>
 //         return sum(1 for n : *this);
 //     }
 
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         if (hasattr(this->NODE_OK, "nodes") {
 //             return (n for n : this->NODE_OK.nodes if (n : this->_atlas);
 //         }
@@ -442,18 +449,18 @@ class AdjacencyView : public AtlasView<Atlas>
 //                 if (this->NODE_OK(u)};
 //     }
 
-//     auto _str__( ) {
+//     auto __str__( ) {
 //         return str({nbr: self[nbr] for nbr : self});
 //     }
 
-//     auto _repr__( ) {
-//         return "%s(%r, %r, %r)" % (this->_class__.__name__, this->_atlas,
+//     auto __repr__( ) {
+//         return "%s(%r, %r, %r)" % (this->__class__.__name__, this->_atlas,
 //                                    this->NODE_OK, this->EDGE_OK);
 //     }
 // };
 
 // class FilterMultiInner(FilterAdjacency) {  // muliedge_seconddict
-//     auto _iter__( ) {
+//     auto __iter__( ) {
 //         if (hasattr(this->NODE_OK, "nodes") {
 //             my_nodes = (n for n : this->NODE_OK.nodes if (n : this->_atlas);
 //         } else {
