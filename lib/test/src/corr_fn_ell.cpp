@@ -26,7 +26,7 @@ TEST_CASE("lsq_corr_fn")
     CHECK(a[0] >= 0.);
     CHECK(feasible);
     CHECK(num_iters >= 679);
-    CHECK(num_iters <= 705);
+    CHECK(num_iters <= 708);
 }
 
 TEST_CASE("mle_corr_fn")
@@ -36,6 +36,6 @@ TEST_CASE("mle_corr_fn")
     const auto [a, num_iters, feasible] = mle_corr_poly(Y, s, 4);
     CHECK(a[0] >= 0.);
     CHECK(feasible);
-    CHECK(num_iters >= 236);
+    CHECK(num_iters >= 149);
     CHECK(num_iters <= 241);
 }

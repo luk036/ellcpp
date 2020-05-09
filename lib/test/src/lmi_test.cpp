@@ -5,10 +5,10 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/lmi_oracle.hpp>
-#include <fmt/format.h>
+// #include <fmt/format.h>
 #include <gsl/span>
-#include <spdlog/sinks/stdout_sinks.h>
-#include <spdlog/spdlog.h>
+// #include <spdlog/sinks/stdout_sinks.h>
+// #include <spdlog/spdlog.h>
 #include <vector>
 #include <xtensor-blas/xlinalg.hpp>
 
@@ -95,17 +95,17 @@ TEST_CASE("LMI test")
 
     auto t = 1.e100; // std::numeric_limits<double>::max()
     const auto [x, ell_info] = cutting_plane_dc(P, E, t);
-    fmt::print("{:f} {} {} \n", t, ell_info.num_iters, ell_info.feasible);
+    // fmt::print("{:f} {} {} \n", t, ell_info.num_iters, ell_info.feasible);
     // std::cout << "LMI xbest: " << xb << "\n";
     // std::cout << "LMI result: " << fb << ", " << niter << ", " << feasible <<
     // ", " << status
     //           << "\n";
 
     // create color multi threaded logger
-    auto console = spdlog::stdout_logger_mt("console");
-    auto err_logger = spdlog::stderr_logger_mt("stderr");
-    spdlog::get("console")->info("loggers can be retrieved from a global "
-                                 "registry using the spdlog::get(logger_name)");
+    // auto console = spdlog::stdout_logger_mt("console");
+    // auto err_logger = spdlog::stderr_logger_mt("stderr");
+    // spdlog::get("console")->info("loggers can be retrieved from a global "
+    //                              "registry using the spdlog::get(logger_name)");
 
     CHECK(x[0] < -0.3);
     CHECK(ell_info.feasible);

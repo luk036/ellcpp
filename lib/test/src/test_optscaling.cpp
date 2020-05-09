@@ -12,12 +12,7 @@
 #include <limits>
 #include <cstddef>
 
-/*!
- * @brief Create a test case1 object
- *
- * @return auto
- */
-static auto create_test_case1()
+TEST_CASE("Test Optimal Scaling (two varaibles)")
 {
     using Edge = std::pair<int, int>;
     constexpr auto num_nodes = 5;
@@ -32,14 +27,8 @@ static auto create_test_case1()
     const auto edges =
         std::array {Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E), Edge(E, A)};
     const auto indices = std::array {0, 1, 2, 3, 4};
-    auto g = xn::DiGraphS(py::range<int>(num_nodes));
-    g.add_edges_from(edges, indices);
-    return g;
-}
-
-TEST_CASE("Test Optimal Scaling (two varaibles)")
-{
-    auto G = create_test_case1();
+    auto G = xn::DiGraphS(py::range<int>(num_nodes));
+    G.add_edges_from(edges, indices);
 
     const auto elem = std::array {1.2, 2.3, 3.4, -4.5, 5.6};
     constexpr auto num_of_nodes = sizeof(elem) / sizeof(double);
@@ -52,7 +41,7 @@ TEST_CASE("Test Optimal Scaling (two varaibles)")
         cost[i] = std::log(std::abs(elem[i]));
     }
 
-    auto get_cost = [&](const auto& e) -> int {
+    auto get_cost = [&](const auto& e) -> double {
         const auto [u, v] = G.end_points(e);
         return cost[G[u].at(v)];
     };
@@ -62,11 +51,11 @@ TEST_CASE("Test Optimal Scaling (two varaibles)")
         std::minmax_element(std::begin(cost), std::end(cost));
     auto x0 = Arr {*cmax, *cmin};
     auto t1 = *cmax - *cmin;
-    auto E = ell {1.5 * t1, std::move(x0)};
+    auto El = ell {1.5 * t1, std::move(x0)};
     auto dist = std::vector(G.number_of_nodes(), 0.);
     auto P = optscaling_oracle {G, dist, get_cost};
     auto t = 1.e100; // std::numeric_limits<double>::max()
-    const auto [x, ell_info] = cutting_plane_dc(std::move(P), std::move(E), t);
+    const auto [x, ell_info] = cutting_plane_dc(std::move(P), std::move(El), t);
 
     CHECK(x[1] >= x[0]);
     CHECK(ell_info.feasible);

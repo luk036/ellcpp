@@ -54,9 +54,9 @@ static xn::grAdaptor<graph_t> create_test_case1()
         Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E), Edge(E, A)};
     size_t indices[] = {0, 1, 2, 3, 4};
     auto num_arcs = sizeof(edge_array) / sizeof(Edge);
-    static auto g =
+    auto g =
         graph_t(edge_array, edge_array + num_arcs, indices, num_nodes);
-    return xn::grAdaptor<graph_t>(g);
+    return xn::grAdaptor<graph_t>(std::move(g));
 }
 
 TEST_CASE("Test Optimal Scaling (two varaibles, boost)")

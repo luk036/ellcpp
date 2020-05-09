@@ -71,6 +71,6 @@ TEST_CASE("Example 1, test infeasible 2")
     auto E = ell {10., Arr {0., 0.}};
     const auto P = my_oracle;
     const auto [x, ell_info] =
-        cutting_plane_dc(P, E, 100); // wrong initial guess
+        cutting_plane_dc(P, E, 100.); // wrong initial guess
     CHECK(!ell_info.feasible);
 }
