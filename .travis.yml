@@ -72,6 +72,7 @@ before_install:
     elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       export CXX=clang++ CC=clang;
     fi
+    export LDFLAGS="$LDFLAGS -lrt -pthread -lresolv"
 
 install:
   - mkdir -p $HOME/.cache
@@ -98,9 +99,9 @@ install:
     elif [[ "$BLAS" == "mkl" ]]; then
       conda install mkl -c conda-forge;
     fi
-  - conda install xtensor-fftw=0.2.5 -c conda-forge
-  - conda install xtensor-blas=0.16.1 -c conda-forge
-  - conda install xtensor=0.20.10 -c conda-forge
+  - conda install xtensor-fftw -c conda-forge
+  - conda install xtensor-blas -c conda-forge
+  - conda install xtensor -c conda-forge
   # - conda install xtensor-blas=0.11.1 -c conda-forge
   # - conda install xtensor=0.16.4 -c conda-forge
   - conda install lapack -c conda-forge

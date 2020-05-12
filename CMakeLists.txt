@@ -23,7 +23,6 @@ option(ENABLE_COVERAGE "Generates the coverage build" OFF)
 option(ENABLE_DOCTESTS "Include tests in the library. Setting this to OFF will remove all doctest related code.
                         Tests in tests/*.cpp will still be enabled." OFF)
 
-
 include(CTest) # Must be called before adding tests but after calling project(). This automatically calls enable_testing() and configures ctest targets when using Make/Ninja
 include(CMakeDependentOption)# This is a really useful scripts that creates options that depends on other options. It can even be used with generator expressions !
 
@@ -39,6 +38,7 @@ include(CopyDllsForDebug)
 # Guard against in-source builds and bad build-type strings
 #
 include(ConfigSafeGuards)
+include(CMakeFindDependencyMacro) # seems for xtensor-blas only
 
 ###############
 ##  OPTIONS  ##
