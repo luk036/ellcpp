@@ -72,7 +72,7 @@ before_install:
     elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       export CXX=clang++ CC=clang;
     fi
-    export LDFLAGS="$LDFLAGS -lrt -pthread -lresolv"
+    # export LDFLAGS="$LDFLAGS -lrt -pthread -lresolv"
 
 install:
   - mkdir -p $HOME/.cache
