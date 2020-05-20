@@ -133,7 +133,7 @@ std::vector<Arr> construct_poly_matrix(const Arr& s, size_t m)
  *
  *    where
  *
- *        ρ(h) = p1 \phi1(h) + ··· + pn \phin(h)
+ *        \rho(h) = p1 \phi1(h) + ... + pn \phin(h)
  *
  *        {Fk}i,j = \phik( ||sj - si||^2 )
  */
