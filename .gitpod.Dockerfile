@@ -35,8 +35,7 @@ RUN /opt/conda/bin/conda config --set always_yes yes --set changeps1 no \
     && /opt/conda/bin/conda info -a
 
 RUN /opt/conda/bin/conda install -y \
-    ninja \
-    lcov
+    ninja
 
 RUN /opt/conda/bin/conda install -y -c conda-forge \
     benchmark \
