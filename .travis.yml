@@ -61,7 +61,7 @@ matrix:
             - spdlog
             - lcov
           update: true
-      env: COMPILER=clang CLANG=8 BUILD_TYPE='Release'
+      env: COMPILER=clang CLANG=8 BLAS=OpenBLAS BUILD_TYPE='Release'
 
 env:
   global:
