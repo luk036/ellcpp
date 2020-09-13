@@ -1,5 +1,5 @@
 language: cpp
-dist: bionic
+dist: focal
 
 cache: # see https://docs.travis-ci.com/user/caching/
   - directories:
@@ -8,50 +8,58 @@ cache: # see https://docs.travis-ci.com/user/caching/
 matrix:
   include:
     - os: linux
-      addons: &gcc7
+      addons: &gcc9
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-7
+            - g++-9
             - libfmt-dev
             - libspdlog-dev
             - lcov
-      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=9 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
-      addons: *gcc7
-      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Release'
+      addons: *gcc9
+      env: COMPILER=gcc GCC=9 BLAS=OpenBLAS BUILD_TYPE='Release'
     - os: linux
-      addons: *gcc7
-      env: COMPILER=gcc GCC=7 BLAS=OpenBLAS BUILD_TYPE='Coverage'
+      addons: *gcc9
+      env: COMPILER=gcc GCC=9 BLAS=OpenBLAS BUILD_TYPE='Coverage'
     - os: linux
-      addons: &gcc8
+      addons: &gcc10
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-8
+            - g++-10
             - libfmt-dev
             - libspdlog-dev
             - lcov
-      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Debug'
+      env: COMPILER=gcc GCC=10 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
-      addons: *gcc8
-      env: COMPILER=gcc GCC=8 BLAS=OpenBLAS BUILD_TYPE='Release'
+      addons: *gcc10
+      env: COMPILER=gcc GCC=10 BLAS=OpenBLAS BUILD_TYPE='Release'
     - os: linux
-      addons: &clang8
+      addons: &clang10
         apt:
-          sources: ['llvm-toolchain-xenial-8', 'ubuntu-toolchain-r-test']
+          sources: ['llvm-toolchain-bionic-10', 'ubuntu-toolchain-r-test']
           packages:
-            - clang-8
-            - libstdc++-8-dev
+            - clang-10
+            - libstdc++-10-dev
             - libfmt-dev
             - libspdlog-dev
             - lcov
-      env: COMPILER=clang CLANG=8 BLAS=OpenBLAS BUILD_TYPE='Debug'
+      env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
-      addons: *clang8
-      env: COMPILER=clang CLANG=8 BLAS=OpenBLAS BUILD_TYPE='Release'
+      addons: *clang10
+      env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Release'
+    - os: osx
+      osx_image: xcode11
+      addons:
+        homebrew:
+          packages:
+          - lcov
+          update: true
+      env: COMPILER=clang CLANG=8 BUILD_TYPE='Release'
 
 env:
   global:
