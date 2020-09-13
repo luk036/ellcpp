@@ -57,7 +57,9 @@ matrix:
       addons:
         homebrew:
           packages:
-          - lcov
+            - libfmt-dev
+            - libspdlog-dev
+            - lcov
           update: true
       env: COMPILER=clang CLANG=8 BUILD_TYPE='Release'
 
