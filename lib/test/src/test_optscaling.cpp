@@ -5,12 +5,12 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 // #include <ellcpp/ell1d.hpp>
+#include <cstddef>
 #include <ellcpp/oracles/optscaling_oracle.hpp> // import optscaling
-#include <utility>                              // for std::pair
+#include <limits>
+#include <utility> // for std::pair
 #include <xnetwork/classes/digraphs.hpp>
 #include <xtensor/xarray.hpp>
-#include <limits>
-#include <cstddef>
 
 TEST_CASE("Test Optimal Scaling (two varaibles)")
 {

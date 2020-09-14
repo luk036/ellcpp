@@ -1,13 +1,13 @@
 // -*- coding: utf-8 -*-
 #include <array>
+#include <cstddef>
 #include <doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell1d.hpp>
 #include <ellcpp/oracles/cycle_ratio_oracle.hpp> // import cycle_ratio
-#include <utility>                               // for std::pair
-#include <xnetwork/classes/digraphs.hpp>
 #include <limits>
-#include <cstddef>
+#include <utility> // for std::pair
+#include <xnetwork/classes/digraphs.hpp>
 
 TEST_CASE("Test Cycle Ratio 2")
 {

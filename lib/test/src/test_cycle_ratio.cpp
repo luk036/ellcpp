@@ -63,7 +63,7 @@ TEST_CASE("Test Cycle Ratio of Timing Graph")
         auto [u, v] = G.end_points(e);
         return cost[G[u].at(v)];
     };
-    const auto get_time = [&](const auto& /*e*/) -> int { return 1; };
+    const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
 
     auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
     auto r = fun::Fraction<int>(7);

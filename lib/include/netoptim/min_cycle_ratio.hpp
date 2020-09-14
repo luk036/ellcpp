@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 #pragma once
- 
+
 #include "parametric.hpp" // import max_parametric
 #include <algorithm>
 #include <numeric>

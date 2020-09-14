@@ -105,7 +105,8 @@ TEST_CASE("LMI test")
     // auto console = spdlog::stdout_logger_mt("console");
     // auto err_logger = spdlog::stderr_logger_mt("stderr");
     // spdlog::get("console")->info("loggers can be retrieved from a global "
-    //                              "registry using the spdlog::get(logger_name)");
+    //                              "registry using the
+    //                              spdlog::get(logger_name)");
 
     CHECK(x[0] < -0.3);
     CHECK(ell_info.feasible);

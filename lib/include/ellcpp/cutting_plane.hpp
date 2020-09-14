@@ -33,10 +33,6 @@ struct CInfo
     bool feasible;
     size_t num_iters;
     CUTStatus status;
-
-    CInfo(const CInfo&) = delete;
-    CInfo operator=(const CInfo&) = delete;
-    CInfo(CInfo&&) noexcept = default;
 };
 
 /*!

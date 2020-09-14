@@ -487,7 +487,7 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
             {
                 for (auto&& nbr : nbrs)
                 {
-                    yield(edge_t{Node(n), Node(nbr)});
+                    yield(edge_t {Node(n), Node(nbr)});
                 }
             }
         };
