@@ -2,7 +2,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include <doctest.h>
-#include <iostream>
+//#include <iostream>
 #include <tuple>
 
 #include <cmath>
@@ -114,7 +114,7 @@ auto run_lowpass(bool use_parallel_cut)
     E.use_parallel_cut = use_parallel_cut;
     auto t = Spsq;
     const auto [r, ell_info] = cutting_plane_dc(P, E, t, options);
-    std::cout << r << '\n';
+    //std::cout << r << '\n';
     return std::tuple<bool, unsigned int>{ell_info.feasible, ell_info.num_iters};
 }
 

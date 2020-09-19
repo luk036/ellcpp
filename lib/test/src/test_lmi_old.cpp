@@ -53,17 +53,19 @@ class my_oracle
     {
         using xt::linalg::dot;
 
-        if (auto cut = this->lmi1(x))
+        const auto cut1 = this->lmi1(x);
+        if (cut1)
         {
-            return {*cut, t};
+            return {*cut1, t};
         }
-        if (auto cut = this->lmi2(x))
+        const auto cut2 = this->lmi2(x);
+        if (cut2)
         {
-            return {*cut, t};
+            return {*cut2, t};
         }
         const auto f0 = dot(this->c, x)();
-        // const auto fj1 = f0 - t;
-        if (const auto fj = f0 - t; fj > 0.)
+        const auto fj = f0 - t;
+        if (fj > 0.)
         {
             return {{this->c, fj}, t};
         }

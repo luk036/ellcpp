@@ -57,11 +57,13 @@ class my_oracle
         {
             return {{this->c, f1}, t};
         }
-        if (auto cut2 = this->lmi1(x))
+        const auto cut2 = this->lmi1(x);
+        if (cut2)
         {
             return {*cut2, t};
         }
-        if (auto cut3 = this->lmi2(x))
+        const auto cut3 = this->lmi2(x);
+        if (cut3)
         {
             return {*cut3, t};
         }

@@ -108,7 +108,8 @@ class optscaling_oracle
      */
     auto operator()(const Arr& x, double t) -> std::tuple<Cut, double>
     {
-        if (auto cut = this->_network(x))
+        const auto cut = this->_network(x);
+        if (cut)
         {
             return {*cut, t};
         }

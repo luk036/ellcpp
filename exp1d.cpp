@@ -3,7 +3,7 @@
 #include <xtensor/xarray.hpp>
 #include <xtensor/xrandom.hpp>
 #include <xtensor-blas/xlinalg.hpp>
-#include <iostream>
+// #include <iostream>
 #include <cmath>
 
 int main() {

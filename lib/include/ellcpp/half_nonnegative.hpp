@@ -24,18 +24,18 @@ namespace algo
 {
 
 template <typename N>
-constexpr typename std::enable_if<std::is_integral<N>::value, N>::type //
+constexpr N
 half_nonnegative(N n)
 {
-    using UnsignedN = typename std::make_unsigned<N>::type;
-    return static_cast<N>(static_cast<UnsignedN>(n) / 2);
-}
-
-template <typename N>
-constexpr typename std::enable_if<!std::is_integral<N>::value, N>::type //
-half_nonnegative(N n)
-{
-    return std::move(n) / 2;
+    if constexpr (std::is_integral<N>::value)
+    {
+        using UnsignedN = typename std::make_unsigned<N>::type;
+        return static_cast<N>(static_cast<UnsignedN>(n) / 2);
+    } 
+    else
+    {
+        return std::move(n) / 2;
+    }
 }
 
 } // namespace algo

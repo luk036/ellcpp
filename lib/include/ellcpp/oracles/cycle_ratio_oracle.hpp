@@ -114,7 +114,8 @@ class cycle_ratio_oracle
         {
             return {{-1., fj}, t};
         }
-        if (auto cut = this->_network(x))
+        const auto cut = this->_network(x);
+        if (cut)
         {
             return {*cut, t};
         }

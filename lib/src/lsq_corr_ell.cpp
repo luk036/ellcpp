@@ -284,12 +284,14 @@ class mle_oracle
     {
         using xt::linalg::dot;
 
-        if (auto cut1 = this->_lmi(x))
+        const auto cut1 = this->_lmi(x);
+        if (cut1)
         {
             return {*cut1, t};
         }
 
-        if (auto cut0 = this->_lmi0(x))
+        const auto cut0 = this->_lmi0(x);
+        if (cut0)
         {
             return {*cut0, t};
         }
