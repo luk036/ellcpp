@@ -107,18 +107,19 @@ class cycle_ratio_oracle
      *
      * @see cutting_plane_dc
      */
-    auto operator()(const double& x, double t) -> std::tuple<Cut, double>
+    auto operator()(const double& x, double& t) -> std::tuple<Cut, bool>
     {
         auto fj = t - x;
         if (fj >= 0)
         {
-            return {{-1., fj}, t};
+            return {{-1., fj}, false};
         }
         const auto cut = this->_network(x);
         if (cut)
         {
-            return {*cut, t};
+            return {*cut, false};
         }
-        return {{-1., 0.}, x};
+        t = x;
+        return {{-1., 0.}, true};
     }
 };

@@ -167,7 +167,7 @@ class lsq_oracle
      * @param[in] t the best-so-far optimal value
      * @return auto
      */
-    std::tuple<Cut, double> operator()(const Arr& x, double t)
+    std::tuple<Cut, bool> operator()(const Arr& x, double& t)
     {
         const auto n = x.size();
         auto g = zeros(x);
@@ -176,7 +176,7 @@ class lsq_oracle
             const auto& [g0, f0] = *cut0;
             xt::view(g, xt::range(0, n - 1)) = g0;
             g(n - 1) = 0.;
-            return {{std::move(g), f0}, t};
+            return {{std::move(g), f0}, false};
         }
         this->_qmi.update(x(n - 1));
 
@@ -188,16 +188,18 @@ class lsq_oracle
             const auto v = xt::view(Q.v, xt::range(start, stop));
             xt::view(g, xt::range(0, n - 1)) = g1;
             g(n - 1) = -xt::linalg::dot(v, v)();
-            return {{std::move(g), f1}, t};
+            return {{std::move(g), f1}, false};
         }
         g(n - 1) = 1.;
 
         const auto f0 = x(n - 1) - t;
         if (f0 > 0)
         {
-            return {{std::move(g), f0}, t};
+            return {{std::move(g), f0}, false};
         }
-        return {{std::move(g), 0.}, x(n - 1)};
+
+        t = x(n-1);
+        return {{std::move(g), 0.}, true};
     }
 };
 
@@ -280,20 +282,20 @@ class mle_oracle
      * @param[in] t the best-so-far optimal value
      * @return auto
      */
-    std::tuple<Cut, double> operator()(const Arr& x, double t)
+    std::tuple<Cut, bool> operator()(const Arr& x, double& t)
     {
         using xt::linalg::dot;
 
         const auto cut1 = this->_lmi(x);
         if (cut1)
         {
-            return {*cut1, t};
+            return {*cut1, false};
         }
 
         const auto cut0 = this->_lmi0(x);
         if (cut0)
         {
-            return {*cut0, t};
+            return {*cut0, false};
         }
 
         auto n = x.shape()[0];
@@ -310,10 +312,13 @@ class mle_oracle
         // auto f1 = 0.;
 
         auto f = f1 - t;
+        auto shrunk = false;
+
         if (f < 0)
         {
             t = f1;
             f = 0.;
+            shrunk = true;
         }
 
         auto g = zeros(x);
@@ -328,7 +333,7 @@ class mle_oracle
                     xt::view(SFsi, k, xt::all()), xt::view(SY, xt::all(), k))();
             }
         }
-        return {{std::move(g), f}, t};
+        return {{std::move(g), f}, shrunk};
     }
 };
 

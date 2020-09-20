@@ -59,6 +59,6 @@ class lowpass_oracle
      * @param[in] Spsq
      * @return auto
      */
-    auto operator()(const Arr& x, double Spsq) const
-        -> std::tuple<ParallelCut, double>;
+    auto operator()(const Arr& x, double& Spsq) const
+        -> std::tuple<ParallelCut, bool>;
 };

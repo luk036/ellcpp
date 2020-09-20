@@ -49,27 +49,28 @@ class my_oracle
      * @param[in] t the best-so-far optimal value
      * @return std::tuple<Cut, double>
      */
-    std::tuple<Cut, double> operator()(const Arr& x, double t)
+    std::tuple<Cut, bool> operator()(const Arr& x, double& t)
     {
         using xt::linalg::dot;
 
         const auto cut1 = this->lmi1(x);
         if (cut1)
         {
-            return {*cut1, t};
+            return {*cut1, false};
         }
         const auto cut2 = this->lmi2(x);
         if (cut2)
         {
-            return {*cut2, t};
+            return {*cut2, false};
         }
         const auto f0 = dot(this->c, x)();
         const auto fj = f0 - t;
         if (fj > 0.)
         {
-            return {{this->c, fj}, t};
+            return {{this->c, fj}, false};
         }
-        return {{this->c, 0.}, f0};
+        t = f0;
+        return {{this->c, 0.}, true};
     }
 };
 

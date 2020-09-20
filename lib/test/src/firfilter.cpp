@@ -61,7 +61,7 @@ class my_fir_oracle
     Arr A_I = -xt::sin(A_theta);
 
   public:
-    auto operator()(const Arr& h, double t) const -> std::tuple<Cut, double>
+    auto operator()(const Arr& h, double& t) const -> std::tuple<Cut, bool>
     {
         auto fmax = -1.e100; // std::numeric_limits<double>::min()
         auto gmax = zeros({n});
@@ -78,7 +78,7 @@ class my_fir_oracle
             if (fj >= t)
             {
                 auto g = Arr {2. * (t_r * a_R + t_i * a_I)};
-                return {{std::move(g), fj - t}, t};
+                return {{std::move(g), fj - t}, false};
             }
             if (fmax < fj)
             {
@@ -88,7 +88,8 @@ class my_fir_oracle
             }
         }
 
-        return {{std::move(gmax), 0.}, fmax};
+        t = fmax;
+        return {{std::move(gmax), 0.}, true};
     }
 };
 

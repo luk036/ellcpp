@@ -15,7 +15,7 @@ using Cut = std::tuple<Arr, double>;
  * @param[in] t
  * @return std::tuple<Cut, double>
  */
-std::tuple<Cut, double> my_oracle(const Arr& z, double t)
+std::tuple<Cut, bool> my_oracle(const Arr& z, double& t)
 {
     auto x = z[0];
     auto y = z[1];
@@ -24,14 +24,14 @@ std::tuple<Cut, double> my_oracle(const Arr& z, double t)
     auto fj = x + y - 3.;
     if (fj > 0.)
     {
-        return {{Arr {1., 1.}, fj}, t};
+        return {{Arr {1., 1.}, fj}, false};
     }
 
     // constraint 2: x - y >= 1
     fj = -x + y + 1.;
     if (fj > 0.)
     {
-        return {{Arr {-1., 1.}, fj}, t};
+        return {{Arr {-1., 1.}, fj}, false};
     }
 
     // objective: maximize x + y
@@ -39,10 +39,10 @@ std::tuple<Cut, double> my_oracle(const Arr& z, double t)
     fj = t - f0;
     if (fj < 0.)
     {
-        fj = 0.;
         t = f0;
+        return {{Arr {-1., -1.}, 0.}, true};
     }
-    return {{Arr {-1., -1.}, fj}, t};
+    return {{Arr {-1., -1.}, fj}, false};
 }
 
 TEST_CASE("Example 1, test feasible")

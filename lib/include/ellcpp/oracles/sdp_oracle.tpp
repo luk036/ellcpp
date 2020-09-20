@@ -17,12 +17,12 @@ class sdp_oracle
     {
     }
 
-    auto operator()(const Vec& x, double t) const
+    auto operator()(const Vec& x, double& t) const
     {
         auto [g, fj] = _lmi.chk_spd(x);
         if (fj > 0)
         {
-            return std::make_tuple(g, fj, t);
+            return std::make_tuple(g, fj, false);
         }
         auto f0 = bnu::inner_prod(_c, x);
 
@@ -30,9 +30,10 @@ class sdp_oracle
         g = _c;
         if (fj > 0)
         {
-            return std::make_tuple(g, fj, t);
+            return std::make_tuple(g, fj, false);
         }
-        return std::make_tuple(g, 0., f0);
+        t = f0;
+        return std::make_tuple(g, 0., true);
     }
 
   private:

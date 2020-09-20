@@ -49,25 +49,26 @@ class my_oracle
      * @param[in] t
      * @return std::tuple<Cut, double>
      */
-    std::tuple<Cut, double> operator()(const Arr& x, double t)
+    std::tuple<Cut, bool> operator()(const Arr& x, double& t)
     {
         const auto f0 = xt::linalg::dot(this->c, x)();
         // const auto f1 = f0 - t;
         if (const auto f1 = f0 - t; f1 > 0)
         {
-            return {{this->c, f1}, t};
+            return {{this->c, f1}, false};
         }
         const auto cut2 = this->lmi1(x);
         if (cut2)
         {
-            return {*cut2, t};
+            return {*cut2, false};
         }
         const auto cut3 = this->lmi2(x);
         if (cut3)
         {
-            return {*cut3, t};
+            return {*cut3, false};
         }
-        return {{this->c, 0.}, f0};
+        t = f0;
+        return {{this->c, 0.}, true};
     }
 };
 

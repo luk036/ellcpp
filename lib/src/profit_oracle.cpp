@@ -11,13 +11,13 @@ using Cut = std::tuple<Arr, double>;
  * @param[in] t the best-so-far optimal value
  * @return std::tuple<Cut, double>
  */
-std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
+std::tuple<Cut, bool> profit_oracle::operator()(const Arr& y, double& t) const
 {
     // y0 <= log k
     const auto f1 = y[0] - this->_log_k;
     if (f1 > 0.)
     {
-        return {{Arr {1., 0.}, f1}, t};
+        return {{Arr {1., 0.}, f1}, false};
     }
 
     const auto log_Cobb = this->_log_pA + xt::linalg::dot(this->_a, y)();
@@ -26,14 +26,16 @@ std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
     auto te = t + vx;
 
     auto fj = std::log(te) - log_Cobb;
+    auto shrunk = false;
     if (fj < 0.)
     {
         te = std::exp(log_Cobb);
         t = te - vx;
+        shrunk = true;
         fj = 0.;
     }
     auto g = Arr {(this->_v * x) / te - this->_a};
-    return {{std::move(g), fj}, t};
+    return {{std::move(g), fj}, shrunk};
 }
 
 /*!
@@ -41,8 +43,8 @@ std::tuple<Cut, double> profit_oracle::operator()(const Arr& y, double t) const
  * @param[in] t the best-so-far optimal value
  * @return std::tuple<Cut, double, Arr, int>
  */
-std::tuple<Cut, Arr, double, bool> profit_q_oracle::operator()(
-    const Arr& y, double t, bool retry)
+std::tuple<Cut, Arr, bool, bool> profit_q_oracle::operator()(
+    const Arr& y, double& t, bool retry)
 {
     if (!retry)
     {
@@ -57,8 +59,8 @@ std::tuple<Cut, Arr, double, bool> profit_q_oracle::operator()(
         }
         this->_yd = xt::log(x);
     }
-    auto [cut, t1] = this->_P(this->_yd, t);
+    auto [cut, shrunk] = this->_P(this->_yd, t);
     auto& [g, h] = cut;
     h += xt::linalg::dot(g, this->_yd - y)();
-    return {std::move(cut), this->_yd, t1, !retry};
+    return {std::move(cut), this->_yd, shrunk, !retry};
 }

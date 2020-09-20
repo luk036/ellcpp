@@ -61,7 +61,7 @@ class profit_oracle
      * @param[in] t the best-so-far optimal value
      * @return std::tuple<Cut, double> Cut and the updated best-so-far value
      */
-    auto operator()(const Arr& y, double t) const -> std::tuple<Cut, double>;
+    auto operator()(const Arr& y, double& t) const -> std::tuple<Cut, bool>;
 };
 
 /*!
@@ -119,7 +119,7 @@ class profit_rb_oracle
      *
      * @see cutting_plane_dc
      */
-    auto operator()(const Arr& y, double t)
+    auto operator()(const Arr& y, double& t)
     {
         auto a_rb = this->_a;
         a_rb[0] += y[0] > 0. ? -this->_uie[0] : this->_uie[0];
@@ -182,6 +182,6 @@ class profit_q_oracle
      *
      * @see cutting_plane_q
      */
-    auto operator()(const Arr& y, double t, bool retry)
-        -> std::tuple<Cut, Arr, double, bool>;
+    auto operator()(const Arr& y, double& t, bool retry)
+        -> std::tuple<Cut, Arr, bool, bool>;
 };

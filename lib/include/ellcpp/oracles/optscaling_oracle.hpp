@@ -106,20 +106,20 @@ class optscaling_oracle
      *
      * @see cutting_plane_dc
      */
-    auto operator()(const Arr& x, double t) -> std::tuple<Cut, double>
+    auto operator()(const Arr& x, double& t) -> std::tuple<Cut, bool>
     {
         const auto cut = this->_network(x);
         if (cut)
         {
-            return {*cut, t};
+            return {*cut, false};
         }
         auto s = x(0) - x(1);
         auto fj = s - t;
         if (fj < 0)
         {
             t = s;
-            fj = 0.;
+            return {{Arr {1., -1.}, 0.}, true};
         }
-        return {{Arr {1., -1.}, fj}, t};
+        return {{Arr {1., -1.}, fj}, false};
     }
 };

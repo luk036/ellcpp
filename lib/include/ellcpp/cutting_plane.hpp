@@ -226,11 +226,11 @@ auto cutting_plane_dc(
 
     for (; niter != options.max_it; ++niter)
     {
-        const auto [cut, t1] = Omega(S.xc(), t);
-        if (t != t1)
+        const auto [cut, shrunk] = Omega(S.xc(), t);
+        if (shrunk)
         { // best t obtained
             // feasible = true;
-            t = t1;
+            // t = t1;
             x_best = S.xc();
         }
         const auto [cutstatus, tsq] = S.update(cut);
@@ -289,10 +289,10 @@ auto cutting_plane_q(
     for (; niter != options.max_it; ++niter)
     {
         auto retry = (status == CUTStatus::noeffect);
-        const auto [cut, x0, t1, more_alt] = Omega(S.xc(), t, retry);
-        if (t != t1)
+        const auto [cut, x0, shrunk, more_alt] = Omega(S.xc(), t, retry);
+        if (shrunk)
         { // best t obtained
-            t = t1;
+            // t = t1;
             x_best = x0;
         }
         const auto [cutstatus, tsq] = S.update(cut);
