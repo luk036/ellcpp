@@ -114,7 +114,7 @@ std::vector<Arr> construct_poly_matrix(const Arr& s, size_t m)
     auto n = s.shape()[0];
     auto D1 = construct_distance_matrix(s);
     auto D = Arr {xt::ones<double>({n, n})};
-    auto Sig = std::vector {D};
+    auto Sig = std::vector<Arr> {D};
     Sig.reserve(m);
 
     for (size_t i = 0U; i != m - 1; ++i)
@@ -223,7 +223,7 @@ auto lsq_corr_core2(const Arr& Y, size_t m, lsq_oracle& P)
     auto t = 1.e100; // std::numeric_limits<double>::max()
     const auto [x_best, ell_info] = cutting_plane_dc(P, E, t);
     Arr a = xt::view(x_best, xt::range(0, m));
-    return std::tuple {std::move(a), ell_info.num_iters, ell_info.feasible};
+    return std::make_tuple(std::move(a), ell_info.num_iters, ell_info.feasible);
 }
 
 /*!
@@ -347,8 +347,8 @@ auto mle_corr_core(const Arr& /* Y */, size_t m, mle_oracle& P)
     auto E = ell(500., x);
     auto t = 1.e100; // std::numeric_limits<double>::max()
     auto [x_best, ell_info] = cutting_plane_dc(P, E, t);
-    return std::tuple {
-        std::move(x_best), ell_info.num_iters, ell_info.feasible};
+    return std::make_tuple(
+        std::move(x_best), ell_info.num_iters, ell_info.feasible);
 }
 
 /*!

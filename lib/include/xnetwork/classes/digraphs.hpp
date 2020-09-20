@@ -1,6 +1,6 @@
 #pragma once
 
-#include <any>
+#include <boost/any.hpp>
 #include <boost/coroutine2/all.hpp>
 #include <cassert>
 #include <py2cpp/py2cpp.hpp>
@@ -108,7 +108,7 @@ namespace xn
     direct manipulation of the attribute
     dictionaries named graph, node and edge respectively.
 
-    >>> G.graph["day"] = std::any("Friday");
+    >>> G.graph["day"] = boost::any("Friday");
     {'day': 'Friday'}
 
     **Subclasses (Advanced):**

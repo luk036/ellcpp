@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-#include <any>
+#include <boost/any.hpp>
 #include <doctest.h>
 // #include <iostream>
 #include <string>
@@ -20,7 +20,7 @@ TEST_CASE("PY2CPP")
     }
     auto S3 = S.copy();
 
-    py::dict<int, std::any> M{{1, "hello"}, {8, 5.6}, {9, 4.2}};
+    py::dict<int, boost::any> M{{1, "hello"}, {8, 5.6}, {9, 4.2}};
     CHECK(M.contains(8));
     CHECK(!M.contains(10));
     CHECK(py::len(M) == 3);
@@ -32,9 +32,9 @@ TEST_CASE("PY2CPP")
     {
         CHECK(M.contains(e));
     }
-    CHECK(std::any_cast<double>(M[8]) == 5.6);
-    CHECK(std::any_cast<double>(M[9]) != 4.1);
-    CHECK(std::any_cast<double>(M.get(2, std::any(-1000.))) == -1000.);
+    CHECK(boost::any_cast<double>(M[8]) == 5.6);
+    CHECK(boost::any_cast<double>(M[9]) != 4.1);
+    CHECK(boost::any_cast<double>(M.get(2, boost::any(-1000.))) == -1000.);
 
     auto M3 = M.copy();
 }

@@ -125,7 +125,10 @@ void ell::_calc_cc(const double& tau)
 template <typename T>
 std::tuple<CUTStatus, double> ell::update(const std::tuple<Arr, T>& cut)
 {
-    const auto& [g, beta] = cut;
+    // const auto& [g, beta] = cut;
+    const auto& g = std::get<0>(cut);
+    const auto& beta = std::get<1>(cut);
+
     const auto Qg = Arr {xt::linalg::dot(_Q, g)};
     const auto omega = xt::linalg::dot(g, Qg)();
     this->_tsq = this->_kappa * omega;

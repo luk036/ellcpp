@@ -12,9 +12,9 @@ using Cut = std::tuple<Arr, double>;
  * @brief
  *
  * @param[in] x
- * @return std::optional<Cut>
+ * @return boost::optional<Cut>
  */
-std::optional<Cut> qmi_oracle::operator()(const Arr& x)
+boost::optional<Cut> qmi_oracle::operator()(const Arr& x)
 {
     using xt::linalg::dot;
 

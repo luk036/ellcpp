@@ -3,7 +3,7 @@
 
 #include "chol_ext.hpp"
 #include <gsl/span>
-#include <optional>
+#include <boost/optional.hpp>
 #include <xtensor/xarray.hpp>
 
 /*!
@@ -68,7 +68,7 @@ class qmi_oracle
      * @brief
      *
      * @param[in] x
-     * @return std::optional<Cut>
+     * @return boost::optional<Cut>
      */
-    auto operator()(const Arr& x) -> std::optional<Cut>;
+    auto operator()(const Arr& x) -> boost::optional<Cut>;
 };

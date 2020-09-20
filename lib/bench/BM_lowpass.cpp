@@ -117,7 +117,7 @@ static auto run_lowpass(bool use_parallel_cut)
     // std::cout << "lowpass r: " << r << '\n';
     // auto Ustop = 20 * std::log10(std::sqrt(Spsq_new));
     // std::cout << "Min attenuation in the stopband is " << Ustop << " dB.\n";
-    return std::tuple {ell_info.feasible, ell_info.num_iters};
+    return std::make_tuple(ell_info.feasible, ell_info.num_iters);
 }
 
 static void BM_Lowpass_single_cut(benchmark::State& state)

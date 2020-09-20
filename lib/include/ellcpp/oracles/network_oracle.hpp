@@ -3,7 +3,7 @@
 
 #include <ellcpp/utility.hpp>
 #include <netoptim/neg_cycle.hpp> // import negCycleFinder
-#include <optional>
+#include <boost/optional.hpp>
 
 /*!
  * @brief Oracle for Parametric Network Problem.
@@ -64,10 +64,10 @@ class network_oracle
      *
      * @tparam T
      * @param[in] x
-     * @return std::optional<std::tuple<T, double>>
+     * @return boost::optional<std::tuple<T, double>>
      */
     template <typename T>
-    auto operator()(const T& x) -> std::optional<std::tuple<T, double>>
+    auto operator()(const T& x) -> boost::optional<std::tuple<T, double>>
     {
         auto get_weight = [this, &x](const edge_t& e) -> double {
             return this->_h.eval(e, x);

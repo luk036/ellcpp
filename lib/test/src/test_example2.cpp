@@ -2,7 +2,7 @@
 #include <doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
-#include <optional>
+#include <boost/optional.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 using Cut = std::tuple<Arr, double>;
@@ -11,9 +11,9 @@ using Cut = std::tuple<Arr, double>;
  * @brief
  *
  * @param[in] z
- * @return std::optional<Cut>
+ * @return boost::optional<Cut>
  */
-auto my_oracle2(const Arr& z) -> std::optional<Cut>
+auto my_oracle2(const Arr& z) -> boost::optional<Cut>
 {
     auto x = z[0];
     auto y = z[1];

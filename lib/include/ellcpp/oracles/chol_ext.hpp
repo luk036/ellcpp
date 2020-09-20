@@ -74,7 +74,10 @@ class chol_ext
     void factor(Fn&& getA)
     {
         this->p = {0U, 0U};
-        auto& [start, stop] = this->p;
+        // auto& [start, stop] = this->p;
+        auto& start = this->p.first;
+        auto& stop = this->p.second;
+        
         for (size_t i = 0U; i != this->n; ++i)
         {
             auto j = start;
