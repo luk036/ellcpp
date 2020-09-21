@@ -330,7 +330,9 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
         >>> G[1][2].update({0: 5});
         >>> G.edges()[1, 2].update({0: 5});
      */
-    auto add_edge(const Node& u, const Node& v)
+    template <typename U = key_type>
+    typename std::enable_if<std::is_same_v<U, value_type>>::type
+    add_edge(const Node& u, const Node& v)
     {
         // auto [u, v] = u_of_edge, v_of_edge;
         // add nodes
@@ -339,19 +341,26 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
         // add the edge
         // datadict = this->_adj[u].get(v, this->edge_attr_dict_factory());
         // datadict.update(attr);
-        if constexpr (std::is_same_v<key_type, value_type>)
-        {
-            // set
-            this->_succ[u].insert(v);
-            // this->_prev[v].insert(u);
-        }
-        else
-        {
-            using T = typename adjlist_t::mapped_type;
-            auto data = this->_adj[u].get(v, T {});
-            this->_succ[u][v] = data;
-            // this->_prev[v][u] = data;
-        }
+        this->_succ[u].insert(v);
+        // this->_prev[v].insert(u);
+        this->_num_of_edges += 1;
+    }
+
+    template <typename U = key_type>
+    typename std::enable_if<!std::is_same_v<U, value_type>>::type
+    add_edge(const Node& u, const Node& v)
+    {
+        // auto [u, v] = u_of_edge, v_of_edge;
+        // add nodes
+        assert(this->_node.contains(u));
+        assert(this->_node.contains(v));
+        // add the edge
+        // datadict = this->_adj[u].get(v, this->edge_attr_dict_factory());
+        // datadict.update(attr);
+        using T = typename adjlist_t::mapped_type;
+        auto data = this->_adj[u].get(v, T {});
+        this->_succ[u][v] = data;
+        // this->_prev[v][u] = data;
         this->_num_of_edges += 1;
     }
 

@@ -70,8 +70,12 @@ class chol_ext
      *
      * See also: factorize()
      */
-    template <typename Fn>
-    void factor(Fn&& getA)
+
+    //typename std::enable_if<std::is_trivially_default_constructible<T>::value>::type
+
+    template <typename Fn, bool U = Allow_semidefinite>
+    typename std::enable_if<U>::type
+    factor(Fn&& getA)
     {
         this->p = {0U, 0U};
         // auto& [start, stop] = this->p;
@@ -93,26 +97,55 @@ class chol_ext
                 }
             }
             this->T(i, i) = d;
-            if constexpr (Allow_semidefinite)
+            if (d < 0.)
             {
-                if (d < 0.)
+                // this->stop = i + 1;
+                stop = i + 1;
+                break;
+            }
+            if (d == 0.) [[unlikely]]
+            {
+                start = i + 1;
+            }
+        }
+    }
+
+    /*!
+     * @brief Perform Cholesky Factorization (Lazy evaluation)
+     *
+     * @tparam Fn
+     * @param[in] getA function to access the elements of A
+     *
+     * See also: factorize()
+     */
+    template <typename Fn, bool U = Allow_semidefinite>
+    typename std::enable_if<!U>::type
+    factor(Fn&& getA)
+    {
+        this->p = {0U, 0U};
+        // auto& [start, stop] = this->p;
+        auto& start = this->p.first;
+        auto& stop = this->p.second;
+        
+        for (size_t i = 0U; i != this->n; ++i)
+        {
+            auto j = start;
+            auto d = getA(i, j);
+            while (j != i)
+            {
+                this->T(i, j) = d;
+                this->T(j, i) = d / this->T(j, j); // note: T(j, i) here!
+                d = getA(i, ++j);
+                for (auto k = start; k != j; ++k)
                 {
-                    // this->stop = i + 1;
-                    stop = i + 1;
-                    break;
-                }
-                if (d == 0.) [[unlikely]]
-                {
-                    start = i + 1;
+                    d -= this->T(k, i) * this->T(j, k);
                 }
             }
-            else // strict positive definite
+            this->T(i, i) = d;
+            if (d <= 0.)
             {
-                if (d <= 0.)
-                {
-                    stop = i + 1;
-                    break;
-                }
+                stop = i + 1;
+                break;
             }
         }
     }
@@ -140,7 +173,9 @@ class chol_ext
         {
             throw std::runtime_error {"Implementation Error."};
         }
-        const auto& [start, n] = this->p;
+        // const auto& [start, n] = this->p;
+        const auto& start = this->p.first;
+        const auto& n = this->p.second;
         auto m = n - 1; // assume stop > 0
         this->v(m) = 1.;
 
@@ -166,7 +201,9 @@ class chol_ext
     {
         auto res = double {};
         const auto& v = this->v;
-        const auto& [start, stop] = this->p;
+        // const auto& [start, stop] = this->p;
+        const auto& start = this->p.first;
+        const auto& stop = this->p.second;
         for (auto i = start; i != stop; ++i)
         {
             auto s = double {};

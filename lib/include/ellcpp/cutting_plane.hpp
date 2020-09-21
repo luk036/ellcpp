@@ -50,7 +50,9 @@ auto bsearch(Oracle&& Omega, Space&& I, const Options& options = Options())
     -> CInfo
 {
     // assume monotone
-    auto& [lower, upper] = I;
+    // auto& [lower, upper] = I;
+    auto& lower = I.first;
+    auto& upper = I.second;
     assert(lower <= upper);
     const auto u_orig = upper;
     auto niter = 0U;

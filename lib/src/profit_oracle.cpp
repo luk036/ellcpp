@@ -26,16 +26,15 @@ std::tuple<Cut, bool> profit_oracle::operator()(const Arr& y, double& t) const
     auto te = t + vx;
 
     auto fj = std::log(te) - log_Cobb;
-    auto shrunk = false;
     if (fj < 0.)
     {
         te = std::exp(log_Cobb);
         t = te - vx;
-        shrunk = true;
-        fj = 0.;
+        auto g = Arr {(this->_v * x) / te - this->_a};
+        return {{std::move(g), 0.}, true};
     }
     auto g = Arr {(this->_v * x) / te - this->_a};
-    return {{std::move(g), fj}, shrunk};
+    return {{std::move(g), fj}, false};
 }
 
 /*!

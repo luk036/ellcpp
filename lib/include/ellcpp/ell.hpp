@@ -124,6 +124,20 @@ class ell
     std::tuple<CUTStatus, double> update(const std::tuple<Arr, T>& cut);
 
   private:
+    CUTStatus _update_cut(const double& beta)
+    {
+        return this->_calc_dc(beta);
+    }
+
+    CUTStatus _update_cut(const Arr& beta)
+    { // parallel cut
+        if (beta.shape()[0] < 2) [[unlikely]]
+        {
+            return this->_calc_dc(beta[0]);
+        }
+        return this->_calc_ll_core(beta[0], beta[1]);
+    }
+
     /*!
      * @brief Calculate new ellipsoid under Parallel Cut
      *

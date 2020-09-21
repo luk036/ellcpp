@@ -113,6 +113,7 @@ void ell::_calc_cc(const double& tau)
     this->_delta = this->_c1;
 }
 
+
 /*!
  * @brief Update ellipsoid core function using the cut
  *
@@ -126,30 +127,14 @@ template <typename T>
 std::tuple<CUTStatus, double> ell::update(const std::tuple<Arr, T>& cut)
 {
     // const auto& [g, beta] = cut;
-    const auto& g = std::get<0>(cut);
     const auto& beta = std::get<1>(cut);
 
+    const auto& g = std::get<0>(cut);
     const auto Qg = Arr {xt::linalg::dot(_Q, g)};
     const auto omega = xt::linalg::dot(g, Qg)();
     this->_tsq = this->_kappa * omega;
-    auto status = CUTStatus::success;
 
-    if constexpr (std::is_scalar_v<T>)
-    { // C++17
-        status = this->_calc_dc(beta);
-    }
-    else
-    { // parallel cut
-        if (beta.shape()[0] < 2) [[unlikely]]
-        {
-            status = this->_calc_dc(beta[0]);
-        }
-        else
-        {
-            status = this->_calc_ll_core(beta[0], beta[1]);
-        }
-    }
-
+    auto status = this->_update_cut(beta);
     if (status != CUTStatus::success)
     {
         return {status, this->_tsq};

@@ -388,9 +388,9 @@ std::tuple<Arr, size_t, bool> lsq_corr_poly(
     auto a = zeros({m});
     auto Q = qmi_oracle(Sig, Y);
     auto E = ell(10., a);
-    auto P = bsearch_adaptor(Q, E);
+    auto P = bsearch_adaptor<decltype(Q), decltype(E)>(Q, E);
     // double normY = xt::norm_l2(Y);
-    auto bs_info = bsearch(P, std::tuple {0., 100. * 100.});
+    auto bs_info = bsearch(P, std::make_pair(0., 100. * 100.));
 
     // std::cout << niter << ", " << feasible << '\n';
     return {P.x_best(), bs_info.num_iters, bs_info.feasible};
