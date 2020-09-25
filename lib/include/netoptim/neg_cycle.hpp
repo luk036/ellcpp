@@ -130,7 +130,9 @@ class negCycleFinder
         auto changed = false;
         for (auto&& e : this->_G.edges())
         {
-            const auto [u, v] = this->_G.end_points(e);
+            const auto vs = this->_G.end_points(e);
+            const auto& u = vs.first;
+            const auto& v = vs.second;
             const auto wt = get_weight(e);
             const auto d = dist[u] + wt;
 
@@ -170,14 +172,14 @@ class negCycleFinder
      * @tparam Container
      * @tparam WeightFn
      * @param[in] handle
-     * @param[in,out] dist
+     * @param[in] dist
      * @param[in] get_weight
      * @return true
      * @return false
      */
     template <typename Container, typename WeightFn>
-    auto _is_negative(
-        const node_t& handle, Container&& dist, WeightFn&& get_weight) -> bool
+    auto _is_negative(const node_t& handle, const Container& dist,
+        WeightFn&& get_weight) -> bool
     {
         auto v = handle;
         do

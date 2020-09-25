@@ -75,6 +75,25 @@ static auto create_test_case_timing() -> xn::grAdaptor<graph_t>
     return xn::grAdaptor<graph_t> {g};
 }
 
+static auto create_test_case_timing2() -> xn::grAdaptor<graph_t>
+{
+    using Edge = std::pair<int, int>;
+    constexpr auto num_nodes = 3;
+    enum nodes
+    {
+        A,
+        B,
+        C
+    };
+    static Edge edge_array[] = {Edge {A, B}, Edge {B, A}, Edge {B, C},
+        Edge {C, B}, Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
+    int weights[] = {3, -4, -1, -3, 2, 0, -2, 1};
+    constexpr int num_arcs = sizeof(edge_array) / sizeof(Edge);
+    static auto g =
+        graph_t(edge_array, edge_array + num_arcs, weights, num_nodes);
+    return xn::grAdaptor<graph_t> {g};
+}
+
 auto do_case(const xn::grAdaptor<graph_t>& G) -> bool
 {
     using edge_t = decltype(*(std::begin(G.edges())));
@@ -84,8 +103,23 @@ auto do_case(const xn::grAdaptor<graph_t>& G) -> bool
         return weightmap[e];
     };
 
-    auto dist = std::vector(G.number_of_nodes(), 0);
-    auto N = negCycleFinder {G};
+    auto dist = std::vector<int>(G.number_of_nodes(), 0);
+    auto N = negCycleFinder<xn::grAdaptor<graph_t>> {G};
+    const auto cycle = N.find_neg_cycle(dist, get_weight);
+    return !cycle.empty();
+}
+
+auto do_case_float(const xn::grAdaptor<graph_t>& G) -> bool
+{
+    using edge_t = decltype(*(std::begin(G.edges())));
+
+    const auto get_weight = [&](const edge_t& e) -> double {
+        const auto& weightmap = boost::get(boost::edge_weight, G);
+        return weightmap[e];
+    };
+
+    auto dist = std::vector<double>(G.number_of_nodes(), 0.0);
+    auto N = negCycleFinder<xn::grAdaptor<graph_t>> {G};
     const auto cycle = N.find_neg_cycle(dist, get_weight);
     return !cycle.empty();
 }
@@ -109,4 +143,25 @@ TEST_CASE("Test Timing Graph (boost)")
     const auto G = create_test_case_timing();
     const auto hasNeg = do_case(G);
     CHECK(!hasNeg);
+}
+
+TEST_CASE("Test Timing Graph 2 (boost)")
+{
+    const auto G = create_test_case_timing2();
+    const auto hasNeg = do_case(G);
+    CHECK(hasNeg);
+}
+
+TEST_CASE("Test Timing Graph float (boost)")
+{
+    const auto G = create_test_case_timing();
+    const auto hasNeg = do_case_float(G);
+    CHECK(!hasNeg);
+}
+
+TEST_CASE("Test Timing Graph 2 (boost)")
+{
+    const auto G = create_test_case_timing2();
+    const auto hasNeg = do_case_float(G);
+    CHECK(hasNeg);
 }

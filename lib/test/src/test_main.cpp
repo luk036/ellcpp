@@ -11,8 +11,9 @@
 
 // void foo(boost::coroutines2::coroutine<int>::pull_type& sink)
 // {
-//     // using coIter = boost::coroutines2::coroutine<int>::pull_type::iterator;
-//     for (auto start = begin(sink); start != end(sink); ++start)
+//     // using coIter =
+//     boost::coroutines2::coroutine<int>::pull_type::iterator; for (auto start
+//     = begin(sink); start != end(sink); ++start)
 //     {
 //         std::cout << "retrieve " << *start << "\n";
 //     }

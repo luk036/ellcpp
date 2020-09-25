@@ -18,21 +18,21 @@ TEST_CASE("Test Cycle Ratio")
         D,
         E
     };
-    const auto edges = std::array {
+    const auto edges = std::array<Edge, 5> {
         Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
-    const auto indices = std::array {0, 1, 2, 3, 4};
-    auto G = xn::DiGraphS {py::range<int>(num_nodes)};
+    const auto indices = std::array<int, 5> {0, 1, 2, 3, 4};
+    auto G = xn::SimpleDiGraphS {py::range<int>(num_nodes)};
     G.add_edges_from(edges, indices);
 
-    const auto cost = std::array {5, 1, 1, 1, 1};
+    const auto cost = std::array<int, 5> {5, 1, 1, 1, 1};
 
-    const auto get_cost = [&](const auto& e) -> int {
-        auto [u, v] = G.end_points(e);
-        return cost[G[u].at(v)];
+    const auto get_cost = [&](const auto& edge) -> int {
+        const auto e = G.end_points(edge);
+        return cost[G[e.first].at(e.second)];
     };
     const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
 
-    auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
+    auto dist = std::vector<fun::Fraction<int>>(G.number_of_nodes(), fun::Fraction<int>(0));
     auto r = fun::Fraction<int>(5);
     const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
     CHECK(!c.empty());
@@ -50,22 +50,22 @@ TEST_CASE("Test Cycle Ratio of Timing Graph")
         B,
         C
     };
-    const auto edges = std::array {Edge {A, B}, Edge {B, A}, Edge {B, C},
+    const auto edges = std::array<Edge, 6> {Edge {A, B}, Edge {B, A}, Edge {B, C},
         Edge {C, B}, Edge {C, A}, Edge {A, C}};
     // make sure no parallel edges!!!
 
-    const auto indices = std::array {0, 1, 2, 3, 4, 5};
-    auto G = xn::DiGraphS {py::range<int>(num_nodes)};
+    const auto indices = std::array<int, 6> {0, 1, 2, 3, 4, 5};
+    auto G = xn::SimpleDiGraphS {py::range<int>(num_nodes)};
     G.add_edges_from(edges, indices);
-    const auto cost = std::array {7, -1, 3, 0, 2, 4};
+    const auto cost = std::array<int, 6> {7, -1, 3, 0, 2, 4};
 
-    const auto get_cost = [&](const auto& e) -> int {
-        auto [u, v] = G.end_points(e);
-        return cost[G[u].at(v)];
+    const auto get_cost = [&](const auto& edge) -> int {
+        const auto e = G.end_points(edge);
+        return cost[G[e.first].at(e.second)];
     };
     const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
 
-    auto dist = std::vector(G.number_of_nodes(), fun::Fraction<int>(0));
+    auto dist = std::vector<fun::Fraction<int>>(G.number_of_nodes(), fun::Fraction<int>(0));
     auto r = fun::Fraction<int>(7);
     const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
     CHECK(!c.empty());

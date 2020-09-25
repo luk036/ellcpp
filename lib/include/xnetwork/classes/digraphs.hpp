@@ -260,7 +260,8 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     */
     auto adj() const
     {
-        return AdjacencyView(this->_succ);
+        using T = decltype(this->_succ);
+        return AdjacencyView<T>(this->_succ);
     }
 
     /// @property
@@ -283,7 +284,8 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     */
     auto succ() const
     {
-        return AdjacencyView(this->_succ);
+        using T = decltype(this->_succ);
+        return AdjacencyView<T>(this->_succ);
     }
 
     /*! Add an edge between u and v.
@@ -331,7 +333,7 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
         >>> G.edges()[1, 2].update({0: 5});
      */
     template <typename U = key_type>
-    typename std::enable_if<std::is_same_v<U, value_type>>::type
+    typename std::enable_if<std::is_same<U, value_type>::value>::type
     add_edge(const Node& u, const Node& v)
     {
         // auto [u, v] = u_of_edge, v_of_edge;
@@ -347,7 +349,7 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     }
 
     template <typename U = key_type>
-    typename std::enable_if<!std::is_same_v<U, value_type>>::type
+    typename std::enable_if<!std::is_same<U, value_type>::value>::type
     add_edge(const Node& u, const Node& v)
     {
         // auto [u, v] = u_of_edge, v_of_edge;
@@ -379,8 +381,8 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
         auto N = edges.size();
         for (auto i = 0U; i != N; ++i)
         {
-            auto [u, v] = edges[i];
-            this->add_edge(u, v, data[i]);
+            const auto& e = edges[i];
+            this->add_edge(e.first, e.second, data[i]);
         }
     }
 
@@ -492,8 +494,10 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     auto edges() const -> pull_t
     {
         auto func = [&](typename coro_t::push_type& yield) {
-            for (auto&& [n, nbrs] : this->_nodes_nbrs())
+            for (auto&& rslt : this->_nodes_nbrs())
             {
+                auto&& n = std::get<0>(rslt);
+                auto&& nbrs = std::get<1>(rslt);
                 for (auto&& nbr : nbrs)
                 {
                     yield(edge_t {Node(n), Node(nbr)});
@@ -511,7 +515,7 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     //     return InEdgeView(*this);
     // }
 
-    auto degree(const Node& n)
+    auto degree(const Node& n) const
     {
         return this->_succ[n].size();
     }
@@ -551,7 +555,7 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     }
 };
 
-using SimpleDiGraphS = Graph<decltype(py::range<int>(1)), py::set<int>>;
+using SimpleDiGraphS = DiGraphS<decltype(py::range<int>(1)), py::dict<int, int>>;
 
 // template <typename nodeview_t,
 //           typename adjlist_t> DiGraphS(int )

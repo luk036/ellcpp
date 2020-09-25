@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/any.hpp>
+#include <boost/utility/string_view.hpp>
 #include <cassert>
 #include <py2cpp/py2cpp.hpp>
 #include <type_traits>
@@ -312,7 +313,14 @@ class Graph : public object
     */
     auto adj() const
     {
-        return AdjacencyView(this->_adj);
+        using T = std::remove_reference_t<decltype(this->_adj)>;
+        return AdjacencyView<const T&>(this->_adj);
+    }
+
+    auto adj()
+    {
+        using T = std::remove_cv_t<decltype(this->_adj)>;
+        return AdjacencyView<T>(this->_adj);
     }
 
     auto _nodes_nbrs() const
@@ -342,7 +350,7 @@ class Graph : public object
     }
 
     // @name.setter
-    auto set_name(std::string_view s)
+    auto set_name(boost::string_view s)
     {
         this->graph["name"] = boost::any(s);
     }
@@ -490,7 +498,8 @@ class Graph : public object
             {0: 1, 1: 2, 2: 3}
 
          */
-        auto nodes = NodeView(*this);
+        using T = decltype(*this);
+        auto nodes = NodeView<T>(*this);
         // Lazy View creation: overload the (class) property on the instance
         // Then future G.nodes use the existing View
         // setattr doesn"t work because attribute already exists
@@ -605,7 +614,7 @@ class Graph : public object
         >>> G.edges()[1, 2].update({0: 5});
      */
     template <typename U = key_type>
-    typename std::enable_if<std::is_same_v<U, value_type>>::type
+    typename std::enable_if<std::is_same<U, value_type>::value>::type
     add_edge(const Node& u, const Node& v)
     {
         // auto [u, v] = u_of_edge, v_of_edge;
@@ -622,7 +631,7 @@ class Graph : public object
     }
 
     template <typename U = key_type>
-    typename std::enable_if<!std::is_same_v<U, value_type>>::type
+    typename std::enable_if<!std::is_same<U, value_type>::value>::type
     add_edge(const Node& u, const Node& v)
     {
         // auto [u, v] = u_of_edge, v_of_edge;
@@ -655,8 +664,8 @@ class Graph : public object
         auto N = edges.size();
         for (auto i = 0U; i != N; ++i)
         {
-            auto [u, v] = edges[i];
-            this->add_edge(u, v, data[i]);
+            const auto& e = edges[i];
+            this->add_edge(e.first, e.second, data[i]);
         }
     }
 
@@ -700,7 +709,7 @@ class Graph : public object
         return this->_adj[u].contains(v);
     }
 
-    auto degree(const Node& n)
+    auto degree(const Node& n) const
     {
         return this->_adj[n].size();
     }

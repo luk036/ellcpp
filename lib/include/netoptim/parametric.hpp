@@ -38,7 +38,7 @@ auto max_parametric(const Graph& G, T& r_opt, Fn1&& d, Fn2&& zero_cancel,
         return d(r_opt, e);
     };
 
-    auto S = negCycleFinder(G);
+    auto S = negCycleFinder<Graph>(G);
     auto C_opt = std::vector<edge_t> {}; // should initial outside
 
     auto niter = 0U;
@@ -61,10 +61,10 @@ auto max_parametric(const Graph& G, T& r_opt, Fn1&& d, Fn2&& zero_cancel,
         r_opt = r_min;
 
         // update ???
-        for (auto&& e : C_opt)
+        for (auto&& edge : C_opt)
         {
-            const auto [u, v] = G.end_points(e);
-            dist[u] = dist[v] - get_weight(e);
+            const auto e = G.end_points(edge);
+            dist[e.first] = dist[e.second] - get_weight(edge);
         }
     }
 

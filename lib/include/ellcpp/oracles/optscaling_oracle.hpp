@@ -96,6 +96,7 @@ class optscaling_oracle
 
     optscaling_oracle(const optscaling_oracle&) = delete;
     optscaling_oracle& operator=(const optscaling_oracle&) = delete;
+    optscaling_oracle(optscaling_oracle&&) = default;
 
     /*!
      * @brief Make object callable for cutting_plane_dc()
