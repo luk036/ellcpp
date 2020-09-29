@@ -198,7 +198,7 @@ class lsq_oracle
             return {{std::move(g), f0}, false};
         }
 
-        t = x(n-1);
+        t = x(n - 1);
         return {{std::move(g), 0.}, true};
     }
 };

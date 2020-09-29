@@ -61,9 +61,7 @@ class cycle_ratio_oracle
          */
         auto eval(const edge_t& e, const double& x) const -> double
         {
-            const auto cost = this->_get_cost(e);
-            const auto time = this->_get_time(e);
-            return cost - time * x;
+            return this->_get_cost(e) - this->_get_time(e) * x;
         }
 
         /*!

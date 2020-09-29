@@ -3,8 +3,8 @@
 
 //#include "mat.hpp"
 #include "chol_ext.hpp"
-#include <gsl/span>
 #include <boost/optional.hpp>
+#include <gsl/span>
 #include <xtensor/xarray.hpp>
 
 /*!

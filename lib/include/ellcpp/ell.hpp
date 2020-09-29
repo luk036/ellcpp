@@ -1,9 +1,11 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
+#include "utility.hpp"
 #include <cmath>
 #include <tuple>
 #include <xtensor/xarray.hpp>
+
 
 // forward declaration
 enum class CUTStatus;
@@ -32,8 +34,24 @@ class ell
     const size_t _n;
     const double _c1;
     double _kappa;
-    Arr _xc;
     Arr _Q;
+    Arr _xc;
+
+    /*!
+     * @brief Construct a new ell object
+     *
+     * @param[in] val
+     * @param[in] x
+     */
+    template <typename V, typename U>
+    ell(V&& kappa, Arr&& Q, U&& x) noexcept
+        : _n {x.size()}
+        , _c1 {double(_n * _n) / (_n * _n - 1)}
+        , _kappa {std::forward<V>(kappa)}
+        , _Q {std::move(Q)}
+        , _xc {std::forward<U>(x)}
+    {
+    }
 
   public:
     /*!
@@ -42,12 +60,8 @@ class ell
      * @param[in] val
      * @param[in] x
      */
-    ell(const Arr& val, Arr x)
-        : _n {x.size()}
-        , _c1 {double(_n * _n) / (_n * _n - 1)}
-        , _kappa {1.}
-        , _xc {std::move(x)}
-        , _Q {xt::diag(val)}
+    ell(const Arr& val, Arr x) noexcept
+        : ell {1., xt::diag(val), std::move(x)}
     {
     }
 
@@ -57,12 +71,8 @@ class ell
      * @param[in] alpha
      * @param[in] x
      */
-    ell(const double& alpha, Arr x)
-        : _n {x.size()}
-        , _c1 {double(_n * _n) / (_n * _n - 1)}
-        , _kappa {alpha}
-        , _xc {std::move(x)}
-        , _Q {xt::eye(_n)}
+    ell(const double& alpha, Arr x) noexcept
+        : ell {alpha, xt::eye(x.size()), std::move(x)}
     {
     }
 
@@ -131,10 +141,11 @@ class ell
 
     CUTStatus _update_cut(const Arr& beta)
     { // parallel cut
-        if (beta.shape()[0] < 2) [[unlikely]]
-        {
-            return this->_calc_dc(beta[0]);
-        }
+        if (beta.shape()[0] < 2)
+            [[unlikely]]
+            {
+                return this->_calc_dc(beta[0]);
+            }
         return this->_calc_ll_core(beta[0], beta[1]);
     }
 

@@ -24,8 +24,8 @@ TEST_CASE("Test Optimal Scaling (two varaibles)")
         D,
         E
     };
-    const auto edges =
-        std::array <Edge, 5>{Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E), Edge(E, A)};
+    const auto edges = std::array<Edge, 5> {
+        Edge(A, B), Edge(B, C), Edge(C, D), Edge(D, E), Edge(E, A)};
     const auto indices = std::array<int, 5> {0, 1, 2, 3, 4};
     auto G = xn::SimpleDiGraphS(py::range<int>(num_nodes));
     G.add_edges_from(edges, indices);
@@ -53,8 +53,8 @@ TEST_CASE("Test Optimal Scaling (two varaibles)")
     auto t1 = *cmax - *cmin;
     auto El = ell {1.5 * t1, std::move(x0)};
     auto dist = std::vector<double>(G.number_of_nodes(), 0.);
-    auto P = optscaling_oracle<xn::SimpleDiGraphS, std::vector<double>, 
-    decltype(get_cost)> {G, dist, get_cost};
+    auto P = optscaling_oracle<xn::SimpleDiGraphS, std::vector<double>,
+        decltype(get_cost)> {G, dist, get_cost};
     auto t = 1.e100; // std::numeric_limits<double>::max()
     const auto [x, ell_info] = cutting_plane_dc(std::move(P), std::move(El), t);
 

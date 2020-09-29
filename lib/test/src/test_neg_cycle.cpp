@@ -92,8 +92,9 @@ TEST_CASE("Test Timing Graph")
         B,
         C
     };
-    const auto edges = std::array<Edge, 8> {Edge {A, B}, Edge {B, A}, Edge {B, C},
-        Edge {C, B}, Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
+    const auto edges =
+        std::array<Edge, 8> {Edge {A, B}, Edge {B, A}, Edge {B, C}, Edge {C, B},
+            Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
     const auto weights = std::array<int, 8> {7, 0, 3, 1, 6, 4, 2, 5};
     auto G = xn::SimpleDiGraphS {py::range<int>(num_nodes)};
     G.add_edges_from(edges, weights);
@@ -115,8 +116,9 @@ TEST_CASE("Test Timing Graph (2)")
         B,
         C
     };
-    const auto edges = std::array<Edge, 8> {Edge {A, B}, Edge {B, A}, Edge {B, C},
-        Edge {C, B}, Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
+    const auto edges =
+        std::array<Edge, 8> {Edge {A, B}, Edge {B, A}, Edge {B, C}, Edge {C, B},
+            Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
     const auto weights = std::array<int, 8> {3, -4, -1, -1, 2, 0, -2, 1};
     auto G = xn::SimpleDiGraphS {py::range<int>(num_nodes)};
     G.add_edges_from(edges, weights);

@@ -1,9 +1,9 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
+#include <boost/optional.hpp>
 #include <ellcpp/utility.hpp>
 #include <netoptim/neg_cycle.hpp> // import negCycleFinder
-#include <boost/optional.hpp>
 
 /*!
  * @brief Oracle for Parametric Network Problem.
@@ -26,8 +26,8 @@ class network_oracle
   private:
     const Graph& _G;
     Container& _u; // reference???
-    Fn _h;
     negCycleFinder<Graph> _S;
+    Fn _h;
 
   public:
     /*!
@@ -40,14 +40,15 @@ class network_oracle
     network_oracle(const Graph& G, Container& u, Fn h)
         : _G {G}
         , _u {u}
-        , _h {std::move(h)}
         , _S(G)
+        , _h {std::move(h)}
     {
     }
 
     network_oracle(const network_oracle&) = delete;
     network_oracle& operator=(const network_oracle&) = delete;
     network_oracle(network_oracle&&) = default;
+
     /*!
      * @brief
      *

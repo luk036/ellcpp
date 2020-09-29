@@ -6,7 +6,7 @@
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/graph_traits.hpp>
 // #include <iostream> // for std::cout
-#include <utility>  // for std::pair
+#include <utility> // for std::pair
 
 // using namespace boost;
 template <class grAdaptor>

@@ -1,8 +1,8 @@
 /* -*- coding: utf-8 -*- */
+#include <boost/optional.hpp>
 #include <doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
-#include <boost/optional.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
 using Cut = std::tuple<Arr, double>;

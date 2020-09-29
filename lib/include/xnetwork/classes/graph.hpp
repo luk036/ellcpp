@@ -614,8 +614,8 @@ class Graph : public object
         >>> G.edges()[1, 2].update({0: 5});
      */
     template <typename U = key_type>
-    typename std::enable_if<std::is_same<U, value_type>::value>::type
-    add_edge(const Node& u, const Node& v)
+    typename std::enable_if<std::is_same<U, value_type>::value>::type add_edge(
+        const Node& u, const Node& v)
     {
         // auto [u, v] = u_of_edge, v_of_edge;
         // add nodes
@@ -631,8 +631,8 @@ class Graph : public object
     }
 
     template <typename U = key_type>
-    typename std::enable_if<!std::is_same<U, value_type>::value>::type
-    add_edge(const Node& u, const Node& v)
+    typename std::enable_if<!std::is_same<U, value_type>::value>::type add_edge(
+        const Node& u, const Node& v)
     {
         // auto [u, v] = u_of_edge, v_of_edge;
         // add nodes

@@ -30,7 +30,8 @@ TEST_CASE("Test Parametric")
     };
     const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
 
-    auto dist = std::vector<fun::Fraction<int>>(G.number_of_nodes(), fun::Fraction<int>(0));
+    auto dist = std::vector<fun::Fraction<int>>(
+        G.number_of_nodes(), fun::Fraction<int>(0));
     auto r = fun::Fraction<int>(5);
     const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
     CHECK(!c.empty());
@@ -48,8 +49,8 @@ TEST_CASE("Test Parametric of Timing Graph")
         B,
         C
     };
-    const auto edges = std::array<Edge, 6> {Edge {A, B}, Edge {B, A}, Edge {B, C},
-        Edge {C, B}, Edge {C, A}, Edge {A, C}};
+    const auto edges = std::array<Edge, 6> {Edge {A, B}, Edge {B, A},
+        Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
     // make sure no parallel edges!!!
 
     const auto indices = std::array<int, 6> {0, 1, 2, 3, 4, 5};
@@ -63,7 +64,8 @@ TEST_CASE("Test Parametric of Timing Graph")
     };
     const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
 
-    auto dist = std::vector<fun::Fraction<int>>(G.number_of_nodes(), fun::Fraction<int>(0));
+    auto dist = std::vector<fun::Fraction<int>>(
+        G.number_of_nodes(), fun::Fraction<int>(0));
     auto r = fun::Fraction<int>(7);
     const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
     CHECK(!c.empty());

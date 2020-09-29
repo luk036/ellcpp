@@ -37,8 +37,8 @@ TEST_CASE("Test Cycle Ratio 2")
 
     auto dist = std::vector<double>(G.number_of_nodes(), 0.);
     auto Ell = ell1d {-100., 100.};
-    auto P = cycle_ratio_oracle<xn::SimpleDiGraphS, std::vector<double>, 
-    decltype(get_cost), decltype(get_time)> {G, dist, get_cost, get_time};
+    auto P = cycle_ratio_oracle<xn::SimpleDiGraphS, std::vector<double>,
+        decltype(get_cost), decltype(get_time)> {G, dist, get_cost, get_time};
     auto r = -1.e100; // std::numeric_limits<double>::min()
     const auto opts = Options {2000, 1e-12};
     const auto [x, ell_info] = cutting_plane_dc(P, Ell, r, opts);
@@ -56,8 +56,8 @@ TEST_CASE("Test Cycle Ratio of Timing Graph 2")
         B,
         C
     };
-    const auto edges = std::array<Edge, 6> {Edge {A, B}, Edge {B, A}, Edge {B, C},
-        Edge {C, B}, Edge {C, A}, Edge {A, C}};
+    const auto edges = std::array<Edge, 6> {Edge {A, B}, Edge {B, A},
+        Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
     // make sure no parallel edges!!!
 
     const auto indices = std::array<int, 6> {0, 1, 2, 3, 4, 5};
@@ -74,8 +74,8 @@ TEST_CASE("Test Cycle Ratio of Timing Graph 2")
 
     auto dist = std::vector<double>(G.number_of_nodes(), 0.);
     auto E = ell1d {-100., 100.};
-    auto P = cycle_ratio_oracle<xn::SimpleDiGraphS, std::vector<double>, 
-    decltype(get_cost), decltype(get_time)> {G, dist, get_cost, get_time};
+    auto P = cycle_ratio_oracle<xn::SimpleDiGraphS, std::vector<double>,
+        decltype(get_cost), decltype(get_time)> {G, dist, get_cost, get_time};
     auto r = -1.e100; // std::numeric_limits<double>::min()
     const auto opts = Options {2000, 1e-12};
     const auto [x, ell_info] = cutting_plane_dc(P, E, r, opts);

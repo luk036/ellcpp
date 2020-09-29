@@ -333,8 +333,8 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
         >>> G.edges()[1, 2].update({0: 5});
      */
     template <typename U = key_type>
-    typename std::enable_if<std::is_same<U, value_type>::value>::type
-    add_edge(const Node& u, const Node& v)
+    typename std::enable_if<std::is_same<U, value_type>::value>::type add_edge(
+        const Node& u, const Node& v)
     {
         // auto [u, v] = u_of_edge, v_of_edge;
         // add nodes
@@ -349,8 +349,8 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     }
 
     template <typename U = key_type>
-    typename std::enable_if<!std::is_same<U, value_type>::value>::type
-    add_edge(const Node& u, const Node& v)
+    typename std::enable_if<!std::is_same<U, value_type>::value>::type add_edge(
+        const Node& u, const Node& v)
     {
         // auto [u, v] = u_of_edge, v_of_edge;
         // add nodes
@@ -555,7 +555,8 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     }
 };
 
-using SimpleDiGraphS = DiGraphS<decltype(py::range<int>(1)), py::dict<int, int>>;
+using SimpleDiGraphS =
+    DiGraphS<decltype(py::range<int>(1)), py::dict<int, int>>;
 
 // template <typename nodeview_t,
 //           typename adjlist_t> DiGraphS(int )

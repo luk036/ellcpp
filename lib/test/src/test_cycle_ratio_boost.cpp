@@ -85,7 +85,8 @@ TEST_CASE("Test Cycle Ratio (boost)")
     };
     auto get_time = [&](const auto & /*unused*/) -> int { return 1; };
 
-    auto dist = std::vector<fun::Fraction<int>>(G.number_of_nodes(), fun::Fraction<int>(0));
+    auto dist = std::vector<fun::Fraction<int>>(
+        G.number_of_nodes(), fun::Fraction<int>(0));
     auto r = fun::Fraction<int>(5);
     const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
     CHECK(!c.empty());
@@ -112,7 +113,8 @@ TEST_CASE("Test Cycle Ratio of Timing Graph (boost)")
     };
     const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
 
-    auto dist = std::vector<fun::Fraction<int>>(G.number_of_nodes(), fun::Fraction<int>(0));
+    auto dist = std::vector<fun::Fraction<int>>(
+        G.number_of_nodes(), fun::Fraction<int>(0));
     auto r = fun::Fraction<int>(7);
     const auto c = min_cycle_ratio(G, r, get_cost, get_time, dist);
     CHECK(!c.empty());

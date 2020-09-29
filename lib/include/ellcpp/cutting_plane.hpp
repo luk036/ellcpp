@@ -231,8 +231,6 @@ auto cutting_plane_dc(
         const auto [cut, shrunk] = Omega(S.xc(), t);
         if (shrunk)
         { // best t obtained
-            // feasible = true;
-            // t = t1;
             x_best = S.xc();
         }
         const auto [cutstatus, tsq] = S.update(cut);

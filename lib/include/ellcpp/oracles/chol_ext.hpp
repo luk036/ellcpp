@@ -71,17 +71,17 @@ class chol_ext
      * See also: factorize()
      */
 
-    //typename std::enable_if<std::is_trivially_default_constructible<T>::value>::type
+    // typename
+    // std::enable_if<std::is_trivially_default_constructible<T>::value>::type
 
     template <typename Fn, bool U = Allow_semidefinite>
-    typename std::enable_if<U>::type
-    factor(Fn&& getA)
+    typename std::enable_if<U>::type factor(Fn&& getA)
     {
         this->p = {0U, 0U};
         // auto& [start, stop] = this->p;
         auto& start = this->p.first;
         auto& stop = this->p.second;
-        
+
         for (size_t i = 0U; i != this->n; ++i)
         {
             auto j = start;
@@ -103,10 +103,11 @@ class chol_ext
                 stop = i + 1;
                 break;
             }
-            if (d == 0.) [[unlikely]]
-            {
-                start = i + 1;
-            }
+            if (d == 0.)
+                [[unlikely]]
+                {
+                    start = i + 1;
+                }
         }
     }
 
@@ -119,14 +120,13 @@ class chol_ext
      * See also: factorize()
      */
     template <typename Fn, bool U = Allow_semidefinite>
-    typename std::enable_if<!U>::type
-    factor(Fn&& getA)
+    typename std::enable_if<!U>::type factor(Fn&& getA)
     {
         this->p = {0U, 0U};
         // auto& [start, stop] = this->p;
         auto& start = this->p.first;
         auto& stop = this->p.second;
-        
+
         for (size_t i = 0U; i != this->n; ++i)
         {
             auto j = start;
