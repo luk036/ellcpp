@@ -24,8 +24,7 @@ boost::optional<Cut> lmi_oracle::operator()(const Arr& x)
         return a;
     };
 
-    this->_Q.factor(getA);
-    if (this->_Q.is_spd())
+    if (this->_Q.factor(getA))
     {
         return {};
     }

@@ -57,9 +57,9 @@ class chol_ext
      * such that $v = R^-1 e_p$ is a certificate vector
      * to make $v'*A[:p,:p]*v < 0$
      */
-    void factorize(const Mat& A)
+    auto factorize(const Mat& A) -> bool
     {
-        this->factor([&](size_t i, size_t j) { return A(i, j); });
+        return this->factor([&](size_t i, size_t j) { return A(i, j); });
     }
 
     /*!
@@ -70,17 +70,11 @@ class chol_ext
      *
      * See also: factorize()
      */
-
-    // typename
-    // std::enable_if<std::is_trivially_default_constructible<T>::value>::type
-
-    template <typename Fn, bool U = Allow_semidefinite>
-    typename std::enable_if<U>::type factor(Fn&& getA)
+    template <typename Fn>
+    auto factor(Fn&& getA) -> bool
     {
         this->p = {0U, 0U};
-        // auto& [start, stop] = this->p;
-        auto& start = this->p.first;
-        auto& stop = this->p.second;
+        auto& [start, stop] = this->p;
 
         for (size_t i = 0U; i != this->n; ++i)
         {
@@ -97,58 +91,33 @@ class chol_ext
                 }
             }
             this->T(i, i) = d;
-            if (d < 0.)
+
+            if constexpr (Allow_semidefinite)
             {
-                // this->stop = i + 1;
-                stop = i + 1;
-                break;
-            }
-            if (d == 0.)
-                [[unlikely]]
+                if (d < 0.)
+                {
+                    // this->stop = i + 1;
+                    stop = i + 1;
+                    break;
+                }
+                if (d == 0.) [[unlikely]]
                 {
                     start = i + 1;
                 }
-        }
-    }
-
-    /*!
-     * @brief Perform Cholesky Factorization (Lazy evaluation)
-     *
-     * @tparam Fn
-     * @param[in] getA function to access the elements of A
-     *
-     * See also: factorize()
-     */
-    template <typename Fn, bool U = Allow_semidefinite>
-    typename std::enable_if<!U>::type factor(Fn&& getA)
-    {
-        this->p = {0U, 0U};
-        // auto& [start, stop] = this->p;
-        auto& start = this->p.first;
-        auto& stop = this->p.second;
-
-        for (size_t i = 0U; i != this->n; ++i)
-        {
-            auto j = start;
-            auto d = getA(i, j);
-            while (j != i)
+            }
+            else // not Allow_semidefinite
             {
-                this->T(i, j) = d;
-                this->T(j, i) = d / this->T(j, j); // note: T(j, i) here!
-                d = getA(i, ++j);
-                for (auto k = start; k != j; ++k)
+                if (d <= 0.)
                 {
-                    d -= this->T(k, i) * this->T(j, k);
+                    stop = i + 1;
+                    break;
                 }
             }
-            this->T(i, i) = d;
-            if (d <= 0.)
-            {
-                stop = i + 1;
-                break;
-            }
         }
+
+        return this->is_spd();
     }
+
 
     /*!
      * @brief Is $A$ symmetric positive definite (spd)
@@ -171,7 +140,7 @@ class chol_ext
     {
         if (this->is_spd())
         {
-            throw std::runtime_error {"Implementation Error."};
+            XTENSOR_THROW(std::runtime_error, "Implementation Error.");
         }
         // const auto& [start, n] = this->p;
         const auto& start = this->p.first;
@@ -220,7 +189,7 @@ class chol_ext
     {
         if (!this->is_spd())
         {
-            throw std::runtime_error {"Implementation Error."};
+            XTENSOR_THROW(std::runtime_error, "Implementation Error.");
         }
 
         auto M = zeros({this->n, this->n});

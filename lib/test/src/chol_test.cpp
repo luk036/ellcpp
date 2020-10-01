@@ -8,8 +8,7 @@ TEST_CASE("Cholesky test 1")
 {
     const auto m1 = Arr {{25., 15., -5.}, {15., 18., 0.}, {-5., 0., 11.}};
     auto Q1 = chol_ext<>(m1.shape()[0]);
-    Q1.factorize(m1);
-    CHECK(Q1.is_spd());
+    CHECK(Q1.factorize(m1));
 }
 
 TEST_CASE("Cholesky test 2")

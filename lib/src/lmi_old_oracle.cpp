@@ -22,8 +22,7 @@ boost::optional<Cut> lmi_old_oracle::operator()(const Arr& x)
         A -= this->_F[k] * x(k);
     }
 
-    this->_Q.factorize(A);
-    if (this->_Q.is_spd())
+    if (this->_Q.factorize(A))
     {
         return {};
     }
