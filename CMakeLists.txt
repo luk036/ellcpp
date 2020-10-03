@@ -105,6 +105,7 @@ else()
 endif(MSVC)
 if (FFTW_FOUND)
     set(LIBS ${LIBS} ${FFTW_LIBRARIES})
+    message(STATUS "Found FFTW: ${FFTW_LIBRARIES}")
     include_directories(${FFTW_INCLUDE_DIRS})
 endif (FFTW_FOUND)
 
