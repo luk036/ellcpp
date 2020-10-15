@@ -39,15 +39,15 @@ RUN /opt/conda/bin/conda install -y \
 
 RUN /opt/conda/bin/conda install -y -c conda-forge \
     benchmark \
+    boost \
     catch2 \
     fmt \
     lapack \
-    libboost \
     openblas \
     spdlog \
-    xtensor-fftw=0.2.5 \
-    xtensor-blas=0.16.1 \
-    xtensor=0.20.10 \
+    xtensor-fftw \
+    xtensor-blas \
+    xtensor \
     cppcheck
 
 RUN apt-get clean && rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
