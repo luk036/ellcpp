@@ -130,8 +130,7 @@ auto cutting_plane_dc(
             break;
         }
     }
-    auto ret = CInfo {t != t_orig, niter, status};
-    return std::make_tuple(std::move(x_best), std::move(ret));
+    return std::make_tuple(std::move(x_best), CInfo {t != t_orig, niter, status});
 } // END
 
 /*!
@@ -199,8 +198,7 @@ auto cutting_plane_q(
             break;
         }
     }
-    auto ret = CInfo {t != t_orig, niter, status};
-    return std::make_tuple(std::move(x_best), std::move(ret));
+    return std::make_tuple(std::move(x_best), CInfo {t != t_orig, niter, status} );
 } // END
 
 /*!

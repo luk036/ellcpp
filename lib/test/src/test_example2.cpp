@@ -1,5 +1,5 @@
 /* -*- coding: utf-8 -*- */
-#include <boost/optional.hpp>
+#include <optional>
 #include <doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
@@ -11,9 +11,9 @@ using Cut = std::tuple<Arr, double>;
  * @brief
  *
  * @param[in] z
- * @return boost::optional<Cut>
+ * @return std::optional<Cut>
  */
-auto my_oracle2(const Arr& z) -> boost::optional<Cut>
+auto my_oracle2(const Arr& z) -> std::optional<Cut>
 {
     auto x = z[0];
     auto y = z[1];

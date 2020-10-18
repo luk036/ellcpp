@@ -11,7 +11,7 @@ using Cut = std::tuple<Arr, double>;
  * @param[in] x
  * @return auto
  */
-boost::optional<Cut> lmi0_oracle::operator()(const Arr& x)
+std::optional<Cut> lmi0_oracle::operator()(const Arr& x)
 {
     auto n = x.size();
 

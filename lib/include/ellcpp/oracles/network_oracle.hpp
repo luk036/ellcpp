@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <ellcpp/utility.hpp>
 #include <netoptim/neg_cycle.hpp> // import negCycleFinder
 
@@ -65,10 +65,10 @@ class network_oracle
      *
      * @tparam T
      * @param[in] x
-     * @return boost::optional<std::tuple<T, double>>
+     * @return std::optional<std::tuple<T, double>>
      */
     template <typename T>
-    auto operator()(const T& x) -> boost::optional<std::tuple<T, double>>
+    auto operator()(const T& x) -> std::optional<std::tuple<T, double>>
     {
         auto get_weight = [this, &x](const edge_t& e) -> double {
             return this->_h.eval(e, x);

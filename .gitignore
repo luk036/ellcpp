@@ -3,6 +3,7 @@ Build*/
 build*/
 tidy
 .vscode
+.cache/*
 
 # Generated API from Exhale
 docs/api

@@ -52,8 +52,8 @@ class my_oracle
     std::tuple<Cut, bool> operator()(const Arr& x, double& t)
     {
         const auto f0 = xt::linalg::dot(this->c, x)();
-        // const auto f1 = f0 - t;
-        if (const auto f1 = f0 - t; f1 > 0)
+        const auto f1 = f0 - t;
+        if (f1 > 0)
         {
             return {{this->c, f1}, false};
         }

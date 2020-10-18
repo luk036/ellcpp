@@ -10,9 +10,9 @@ using Cut = std::tuple<Arr, double>;
  * @brief
  *
  * @param[in] x
- * @return boost::optional<Cut>
+ * @return std::optional<Cut>
  */
-boost::optional<Cut> lmi_old_oracle::operator()(const Arr& x)
+std::optional<Cut> lmi_old_oracle::operator()(const Arr& x)
 {
     const auto n = x.size();
 

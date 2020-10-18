@@ -3,7 +3,7 @@
 
 //#include "mat.hpp"
 #include "chol_ext.hpp"
-#include <boost/optional.hpp>
+#include <optional>
 #include <gsl/span>
 #include <xtensor/xarray.hpp>
 
@@ -26,8 +26,7 @@ class lmi0_oracle
 
   public:
     chol_ext<> _Q;
-
-  public:
+  
     /*!
      * @brief Construct a new lmi0 oracle object
      *
@@ -44,7 +43,7 @@ class lmi0_oracle
      * @brief
      *
      * @param[in] x
-     * @return boost::optional<Cut>
+     * @return std::optional<Cut>
      */
-    auto operator()(const Arr& x) -> boost::optional<Cut>;
+    auto operator()(const Arr& x) -> std::optional<Cut>;
 };

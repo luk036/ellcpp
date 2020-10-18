@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include "utility.hpp"
+#include <ellcpp/utility.hpp>
 #include <cmath>
 #include <tuple>
 #include <xtensor/xarray.hpp>
@@ -90,7 +90,7 @@ class ell
      * @param[in] E
      */
     ell(const ell& E) = default;
-    ell& operator=(const ell& E) = delete;
+    auto operator=(const ell& E) -> ell& = delete;
 
   public:
     /**
@@ -98,7 +98,7 @@ class ell
      *
      * @return ell
      */
-    ell copy() const
+    [[nodiscard]] auto copy() const -> ell
     {
         return ell(*this);
     }
@@ -108,7 +108,7 @@ class ell
      *
      * @return Arr
      */
-    auto xc() const -> Arr
+    [[nodiscard]] auto xc() const -> Arr
     {
         return _xc;
     }
@@ -131,10 +131,10 @@ class ell
      * @return std::tuple<int, double>
      */
     template <typename T>
-    std::tuple<CUTStatus, double> update(const std::tuple<Arr, T>& cut);
+    auto update(const std::tuple<Arr, T>& cut) -> std::tuple<CUTStatus, double>;
 
   private:
-    CUTStatus _update_cut(const double& beta)
+    auto _update_cut(const double& beta) -> CUTStatus
     {
         return this->_calc_dc(beta);
     }
