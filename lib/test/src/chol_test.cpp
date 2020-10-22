@@ -18,7 +18,7 @@ TEST_CASE("Cholesky test 2")
     auto Q2 = chol_ext<>(m2.shape()[0]);
     Q2.factorize(m2);
     CHECK(!Q2.is_spd());
-    //CHECK(Q2.p.second == 2);
+    // CHECK(Q2.p.second == 2);
 }
 
 TEST_CASE("Cholesky test 3")
@@ -28,6 +28,6 @@ TEST_CASE("Cholesky test 3")
     Q3.factorize(m3);
     CHECK(!Q3.is_spd());
     const auto ep3 = Q3.witness();
-    //CHECK(Q3.p.second == 1);
+    // CHECK(Q3.p.second == 1);
     CHECK(ep3 == 0.);
 }

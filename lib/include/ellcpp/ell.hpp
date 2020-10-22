@@ -1,8 +1,8 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include <ellcpp/utility.hpp>
 #include <cmath>
+#include <ellcpp/utility.hpp>
 #include <tuple>
 #include <xtensor/xarray.hpp>
 

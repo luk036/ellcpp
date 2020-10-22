@@ -2,8 +2,8 @@
 #pragma once
 
 #include "chol_ext.hpp"
-#include <optional>
 #include <gsl/span>
+#include <optional>
 #include <xtensor/xarray.hpp>
 
 /*!

@@ -1,9 +1,9 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include <optional>
 #include <ellcpp/utility.hpp>
 #include <netoptim/neg_cycle.hpp> // import negCycleFinder
+#include <optional>
 
 /*!
  * @brief Oracle for Parametric Network Problem.
