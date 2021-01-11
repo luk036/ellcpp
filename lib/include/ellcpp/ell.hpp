@@ -40,6 +40,13 @@ class ell
     /*!
      * @brief Construct a new ell object
      *
+     * @param[in] E
+     */
+    auto operator=(const ell& E) -> ell& = delete;
+
+    /*!
+     * @brief Construct a new ell object
+     *
      * @param[in] val
      * @param[in] x
      */
@@ -83,16 +90,14 @@ class ell
      */
     ell(ell&& E) = default;
 
-  private:
-    /*!
-     * @brief Construct a new ell object
-     *
-     * @param[in] E
-     */
-    ell(const ell& E) = default;
-    auto operator=(const ell& E) -> ell& = delete;
-
   public:
+    /**
+     * @brief Construct a new ell object
+     * 
+     * @param E 
+     */
+    explicit ell(const ell& E) = default;
+
     /**
      * @brief explicitly copy
      *

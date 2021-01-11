@@ -49,6 +49,12 @@ class optscaling_oracle
         {
         }
 
+        /**
+         * @brief Construct a new Ratio object (only explicitly)
+         * 
+         */
+        explicit Ratio(const Ratio& ) = default;
+
         /*!
          * @brief Evaluate function
          *
@@ -94,9 +100,14 @@ class optscaling_oracle
     {
     }
 
-    optscaling_oracle(const optscaling_oracle&) = delete;
-    optscaling_oracle& operator=(const optscaling_oracle&) = delete;
-    optscaling_oracle(optscaling_oracle&&) = default;
+    /**
+     * @brief Construct a new optscaling oracle object
+     * 
+     */
+    explicit optscaling_oracle(const optscaling_oracle&) = default;
+
+    // optscaling_oracle& operator=(const optscaling_oracle&) = delete;
+    // optscaling_oracle(optscaling_oracle&&) = default;
 
     /*!
      * @brief Make object callable for cutting_plane_dc()

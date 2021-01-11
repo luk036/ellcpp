@@ -14,7 +14,6 @@
 auto ell1d::update(const std::tuple<double, double>& cut) -> ell1d::return_t
 {
     const auto& [g, beta] = cut;
-
     const auto tau = std::abs(this->_r * g);
     const auto tsq = tau * tau;
 

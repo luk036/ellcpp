@@ -45,9 +45,14 @@ class network_oracle
     {
     }
 
-    network_oracle(const network_oracle&) = delete;
-    network_oracle& operator=(const network_oracle&) = delete;
-    network_oracle(network_oracle&&) = default;
+    /**
+     * @brief Construct a new network oracle object
+     * 
+     */
+    explicit network_oracle(const network_oracle&) = default;
+
+    // network_oracle& operator=(const network_oracle&) = delete;
+    // network_oracle(network_oracle&&) = default;
 
     /*!
      * @brief

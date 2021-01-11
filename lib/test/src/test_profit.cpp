@@ -22,6 +22,7 @@ TEST_CASE("Profit Test 1")
     {
         auto E = ell {100., Vec {0., 0.}};
         auto P = profit_oracle {p, A, k, a, v};
+
         const auto [y, ell_info] =
             cutting_plane_dc(std::move(P), std::move(E), 0.);
         CHECK(y[0] <= std::log(k));

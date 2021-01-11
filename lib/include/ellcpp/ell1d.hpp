@@ -38,7 +38,7 @@ class ell1d
      *
      * @param[in] E
      */
-    ell1d(const ell1d& E) = default;
+    explicit ell1d(const ell1d& E) = default;
 
     /*!
      * @brief
