@@ -146,12 +146,10 @@ class ell
 
     CUTStatus _update_cut(const Arr& beta)
     { // parallel cut
-        // if (beta.shape()[0] < 2)
-        //     [[unlikely]]
-        //     {
-        //         return this->_calc_dc(beta[0]);
-        //     }
-        assert(beta.shape()[0] >= 2);
+        if (beta.shape()[0] < 2)
+        {
+            return this->_calc_dc(beta[0]);
+        }
         return this->_calc_ll_core(beta[0], beta[1]);
     }
 
