@@ -1,9 +1,11 @@
 #include <cmath>
+#include <ellcpp/ell_assert.hpp>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;
+
 
 /*!
  * @brief
@@ -21,10 +23,9 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
     }
 
     if (b1 < b0)
-        [[unlikely]]
-        {
-            return CUTStatus::nosoln; // no sol'n
-        }
+    {
+        return CUTStatus::nosoln; // no sol'n
+    }
 
     if (b0 == 0.)
     {
@@ -34,11 +35,10 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
 
     const auto b0b1 = b0 * b1;
     const auto& n = this->_n;
-    if (n * b0b1 < -this->_tsq)
-        [[unlikely]]
-        {
-            return CUTStatus::noeffect; // no effect
-        }
+    if (ELL_UNLIKELY(n * b0b1 < -this->_tsq))
+    {
+        return CUTStatus::noeffect; // no effect
+    }
 
     const auto t0 = this->_tsq - b0 * b0;
     const auto t1 = this->_tsq - b1sq;
@@ -90,11 +90,10 @@ CUTStatus ell::_calc_dc(const double& beta)
     }
 
     const auto gamma = tau + this->_n * beta;
-    if (gamma < 0)
-        [[unlikely]]
-        {
-            return CUTStatus::noeffect; // no effect
-        }
+    if (ELL_UNLIKELY(gamma < 0))
+    {
+        return CUTStatus::noeffect; // no effect
+    }
 
     this->_rho = gamma / (this->_n + 1.);
     this->_sigma = 2 * this->_rho / (tau + beta);

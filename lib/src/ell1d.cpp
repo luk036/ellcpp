@@ -2,6 +2,7 @@
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell1d.hpp>
 #include <ellcpp/half_nonnegative.hpp>
+#include <ellcpp/ell_assert.hpp>
 
 // #include <tuple>
 
@@ -18,22 +19,19 @@ auto ell1d::update(const std::tuple<double, double>& cut) -> ell1d::return_t
     const auto tsq = tau * tau;
 
     if (beta == 0.)
-        [[unlikely]]
-        {
-            this->_r /= 2;
-            this->_xc += g > 0. ? -this->_r : this->_r;
-            return {CUTStatus::success, tsq};
-        }
+    {
+        this->_r /= 2;
+        this->_xc += g > 0. ? -this->_r : this->_r;
+        return {CUTStatus::success, tsq};
+    }
     if (beta > tau)
-        [[unlikely]]
-        {
-            return {CUTStatus::nosoln, tsq}; // no sol'n
-        }
-    if (beta < -tau)
-        [[unlikely]]
-        {
-            return {CUTStatus::noeffect, tsq}; // no effect
-        }
+    {
+        return {CUTStatus::nosoln, tsq}; // no sol'n
+    }
+    if (ELL_UNLIKELY(beta < -tau))
+    {
+        return {CUTStatus::noeffect, tsq}; // no effect
+    }
 
     const auto bound = this->_xc - beta / g;
     const auto u = g > 0. ? bound : this->_xc + this->_r;

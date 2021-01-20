@@ -70,8 +70,8 @@ class chol_ext
      *
      * See also: factorize()
      */
-    template <typename Fn>
-    auto factor(Fn&& getA) -> bool
+    template <typename Callable>
+    auto factor(Callable&& getA) -> bool
     {
         this->p = {0U, 0U};
         auto& [start, stop] = this->p;
