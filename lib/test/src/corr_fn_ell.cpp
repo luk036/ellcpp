@@ -37,5 +37,5 @@ TEST_CASE("mle_corr_fn")
     CHECK(a[0] >= 0.);
     CHECK(feasible);
     CHECK(num_iters >= 149);
-    CHECK(num_iters <= 241);
+    CHECK(num_iters <= 248);
 }
