@@ -51,9 +51,9 @@ class optscaling_oracle
 
         /**
          * @brief Construct a new Ratio object (only explicitly)
-         * 
+         *
          */
-        explicit Ratio(const Ratio& ) = default;
+        explicit Ratio(const Ratio&) = default;
 
         /*!
          * @brief Evaluate function
@@ -102,7 +102,7 @@ class optscaling_oracle
 
     /**
      * @brief Construct a new optscaling oracle object
-     * 
+     *
      */
     explicit optscaling_oracle(const optscaling_oracle&) = default;
 

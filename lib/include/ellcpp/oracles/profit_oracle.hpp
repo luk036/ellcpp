@@ -56,9 +56,9 @@ class profit_oracle
 
     /**
      * @brief Construct a new profit oracle object (only explicitly)
-     * 
+     *
      */
-    explicit profit_oracle(const profit_oracle& ) = default;
+    explicit profit_oracle(const profit_oracle&) = default;
 
     /*!
      * @brief

@@ -1,7 +1,7 @@
 #include <cmath>
-#include <ellcpp/ell_assert.hpp>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
+#include <ellcpp/ell_assert.hpp>
 #include <xtensor-blas/xlinalg.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;

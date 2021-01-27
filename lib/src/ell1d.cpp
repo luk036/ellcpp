@@ -1,8 +1,8 @@
 #include <cmath>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell1d.hpp>
-#include <ellcpp/half_nonnegative.hpp>
 #include <ellcpp/ell_assert.hpp>
+#include <ellcpp/half_nonnegative.hpp>
 
 // #include <tuple>
 

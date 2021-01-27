@@ -93,8 +93,8 @@ class ell
   public:
     /**
      * @brief Construct a new ell object
-     * 
-     * @param E 
+     *
+     * @param E
      */
     explicit ell(const ell& E) = default;
 

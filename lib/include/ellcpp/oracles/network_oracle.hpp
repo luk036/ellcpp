@@ -47,7 +47,7 @@ class network_oracle
 
     /**
      * @brief Construct a new network oracle object
-     * 
+     *
      */
     explicit network_oracle(const network_oracle&) = default;
 

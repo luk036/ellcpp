@@ -100,10 +100,11 @@ class chol_ext
                     stop = i + 1;
                     break;
                 }
-                if (d == 0.) [[unlikely]]
-                {
-                    start = i + 1;
-                }
+                if (d == 0.)
+                    [[unlikely]]
+                    {
+                        start = i + 1;
+                    }
             }
             else // not Allow_semidefinite
             {
