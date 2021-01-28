@@ -52,16 +52,16 @@ matrix:
     - os: linux
       addons: *clang10
       env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Release'
-    - os: osx
-      osx_image: xcode12
-      addons:
-        homebrew:
-          packages:
-            - fmt
-            - spdlog
-            - lcov
-          update: true
-      env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Release'
+    # - os: osx
+    #   osx_image: xcode12
+    #   addons:
+    #     homebrew:
+    #       packages:
+    #         - fmt
+    #         - spdlog
+    #         - lcov
+    #       update: true
+    #   env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Release'
 
 env:
   global:
