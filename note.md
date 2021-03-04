@@ -4,7 +4,7 @@ Limitations:
 
 - For convex problems only
 - Provide efficient oracles
-- Need to know the bound
+- Need to know the bounds
 
 LDLT factorization: Square-root-free Cholesky factorization.
 Row based - Stop as soon as possible.
@@ -15,3 +15,5 @@ Row based - Stop as soon as possible.
   cum hoc ergo proter hoc
 - Normally distributed and uncorrelated does not imply independent
 - Basically, Central Limit Theorem is only applicable to i.i.d.
+
+# cvx + network flow
