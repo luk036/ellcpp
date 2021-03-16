@@ -42,7 +42,7 @@ RUN apt-get update \
   figlet \
   fortune \
   toilet \
-  tty-clock \
+  tty-clock
 
 RUN mkdir -p /workspace/data \
     && chown -R gitpod:gitpod /workspace/data
