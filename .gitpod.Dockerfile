@@ -6,19 +6,43 @@ USER root
 RUN apt-get update \
  && apt-get install -y \
   apt-utils \
-  neofetch \
-  neovim \
+  aria2 \
+# c++ stuff \
+  clang-format \
+  cppcheck \
+  doctest-dev \
+  kcachegrind-converters \
+  kcachegrind \
+  lcov \
+  libbenchmark-dev \
+  libboost-all-dev \
+  libfmt-dev \
+  libjsoncpp-dev \
+  libopenblas-dev \
+  librange-v3-dev \
+  libspdlog-dev \
+  ninja-build \
+# utilities (not ripgrep, gh) \
   asciinema \
-  tmux \
-  vifm \
+  bat \
+  byobu \
+  curl \
+  elinks \
+  fd-find \
+  fish \
+  mdp \
+  ncdu \
+  neofetch \
+  patat \
+  pkg-config \
+  ranger \
   w3m \
+# just for fun (not cmatrix) \
   cowsay \
   figlet \
   fortune \
   toilet \
   tty-clock \
-  librange-v3-dev \
-  wget
 
 RUN mkdir -p /workspace/data \
     && chown -R gitpod:gitpod /workspace/data
@@ -36,21 +60,17 @@ RUN /opt/conda/bin/conda config --set always_yes yes --set changeps1 no \
     && /opt/conda/bin/conda update -q conda \
     && /opt/conda/bin/conda info -a
 
-RUN /opt/conda/bin/conda install -y \
-    ninja
-
 RUN /opt/conda/bin/conda install -y -c conda-forge \
-    benchmark \
-    boost \
-    catch2 \
-    fmt \
-    lapack \
-    openblas \
-    spdlog \
+    pandoc-crossref \
+    pandoc \
     xtensor-fftw \
     xtensor-blas \
-    xtensor \
-    cppcheck
+    xtensor 
+
+RUN /opt/conda/bin/pip install \
+    cppclean \
+    pyprof2calltree \
+    lolcat
 
 RUN chown -R gitpod:gitpod /opt/conda \
     && chmod -R 777 /opt/conda \
