@@ -17,7 +17,7 @@ RUN apt-get update \
   libbenchmark-dev \
   libboost-all-dev \
   libfmt-dev \
-  libjsoncpp-dev \
+#  libjsoncpp-dev \
 #  libopenblas-dev \
   librange-v3-dev \
   libspdlog-dev \
