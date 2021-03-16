@@ -18,7 +18,7 @@ RUN apt-get update \
   libboost-all-dev \
   libfmt-dev \
   libjsoncpp-dev \
-  libopenblas-dev \
+#  libopenblas-dev \
   librange-v3-dev \
   libspdlog-dev \
   ninja-build \
@@ -63,6 +63,7 @@ RUN /opt/conda/bin/conda config --set always_yes yes --set changeps1 no \
 RUN /opt/conda/bin/conda install -y -c conda-forge \
     pandoc-crossref \
     pandoc \
+    openblas \
     xtensor-fftw \
     xtensor-blas \
     xtensor 
