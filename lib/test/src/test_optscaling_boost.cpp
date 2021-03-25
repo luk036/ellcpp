@@ -4,7 +4,7 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
 #include <boost/property_map/property_map.hpp>
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 // #include <ellcpp/ell1d.hpp>

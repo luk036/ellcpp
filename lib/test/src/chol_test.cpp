@@ -1,4 +1,4 @@
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <ellcpp/oracles/chol_ext.hpp>
 // #include <xtensor/xarray.hpp>
 

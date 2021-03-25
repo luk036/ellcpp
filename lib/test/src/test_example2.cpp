@@ -1,5 +1,5 @@
 /* -*- coding: utf-8 -*- */
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <optional>

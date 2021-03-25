@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 #include <boost/any.hpp>
-#include <doctest.h>
+#include <doctest/doctest.h>
 // #include <iostream>
 #include <string>
 

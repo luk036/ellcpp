@@ -1,5 +1,5 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
+#include "doctest/doctest.h"
 
 // #include <boost/coroutine2/all.hpp>
 // #include <iostream>

@@ -30,7 +30,7 @@ include(CMakeDependentOption)# This is a really useful scripts that creates opti
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(Colors)
-include(Doctest)
+# include(Doctest)
 include(LTO)
 include(Warnings)
 include(CopyDllsForDebug)

@@ -1,4 +1,4 @@
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <py2cpp/nx2bgl.hpp>
 
 #include <algorithm> // for std::for_each

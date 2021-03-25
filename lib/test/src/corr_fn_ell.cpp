@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <xtensor/xarray.hpp>
 
 using Arr = xt::xarray<double, xt::layout_type::row_major>;

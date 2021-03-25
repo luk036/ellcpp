@@ -1,7 +1,7 @@
 /*
  *  Distributed under the MIT License (See accompanying file /LICENSE )
  */
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/oracles/profit_oracle.hpp>

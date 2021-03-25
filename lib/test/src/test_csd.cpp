@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <string>
 
 extern auto to_csd(double num, int places = 0) -> std::string;

@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/graph_traits.hpp>
-#include <doctest.h>
+#include <doctest/doctest.h>
 #include <netoptim/min_cycle_ratio.hpp>
 #include <netoptim/neg_cycle.hpp> // import negCycleFinder
 #include <py2cpp/nx2bgl.hpp>
