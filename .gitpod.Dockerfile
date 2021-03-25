@@ -10,7 +10,6 @@ RUN apt-get update \
 # c++ stuff \
   clang-format \
   cppcheck \
-  doctest-dev \
   kcachegrind-converters \
   kcachegrind \
   lcov \

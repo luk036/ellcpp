@@ -14,8 +14,6 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-9
-            - libfmt-dev
-            - libspdlog-dev
             - lcov
       env: COMPILER=gcc GCC=9 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
@@ -31,8 +29,6 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-10
-            - libfmt-dev
-            - libspdlog-dev
             - lcov
       env: COMPILER=gcc GCC=10 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
@@ -45,23 +41,19 @@ matrix:
           packages:
             - clang-10
             - libstdc++-10-dev
-            - libfmt-dev
-            - libspdlog-dev
             - lcov
       env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Debug'
     - os: linux
       addons: *clang10
       env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Release'
-    # - os: osx
-    #   osx_image: xcode12
-    #   addons:
-    #     homebrew:
-    #       packages:
-    #         - fmt
-    #         - spdlog
-    #         - lcov
-    #       update: true
-    #   env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Release'
+    - os: osx
+      osx_image: xcode12
+      addons:
+        homebrew:
+          packages:
+            - lcov
+          update: true
+      env: COMPILER=clang CLANG=10 BLAS=OpenBLAS BUILD_TYPE='Release'
 
 env:
   global:
@@ -100,24 +92,17 @@ install:
   - export LD_LIBRARY_PATH="$CONDA_PREFIX/lib"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
+  - conda config --add channels conda-forge
   - conda update -q conda
   - conda info -a
   # - conda install gtest cmake -c conda-forge
   # Install xtensor and BLAS
   - if [[ "$BLAS" == "OpenBLAS" ]]; then
-      conda install openblas -c conda-forge;
+      conda install openblas;
     elif [[ "$BLAS" == "mkl" ]]; then
-      conda install mkl -c conda-forge;
+      conda install mkl;
     fi
-  - conda install xtensor-fftw -c conda-forge
-  - conda install xtensor-blas -c conda-forge
-  - conda install xtensor -c conda-forge
-  # - conda install xtensor-blas=0.11.1 -c conda-forge
-  # - conda install xtensor=0.16.4 -c conda-forge
-  - conda install lapack -c conda-forge
-  - conda install libboost -c conda-forge
-  - conda install catch2 -c conda-forge
-  - conda install -c conda-forge benchmark
+  - conda install --file requirements.txt
 
 script:
   - |

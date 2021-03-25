@@ -1,0 +1,8 @@
+# all requirements except openblas
+fmt
+boost
+doctest
+benchmark
+xtensor
+xtensor-blas
+xtensor-fftw

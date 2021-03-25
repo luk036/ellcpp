@@ -52,23 +52,3 @@ TEST_CASE("Quasiconvex 1, test feasible")
     CHECK(x[0]*x[0] == doctest::Approx(0.5029823096));
     CHECK(std::exp(x[1]) == doctest::Approx(1.6536872635));
 }
-
-TEST_CASE("Quasiconvex 1, test infeasible 1")
-{
-    auto E = ell {10., Arr {100., 100.}}; // wrong initial guess
-                                          // or ellipsoid is too small
-    const auto P = my_quasicvx_oracle;
-    auto t = 0.;
-    const auto [x, ell_info] = cutting_plane_dc(P, E, t);
-    CHECK(!ell_info.feasible);
-    CHECK(ell_info.status == CUTStatus::nosoln); // no sol'n
-}
-
-TEST_CASE("Quasiconvex 1, test infeasible 2")
-{
-    auto E = ell {10., Arr {0., 0.}};
-    const auto P = my_quasicvx_oracle;
-    const auto [x, ell_info] =
-        cutting_plane_dc(P, E, 100.); // wrong initial guess
-    CHECK(!ell_info.feasible);
-}
