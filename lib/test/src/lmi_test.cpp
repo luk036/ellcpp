@@ -4,6 +4,7 @@
 #include <doctest/doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
+#include <ellcpp/ell_stable.hpp>
 #include <ellcpp/oracles/lmi_oracle.hpp>
 // #include <fmt/format.h>
 #include <gsl/span>
@@ -75,7 +76,7 @@ class my_oracle
     }
 };
 
-TEST_CASE("LMI test")
+TEST_CASE("LMI test (stable)")
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using M_t = std::vector<Arr>;
@@ -92,10 +93,6 @@ TEST_CASE("LMI test")
     auto P = my_oracle(F1, B1, F2, B2, std::move(c));
     auto E = ell(10., Arr {0., 0., 0.});
 
-    // double fb;
-    // int niter, feasible, status;
-    // Arr xb;
-
     auto t = 1.e100; // std::numeric_limits<double>::max()
     const auto [x, ell_info] = cutting_plane_dc(P, E, t);
     // fmt::print("{:f} {} {} \n", t, ell_info.num_iters, ell_info.feasible);
@@ -111,19 +108,30 @@ TEST_CASE("LMI test")
     //                              "registry using the
     //                              spdlog::get(logger_name)");
 
-    CHECK(x[0] < -0.3);
     CHECK(ell_info.feasible);
     CHECK(ell_info.num_iters == 113);
 }
 
-// TEST_CASE( "Projective Point", "[proj_plane]" ) {
-//     REQUIRE( l.incident({l, m}) );
-// }
+TEST_CASE("LMI test ")
+{
+    using Arr = xt::xarray<double, xt::layout_type::row_major>;
+    using M_t = std::vector<Arr>;
 
-// int main(int argc, char* argv[]) {
-//   //using namespace ModernCppCI;
+    auto c = Arr {1., -1., 1.};
+    auto F1 = M_t {{{-7., -11.}, {-11., 3.}}, {{7., -18.}, {-18., 8.}},
+        {{-2., -8.}, {-8., 1.}}};
+    auto B1 = Arr {{33., -9.}, {-9., 26.}};
+    auto F2 = M_t {{{-21., -11., 0.}, {-11., 10., 8.}, {0., 8., 5.}},
+        {{0., 10., 16.}, {10., -10., -10.}, {16., -10., 3.}},
+        {{-5., 2., -17.}, {2., -6., 8.}, {-17., 8., 6.}}};
+    auto B2 = Arr {{14., 9., 40.}, {9., 91., 10.}, {40., 10., 15.}};
 
-//   auto result = Catch::Session().run(argc, argv);
+    auto P = my_oracle(F1, B1, F2, B2, std::move(c));
+    auto E = ell_stable(10., Arr {0., 0., 0.});
 
-//   return (result < 0xff ? result : 0xff);
-// }
+    auto t = 1.e100; // std::numeric_limits<double>::max()
+    const auto [x, ell_info] = cutting_plane_dc(P, E, t);
+
+    CHECK(ell_info.feasible);
+    CHECK(ell_info.num_iters == 112);
+}

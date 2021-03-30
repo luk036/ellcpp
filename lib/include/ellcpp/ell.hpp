@@ -14,6 +14,8 @@ enum class CUTStatus;
  * @brief Ellipsoid Search Space
  *
  *        ell = {x | (x - xc)' Q^-1 (x - xc) \le \kappa}
+ *
+ * Keep $Q$ symmetric but no promise of positive definite
  */
 class ell
 {
@@ -25,7 +27,7 @@ class ell
     bool use_parallel_cut = true;
     bool no_defer_trick = false;
 
-  private:
+  protected:
     double _rho {};
     double _sigma {};
     double _delta {};
@@ -138,7 +140,7 @@ class ell
     template <typename T>
     auto update(const std::tuple<Arr, T>& cut) -> std::tuple<CUTStatus, double>;
 
-  private:
+  protected:
     auto _update_cut(const double& beta) -> CUTStatus
     {
         return this->_calc_dc(beta);

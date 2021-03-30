@@ -2,6 +2,7 @@
 #include <doctest/doctest.h>
 #include <ellcpp/cutting_plane.hpp>
 #include <ellcpp/ell.hpp>
+#include <ellcpp/ell_stable.hpp>
 #include <limits>
 #include <tuple>
 
@@ -47,7 +48,7 @@ std::tuple<Cut, bool> my_oracle(const Arr& z, double& t)
 
 TEST_CASE("Example 1, test feasible")
 {
-    auto E = ell {10., Arr {0., 0.}};
+    auto E = ell_stable {10., Arr {0., 0.}};
     const auto P = my_oracle;
     auto t = -1.e100; // std::numeric_limits<double>::min()
     const auto [x, ell_info] = cutting_plane_dc(P, E, t);
@@ -57,8 +58,8 @@ TEST_CASE("Example 1, test feasible")
 
 TEST_CASE("Example 1, test infeasible 1")
 {
-    auto E = ell {10., Arr {100., 100.}}; // wrong initial guess
-                                          // or ellipsoid is too small
+    auto E = ell_stable {10., Arr {100., 100.}}; // wrong initial guess
+                                                 // or ellipsoid is too small
     const auto P = my_oracle;
     auto t = -1.e100; // std::numeric_limits<double>::min()
     const auto [x, ell_info] = cutting_plane_dc(P, E, t);
@@ -68,7 +69,7 @@ TEST_CASE("Example 1, test infeasible 1")
 
 TEST_CASE("Example 1, test infeasible 2")
 {
-    auto E = ell {10., Arr {0., 0.}};
+    auto E = ell_stable {10., Arr {0., 0.}};
     const auto P = my_oracle;
     const auto [x, ell_info] =
         cutting_plane_dc(P, E, 100.); // wrong initial guess

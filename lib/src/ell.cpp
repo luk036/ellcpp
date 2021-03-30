@@ -132,8 +132,9 @@ std::tuple<CUTStatus, double> ell::update(const std::tuple<Arr, T>& cut)
     const auto& beta = std::get<1>(cut);
 
     const auto& g = std::get<0>(cut);
-    const auto Qg = Arr {xt::linalg::dot(_Q, g)};
-    const auto omega = xt::linalg::dot(g, Qg)();
+    // n^2
+    const auto Qg = Arr {xt::linalg::dot(this->_Q, g)}; // n^2
+    const auto omega = xt::linalg::dot(g, Qg)();        // n
     this->_tsq = this->_kappa * omega;
 
     auto status = this->_update_cut(beta);
@@ -142,8 +143,21 @@ std::tuple<CUTStatus, double> ell::update(const std::tuple<Arr, T>& cut)
         return {status, this->_tsq};
     }
 
-    this->_xc -= (this->_rho / omega) * Qg;
-    this->_Q -= (this->_sigma / omega) * xt::linalg::outer(Qg, Qg);
+    this->_xc -= (this->_rho / omega) * Qg; // n
+    // n*(n+1)/2 + n
+    // this->_Q -= (this->_sigma / omega) * xt::linalg::outer(Qg, Qg);
+    const auto r = this->_sigma / omega;
+    for (auto i = 0U; i < this->_n; ++i)
+    {
+        const auto rQg = r * Qg(i);
+        for (auto j = 0U; j < i; ++j)
+        {
+            this->_Q(i, j) -= rQg * Qg(j);
+            this->_Q(j, i) = this->_Q(i, j);
+        }
+        this->_Q(i, i) -= rQg * Qg(i);
+    }
+
     this->_kappa *= this->_delta;
 
     if (this->no_defer_trick)
