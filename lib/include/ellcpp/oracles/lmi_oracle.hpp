@@ -22,7 +22,7 @@ class lmi_oracle
   private:
     const gsl::span<const Arr> _F;
     const Arr _F0;
-    chol_ext<> _Q;
+    chol_ext _Q;
 
   public:
     /*!

@@ -2,7 +2,7 @@
 #pragma once
 
 #include <ellcpp/utility.hpp>
-#include <stdexcept>
+#include <ellcpp/ell_assert.hpp> // ELL_UNLIKELY
 #include <xtensor/xarray.hpp>
 
 /*!
@@ -14,7 +14,6 @@
  *      for all v in R^n.
  *  - O(p^2) per iteration, independent of N
  */
-template <bool Allow_semidefinite = false> //
 class chol_ext
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
@@ -70,7 +69,7 @@ class chol_ext
      *
      * See also: factorize()
      */
-    template <typename Callable>
+    template <typename Callable, bool Allow_semidefinite = false>
     auto factor(Callable&& getA) -> bool
     {
         this->p = {0U, 0U};
@@ -82,12 +81,12 @@ class chol_ext
             auto d = getA(i, j);
             while (j != i)
             {
-                this->T(i, j) = d;
-                this->T(j, i) = d / this->T(j, j); // note: T(j, i) here!
+                this->T(j, i) = d;
+                this->T(i, j) = d / this->T(j, j); // note: T(j, i) here!
                 d = getA(i, ++j);
                 for (auto k = start; k != j; ++k)
                 {
-                    d -= this->T(k, i) * this->T(j, k);
+                    d -= this->T(i, k) * this->T(k, j);
                 }
             }
             this->T(i, i) = d;
@@ -100,11 +99,11 @@ class chol_ext
                     stop = i + 1;
                     break;
                 }
-                if (d == 0.)
-                    [[unlikely]]
-                    {
-                        start = i + 1;
-                    }
+                if (ELL_UNLIKELY(d == 0.))
+                {
+                    start = i + 1; 
+                    // restart at i + 1, special as an LMI oracle
+                }
             }
             else // not Allow_semidefinite
             {
@@ -126,7 +125,7 @@ class chol_ext
      * @return true
      * @return false
      */
-    auto is_spd() const -> bool
+    auto is_spd() const noexcept -> bool
     {
         return this->p.second == 0;
     }
@@ -137,29 +136,7 @@ class chol_ext
      *
      * @return auto
      */
-    auto witness() -> double
-    {
-        if (this->is_spd())
-        {
-            XTENSOR_THROW(std::runtime_error, "Implementation Error.");
-        }
-        // const auto& [start, n] = this->p;
-        const auto& start = this->p.first;
-        const auto& n = this->p.second;
-        auto m = n - 1; // assume stop > 0
-        this->v(m) = 1.;
-
-        for (auto i = m; i > start; --i)
-        {
-            auto s = 0.;
-            for (auto k = i; k <= m; ++k)
-            {
-                s += this->T(i - 1, k) * this->v(k);
-            }
-            this->v(i - 1) = -s;
-        }
-        return -this->T(m, m);
-    }
+    auto witness() -> double;
 
     /*!
      * @brief Calculate v'*{A}(p,p)*v
@@ -167,41 +144,7 @@ class chol_ext
      * @param[in] A
      * @return double
      */
-    auto sym_quad(const Vec& A) const -> double
-    {
-        auto res = double {};
-        const auto& v = this->v;
-        // const auto& [start, stop] = this->p;
-        const auto& start = this->p.first;
-        const auto& stop = this->p.second;
-        for (auto i = start; i != stop; ++i)
-        {
-            auto s = double {};
-            for (auto j = i + 1; j != stop; ++j)
-            {
-                s += A(i, j) * v(j);
-            }
-            res += v(i) * (A(i, i) * v(i) + 2 * s);
-        }
-        return res;
-    }
+    auto sym_quad(const Vec& A) const -> double;
 
-    auto sqrt() -> Mat
-    {
-        if (!this->is_spd())
-        {
-            XTENSOR_THROW(std::runtime_error, "Implementation Error.");
-        }
-
-        auto M = zeros({this->n, this->n});
-        for (auto i = 0U; i != this->n; ++i)
-        {
-            M(i, i) = std::sqrt(this->T(i, i));
-            for (auto j = i + 1; j != this->n; ++j)
-            {
-                M(i, j) = this->T(i, j) * M(i, i);
-            }
-        }
-        return M;
-    }
+    auto sqrt() -> Mat;
 };

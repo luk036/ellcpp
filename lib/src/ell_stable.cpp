@@ -26,8 +26,8 @@ std::tuple<CUTStatus, double> ell_stable::update(const std::tuple<Arr, T>& cut)
     {
         for (auto j = 0U; j < i; ++j)
         {
-            this->_Q(i, j) =
-                this->_Q(j, i) * invLg(j); // keep for rank-one update
+            this->_Q(i, j) = this->_Q(j, i) * invLg(j); 
+            // keep for rank-one update
             invLg(i) -= this->_Q(i, j);
         }
     }
@@ -64,16 +64,16 @@ std::tuple<CUTStatus, double> ell_stable::update(const std::tuple<Arr, T>& cut)
 
     // rank-one update: 6*n + (n-1)*n/2
     const auto r = this->_sigma / omega;
-    const auto k = r / (1. - this->_sigma);
+    const auto mu = r / (1. - this->_sigma);
     auto oldt = 1.; // initially
     for (auto j = 0U; j < this->_n; ++j)
     {
         // p=sqrt(k)*vv(j);
         const auto p = g(j);
-        const auto kp = k * p;
-        const auto t = oldt + kp * p * this->_Q(j, j);
+        const auto mup = mu * p;
+        const auto t = oldt + mup * p * this->_Q(j, j);
         this->_Q(j, j) /= t; // update invD
-        const auto beta = kp * this->_Q(j, j);
+        const auto beta = mup * this->_Q(j, j);
         this->_Q(j, j) *= oldt; // update invD
         if (j < this->_n - 1)
         {

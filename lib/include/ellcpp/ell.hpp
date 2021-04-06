@@ -28,13 +28,18 @@ class ell
     bool no_defer_trick = false;
 
   protected:
+    double _mu {};
     double _rho {};
     double _sigma {};
     double _delta {};
     double _tsq {};
 
     const size_t _n;
+    const size_t _nPlus1;
+    const size_t _nMinus1;
+    const size_t _nSq;
     const double _c1;
+
     double _kappa;
     Arr _Q;
     Arr _xc;
@@ -55,7 +60,10 @@ class ell
     template <typename V, typename U>
     ell(V&& kappa, Arr&& Q, U&& x) noexcept
         : _n {x.size()}
-        , _c1 {double(_n * _n) / (_n * _n - 1)}
+        , _nPlus1 {_n + 1}
+        , _nMinus1 {_n - 1}
+        , _nSq {_n * _n}
+        , _c1 {double(_nSq) / (_nSq - 1)}
         , _kappa {std::forward<V>(kappa)}
         , _Q {std::move(Q)}
         , _xc {std::forward<U>(x)}

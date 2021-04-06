@@ -16,20 +16,23 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  */
 CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
 {
-    const auto b1sq = b1 * b1;
-    if (b1sq > this->_tsq || !this->use_parallel_cut)
+    //const auto b1sq = b1 * b1;
+    const auto b1sqn = b1 * (b1 / this->_tsq);
+    const auto t1n = 1. - b1sqn;
+    if (t1n < 0. || !this->use_parallel_cut)
     {
         return this->_calc_dc(b0);
     }
 
-    if (b1 < b0)
+    const auto bdiff = b1 - b0;
+    if (bdiff < 0.)
     {
         return CUTStatus::nosoln; // no sol'n
     }
 
-    if (b0 == 0.)
+    if (b0 == 0.) // central cut
     {
-        this->_calc_ll_cc(b1, b1sq);
+        this->_calc_ll_cc(b1, b1sqn);
         return CUTStatus::success;
     }
 
@@ -40,14 +43,16 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
         return CUTStatus::noeffect; // no effect
     }
 
-    const auto t0 = this->_tsq - b0 * b0;
-    const auto t1 = this->_tsq - b1sq;
+    // const auto t0 = this->_tsq - b0 * b0;
+    const auto t0n = 1. - b0 * (b0 / this->_tsq);
+    // const auto t1 = this->_tsq - b1sq;
     const auto bav = (b0 + b1) / 2;
-    const auto temp = n * bav * (b1 - b0);
-    const auto xi = std::sqrt(t0 * t1 + temp * temp);
-    this->_sigma = (n + (this->_tsq - b0b1 - xi) / (2 * bav * bav)) / (n + 1.);
+    const auto bavn = bav / this->_tsq;
+    const auto tempn = n * bavn * (b1 - b0);
+    const auto xi = std::sqrt(t0n * t1n + tempn * tempn);
+    this->_sigma = (n + (1. - b0b1 / this->_tsq - xi) / (2 * bavn * bav)) / this->_nPlus1;
     this->_rho = this->_sigma * bav;
-    this->_delta = this->_c1 * ((t0 + t1) / 2 + xi / n) / this->_tsq;
+    this->_delta = this->_c1 * ((t0n + t1n) / 2. + xi / n);
     return CUTStatus::success;
 }
 
@@ -58,14 +63,13 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
  * @param[in] b1sq
  * @return void
  */
-void ell::_calc_ll_cc(const double& b1, const double& b1sq)
+void ell::_calc_ll_cc(const double& b1, const double& b1sqn)
 {
-    const auto& n = this->_n;
-    const auto temp = n * b1sq / 2;
-    const auto xi = std::sqrt(this->_tsq * (this->_tsq - b1sq) + temp * temp);
-    this->_sigma = (n + 2 * (this->_tsq - xi) / b1sq) / (n + 1);
+    const auto temp = this->_n * b1sqn / 2.;
+    const auto xi = std::sqrt((1. - b1sqn) + temp * temp);
+    this->_sigma = (this->_n + 2. * (1. - xi) / b1sqn) / this->_nPlus1;
     this->_rho = this->_sigma * b1 / 2;
-    this->_delta = this->_c1 * (this->_tsq - b1sq / 2 + xi / n) / this->_tsq;
+    this->_delta = this->_c1 * (1. - b1sqn / 2.  + xi / this->_n);
 }
 
 /*!
@@ -78,7 +82,8 @@ CUTStatus ell::_calc_dc(const double& beta)
 {
     const auto tau = std::sqrt(this->_tsq);
 
-    if (beta > tau)
+    const auto bdiff = tau - beta;
+    if (bdiff < 0)
     {
         return CUTStatus::nosoln; // no sol'n
     }
@@ -95,6 +100,7 @@ CUTStatus ell::_calc_dc(const double& beta)
         return CUTStatus::noeffect; // no effect
     }
 
+    this->_mu = (bdiff / gamma) * this->_nMinus1 / 2.;
     this->_rho = gamma / (this->_n + 1.);
     this->_sigma = 2 * this->_rho / (tau + beta);
     this->_delta = this->_c1 * (this->_tsq - beta * beta) / this->_tsq;
@@ -109,9 +115,9 @@ CUTStatus ell::_calc_dc(const double& beta)
  */
 void ell::_calc_cc(const double& tau)
 {
-    const auto np1 = this->_n + 1;
-    this->_sigma = 2. / np1;
-    this->_rho = tau / np1;
+    this->_mu = this->_nMinus1 / 2.;
+    this->_sigma = 2. / this->_nPlus1;
+    this->_rho = tau / this->_nPlus1;
     this->_delta = this->_c1;
 }
 

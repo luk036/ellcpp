@@ -25,7 +25,7 @@ class lmi0_oracle
     const size_t _n;
 
   public:
-    chol_ext<> _Q;
+    chol_ext _Q;
 
     /*!
      * @brief Construct a new lmi0 oracle object

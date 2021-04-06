@@ -35,7 +35,7 @@ class qmi_oracle
     Arr _Fx;
 
   public:
-    chol_ext<> _Q;
+    chol_ext _Q;
 
   public:
     /*!
