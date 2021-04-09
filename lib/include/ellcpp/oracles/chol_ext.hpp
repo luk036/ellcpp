@@ -77,13 +77,14 @@ class chol_ext
 
         for (size_t i = 0U; i != this->n; ++i)
         {
-            auto j = start;
-            auto d = getA(i, j);
-            while (j != i)
+            // auto j = start;
+            auto d = getA(i, start);
+            for (auto j = start; j != i; )
             {
                 this->T(j, i) = d;
                 this->T(i, j) = d / this->T(j, j); // note: T(j, i) here!
-                d = getA(i, ++j);
+                j += 1;
+                d = getA(i, j);
                 for (auto k = start; k != j; ++k)
                 {
                     d -= this->T(i, k) * this->T(k, j);
