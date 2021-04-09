@@ -1,5 +1,11 @@
 # Note
 
+TODO
+
+- clean up clang-tidy
+  - modern style function -> return
+- noexcept calc
+
 Limitations:
 
 - For convex problems only

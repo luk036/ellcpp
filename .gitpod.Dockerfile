@@ -22,6 +22,7 @@ RUN apt-get update \
   libbenchmark-dev \
   libboost-all-dev \
   libfmt-dev \
+  doctest-dev \
 #  libjsoncpp-dev \
 #  libopenblas-dev \
   librange-v3-dev \

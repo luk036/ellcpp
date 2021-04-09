@@ -37,8 +37,7 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
     }
 
     const auto b0b1 = b0 * b1;
-    const auto& n = this->_n;
-    if (ELL_UNLIKELY(n * b0b1 < -this->_tsq))
+    if (ELL_UNLIKELY(this->_nFloat * b0b1 < -this->_tsq))
     {
         return CUTStatus::noeffect; // no effect
     }
@@ -46,13 +45,13 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
     // const auto t0 = this->_tsq - b0 * b0;
     const auto t0n = 1. - b0 * (b0 / this->_tsq);
     // const auto t1 = this->_tsq - b1sq;
-    const auto bav = (b0 + b1) / 2;
-    const auto bavn = bav / this->_tsq;
-    const auto tempn = n * bavn * (b1 - b0);
+    const auto bsum = b0 + b1;
+    const auto bsumn = bsum / this->_tsq;
+    const auto tempn = this->_halfN * bsumn * (b1 - b0);
     const auto xi = std::sqrt(t0n * t1n + tempn * tempn);
-    this->_sigma = (n + (1. - b0b1 / this->_tsq - xi) / (2 * bavn * bav)) / this->_nPlus1;
-    this->_rho = this->_sigma * bav;
-    this->_delta = this->_c1 * ((t0n + t1n) / 2. + xi / n);
+    this->_sigma = this->_c3 + (1. - b0b1 / this->_tsq - xi) / (bsumn * bsum) / this->_halfNplus1;
+    this->_rho = this->_sigma * bsum / 2.;
+    this->_delta = this->_c1 * ((t0n + t1n) / 2. + xi / this->_nFloat);
     return CUTStatus::success;
 }
 
@@ -65,11 +64,11 @@ CUTStatus ell::_calc_ll_core(const double& b0, const double& b1)
  */
 void ell::_calc_ll_cc(const double& b1, const double& b1sqn)
 {
-    const auto temp = this->_n * b1sqn / 2.;
+    const auto temp = this->_halfN * b1sqn;
     const auto xi = std::sqrt((1. - b1sqn) + temp * temp);
-    this->_sigma = (this->_n + 2. * (1. - xi) / b1sqn) / this->_nPlus1;
+    this->_sigma = this->_c3 + (1. - xi) / b1sqn / this->_halfNplus1;
     this->_rho = this->_sigma * b1 / 2;
-    this->_delta = this->_c1 * (1. - b1sqn / 2.  + xi / this->_n);
+    this->_delta = this->_c1 * (1. - b1sqn / 2.  + xi / this->_nFloat);
 }
 
 /*!
@@ -94,16 +93,16 @@ CUTStatus ell::_calc_dc(const double& beta) noexcept
         return CUTStatus::success;
     }
 
-    const auto gamma = tau + this->_n * beta;
+    const auto gamma = tau + this->_nFloat * beta;
     if (ELL_UNLIKELY(gamma < 0))
     {
         return CUTStatus::noeffect; // no effect
     }
 
-    this->_mu = (bdiff / gamma) * this->_nMinus1 / 2.;
-    this->_rho = gamma / (this->_nPlus1);
+    this->_mu = (bdiff / gamma) * this->_halfNminus1;
+    this->_rho = gamma / this->_nPlus1;
     this->_sigma = 2 * this->_rho / (tau + beta);
-    this->_delta = this->_c1 * (this->_tsq - beta * beta) / this->_tsq;
+    this->_delta = this->_c1 * (1. - beta * (beta / this->_tsq));
     return CUTStatus::success;
 }
 
@@ -115,8 +114,8 @@ CUTStatus ell::_calc_dc(const double& beta) noexcept
  */
 void ell::_calc_cc(const double& tau) noexcept
 {
-    this->_mu = this->_nMinus1 / 2.;
-    this->_sigma = 2. / this->_nPlus1;
+    this->_mu = this->_halfNminus1;
+    this->_sigma = this->_c2;
     this->_rho = tau / this->_nPlus1;
     this->_delta = this->_c1;
 }

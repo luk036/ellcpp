@@ -35,10 +35,17 @@ class ell
     double _tsq {};
 
     const size_t _n;
-    const size_t _nPlus1;
-    const size_t _nMinus1;
-    const size_t _nSq;
+
+    const double _nFloat;
+    const double _nPlus1;
+    const double _nMinus1;
+    const double _halfN;
+    const double _halfNplus1;
+    const double _halfNminus1;
+    const double _nSq;
     const double _c1;
+    const double _c2;
+    const double _c3;
 
     double _kappa;
     Arr _Q;
@@ -60,10 +67,16 @@ class ell
     template <typename V, typename U>
     ell(V&& kappa, Arr&& Q, U&& x) noexcept
         : _n {x.size()}
-        , _nPlus1 {_n + 1}
-        , _nMinus1 {_n - 1}
-        , _nSq {_n * _n}
-        , _c1 {double(_nSq) / (_nSq - 1)}
+        , _nFloat (_n)
+        , _nPlus1 (_n + 1)
+        , _nMinus1 (_n - 1)
+        , _halfN {_nFloat / 2.}
+        , _halfNplus1 {_nPlus1 / 2.}
+        , _halfNminus1 {_nMinus1 / 2.}
+        , _nSq (_n * _n)
+        , _c1 {_nSq / (_nSq - 1)}
+        , _c2 {2. / _nPlus1}
+        , _c3 {_nFloat / _nPlus1}
         , _kappa {std::forward<V>(kappa)}
         , _Q {std::move(Q)}
         , _xc {std::forward<U>(x)}
