@@ -67,13 +67,13 @@ class ell
     template <typename V, typename U>
     ell(V&& kappa, Arr&& Q, U&& x) noexcept
         : _n {x.size()}
-        , _nFloat (_n)
-        , _nPlus1 (_n + 1)
-        , _nMinus1 (_n - 1)
+        , _nFloat {double(_n)}
+        , _nPlus1 {_nFloat + 1.}
+        , _nMinus1 {_nFloat - 1.}
         , _halfN {_nFloat / 2.}
         , _halfNplus1 {_nPlus1 / 2.}
         , _halfNminus1 {_nMinus1 / 2.}
-        , _nSq (_n * _n)
+        , _nSq {_nFloat * _nFloat}
         , _c1 {_nSq / (_nSq - 1)}
         , _c2 {2. / _nPlus1}
         , _c3 {_nFloat / _nPlus1}
