@@ -15,7 +15,7 @@ using std::string;
  * @param places
  * @return string
  */
-auto to_csd(double num, int places = 0) -> string
+auto to_csd(double num, int places = 0) noexcept -> string
 {
     if (num == 0.)
     {
@@ -58,7 +58,7 @@ auto to_csd(double num, int places = 0) -> string
  * @param csd_str
  * @return double
  */
-auto to_decimal(std::string_view csd_str) -> double
+auto to_decimal(std::string_view csd_str) noexcept -> double
 {
     auto num = 0.0;
     auto loc = 0;
@@ -101,7 +101,7 @@ auto to_decimal(std::string_view csd_str) -> double
  * @param[in] nnz number of non-zero
  * @return string
  */
-auto to_csdfixed(double num, unsigned int nnz = 4) -> string
+auto to_csdfixed(double num, unsigned int nnz = 4) noexcept -> string
 {
     if (num == 0.)
     {
