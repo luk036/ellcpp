@@ -1,5 +1,5 @@
 #include <cmath>
-#include <ellcpp/cutting_plane.hpp>
+#include <ellcpp/cut_config.hpp>
 #include <ellcpp/ell1d.hpp>
 #include <ellcpp/ell_assert.hpp>
 #include <ellcpp/half_nonnegative.hpp>
@@ -12,7 +12,7 @@
  * @param[in] cut
  * @return ell1d::return_t
  */
-auto ell1d::update(const std::tuple<double, double>& cut) -> ell1d::return_t
+auto ell1d::update(const std::tuple<double, double>& cut) noexcept -> ell1d::return_t
 {
     const auto& [g, beta] = cut;
     const auto tau = std::abs(this->_r * g);

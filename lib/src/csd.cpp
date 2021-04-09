@@ -18,7 +18,9 @@ using std::string;
 auto to_csd(double num, int places = 0) -> string
 {
     if (num == 0.)
+    {
         return "0";
+    }
     auto absnum = fabs(num);
     auto n = absnum < 1. ? 0 : int(ceil(log2(absnum * 1.5)));
     auto csd_str = string {absnum < 1. ? "0" : ""};
@@ -78,11 +80,16 @@ auto to_decimal(std::string_view csd_str) -> double
                 break;
             case '.':
                 loc = i + 1;
+                break;
+            default:
+                break; // ignore
         }
         ++i;
     }
     if (loc != 0)
+    {
         num /= std::pow(2, csd_str.size() - loc);
+    }
     return num;
 }
 
@@ -97,7 +104,9 @@ auto to_decimal(std::string_view csd_str) -> double
 auto to_csdfixed(double num, unsigned int nnz = 4) -> string
 {
     if (num == 0.)
+    {
         return "0";
+    }
     auto an = fabs(num);
     auto n = an < 1. ? 0 : int(ceil(log2(an * 1.5)));
     auto csd_str = string {an < 1. ? "0" : ""};
@@ -120,10 +129,14 @@ auto to_csdfixed(double num, unsigned int nnz = 4) -> string
             nnz -= 1;
         }
         else
+        {
             csd_str += '0';
+        }
         limit /= 2.;
         if (nnz == 0)
+        {
             num = 0;
+        }
     }
     return csd_str;
 }

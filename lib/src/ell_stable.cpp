@@ -1,5 +1,5 @@
 #include <cmath>
-#include <ellcpp/cutting_plane.hpp>
+#include <ellcpp/cut_config.hpp>
 #include <ellcpp/ell_assert.hpp>
 #include <ellcpp/ell_stable.hpp>
 // #include <xtensor-blas/xlinalg.hpp>

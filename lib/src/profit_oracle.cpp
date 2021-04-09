@@ -11,7 +11,7 @@ using Cut = std::tuple<Arr, double>;
  * @param[in] t the best-so-far optimal value
  * @return std::tuple<Cut, double>
  */
-std::tuple<Cut, bool> profit_oracle::operator()(const Arr& y, double& t) const
+auto profit_oracle::operator()(const Arr& y, double& t) const -> std::tuple<Cut, bool>
 {
     // y0 <= log k
     const auto f1 = y[0] - this->_log_k;

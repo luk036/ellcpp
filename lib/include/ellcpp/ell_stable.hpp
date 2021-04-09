@@ -47,13 +47,20 @@ class ell_stable : public ell
      */
     ell_stable(ell_stable&& E) = default;
 
-  public:
     /**
      * @brief Construct a new ell_stable object
      *
+     * To avoid accidentally copying, only explicit copy is allowed
+     * 
      * @param E
      */
     explicit ell_stable(const ell_stable& E) = default;
+
+    /**
+     * @brief Destroy the ell stable object
+     * 
+     */
+    ~ell_stable() {}
 
     /**
      * @brief explicitly copy

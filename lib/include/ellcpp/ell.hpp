@@ -100,10 +100,17 @@ class ell
      */
     ell(ell&& E) = default;
 
-  public:
+    /**
+     * @brief Destroy the ell object
+     * 
+     */
+    ~ell() {}
+
     /**
      * @brief Construct a new ell object
      *
+     * To avoid accidentally copying, only explicit copy is allowed
+     * 
      * @param E
      */
     explicit ell(const ell& E) = default;
@@ -193,7 +200,7 @@ class ell
      *
      * @param[in] beta
      */
-    auto _calc_dc(const double& beta) -> CUTStatus;
+    auto _calc_dc(const double& beta) noexcept -> CUTStatus;
 
     /*!
      * @brief Calculate new ellipsoid under Central Cut
@@ -202,5 +209,5 @@ class ell
      *
      * @param[in] tau
      */
-    auto _calc_cc(const double& tau) -> void;
+    auto _calc_cc(const double& tau) noexcept -> void;
 }; // } ell

@@ -30,7 +30,7 @@ constexpr auto enumerate(T&& iterable)
     {
         size_t i;
         TIter iter;
-        bool operator!=(const iterator& other) const
+        auto operator!=(const iterator& other) const -> bool
         {
             return iter != other.iter;
         }

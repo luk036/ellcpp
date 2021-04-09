@@ -22,7 +22,7 @@ struct exercise_vertex
     //...
     grAdaptor& g;
 
-    void operator()(const Vertex& v) const
+    auto operator()(const Vertex& v) const -> void
     {
         // typedef boost::graph_traits<Graph> GraphTraits;
         // typename boost::property_map<Graph, boost::vertex_index_t>::type

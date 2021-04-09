@@ -5,35 +5,7 @@
 #include <cassert>
 #include <cmath>
 #include <tuple>
-
-enum class CUTStatus
-{
-    success,
-    nosoln,
-    smallenough,
-    noeffect
-};
-
-/*!
- * @brief Options
- *
- */
-struct Options
-{
-    unsigned int max_it = 2000; //!< maximum number of iterations
-    double tol = 1e-8;          //!< error tolerance
-};
-
-/*!
- * @brief CInfo
- *
- */
-struct CInfo
-{
-    bool feasible;
-    size_t num_iters;
-    CUTStatus status;
-};
+#include "cut_config.hpp"
 
 
 /*!
@@ -294,7 +266,7 @@ class bsearch_adaptor
      *
      * @return auto
      */
-    auto x_best() const
+    [[nodiscard]] auto x_best() const
     {
         return this->_S.xc();
     }

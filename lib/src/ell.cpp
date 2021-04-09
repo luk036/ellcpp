@@ -1,5 +1,5 @@
 #include <cmath>
-#include <ellcpp/cutting_plane.hpp>
+#include <ellcpp/cut_config.hpp>
 #include <ellcpp/ell.hpp>
 #include <ellcpp/ell_assert.hpp>
 #include <xtensor-blas/xlinalg.hpp>
@@ -78,7 +78,7 @@ void ell::_calc_ll_cc(const double& b1, const double& b1sqn)
  * @param[in] beta
  * @return int
  */
-CUTStatus ell::_calc_dc(const double& beta)
+CUTStatus ell::_calc_dc(const double& beta) noexcept
 {
     const auto tau = std::sqrt(this->_tsq);
 
@@ -101,7 +101,7 @@ CUTStatus ell::_calc_dc(const double& beta)
     }
 
     this->_mu = (bdiff / gamma) * this->_nMinus1 / 2.;
-    this->_rho = gamma / (this->_n + 1.);
+    this->_rho = gamma / (this->_nPlus1);
     this->_sigma = 2 * this->_rho / (tau + beta);
     this->_delta = this->_c1 * (this->_tsq - beta * beta) / this->_tsq;
     return CUTStatus::success;
@@ -113,7 +113,7 @@ CUTStatus ell::_calc_dc(const double& beta)
  * @param[in] tau
  * @return int
  */
-void ell::_calc_cc(const double& tau)
+void ell::_calc_cc(const double& tau) noexcept
 {
     this->_mu = this->_nMinus1 / 2.;
     this->_sigma = 2. / this->_nPlus1;

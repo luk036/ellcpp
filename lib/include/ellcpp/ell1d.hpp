@@ -27,7 +27,7 @@ class ell1d
      * @param[in] l
      * @param[in] u
      */
-    ell1d(const double& l, const double& u) //
+    ell1d(const double& l, const double& u) noexcept
         : _r {(u - l) / 2}
         , _xc {l + _r}
     {
@@ -45,7 +45,7 @@ class ell1d
      *
      * @return double
      */
-    auto xc() const -> double
+    auto xc() const noexcept -> double
     {
         return _xc;
     }
@@ -55,7 +55,7 @@ class ell1d
      *
      * @param[in] xc
      */
-    void set_xc(const double& xc)
+    auto set_xc(const double& xc) noexcept -> void
     {
         _xc = xc;
     }
@@ -66,5 +66,5 @@ class ell1d
      * @param[in] cut
      * @return return_t
      */
-    return_t update(const std::tuple<double, double>& cut);
+    auto update(const std::tuple<double, double>& cut) noexcept -> return_t;
 }; // } ell1d
