@@ -6,7 +6,7 @@
 #include <xtensor/xarray.hpp>
 
 /*!
- * @brief Cholesky factorization for LMI
+ * @brief LDLT factorization for LMI
  *
  *  - LDL^T square-root-free version
  *  - Option allow semidefinite
@@ -14,7 +14,7 @@
  *      for all v in R^n.
  *  - O(p^2) per iteration, independent of N
  */
-class chol_ext
+class ldlt_ext
 {
     using Arr = xt::xarray<double, xt::layout_type::row_major>;
     using Vec = Arr;
@@ -31,23 +31,23 @@ class chol_ext
 
   public:
     /*!
-     * @brief Construct a new chol ext object
+     * @brief Construct a new ldlt ext object
      *
      * @param[in] N dimension
      */
-    explicit chol_ext(size_t N)
+    explicit ldlt_ext(size_t N)
         : v {zeros({N})}
         , n {N}
         , T {zeros({N, N})}
     {
     }
 
-    chol_ext(const chol_ext&) = delete;
-    chol_ext& operator=(const chol_ext&) = delete;
-    chol_ext(chol_ext&&) = default;
+    ldlt_ext(const ldlt_ext&) = delete;
+    ldlt_ext& operator=(const ldlt_ext&) = delete;
+    ldlt_ext(ldlt_ext&&) = default;
 
     /*!
-     * @brief Perform Cholesky Factorization
+     * @brief Perform LDLT Factorization
      *
      * @param[in] A Symmetric Matrix
      *
@@ -62,7 +62,7 @@ class chol_ext
     }
 
     /*!
-     * @brief Perform Cholesky Factorization (Lazy evaluation)
+     * @brief Perform LDLT Factorization (Lazy evaluation)
      *
      * @tparam Fn
      * @param[in] getA function to access the elements of A
@@ -79,15 +79,15 @@ class chol_ext
         {
             // auto j = start;
             auto d = getA(i, start);
-            for (auto j = start; j != i; )
+            for (auto j = start; j != i; ++j)
             {
                 this->T(j, i) = d;
                 this->T(i, j) = d / this->T(j, j); // note: T(j, i) here!
-                j += 1;
-                d = getA(i, j);
-                for (auto k = start; k != j; ++k)
+                auto s = j + 1;
+                d = getA(i, s);
+                for (auto k = start; k != s; ++k)
                 {
-                    d -= this->T(i, k) * this->T(k, j);
+                    d -= this->T(i, k) * this->T(k, s);
                 }
             }
             this->T(i, i) = d;

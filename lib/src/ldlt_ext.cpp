@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-#include <ellcpp/oracles/chol_ext.hpp>
+#include <ellcpp/oracles/ldlt_ext.hpp>
 #include <stdexcept>
 
 
@@ -9,7 +9,7 @@
  *
  * @return auto
  */
-auto chol_ext::witness() -> double
+auto ldlt_ext::witness() -> double
 {
     if (this->is_spd())
     {
@@ -22,12 +22,11 @@ auto chol_ext::witness() -> double
     this->v(m) = 1.;
     for (auto i = m; i > start; --i)
     {
-        auto s = 0.;
-        for (auto k = i; k <= m; ++k)
+        this->v(i - 1) = 0.;
+        for (auto k = i; k != n; ++k)
         {
-            s += this->T(k, i - 1) * this->v(k);
+            this->v(i - 1) -= this->T(k, i - 1) * this->v(k);
         }
-        this->v(i - 1) = -s;
     }
     return -this->T(m, m);
 }
@@ -38,7 +37,7 @@ auto chol_ext::witness() -> double
  * @param[in] A
  * @return double
  */
-auto chol_ext::sym_quad(const Vec& A) const -> double
+auto ldlt_ext::sym_quad(const Vec& A) const -> double
 {
     auto res = double {};
     const auto& v = this->v;
@@ -62,7 +61,7 @@ auto chol_ext::sym_quad(const Vec& A) const -> double
  * 
  * @return Mat 
  */
-auto chol_ext::sqrt() -> Mat
+auto ldlt_ext::sqrt() -> Mat
 {
     if (!this->is_spd())
     {

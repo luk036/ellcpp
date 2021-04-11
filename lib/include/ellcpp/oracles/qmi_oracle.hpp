@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include "chol_ext.hpp"
+#include "ldlt_ext.hpp"
 #include <gsl/span>
 #include <optional>
 #include <xtensor/xarray.hpp>
@@ -35,7 +35,7 @@ class qmi_oracle
     Arr _Fx;
 
   public:
-    chol_ext _Q;
+    ldlt_ext _Q;
 
   public:
     /*!

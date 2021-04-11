@@ -2,7 +2,7 @@
 #pragma once
 
 //#include "mat.hpp"
-#include "chol_ext.hpp"
+#include "ldlt_ext.hpp"
 #include <gsl/span>
 #include <optional>
 #include <xtensor/xarray.hpp>
@@ -25,7 +25,7 @@ class lmi0_oracle
     const size_t _n;
 
   public:
-    chol_ext _Q;
+    ldlt_ext _Q;
 
     /*!
      * @brief Construct a new lmi0 oracle object

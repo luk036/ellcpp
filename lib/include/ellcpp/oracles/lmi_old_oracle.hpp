@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include "chol_ext.hpp"
+#include "ldlt_ext.hpp"
 #include <gsl/span>
 #include <optional>
 #include <xtensor/xarray.hpp>
@@ -22,7 +22,7 @@ class lmi_old_oracle
   private:
     const gsl::span<const Arr> _F;
     const Arr _F0;
-    chol_ext _Q;
+    ldlt_ext _Q;
 
   public:
     /*!

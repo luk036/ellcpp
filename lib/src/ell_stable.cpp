@@ -24,7 +24,7 @@ auto ell_stable::update(const std::tuple<Arr, T>& cut) -> std::tuple<CUTStatus, 
     auto invLg = Arr {g}; // initially
     for (auto i = 1U; i != this->_n; ++i)
     {
-        for (auto j = 0U; j < i; ++j)
+        for (auto j = 0U; j != i; ++j)
         {
             this->_Q(i, j) = this->_Q(j, i) * invLg(j); 
             // keep for rank-one update
@@ -55,7 +55,7 @@ auto ell_stable::update(const std::tuple<Arr, T>& cut) -> std::tuple<CUTStatus, 
     { // backward subsituition
         for (auto j = i; j != this->_n; ++j)
         {
-            Qg(i - 1) -= this->_Q(i, j) * Qg(j);
+            Qg(i - 1) -= this->_Q(i, j) * Qg(j); // ???
         }
     }
 
@@ -66,25 +66,29 @@ auto ell_stable::update(const std::tuple<Arr, T>& cut) -> std::tuple<CUTStatus, 
     const auto r = this->_sigma / omega;
     const auto mu = r / (1. - this->_sigma);
     auto oldt = 1.; // initially
-    for (auto j = 0U; j != this->_n; ++j)
+    auto n1 = this->_n - 1;
+    for (auto j = 0U; j != n1; ++j)
     {
         // p=sqrt(k)*vv(j);
         const auto p = g(j);
         const auto mup = mu * p;
         const auto t = oldt + mup * p * this->_Q(j, j);
         this->_Q(j, j) /= t; // update invD
-        const auto beta = mup * this->_Q(j, j);
+        const auto beta2 = mup * this->_Q(j, j);
         this->_Q(j, j) *= oldt; // update invD
-        if (j != this->_n - 1)
+        for (auto l = j + 1; l != this->_n; ++l)
         {
-            for (auto l = j + 1; l != this->_n; ++l)
-            {
-                // v(l) -= p * this->_Q(j, l);
-                this->_Q(j, l) += beta * this->_Q(l, j);
-            }
+            // v(l) -= p * this->_Q(j, l);
+            this->_Q(j, l) += beta2 * this->_Q(l, j);
         }
         oldt = t;
     }
+
+    const auto p = g(n1);
+    const auto mup = mu * p;
+    const auto t = oldt + mup * p * this->_Q(n1, n1);
+    this->_Q(n1, n1) *= oldt / t; // update invD
+
 
     this->_kappa *= this->_delta;
 
