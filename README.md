@@ -24,3 +24,6 @@ To build with Ninja:
 To run CTest:
 
     ninja test
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTgzNTE3NTAxOF19
+-->
