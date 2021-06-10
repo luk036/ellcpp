@@ -27,7 +27,7 @@ std::optional<Cut> qmi_oracle::operator()(const Arr& x)
         {
             this->_count = i + 1;
             ROW(this->_Fx, i) = COLUMN(this->_F0, i);
-            for (size_t k = 0U; k != this->_nx; ++k)
+            for (auto k = 0; k != this->_nx; ++k)
             {
                 ROW(this->_Fx, i) -= COLUMN(this->_F[k], i) * x(k);
             }
@@ -51,7 +51,7 @@ std::optional<Cut> qmi_oracle::operator()(const Arr& x)
     const auto Fxp = ROW(this->_Fx, xt::range(start, stop));
     const auto Av = dot(v, Fxp);
     auto g = zeros({this->_nx});
-    for (size_t k = 0U; k != this->_nx; ++k)
+    for (auto k = 0; k != this->_nx; ++k)
     {
         const auto Fkp = ROW(this->_F[k], xt::range(start, stop));
         g(k) = -2 * dot(dot(v, Fkp), Av)();

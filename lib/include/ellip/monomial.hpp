@@ -85,7 +85,7 @@ class monomial
         : _b(log(ar[0]))
         , _a(_Tp(0), n)
     {
-        for (size_t i = 1; i <= n; ++i)
+        for (auto i = 1; i <= n; ++i)
             _a[i - 1] = ar[i];
     }
 
@@ -147,7 +147,7 @@ class monomial
     _Tp lse(const std::valarray<_Up>& y) const
     {
         _Tp res = _b;
-        for (size_t i = 0; i != _a.size(); ++i)
+        for (auto i = 0; i != _a.size(); ++i)
         {
             if (_a[i] == _Tp(0))
                 continue;
@@ -169,7 +169,7 @@ class monomial
     {
         assert(_a.size() == y.size());
         _Tp res = _b;
-        for (size_t i = 0; i != _a.size(); ++i)
+        for (auto i = 0; i != _a.size(); ++i)
         {
             if (_a[i] == _Tp(0))
                 continue;

@@ -31,7 +31,9 @@ auto lowpass_oracle::operator()(const Arr& x, double& Spsq) const
     // 2. passband constraints
     auto N = this->_Ap.shape()[0];
     // for (k in chain(range(i_As, N), range(i_As))) {
-    for (size_t i = 0U, k = this->_i_Ap; i != N; ++i, ++k)
+
+    auto k = this->_i_Ap;
+    for (auto i = 0; i != N; ++i, ++k)
     {
         if (k == N)
         {
@@ -63,7 +65,8 @@ auto lowpass_oracle::operator()(const Arr& x, double& Spsq) const
     auto fmax = -1.e100; // std::numeric_limits<double>::min()
     size_t imax {0};
     // for (k in chain(range(i_As, N), range(i_As))) {
-    for (size_t i = 0U, k = this->_i_As; i != N; ++i, ++k)
+    k = this->_i_As;
+    for (auto i = 0; i != N; ++i, ++k)
     {
         if (k == N)
         {
@@ -97,7 +100,8 @@ auto lowpass_oracle::operator()(const Arr& x, double& Spsq) const
     // case 4,
     // 1. nonnegative-real constraint
     N = this->_Anr.shape()[0];
-    for (size_t i = 0U, k = this->_i_Anr; i != N; ++i, ++k)
+    k = this->_i_Anr;
+    for (auto i = 0; i != N; ++i, ++k)
     {
         if (k == N)
         {

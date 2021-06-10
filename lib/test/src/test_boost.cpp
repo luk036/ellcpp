@@ -73,7 +73,7 @@ TEST_CASE("Test Boost")
     // using edge_t = typename boost::graph_traits<Graph>::edge_descriptor;
 
     // add the edges to the graph object
-    for (size_t i = 0U; i != num_edges; ++i)
+    for (auto i = 0; i != num_edges; ++i)
     {
         G.add_edge(edge_array[i].first, edge_array[i].second);
     }

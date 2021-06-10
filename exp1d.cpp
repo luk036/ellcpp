@@ -23,7 +23,7 @@ int main() {
   //shape_type shape = {n, n};
   Arr Sig = xt::ones<double>({n, n});
 
-  for (auto i = 0U; i != n; ++i) {
+  for (auto i = 0; i != n; ++i) {
     for (auto j = i+1; j != n; ++j) {
       const auto d = s[j] - s[i];
       Sig(i, j) = std::exp(-0.5*(d*d)/(sdkern*sdkern)/2);
@@ -35,7 +35,7 @@ int main() {
   Arr Ys = zeros({n, N});
 
   Arr ym = xt::random::randn<double>({n});
-  for (auto k = 0U; k != N; ++k) {
+  for (auto k = 0; k != N; ++k) {
     Arr x = var * xt::random::randn<double>({n});
     Arr y = dot(A,x) + ym + 0.5*xt::random::randn<double>({n});
     xt::view(Ys, xt::all(), k) = y;

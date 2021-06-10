@@ -23,9 +23,9 @@ auto ell_stable::update(const std::tuple<Arr, T>& cut)
 
     // calculate inv(L)*g: (n-1)*n/2 multiplications
     auto invLg = Arr {g}; // initially
-    for (auto i = 1U; i != this->_n; ++i)
+    for (auto i = 1; i != this->_n; ++i)
     {
-        for (auto j = 0U; j != i; ++j)
+        for (auto j = 0; j != i; ++j)
         {
             this->_Q(i, j) = this->_Q(j, i) * invLg(j);
             // keep for rank-one update
@@ -36,7 +36,7 @@ auto ell_stable::update(const std::tuple<Arr, T>& cut)
     // calculate inv(D)*inv(L)*g and omega: 2n
     auto invDinvLg = Arr {invLg}; // initially
     auto omega = 0.;              // initially
-    for (auto i = 0U; i != this->_n; ++i)
+    for (auto i = 0; i != this->_n; ++i)
     {
         invDinvLg(i) *= this->_Q(i, i);
         omega += invLg(i) * invDinvLg(i);
@@ -68,7 +68,7 @@ auto ell_stable::update(const std::tuple<Arr, T>& cut)
     const auto mu = r / (1. - this->_sigma);
     auto oldt = 1.; // initially
     auto n1 = this->_n - 1;
-    for (auto j = 0U; j != n1; ++j)
+    for (auto j = 0; j != n1; ++j)
     {
         // p=sqrt(k)*vv(j);
         const auto p = g(j);

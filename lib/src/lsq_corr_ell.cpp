@@ -54,7 +54,7 @@ Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
     xt::random::seed(5);
 
     auto Sig = zeros({n, n});
-    for (auto i = 0U; i != n; ++i)
+    for (auto i = 0; i != n; ++i)
     {
         for (auto j = i; j != n; ++j)
         {
@@ -67,7 +67,7 @@ Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 
     auto A = xt::linalg::cholesky(Sig);
     auto Y = zeros({n, n});
-    for (size_t k = 0U; k != N; ++k)
+    for (auto k = 0; k != N; ++k)
     {
         auto x = var * xt::random::randn<double>({n});
         auto y = dot(A, x) + tau * xt::random::randn<double>({n});
@@ -89,9 +89,9 @@ Arr construct_distance_matrix(const Arr& s)
 {
     auto n = s.shape()[0];
     auto D1 = zeros({n, n});
-    for (size_t i = 0U; i != n; ++i)
+    for (auto i = 0; i != n; ++i)
     {
-        for (size_t j = i + 1; j != n; ++j)
+        for (auto j = i + 1; j != n; ++j)
         {
             auto h = xt::view(s, j, xt::all()) - xt::view(s, i, xt::all());
             auto d = std::sqrt(xt::linalg::dot(h, h)());
@@ -117,7 +117,7 @@ std::vector<Arr> construct_poly_matrix(const Arr& s, size_t m)
     auto Sig = std::vector<Arr> {D};
     Sig.reserve(m);
 
-    for (size_t i = 0U; i != m - 1; ++i)
+    for (auto i = 0; i != m - 1; ++i)
     {
         D *= D1;
         Sig.push_back(D);
@@ -323,11 +323,11 @@ class mle_oracle
 
         auto g = zeros(x);
 
-        for (size_t i = 0U; i != n; ++i)
+        for (auto i = 0; i != n; ++i)
         {
             auto SFsi = dot(S, this->_Sig[i]);
             g(i) = xt::linalg::trace(SFsi)();
-            for (size_t k = 0U; k != m; ++k)
+            for (auto k = 0; k != m; ++k)
             {
                 g(i) -= dot(
                     xt::view(SFsi, k, xt::all()), xt::view(SY, xt::all(), k))();

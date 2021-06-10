@@ -26,7 +26,7 @@ class ellipsoid
         , _x(x)
     {
         assert(rho > 0);
-        for (size_t i = 0; i != _n; ++i)
+        for (auto i = 0; i != _n; ++i)
         {
             _Ae[i][i] = rho; // initial radius
         }
@@ -38,7 +38,7 @@ class ellipsoid
         , _Ae(Vec(0., _n), _n)
         , _x(x)
     {
-        for (size_t i = 0; i != _n; ++i)
+        for (auto i = 0; i != _n; ++i)
         {
             assert(r[i] > 0);
             _Ae[i][i] = r[i]; // initial radius

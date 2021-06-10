@@ -68,7 +68,7 @@ auto ldlt_ext::sqrt() -> Mat
         XTENSOR_THROW(std::runtime_error, "Implementation Error.");
     }
     auto M = zeros({this->n, this->n});
-    for (auto i = 0U; i != this->n; ++i)
+    for (auto i = 0; i != this->n; ++i)
     {
         M(i, i) = std::sqrt(this->T(i, i));
         for (auto j = i + 1; j != this->n; ++j)

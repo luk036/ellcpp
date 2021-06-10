@@ -662,7 +662,7 @@ class Graph : public object
     auto add_edges_from(const C1& edges, const C2& data)
     {
         auto N = edges.size();
-        for (auto i = 0U; i != N; ++i)
+        for (auto i = 0; i != N; ++i)
         {
             const auto& e = edges[i];
             this->add_edge(e.first, e.second, data[i]);

@@ -154,10 +154,10 @@ std::tuple<CUTStatus, double> ell::update(const std::tuple<Arr, T>& cut)
     // n*(n+1)/2 + n
     // this->_Q -= (this->_sigma / omega) * xt::linalg::outer(Qg, Qg);
     const auto r = this->_sigma / omega;
-    for (auto i = 0U; i != this->_n; ++i)
+    for (auto i = 0; i != this->_n; ++i)
     {
         const auto rQg = r * Qg(i);
-        for (auto j = 0U; j < i; ++j)
+        for (auto j = 0; j < i; ++j)
         {
             this->_Q(i, j) -= rQg * Qg(j);
             this->_Q(j, i) = this->_Q(i, j);
