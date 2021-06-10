@@ -17,7 +17,7 @@ std::optional<Cut> lmi_old_oracle::operator()(const Arr& x)
     const auto n = x.size();
 
     auto A = Arr {this->_F0};
-    for (auto k = 0; k != n; ++k)
+    for (auto k = 0U; k != n; ++k)
     {
         A -= this->_F[k] * x(k);
     }
@@ -28,7 +28,7 @@ std::optional<Cut> lmi_old_oracle::operator()(const Arr& x)
     }
     const auto ep = this->_Q.witness();
     auto g = zeros(x);
-    for (auto i = 0; i != n; ++i)
+    for (auto i = 0U; i != n; ++i)
     {
         g(i) = this->_Q.sym_quad(this->_F[i]);
     }

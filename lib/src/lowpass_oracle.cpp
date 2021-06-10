@@ -33,7 +33,7 @@ auto lowpass_oracle::operator()(const Arr& x, double& Spsq) const
     // for (k in chain(range(i_As, N), range(i_As))) {
 
     auto k = this->_i_Ap;
-    for (auto i = 0; i != N; ++i, ++k)
+    for (auto i = 0U; i != N; ++i, ++k)
     {
         if (k == N)
         {
@@ -66,7 +66,7 @@ auto lowpass_oracle::operator()(const Arr& x, double& Spsq) const
     size_t imax {0};
     // for (k in chain(range(i_As, N), range(i_As))) {
     k = this->_i_As;
-    for (auto i = 0; i != N; ++i, ++k)
+    for (auto i = 0U; i != N; ++i, ++k)
     {
         if (k == N)
         {
@@ -101,7 +101,7 @@ auto lowpass_oracle::operator()(const Arr& x, double& Spsq) const
     // 1. nonnegative-real constraint
     N = this->_Anr.shape()[0];
     k = this->_i_Anr;
-    for (auto i = 0; i != N; ++i, ++k)
+    for (auto i = 0U; i != N; ++i, ++k)
     {
         if (k == N)
         {

@@ -66,7 +66,7 @@ class my_fir_oracle
         auto fmax = -1.e100; // std::numeric_limits<double>::min()
         auto gmax = zeros({n});
 
-        for (auto i = 0; i != m; ++i)
+        for (auto i = 0U; i != m; ++i)
         {
             auto a_R = Arr {xt::view(A_R, i, xt::all())};
             auto a_I = Arr {xt::view(A_I, i, xt::all())};

@@ -22,7 +22,7 @@ class ldlt_ext
     using Rng = std::pair<size_t, size_t>;
 
   public:
-    Rng p {0, 0}; //!< the rows where the process starts and stops
+    Rng p {0U, 0U}; //!< the rows where the process starts and stops
     Vec v;        //!< witness vector
 
   private:
@@ -75,7 +75,7 @@ class ldlt_ext
         this->p = {0U, 0U};
         auto& [start, stop] = this->p;
 
-        for (auto i = 0; i != this->n; ++i)
+        for (auto i = 0U; i != this->n; ++i)
         {
             // auto j = start;
             auto d = getA(i, start);

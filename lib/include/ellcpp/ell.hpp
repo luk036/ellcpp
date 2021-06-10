@@ -34,7 +34,7 @@ class ell
     double _delta {};
     double _tsq {};
 
-    const size_t _n;
+    const int _n;
 
     const double _nFloat;
     const double _nPlus1;
@@ -66,7 +66,7 @@ class ell
      */
     template <typename V, typename U>
     ell(V&& kappa, Arr&& Q, U&& x) noexcept
-        : _n {x.size()}
+        : _n (x.size())
         , _nFloat {double(_n)}
         , _nPlus1 {_nFloat + 1.}
         , _nMinus1 {_nFloat - 1.}

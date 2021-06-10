@@ -41,7 +41,7 @@ auto max_parametric(const Graph& G, T& r_opt, Fn1&& d, Fn2&& zero_cancel,
     auto S = negCycleFinder<Graph>(G);
     auto C_opt = std::vector<edge_t> {}; // should initial outside
 
-    auto niter = 0;
+    auto niter = 0U;
     for (; niter != max_iter; ++niter)
     {
         const auto& C_min =

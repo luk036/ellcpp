@@ -18,7 +18,7 @@ std::optional<Cut> lmi0_oracle::operator()(const Arr& x)
     auto getA = [&, this](size_t i, size_t j) -> double
     {
         auto a = 0.;
-        for (auto k = 0; k != n; ++k)
+        for (auto k = 0U; k != n; ++k)
         {
             a += this->_F[k](i, j) * x(k);
         }
@@ -31,7 +31,7 @@ std::optional<Cut> lmi0_oracle::operator()(const Arr& x)
     }
     auto ep = this->_Q.witness();
     auto g = zeros(x);
-    for (auto i = 0; i != n; ++i)
+    for (auto i = 0U; i != n; ++i)
     {
         g(i) = -_Q.sym_quad(this->_F[i]);
     }

@@ -54,7 +54,7 @@ Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
     xt::random::seed(5);
 
     auto Sig = zeros({n, n});
-    for (auto i = 0; i != n; ++i)
+    for (auto i = 0U; i != n; ++i)
     {
         for (auto j = i; j != n; ++j)
         {
@@ -67,7 +67,7 @@ Arr create_2d_isotropic(const Arr& s, size_t N = 3000U)
 
     auto A = xt::linalg::cholesky(Sig);
     auto Y = zeros({n, n});
-    for (auto k = 0; k != N; ++k)
+    for (auto k = 0U; k != N; ++k)
     {
         auto x = var * xt::random::randn<double>({n});
         auto y = dot(A, x) + tau * xt::random::randn<double>({n});
@@ -89,7 +89,7 @@ Arr construct_distance_matrix(const Arr& s)
 {
     auto n = s.shape()[0];
     auto D1 = zeros({n, n});
-    for (auto i = 0; i != n; ++i)
+    for (auto i = 0U; i != n; ++i)
     {
         for (auto j = i + 1; j != n; ++j)
         {
@@ -117,7 +117,7 @@ std::vector<Arr> construct_poly_matrix(const Arr& s, size_t m)
     auto Sig = std::vector<Arr> {D};
     Sig.reserve(m);
 
-    for (auto i = 0; i != m - 1; ++i)
+    for (auto i = 0U; i != m - 1; ++i)
     {
         D *= D1;
         Sig.push_back(D);
@@ -298,7 +298,7 @@ class mle_oracle
             return {*cut0, false};
         }
 
-        auto n = x.shape()[0];
+        auto n = int(x.shape()[0]);
         auto m = this->_Y.shape()[0];
 
         const auto& R = this->_lmi0._Q.sqrt();
@@ -327,7 +327,7 @@ class mle_oracle
         {
             auto SFsi = dot(S, this->_Sig[i]);
             g(i) = xt::linalg::trace(SFsi)();
-            for (auto k = 0; k != m; ++k)
+            for (auto k = 0U; k != m; ++k)
             {
                 g(i) -= dot(
                     xt::view(SFsi, k, xt::all()), xt::view(SY, xt::all(), k))();
