@@ -58,8 +58,8 @@ auto ldlt_ext::sym_quad(const Vec& A) const -> double
 
 /**
  * @brief Return upper triangular matrix $R$ where $A = R^T R$
- * 
- * @return Mat 
+ *
+ * @return Mat
  */
 auto ldlt_ext::sqrt() -> Mat
 {

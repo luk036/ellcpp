@@ -1,11 +1,11 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
+#include "cut_config.hpp"
 #include "half_nonnegative.hpp"
 #include <cassert>
 #include <cmath>
 #include <tuple>
-#include "cut_config.hpp"
 
 
 /*!

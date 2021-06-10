@@ -1,8 +1,8 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include <ellcpp/utility.hpp>
 #include <ellcpp/ell_assert.hpp> // ELL_UNLIKELY
+#include <ellcpp/utility.hpp>
 #include <xtensor/xarray.hpp>
 
 /*!
@@ -102,7 +102,7 @@ class ldlt_ext
                 }
                 if (ELL_UNLIKELY(d == 0.))
                 {
-                    start = i + 1; 
+                    start = i + 1;
                     // restart at i + 1, special as an LMI oracle
                 }
             }

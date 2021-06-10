@@ -75,9 +75,8 @@ class network_oracle
     template <typename T>
     auto operator()(const T& x) -> std::optional<std::tuple<T, double>>
     {
-        auto get_weight = [this, &x](const edge_t& e) -> double {
-            return this->_h.eval(e, x);
-        };
+        auto get_weight = [this, &x](const edge_t& e) -> double
+        { return this->_h.eval(e, x); };
 
         auto C = this->_S.find_neg_cycle(this->_u, get_weight);
         if (C.empty())

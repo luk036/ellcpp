@@ -493,7 +493,8 @@ class DiGraphS : public Graph<nodeview_t, adjlist_t>
     */
     auto edges() const -> pull_t
     {
-        auto func = [&](typename coro_t::push_type& yield) {
+        auto func = [&](typename coro_t::push_type& yield)
+        {
             for (auto&& rslt : this->_nodes_nbrs())
             {
                 auto&& n = std::get<0>(rslt);

@@ -3,7 +3,8 @@
 #include <string>
 
 extern auto to_csd(double num, int places = 0) noexcept -> std::string;
-extern auto to_csdfixed(double num, unsigned int nnz = 4) noexcept -> std::string;
+extern auto to_csdfixed(double num, unsigned int nnz = 4) noexcept
+    -> std::string;
 extern auto to_decimal(std::string_view csd_str) noexcept -> double;
 
 using namespace std::string_literals;

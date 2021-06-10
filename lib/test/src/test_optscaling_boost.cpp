@@ -79,9 +79,8 @@ TEST_CASE("Test Optimal Scaling (two varaibles, boost)")
     auto edge_id = boost::get(boost::id_tag, G);
     auto cost_pa = IterMap {cost, edge_id};
 
-    auto get_cost = [&](const auto& e) -> double {
-        return boost::get(cost_pa, e);
-    };
+    auto get_cost = [&](const auto& e) -> double
+    { return boost::get(cost_pa, e); };
 
     const auto [cmin, cmax] =
         std::minmax_element(std::begin(cost), std::end(cost));

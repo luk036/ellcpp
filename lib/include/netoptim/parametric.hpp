@@ -44,8 +44,8 @@ auto max_parametric(const Graph& G, T& r_opt, Fn1&& d, Fn2&& zero_cancel,
     auto niter = 0U;
     for (; niter != max_iter; ++niter)
     {
-        const auto& C_min = S.find_neg_cycle(
-            std::forward<Container>(dist), get_weight);
+        const auto& C_min =
+            S.find_neg_cycle(std::forward<Container>(dist), get_weight);
         if (C_min.empty())
         {
             break;

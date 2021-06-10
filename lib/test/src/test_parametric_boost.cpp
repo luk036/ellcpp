@@ -80,9 +80,8 @@ TEST_CASE("Test Parametric (boost)")
     EdgeIndexMap edge_id = boost::get(boost::id_tag, G);
     IterMap cost_pa(cost, edge_id);
 
-    auto get_cost = [&](const auto& e) -> int {
-        return boost::get(cost_pa, e);
-    };
+    auto get_cost = [&](const auto& e) -> int
+    { return boost::get(cost_pa, e); };
     auto get_time = [&](const auto&) -> int { return 1; };
 
     auto dist = std::vector<fun::Fraction<int>>(
@@ -108,10 +107,9 @@ TEST_CASE("Test Parametric of Timing Graph (boost)")
     EdgeIndexMap edge_id = boost::get(boost::id_tag, G);
     IterMap cost_pa(cost, edge_id);
 
-    const auto get_cost = [&](const auto& e) -> int {
-        return boost::get(cost_pa, e);
-    };
-    const auto get_time = [&](const auto & /*e*/) -> int { return 1; };
+    const auto get_cost = [&](const auto& e) -> int
+    { return boost::get(cost_pa, e); };
+    const auto get_time = [&](const auto& /*e*/) -> int { return 1; };
 
     auto dist = std::vector<fun::Fraction<int>>(
         G.number_of_nodes(), fun::Fraction<int>(0));

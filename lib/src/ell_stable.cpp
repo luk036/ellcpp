@@ -16,7 +16,8 @@ using Arr = xt::xarray<double, xt::layout_type::row_major>;
  * @return std::tuple<int, double>
  */
 template <typename T>
-auto ell_stable::update(const std::tuple<Arr, T>& cut) -> std::tuple<CUTStatus, double>
+auto ell_stable::update(const std::tuple<Arr, T>& cut)
+    -> std::tuple<CUTStatus, double>
 {
     const auto& [g, beta] = cut;
 
@@ -26,7 +27,7 @@ auto ell_stable::update(const std::tuple<Arr, T>& cut) -> std::tuple<CUTStatus, 
     {
         for (auto j = 0U; j != i; ++j)
         {
-            this->_Q(i, j) = this->_Q(j, i) * invLg(j); 
+            this->_Q(i, j) = this->_Q(j, i) * invLg(j);
             // keep for rank-one update
             invLg(i) -= this->_Q(i, j);
         }

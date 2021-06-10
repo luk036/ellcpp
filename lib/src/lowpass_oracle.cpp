@@ -12,8 +12,8 @@ using ParallelCut = std::tuple<Arr, Arr>;
  * @param[in] Spsq
  * @return auto
  */
-auto lowpass_oracle::operator()(
-    const Arr& x, double& Spsq) const -> std::tuple<ParallelCut, bool>
+auto lowpass_oracle::operator()(const Arr& x, double& Spsq) const
+    -> std::tuple<ParallelCut, bool>
 {
     using xt::linalg::dot;
 

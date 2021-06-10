@@ -24,14 +24,16 @@ namespace algo
 {
 
 template <typename N>
-auto half_nonnegative(N n) noexcept -> typename std::enable_if<std::is_integral<N>::value, N>::type
+auto half_nonnegative(N n) noexcept ->
+    typename std::enable_if<std::is_integral<N>::value, N>::type
 {
     using UN = typename std::make_unsigned<N>::type;
     return static_cast<N>(static_cast<UN>(n) / 2);
 }
 
 template <typename N>
-auto half_nonnegative(N n) noexcept -> typename std::enable_if<!std::is_integral<N>::value, N>::type
+auto half_nonnegative(N n) noexcept ->
+    typename std::enable_if<!std::is_integral<N>::value, N>::type
 {
     return std::move(n) / 2;
 }

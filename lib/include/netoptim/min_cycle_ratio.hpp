@@ -35,7 +35,8 @@ auto min_cycle_ratio(const Graph& G, T& r0, Fn1&& get_cost, Fn2&& get_time,
     using cost_T = decltype(get_cost(std::declval<edge_t>()));
     using time_T = decltype(get_time(std::declval<edge_t>()));
 
-    auto calc_ratio = [&](const auto& C) -> T {
+    auto calc_ratio = [&](const auto& C) -> T
+    {
         auto total_cost = cost_T(0);
         auto total_time = time_T(0);
         for (auto&& e : C)
@@ -46,9 +47,8 @@ auto min_cycle_ratio(const Graph& G, T& r0, Fn1&& get_cost, Fn2&& get_time,
         return T(total_cost) / total_time;
     };
 
-    auto calc_weight = [&](const T& r, const auto& e) -> T {
-        return get_cost(e) - r * get_time(e);
-    };
+    auto calc_weight = [&](const T& r, const auto& e) -> T
+    { return get_cost(e) - r * get_time(e); };
 
     return max_parametric(G, r0, std::move(calc_weight), std::move(calc_ratio),
         std::forward<Container>(dist), max_iter);

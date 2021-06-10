@@ -115,15 +115,15 @@ class ell
 
     /**
      * @brief Destroy the ell object
-     * 
+     *
      */
-    ~ell() {}
+    ~ell() { }
 
     /**
      * @brief Construct a new ell object
      *
      * To avoid accidentally copying, only explicit copy is allowed
-     * 
+     *
      * @param E
      */
     explicit ell(const ell& E) = default;
