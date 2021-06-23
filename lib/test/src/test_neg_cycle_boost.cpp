@@ -30,9 +30,9 @@ static xn::grAdaptor<graph_t> create_test_case1()
         Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
     int weights[] = {-5, 1, 1, 1, 1};
     int num_arcs = sizeof(edge_array) / sizeof(Edge);
-    static auto g =
+    auto g =
         graph_t(edge_array, edge_array + num_arcs, weights, num_nodes);
-    return xn::grAdaptor<graph_t> {g};
+    return xn::grAdaptor<graph_t> {std::move(g)};
 }
 
 static xn::grAdaptor<graph_t> create_test_case2()
@@ -51,9 +51,9 @@ static xn::grAdaptor<graph_t> create_test_case2()
         Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
     int weights[] = {2, 1, 1, 1, 1};
     int num_arcs = sizeof(edge_array) / sizeof(Edge);
-    static auto g =
+    auto g =
         graph_t(edge_array, edge_array + num_arcs, weights, num_nodes);
-    return xn::grAdaptor<graph_t> {g};
+    return xn::grAdaptor<graph_t> {std::move(g)};
 }
 
 static auto create_test_case_timing() -> xn::grAdaptor<graph_t>
@@ -70,9 +70,9 @@ static auto create_test_case_timing() -> xn::grAdaptor<graph_t>
         Edge {C, B}, Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
     int weights[] = {7, 0, 3, 1, 6, 4, 2, 5};
     constexpr int num_arcs = sizeof(edge_array) / sizeof(Edge);
-    static auto g =
+    auto g =
         graph_t(edge_array, edge_array + num_arcs, weights, num_nodes);
-    return xn::grAdaptor<graph_t> {g};
+    return xn::grAdaptor<graph_t> {std::move(g)};
 }
 
 static auto create_test_case_timing2() -> xn::grAdaptor<graph_t>
@@ -89,9 +89,9 @@ static auto create_test_case_timing2() -> xn::grAdaptor<graph_t>
         Edge {C, B}, Edge {B, C}, Edge {C, B}, Edge {C, A}, Edge {A, C}};
     int weights[] = {3, -4, -1, -3, 2, 0, -2, 1};
     constexpr int num_arcs = sizeof(edge_array) / sizeof(Edge);
-    static auto g =
+    auto g =
         graph_t(edge_array, edge_array + num_arcs, weights, num_nodes);
-    return xn::grAdaptor<graph_t> {g};
+    return xn::grAdaptor<graph_t> {std::move(g)};
 }
 
 auto do_case(const xn::grAdaptor<graph_t>& G) -> bool

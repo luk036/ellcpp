@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm> // std::max
 #include <initializer_list>
 #include <tuple>
 #include <type_traits>
@@ -95,22 +96,22 @@ constexpr auto enumerate(T&& iterable)
 template <typename T>
 inline constexpr auto range(T start, T stop)
 {
-    struct __iterator
+    struct _iterator
     {
         T i;
-        constexpr bool operator!=(const __iterator& other) const
+        constexpr auto operator!=(const _iterator& other) const -> bool
         {
             return this->i != other.i;
         }
-        constexpr bool operator==(const __iterator& other) const
+        constexpr auto operator==(const _iterator& other) const -> bool
         {
             return this->i == other.i;
         }
-        constexpr T operator*() const
+        constexpr auto operator*() const -> T
         {
             return this->i;
         }
-        constexpr __iterator& operator++()
+        constexpr auto operator++() -> _iterator&
         {
             ++this->i;
             return *this;
@@ -121,7 +122,8 @@ inline constexpr auto range(T start, T stop)
     {
       public:
         using value_type [[maybe_unused]] = T; // luk:
-        using iterator = __iterator;           // luk
+        using key_type [[maybe_unused]] = T;   // luk:
+        using iterator = _iterator;            // luk
         T start;
         T stop;
         [[nodiscard]] constexpr auto begin() const
@@ -171,7 +173,7 @@ inline constexpr auto range(T stop)
 template <typename Key>
 class set : public std::unordered_set<Key>
 {
-    using _Self = set<Key>;
+    using Self = set<Key>;
 
   public:
     /*!
@@ -210,7 +212,7 @@ class set : public std::unordered_set<Key>
      * @return true
      * @return false
      */
-    bool contains(const Key& key) const
+    auto contains(const Key& key) const -> bool
     {
         return this->find(key) != this->end();
     }
@@ -220,7 +222,7 @@ class set : public std::unordered_set<Key>
      *
      * @return _Self
      */
-    _Self copy() const
+    auto copy() const -> set
     {
         return *this;
     }
@@ -230,14 +232,14 @@ class set : public std::unordered_set<Key>
      *
      * @return _Self&
      */
-    _Self& operator=(const _Self&) = delete;
+    auto operator=(const set&) -> set& = delete;
 
     /*!
      * @brief
      *
      * @return _Self&
      */
-    _Self& operator=(_Self&&) noexcept = default;
+    auto operator=(set&&) noexcept -> set& = default;
 
     /*!
      * @brief Move Constructor (default)
@@ -245,7 +247,7 @@ class set : public std::unordered_set<Key>
      */
     set(set<Key>&&) noexcept = default;
 
-  private:
+    // private:
     /*!
      * @brief Copy Constructor (deleted)
      *
@@ -264,7 +266,7 @@ class set : public std::unordered_set<Key>
  * @return false
  */
 template <typename Key>
-inline bool operator<(const Key& key, const set<Key>& m)
+inline auto operator<(const Key& key, const set<Key>& m) -> bool
 {
     return m.contains(key);
 }
@@ -277,7 +279,7 @@ inline bool operator<(const Key& key, const set<Key>& m)
  * @return size_t
  */
 template <typename Key>
-inline size_t len(const set<Key>& m)
+inline auto len(const set<Key>& m) -> size_t
 {
     return m.size();
 }
@@ -304,7 +306,7 @@ struct key_iterator : Iter
     {
         return Iter::operator*().first;
     }
-    key_iterator& operator++()
+    auto operator++() -> key_iterator&
     {
         Iter::operator++();
         return *this;
@@ -320,8 +322,8 @@ struct key_iterator : Iter
 template <typename Key, typename T>
 class dict : public std::unordered_map<Key, T>
 {
-    using _Self = dict<Key, T>;
-    using _Base = std::unordered_map<Key, T>;
+    using Self = dict<Key, T>;
+    using Base = std::unordered_map<Key, T>;
 
   public:
     using value_type = std::pair<const Key, T>;
@@ -366,7 +368,7 @@ class dict : public std::unordered_map<Key, T>
      * @return true
      * @return false
      */
-    bool contains(const Key& key) const
+    auto contains(const Key& key) const -> bool
     {
         return this->find(key) != this->end();
     }
@@ -378,7 +380,7 @@ class dict : public std::unordered_map<Key, T>
      * @param[in] default_value
      * @return T
      */
-    T get(const Key& key, const T& default_value)
+    auto get(const Key& key, const T& default_value) -> T
     {
         if (!contains(key))
         {
@@ -414,7 +416,7 @@ class dict : public std::unordered_map<Key, T>
      *
      * @return std::unordered_map<Key, T>&
      */
-    std::unordered_map<Key, T>& items()
+    auto items() -> std::unordered_map<Key, T>&
     {
         return *this;
     }
@@ -424,7 +426,7 @@ class dict : public std::unordered_map<Key, T>
      *
      * @return const std::unordered_map<Key, T>&
      */
-    const std::unordered_map<Key, T>& items() const
+    auto items() const -> const std::unordered_map<Key, T>&
     {
         return *this;
     }
@@ -434,7 +436,7 @@ class dict : public std::unordered_map<Key, T>
      *
      * @return _Self
      */
-    _Self copy() const
+    auto copy() const -> Self
     {
         return *this;
     }
@@ -444,14 +446,34 @@ class dict : public std::unordered_map<Key, T>
      *
      * @return _Self&
      */
-    _Self& operator=(const _Self&) = delete;
+    auto operator[](const Key& k) const -> const T&
+    {
+        return this->at(k); // luk: a bug in std::unordered_map?
+    }
 
     /*!
      * @brief
      *
      * @return _Self&
      */
-    _Self& operator=(_Self&&) noexcept = default;
+    auto operator[](const Key& k) -> T&
+    {
+        return Base::operator[](k);
+    }
+
+    /*!
+     * @brief
+     *
+     * @return _Self&
+     */
+    auto operator=(const Self&) -> Self& = delete;
+
+    /*!
+     * @brief
+     *
+     * @return _Self&
+     */
+    auto operator=(Self&&) noexcept -> dict& = default;
 
     /*!
      * @brief Move Constructor (default)
@@ -459,7 +481,9 @@ class dict : public std::unordered_map<Key, T>
      */
     dict(dict<Key, T>&&) noexcept = default;
 
-  private:
+    ~dict() = default;
+
+    // private:
     /*!
      * @brief Construct a new dict object
      *
@@ -479,7 +503,7 @@ class dict : public std::unordered_map<Key, T>
  * @return false
  */
 template <typename Key, typename T>
-inline bool operator<(const Key& key, const dict<Key, T>& m)
+inline auto operator<(const Key& key, const dict<Key, T>& m) -> bool
 {
     return m.contains(key);
 }
@@ -493,7 +517,7 @@ inline bool operator<(const Key& key, const dict<Key, T>& m)
  * @return size_t
  */
 template <typename Key, typename T>
-inline size_t len(const dict<Key, T>& m)
+inline auto len(const dict<Key, T>& m) -> size_t
 {
     return m.size();
 }

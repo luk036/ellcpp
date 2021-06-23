@@ -22,8 +22,8 @@ class VertexView : public Graph
      *
      * @param[in] G
      */
-    explicit VertexView(Graph& G)
-        : Graph(G)
+    explicit VertexView(Graph&& G) noexcept
+        : Graph {std::forward<Graph>(G)}
     {
     }
 
@@ -85,7 +85,7 @@ template <typename Graph>
 class EdgeView
 {
   private:
-    const Graph& _G;
+    const Graph& G;
 
   public:
     /*!
@@ -94,7 +94,7 @@ class EdgeView
      * @param[in] G
      */
     explicit EdgeView(const Graph& G)
-        : _G {G}
+        : G {G}
     {
     }
 
@@ -107,7 +107,7 @@ class EdgeView
     {
         // auto [e_iter, e_end] = boost::edges(_G);
         // return e_iter;
-        return boost::edges(_G).first;
+        return boost::edges(this->G).first;
     }
 
     /*!
@@ -119,7 +119,7 @@ class EdgeView
     {
         // auto [e_iter, e_end] = boost::edges(_G);
         // return e_end;
-        return boost::edges(_G).second;
+        return boost::edges(this->G).second;
     }
 
     /*!
@@ -131,7 +131,7 @@ class EdgeView
     {
         // auto [e_iter, e_end] = boost::edges(_G);
         // return e_iter;
-        return boost::edges(_G).first;
+        return boost::edges(this->G).first;
     }
 
     /*!
@@ -143,7 +143,7 @@ class EdgeView
     {
         // auto [e_iter, e_end] = boost::edges(_G);
         // return e_end;
-        return boost::edges(_G).second;
+        return boost::edges(this->G).second;
     }
 };
 
@@ -158,7 +158,7 @@ class AtlasView
 {
   private:
     Vertex _v;
-    const Graph& _G;
+    const Graph& G;
 
   public:
     /*!
@@ -169,7 +169,7 @@ class AtlasView
      */
     AtlasView(Vertex v, const Graph& G)
         : _v {v}
-        , _G {G}
+        , G {G}
     {
     }
 
@@ -182,7 +182,7 @@ class AtlasView
     {
         // auto [e_iter, e_end] = boost::out_edges(_v, _G);
         // return e_iter;
-        return boost::out_edges(_v, _G).first;
+        return boost::out_edges(this->_v, this->G).first;
     }
 
     /*!
@@ -194,7 +194,7 @@ class AtlasView
     {
         // auto [e_iter, e_end] = boost::out_edges(_v, _G);
         // return e_end;
-        return boost::out_edges(_v, _G).second;
+        return boost::out_edges(this->_v, this->G).second;
     }
 
     /*!
@@ -206,7 +206,7 @@ class AtlasView
     {
         // auto [e_iter, e_end] = boost::out_edges(_v, _G);
         // return e_iter;
-        return boost::out_edges(_v, _G).first;
+        return boost::out_edges(this->_v, this->G).first;
     }
 
     /*!
@@ -218,7 +218,7 @@ class AtlasView
     {
         // auto [e_iter, e_end] = boost::out_edges(_v, _G);
         // return e_end;
-        return boost::out_edges(_v, _G).second;
+        return boost::out_edges(this->_v, this->G).second;
     }
 };
 
@@ -249,8 +249,8 @@ class grAdaptor : public VertexView<Graph>
      *
      * @param[in] G
      */
-    explicit grAdaptor(Graph& G)
-        : VertexView<Graph>(G)
+    explicit grAdaptor(Graph&& G) noexcept
+        : VertexView<Graph> {std::forward<Graph>(G)}
     {
     }
 
@@ -283,7 +283,7 @@ class grAdaptor : public VertexView<Graph>
      *
      * @return EdgeView<Graph>
      */
-    [[nodiscard]] EdgeView<Graph> edges() const
+    [[nodiscard]] auto edges() const -> EdgeView<Graph>
     {
         return EdgeView<Graph>(*this);
     }
@@ -294,7 +294,7 @@ class grAdaptor : public VertexView<Graph>
      * @param[in] v
      * @return AtlasView<Vertex, Graph>
      */
-    [[nodiscard]] AtlasView<Vertex, Graph> neighbors(Vertex v) const
+    [[nodiscard]] auto neighbors(Vertex v) const -> AtlasView<Vertex, Graph>
     {
         return AtlasView<Vertex, Graph>(v, *this);
     }
@@ -316,7 +316,7 @@ class grAdaptor : public VertexView<Graph>
      *
      * @return Vertex
      */
-    static Vertex null_vertex()
+    static auto null_vertex() -> Vertex
     {
         return boost::graph_traits<Graph>::null_vertex();
     }
@@ -329,7 +329,7 @@ class grAdaptor : public VertexView<Graph>
      * @return Vertex
      */
     template <typename Edge>
-    Vertex source(const Edge& e) const
+    auto source(const Edge& e) const -> Vertex
     {
         return boost::source(e, *this);
     }
@@ -342,7 +342,7 @@ class grAdaptor : public VertexView<Graph>
      * @return Vertex
      */
     template <typename Edge>
-    Vertex target(const Edge& e) const
+    auto target(const Edge& e) const -> Vertex
     {
         return boost::target(e, *this);
     }

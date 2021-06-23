@@ -119,7 +119,7 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
      *
      * @return const Z&
      */
-    constexpr auto numerator() const -> const Z&
+    [[nodiscard]] constexpr auto numerator() const -> const Z&
     {
         return _numerator;
     }
@@ -129,7 +129,7 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
      *
      * @return const Z&
      */
-    constexpr auto denominator() const -> const Z&
+    [[nodiscard]] constexpr auto denominator() const -> const Z&
     {
         return _denominator;
     }
@@ -139,7 +139,7 @@ struct Fraction : boost::totally_ordered<Fraction<Z>,
      *
      * @return Fraction
      */
-    constexpr auto abs() const -> Fraction
+    [[nodiscard]] constexpr auto abs() const -> Fraction
     {
         return Fraction(std::abs(_numerator), std::abs(_denominator));
     }

@@ -68,7 +68,7 @@ TEST_CASE("Test Boost")
 
     // declare a graph object
     Graph g(num_vertices);
-    xn::grAdaptor<Graph> G(g);
+    xn::grAdaptor<Graph> G(std::move(g));
     using Vertex = typename boost::graph_traits<Graph>::vertex_descriptor;
     // using edge_t = typename boost::graph_traits<Graph>::edge_descriptor;
 

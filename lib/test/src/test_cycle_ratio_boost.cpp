@@ -45,8 +45,8 @@ static auto create_test_case1()
         Edge {A, B}, Edge {B, C}, Edge {C, D}, Edge {D, E}, Edge {E, A}};
     size_t indices[] = {0, 1, 2, 3, 4};
     int num_arcs = sizeof(edge_array) / sizeof(Edge);
-    static graph_t g(edge_array, edge_array + num_arcs, indices, num_nodes);
-    return xn::grAdaptor<graph_t> {g};
+    graph_t g(edge_array, edge_array + num_arcs, indices, num_nodes);
+    return xn::grAdaptor<graph_t> {std::move(g)};
 }
 
 static auto create_test_case_timing()
@@ -65,8 +65,8 @@ static auto create_test_case_timing()
     size_t indices[] = {0, 1, 2, 3, 4, 5, 6, 7};
     int num_arcs = sizeof(edge_array) / sizeof(Edge);
 
-    static graph_t g(edge_array, edge_array + num_arcs, indices, num_nodes);
-    return xn::grAdaptor<graph_t> {g};
+    graph_t g(edge_array, edge_array + num_arcs, indices, num_nodes);
+    return xn::grAdaptor<graph_t> {std::move(g)};
 }
 
 TEST_CASE("Test Cycle Ratio (boost)")
