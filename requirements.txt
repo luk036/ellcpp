@@ -3,6 +3,6 @@ fmt
 boost
 doctest
 benchmark
+xtensor-blas=0.16
 xtensor
-xtensor-blas
 xtensor-fftw

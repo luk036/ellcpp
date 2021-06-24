@@ -114,7 +114,9 @@ auto to_csdfixed(double num, unsigned int nnz = 4) noexcept -> string
     while (n > 0 || nnz > 0)
     {
         if (n == 0)
+        {
             csd_str += '.';
+        }
         n -= 1;
         if (num > limit)
         {
