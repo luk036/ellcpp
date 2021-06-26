@@ -61,7 +61,7 @@ TEST_CASE("Test Boost")
     // const char *name = "ABCDE";
 
     // writing out the edges in the graph
-    using Edge = std::pair<int, int>;
+    using Edge = std::pair<size_t, size_t>;
     Edge edge_array[] = {Edge(A, B), Edge(A, D), Edge(C, A), Edge(D, C),
         Edge(C, E), Edge(B, D), Edge(D, E)};
     const auto num_edges = sizeof(edge_array) / sizeof(edge_array[0]);

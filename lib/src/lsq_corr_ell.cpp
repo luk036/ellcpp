@@ -298,7 +298,7 @@ class mle_oracle
             return {*cut0, false};
         }
 
-        auto n = int(x.shape()[0]);
+        auto n = x.shape()[0];
         auto m = this->_Y.shape()[0];
 
         const auto& R = this->_lmi0._Q.sqrt();
@@ -323,7 +323,7 @@ class mle_oracle
 
         auto g = zeros(x);
 
-        for (auto i = 0; i != n; ++i)
+        for (auto i = 0U; i != n; ++i)
         {
             auto SFsi = dot(S, this->_Sig[i]);
             g(i) = xt::linalg::trace(SFsi)();
