@@ -12,10 +12,8 @@
  */
 auto ldlt_ext::witness() -> double
 {
-    if (this->is_spd())
-    {
-        XTENSOR_THROW(std::runtime_error, "Implementation Error.");
-    }
+    assert(!this->is_spd());
+
     // const auto& [start, n] = this->p;
     const auto& start = this->p.first;
     const auto& n = this->p.second;
@@ -64,10 +62,8 @@ auto ldlt_ext::sym_quad(const Vec& A) const -> double
  */
 auto ldlt_ext::sqrt() -> Mat
 {
-    if (!this->is_spd())
-    {
-        //XTENSOR_THROW(std::runtime_error, "Implementation Error.");
-    }
+    assert(this->is_spd());
+
     auto M = zeros({this->n, this->n});
     for (auto i = 0U; i != this->n; ++i)
     {
