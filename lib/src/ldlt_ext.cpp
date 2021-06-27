@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 #include <ellcpp/oracles/ldlt_ext.hpp>
+#include <xtensor/xtensor_config.hpp>
 #include <stdexcept>
 
 
