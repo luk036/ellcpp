@@ -306,7 +306,7 @@ class grAdaptor : public VertexView<Graph>
      * @param[in] v
      * @return auto
      */
-    auto add_edge(int u, int v)
+    auto add_edge(size_t u, size_t v)
     {
         return boost::add_edge(u, v, *this);
     }

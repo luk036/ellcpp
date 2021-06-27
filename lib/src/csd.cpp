@@ -61,8 +61,8 @@ auto to_csd(double num, int places = 0) noexcept -> string
 auto to_decimal(std::string_view csd_str) noexcept -> double
 {
     auto num = 0.0;
-    auto loc = 0;
-    auto i = 0;
+    auto loc = 0U;
+    auto i = 0U;
     for (auto c : csd_str)
     {
         switch (c)
@@ -114,7 +114,9 @@ auto to_csdfixed(double num, unsigned int nnz = 4) noexcept -> string
     while (n > 0 || nnz > 0)
     {
         if (n == 0)
+        {
             csd_str += '.';
+        }
         n -= 1;
         if (num > limit)
         {

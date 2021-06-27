@@ -37,7 +37,7 @@ class qmi_oracle
   public:
     ldlt_ext _Q;
 
-  public:
+
     /*!
      * @brief Construct a new qmi oracle object
      *

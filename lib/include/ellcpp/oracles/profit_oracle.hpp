@@ -36,7 +36,7 @@ class profit_oracle
   public:
     Arr _a;
 
-  public:
+
     /*!
      * @brief Construct a new profit oracle object
      *
