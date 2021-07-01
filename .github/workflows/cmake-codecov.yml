@@ -1,0 +1,59 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Codecov CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      # Runs a single command using the runners shell
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Add conda to system path
+        run: |
+          # $CONDA is an environment variable pointing to the root of the miniconda directory
+          echo $CONDA/bin >> $GITHUB_PATH
+      - name: Before Install
+        run: |
+          sudo apt-get install g++-10 librange-v3-dev lcov
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 90 
+          conda env update --file environment-dev.yml --name base
+          git submodule update --init 
+      - name: Run Tests
+        run: |
+          mkdir build && cd build;
+          cmake -DCMAKE_BUILD_TYPE=Coverage -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib ..;
+          make -j2
+          ctest -VV --output-on-failure
+          lcov --directory . --capture --output-file coverage.info # capture coverage info
+          lcov --remove coverage.info '*/external/*' '/usr/*' --output-file coverage.info # filter out system
+          lcov --list coverage.info #debug info
+      - name: Codecov
+        # You may pin to the exact commit or the version.
+        # uses: codecov/codecov-action@29386c70ef20e286228c72b668a06fd0e8399192
+        uses: codecov/codecov-action@v1.5.2
+        with:
+          # Repository upload token - get it from codecov.io. Required only for private repositories
+          token: # optional
+          # Comma-separated list of files to upload
+          fail_ci_if_error: true
