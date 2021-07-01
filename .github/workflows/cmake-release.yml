@@ -37,7 +37,7 @@ jobs:
         run: |
           sudo apt-get install g++-10 librange-v3-dev libfftw3-dev
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 90
-          conda update -q conda
+          # conda update -q conda
           conda env update --file environment-dev.yml --name base
           git submodule update --init 
       - name: Run Tests

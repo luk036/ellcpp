@@ -6,7 +6,6 @@
 #include <tuple>
 #include <xtensor/xarray.hpp>
 
-
 // forward declaration
 enum class CUTStatus;
 
