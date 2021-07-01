@@ -41,8 +41,10 @@ jobs:
           git submodule update --init 
       - name: Run Tests
         run: |
-          mkdir build && cd build;
-          cmake -DCMAKE_BUILD_TYPE=Coverage -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib ..;
+          mkdir build && cd build
+          # cmake -DCMAKE_BUILD_TYPE=Coverage -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib ..
+          cmake -DENABLE_COVERAGE=1 -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib ..
+
           make -j2
           ctest -VV --output-on-failure
           lcov --directory . --capture --output-file coverage.info # capture coverage info
