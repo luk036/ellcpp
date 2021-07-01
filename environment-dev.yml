@@ -10,7 +10,6 @@ dependencies:
   - doctest
   - benchmark
   - openblas
-  - fftw
   - xtensor
   - xtensor-blas
   - xtensor-fftw
