@@ -25,7 +25,7 @@ TEST_CASE("lsq_corr_fn")
     const auto [a, num_iters, feasible] = lsq_corr_poly2(Y, s, 4);
     CHECK(a[0] >= 0.);
     CHECK(feasible);
-    CHECK(num_iters >= 675);
+    CHECK(num_iters >= 673);
     CHECK(num_iters <= 716);
 }
 
