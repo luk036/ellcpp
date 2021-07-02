@@ -33,7 +33,7 @@ jobs:
 
     - name: Before Install
       run: |
-        sudo apt-get install g++-10 librange-v3-dev libfftw3-dev
+        sudo apt-get install g++-10 librange-v3-dev libfftw3-dev lcov
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 90
         # conda update -q conda
         conda env update --file environment-dev.yml --name base
