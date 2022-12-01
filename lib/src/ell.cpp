@@ -51,7 +51,7 @@ auto ell::_calc_ll_core(const double& b0, const double& b1) -> CUTStatus
     const auto tempn = this->_halfN * bsumn * bdiff;
     const auto xi = std::sqrt(t0n * t1n + tempn * tempn);
     this->_sigma =
-        this->_c3 + (1. - b0b1n - xi) / (bsumn * bav) / this->_nPlus1;
+        this->_c3 + (1. + b0b1n - xi) / (bsumn * bav) / this->_nPlus1;
     this->_rho = this->_sigma * bav;
     this->_delta = this->_c1 * ((t0n + t1n) / 2. + xi / this->_nFloat);
     return CUTStatus::success;
